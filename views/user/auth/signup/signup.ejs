@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Elanora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDF7F0;
+            --footer-bg: #F9F1E7;
+            --primary-gold: #BC984D;
+            --text-dark: #333333;
+            --text-light: #777777;
+            --border-color: #E0E0E0;
+            --error-color: #e74c3c;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+        }
+        .signup-card {
+            background: white;
+            width: 100%;
+            max-width: 460px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            text-align: center;
+        }
+        .logo-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--primary-gold);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        h1 {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.85rem;
+            transition: border 0.2s;
+        }
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 45px !important;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+            font-size: 1.2rem;
+            user-select: none;
+            transition: color 0.2s;
+        }
+        .toggle-password:hover {
+            color: #666;
+        }
+        input.error {
+            border-color: var(--error-color);
+        }
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.72rem;
+            margin-top: 5px;
+            display: none;
+        }
+        .general-error {
+            background: #ffebee;
+            color: var(--error-color);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            display: none;
+            text-align: left;
+        }
+        .referral-link {
+            display: block;
+            text-align: left;
+            font-size: 0.75rem;
+            color: var(--primary-gold);
+            text-decoration: none;
+            margin: 10px 0;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        #referral-field {
+            display: none;
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .terms-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            text-align: left;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        .terms-container input {
+            margin-top: 2px;
+        }
+        .terms-container a {
+            color: var(--primary-gold);
+            text-decoration: none;
+        }
+        .btn-create {
+            background-color: var(--primary-gold);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: background 0.2s;
+        }
+        .btn-create:disabled {
+            background-color: #d4b88a;
+            cursor: not-allowed;
+        }
+        .divider {
+            margin: 15px 0;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            position: relative;
+        }
+        .btn-google {
+            background: white;
+            border: 1px solid var(--border-color);
+            width: 100%;
+            padding: 12px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .btn-google:hover {
+            border-color: var(--primary-gold);
+            background: #fafafa;
+        }
+        .login-link {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .login-link a {
+            color: var(--primary-gold);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        /* Footer Styles */
+        footer {
+            background-color: var(--footer-bg);
+            padding: 60px 8% 30px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col h4 {
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        .footer-col p, .footer-col li {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            list-style: none;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .social-icons {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .social-icon {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            font-size: 0.8rem;
+        }
+        .newsletter-input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+        }
+        .btn-subscribe {
+            background: var(--primary-gold);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        @media (max-width: 850px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="signup-card">
+            <div class="logo-box">
+                <span>💎</span> Elanora
+            </div>
+            <h1>Create Account</h1>
+            <p class="subtitle">Join us to explore our jewelry world</p>
+
+            <!-- General Error Message -->
+            <div class="general-error" id="generalError"></div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="fullName" placeholder="Enter your full name">
+                    <div class="error-message" id="fullNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                    <div class="error-message" id="emailError"></div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Create a password">
+                        <span class="toggle-password" id="togglePassword">👁️</span>
+                    </div>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Confirm your password">
+                        <span class="toggle-password" id="toggleConfirmPassword">👁️</span>
+                    </div>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+                
+                <span class="referral-link" id="toggle-referral" onclick="showReferral()">🎁 Have a referral code?</span>
+               
+                <div class="form-group" id="referral-field">
+                    <label>Referral Code</label>
+                    <input type="text" id="referralCode" placeholder="Enter code here">
+                    <div class="error-message" id="referralCodeError"></div>
+                </div>
+                
+                <div class="terms-container">
+                    <input type="checkbox" id="terms">
+                    <label for="terms" style="font-weight: 400; margin-bottom: 0;">
+                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                    </label>
+                </div>
+                <div class="error-message" id="termsError" style="margin-top: -10px; margin-bottom: 15px;"></div>
+                
+                <button type="submit" id="createBtn" class="btn-create">Create Account</button>
+            </form>
+            
+            <div class="divider">or signup with</div>
+
+            <!-- FIXED Google Sign Up Button -->
+            <a href="/auth/google" style="text-decoration: none; display: block; width: 100%;">
+                <button type="button" class="btn-google">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" 
+                         width="18" 
+                         height="18"
+                         alt="Google">
+                    Continue with Google
+                </button>
+            </a>
+
+            <p class="login-link">Already have an account? <a href="/login">Sign In</a></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo-box" style="justify-content: flex-start; margin-bottom: 15px;">💎 Elanora</div>
+                <p>Crafting timeless elegance and radiant refinement for those who appreciate the finer things in life.</p>
+                <div class="social-icons">
+                    <div class="social-icon">f</div>
+                    <div class="social-icon">𝕏</div>
+                    <div class="social-icon">📸</div>
+                    <div class="social-icon">▶</div>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul><li>Shop Collection</li><li>About Us</li><li>Our Story</li><li>Contact Us</li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>Customer Service</h4>
+                <ul><li>FAQ</li><li>Shipping & Returns</li><li>Jewelry Care</li><li>Terms & Conditions</li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p>Subscribe to receive updates, access to exclusive deals, and more.</p>
+                <form action="/subscribe" method="POST">
+                    <input type="email" name="subscriberEmail" class="newsletter-input" placeholder="Enter your email" required>
+                    <button type="submit" class="btn-subscribe">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 Elanora Jewelry. All rights reserved.</div>
+            <div>Privacy Policy &nbsp;&nbsp; Terms of Service</div>
+        </div>
+    </footer>
+
+    <script>
+        // Show referral field
+        function showReferral() {
+            document.getElementById('toggle-referral').style.display = 'none';
+            document.getElementById('referral-field').style.display = 'block';
+        }
+
+        // Password toggle
+        function togglePasswordVisibility(inputId, toggleId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(toggleId);
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.textContent = "🙈";
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.textContent = "👁️";
+            }
+        }
+
+        // Error handling functions
+        function showError(inputId, message) {
+            const errorElement = document.getElementById(inputId + 'Error');
+            const input = document.getElementById(inputId);
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+            if (input) input.classList.add('error');
+        }
+
+        function clearError(inputId) {
+            const errorElement = document.getElementById(inputId + 'Error');
+            const input = document.getElementById(inputId);
+            if (errorElement) errorElement.style.display = 'none';
+            if (input) input.classList.remove('error');
+        }
+
+        function showGeneralError(message) {
+            const generalError = document.getElementById('generalError');
+            generalError.textContent = message;
+            generalError.style.display = 'block';
+        }
+
+        function clearGeneralError() {
+            const generalError = document.getElementById('generalError');
+            generalError.style.display = 'none';
+        }
+
+        // Validation functions
+        function validateFullName() {
+            const fullName = document.getElementById('fullName').value.trim();
+            clearError('fullName');
+            if (fullName === '') {
+                showError('fullName', 'Full name is required');
+                return false;
+            }
+            if (fullName.length < 2) {
+                showError('fullName', 'Full name must be at least 2 characters');
+                return false;
+            }
+            return true;
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('email').value.trim();
+            clearError('email');
+            if (email === '') {
+                showError('email', 'Email address is required');
+                return false;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('email', 'Please enter a valid email address');
+                return false;
+            }
+            return true;
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            clearError('password');
+            if (password === '') {
+                showError('password', 'Password is required');
+                return false;
+            }
+            if (password.length < 8) {
+                showError('password', 'Password must be at least 8 characters long');
+                return false;
+            }
+            return true;
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            clearError('confirmPassword');
+            if (confirmPassword === '') {
+                showError('confirmPassword', 'Please confirm your password');
+                return false;
+            }
+            if (password !== confirmPassword) {
+                showError('confirmPassword', 'Passwords do not match');
+                return false;
+            }
+            return true;
+        }
+
+        function validateTerms() {
+            const termsChecked = document.getElementById('terms').checked;
+            const termsError = document.getElementById('termsError');
+            if (!termsChecked) {
+                termsError.textContent = 'You must agree to the Terms of Service and Privacy Policy';
+                termsError.style.display = 'block';
+                return false;
+            }
+            termsError.style.display = 'none';
+            return true;
+        }
+
+        // Real-time validation
+        document.getElementById('fullName').addEventListener('input', validateFullName);
+        document.getElementById('email').addEventListener('input', validateEmail);
+        document.getElementById('password').addEventListener('input', () => {
+            validatePassword();
+            if (document.getElementById('confirmPassword').value) validateConfirmPassword();
+        });
+        document.getElementById('confirmPassword').addEventListener('input', validateConfirmPassword);
+        document.getElementById('terms').addEventListener('change', validateTerms);
+
+        // Password eye toggles
+        document.getElementById('togglePassword').addEventListener('click', () => {
+            togglePasswordVisibility('password', 'togglePassword');
+        });
+
+        document.getElementById('toggleConfirmPassword').addEventListener('click', () => {
+            togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword');
+        });
+
+        // Form Submission with AJAX
+        const form = document.getElementById('signupForm');
+        const createBtn = document.getElementById('createBtn');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearGeneralError();
+
+            let isValid = true;
+
+            if (!validateFullName()) isValid = false;
+            if (!validateEmail()) isValid = false;
+            if (!validatePassword()) isValid = false;
+            if (!validateConfirmPassword()) isValid = false;
+            if (!validateTerms()) isValid = false;
+
+            // Referral validation if visible
+            const referralField = document.getElementById('referral-field');
+            if (referralField.style.display !== 'none') {
+                const referralCode = document.getElementById('referralCode').value.trim();
+                if (referralCode && referralCode.length < 3) {
+                    showError('referralCode', 'Referral code must be at least 3 characters');
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) return;
+
+            // Disable button
+            createBtn.disabled = true;
+            createBtn.textContent = 'Creating Account...';
+
+            const formData = {
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+                confirmPassword: document.getElementById('confirmPassword').value,
+                referralCode: document.getElementById('referralCode').value.trim() || null,
+                agreeTerms: document.getElementById('terms').checked
+            };
+
+            try {
+                const response = await fetch('/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    window.location.href = '/signup-verification';
+                } else {
+                    if (result.field) {
+                        showError(result.field, result.message);
+                    } else {
+                        showGeneralError(result.message || "An error occurred. Please try again.");
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                showGeneralError("Network error. Please check your connection and try again.");
+            } finally {
+                createBtn.disabled = false;
+                createBtn.textContent = 'Create Account';
+            }
+        });
+    </script>
+</body>
+</html>

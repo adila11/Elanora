@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Elanora</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FDF7F0;
+            --card-white: #FFFFFF;
+            --primary-gold: #BC984D;
+            --btn-hover: #A68542;
+            --text-dark: #333333;
+            --text-muted: #777777;
+            --border: #E0E0E0;
+            --error-red: #d32f2f;
+            --success-green: #388e3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .login-container {
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-gold);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .login-card {
+            background: var(--card-white);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            text-align: left;
+        }
+
+        .message {
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .error-box {
+            background-color: #ffebee;
+            color: var(--error-red);
+            border: 1px solid #ffcdd2;
+        }
+
+        .success-box {
+            background-color: #e8f5e9;
+            color: var(--success-green);
+            border: 1px solid #c8e6c9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 3px rgba(188, 152, 77, 0.1);
+        }
+
+        .btn-signin {
+            width: 100%;
+            background-color: var(--primary-gold);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-signin:hover:not(:disabled) {
+            background-color: var(--btn-hover);
+        }
+
+        .btn-signin:disabled {
+            background-color: #b8a07a;
+            cursor: not-allowed;
+        }
+
+        /* Spinner Animation */
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+        <div class="brand-logo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L4.5 9L12 22L19.5 9L12 2Z" fill="#BC984D" />
+            </svg>
+            Elanora
+        </div>
+
+        <h2>Sign in to your account</h2>
+        <p class="subtitle">Admin portal access</p>
+
+        <div class="login-card">
+    <!-- Backend Error Message -->
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="message error-box" id="backendError">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <!-- Frontend JS Message Box -->
+    <div id="messageBox" class="message"></div>
+
+    <form id="loginForm" method="post" action="/admin">
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="text" id="email" name="email" placeholder="Enter admin email">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter password">
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn-signin">
+            Sign in
+        </button>
+    </form>
+</div>
+    </div>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        const messageBox = document.getElementById('messageBox');
+        const submitBtn = document.getElementById('submitBtn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.className = `message ${type}-box`;
+            messageBox.style.display = 'block';
+        }
+
+        function clearMessage() {
+            messageBox.style.display = 'none';
+        }
+
+        // Main Form Validation
+        form.addEventListener('submit', function (e) {
+            clearMessage();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            // Email Validation
+            if (!email) {
+                e.preventDefault();
+                showMessage("Email address is required", "error");
+                emailInput.focus();
+                return;
+            }
+
+            // Basic email format validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                showMessage("Please enter a valid email address", "error");
+                emailInput.focus();
+                return;
+            }
+
+            // Password Validation
+            if (!password) {
+                e.preventDefault();
+                showMessage("Password is required", "error");
+                passwordInput.focus();
+                return;
+            }
+
+            if (password.length < 6) {
+                e.preventDefault();
+                showMessage("Password must be at least 6 characters long", "error");
+                passwordInput.focus();
+                return;
+            }
+
+            // If validation passes → Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <span style="display:inline-block; animation: spin 1s linear infinite; margin-right: 8px;">↻</span>
+                Signing in...
+            `;
+        });
+
+        // Clear error message when user starts typing
+        emailInput.addEventListener('input', clearMessage);
+        passwordInput.addEventListener('input', clearMessage);
+
+        // Optional: Press Enter key support (already handled by form)
+    </script>
+
+</body>
+
+</html>

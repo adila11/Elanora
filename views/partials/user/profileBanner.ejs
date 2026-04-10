@@ -1,0 +1,43 @@
+<%
+  const displayName = (user.firstName && user.lastName)
+    ? user.firstName + ' ' + user.lastName
+    : (user.fullName.toUpperCase() || 'User');
+  const initial = displayName[0].toUpperCase();
+  const memberYear = user.createdAt ? new Date(user.createdAt).getFullYear() : new Date().getFullYear();
+%>
+
+<div style="background:#fff; border-radius:18px; padding:24px 32px; display:flex; align-items:center; gap:24px; margin-bottom:28px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+
+  <div style="width:88px; height:88px; border-radius:50%; background:rgba(196,154,42,0.18); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+    <span style="font-family:'Cormorant Garamond',serif; font-size:2.4rem; font-weight:700; color:#c49a2a; line-height:1;">
+      <%= initial %>
+    </span>
+  </div>
+
+  <div style="flex:1; min-width:0;">
+    <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.75rem; font-weight:700; color:#2c2c2c; margin-bottom:3px;">
+      <%= displayName %>
+    </h2>
+    <p style="font-size:0.85rem; color:#aaa; margin-bottom:12px;"><%= user.email %></p>
+
+    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:600; padding:6px 14px; border-radius:20px; background:#f5edd8; color:#c49a2a;">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20 21a8 8 0 10-16 0"/>
+          <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.75" fill="none"/>
+        </svg>
+        Member since <%= memberYear %>
+      </span>
+
+      <% if (typeof user.walletBalance !== 'undefined' && user.walletBalance !== null) { %>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:600; padding:6px 14px; border-radius:20px; background:#f5edd8; color:#c49a2a;">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+        </svg>
+        Balance: ₹<%= user.walletBalance.toLocaleString('en-IN') %>
+      </span>
+      <% } %>
+    </div>
+  </div>
+
+</div>

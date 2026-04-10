@@ -30,6 +30,43 @@
       overflow-x: hidden;
     }
 
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(253,250,245,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 60px; height: 64px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 600; color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-logo svg { width: 20px; height: 20px; fill: var(--gold); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: 13px; font-weight: 400; letter-spacing: 0.06em;
+      color: var(--text); text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+    .nav-icon { width: 18px; height: 18px; cursor: pointer; color: var(--text); }
+    .btn-login {
+      padding: 7px 18px; border: 1px solid var(--border); border-radius: 6px;
+      font-size: 12px; font-weight: 500; background: transparent; cursor: pointer;
+      color: var(--text); transition: border-color .2s, color .2s;
+    }
+    .btn-login:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-signup {
+      padding: 7px 18px; border-radius: 6px; font-size: 12px; font-weight: 500;
+      background: var(--gold); color: #fff; border: none; cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-signup:hover { background: #a87820; }
 
     /* ── HERO ── */
     .hero {
@@ -265,119 +302,28 @@
       display: flex; align-items: center; justify-content: center;
     }
     .img-placeholder span { color: var(--muted); font-size: 13px; opacity: .6; }
-
-    /* ── RESPONSIVE (only additions – no original styles were changed) ── */
-    @media (max-width: 1024px) {
-      .hero {
-        grid-template-columns: 1fr;
-        min-height: auto;
-      }
-      .hero-content {
-        padding: 60px 40px;
-      }
-      .about {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        padding: 80px 40px;
-      }
-      .about-image img {
-        height: 400px;
-      }
-      .collection {
-        padding: 60px 40px;
-      }
-      .products-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .category {
-        margin: 0 40px 60px;
-        grid-template-columns: 1fr;
-      }
-      .category-image img {
-        height: 300px;
-      }
-      .footer-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .features {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .products-grid {
-        grid-template-columns: 1fr;
-      }
-      .footer-grid {
-        grid-template-columns: 1fr;
-      }
-      .hero-content {
-        padding: 50px 30px;
-      }
-      .about {
-        padding: 60px 30px;
-      }
-      .collection {
-        padding: 50px 30px;
-      }
-      .category {
-        margin: 0 30px 50px;
-      }
-      .category-content {
-        padding: 40px 30px;
-      }
-      .category-types {
-        gap: 20px;
-      }
-      .type-thumb {
-        width: 64px;
-        height: 64px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .features {
-        grid-template-columns: 1fr;
-      }
-      .hero-content {
-        padding: 40px 20px;
-      }
-      .hero-content h1 {
-        font-size: clamp(32px, 8vw, 48px);
-      }
-      .about {
-        padding: 50px 20px;
-      }
-      .collection {
-        padding: 40px 20px;
-      }
-      .category {
-        margin: 0 20px 40px;
-      }
-      .category-content {
-        padding: 30px 20px;
-      }
-      .footer {
-        padding: 50px 20px 25px;
-      }
-      .hero-bottom {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-      }
-    }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <%- include('partials/user/header') %>
+  <a class="nav-logo" href="#">
+    <svg viewBox="0 0 24 24"><polygon points="12,2 15.5,8.5 22,9.3 17,14 18.4,21 12,17.8 5.6,21 7,14 2,9.3 8.5,8.5"/></svg>
+    Elanora
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Shop</a></li>
+    <li><a href="#">About Us</a></li>
+    <li><a href="#">Contact Us</a></li>
+  </ul>
+  <div class="nav-actions">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    <button class="btn-login">Login</button>
+    <button class="btn-signup">Sign Up</button>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -403,7 +349,7 @@
     </div>
   </div>
   <div class="hero-image">
-    <img src="images/home/Mainpic.jpeg" alt="Model wearing luxury jewelry" onerror="this.parentElement.innerHTML='<div class=img-placeholder><span>Hero Image</span></div>'"/>
+    <img src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&q=80" alt="Model wearing luxury jewelry" onerror="this.parentElement.innerHTML='<div class=img-placeholder><span>Hero Image</span></div>'"/>
     <div class="hero-badge">
       <img class="badge-img" src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=80&q=80" alt="Earring" onerror="this.style.display='none'"/>
       <div class="badge-text">
@@ -529,7 +475,62 @@
 
 <!-- FOOTER -->
 <footer>
- <%- include('partials/user/footer') %>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="nav-logo" href="#">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--gold)"><polygon points="12,2 15.5,8.5 22,9.3 17,14 18.4,21 12,17.8 5.6,21 7,14 2,9.3 8.5,8.5"/></svg>
+        Elanora
+      </a>
+      <p>Crafting timeless elegance and radiant refinement for those who appreciate the finer things in life.</p>
+      <div class="footer-socials">
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </div>
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="var(--muted)"/></svg>
+        </div>
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0016 2.5a4.5 4.5 0 00-4.5 4.5v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+        </div>
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#">Shop Collection</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Customer Service</h4>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Shipping & Returns</a></li>
+        <li><a href="#">Jewel Care</a></li>
+        <li><a href="#">Terms & Conditions</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Newsletter</h4>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px;">Subscribe to receive updates, access to exclusive deals, and more.</p>
+      <div class="newsletter-input-wrap">
+        <input type="email" placeholder="Enter your email..."/>
+        <button>Subscribe</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Elanora Jewellery. All rights reserved.</p>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
 </footer>
 
 </body>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - Elanora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDF7F0;
+            --footer-bg: #F9F1E7;
+            --primary-gold: #BC984D;
+            --primary-gold-faded: #DCC9A1;
+            --text-dark: #333333;
+            --text-light: #777777;
+            --border-color: #E0E0E0;
+            --error-color: #d8000c;
+            --success-color: #155724;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .error-message,
+        .success-message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .error-message {
+            background-color: #ffe5e5;
+            color: var(--error-color);
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: var(--success-color);
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .otp-card {
+            background: white;
+            width: 100%;
+            max-width: 440px;
+            padding: 45px 35px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+            text-align: center;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--primary-gold);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .instructions {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .user-email {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .otp-field {
+            width: 45px;
+            height: 50px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .otp-field:focus {
+            border-color: var(--primary-gold);
+        }
+
+        .btn-continue {
+            background-color: var(--primary-gold-faded);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .btn-continue:disabled {
+            opacity: 0.75;
+            cursor: not-allowed;
+        }
+
+        .resend-container {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .resend-link {
+            color: var(--primary-gold);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .resend-link.disabled {
+            color: #999;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .timer {
+            color: var(--primary-gold);
+            font-weight: 600;
+        }
+
+        .different-email {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            padding: 60px 8% 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .footer-col p,
+        .footer-col li {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            list-style: none;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            font-size: 0.75rem;
+        }
+
+        .newsletter-input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+        }
+
+        .btn-subscribe {
+            background: var(--primary-gold);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 850px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content-wrapper">
+        <div class="otp-card">
+            <div class="logo-box">
+                <span>💎</span> Elanora2
+            </div>
+            <h1>Reset Password</h1>
+            <p class="instructions">Enter the 6-digit code sent to<br><span class="user-email">as***@gmail.com</span>
+            </p>
+
+            <% if (typeof messages !== 'undefined' && messages.error && messages.error.length > 0) { %>
+                <div class="error-message">
+                    <%= messages.error %>
+                </div>
+            <% } %>
+
+            <% if (typeof messages !== 'undefined' && messages.success && messages.success.length > 0) { %>
+                <div class="success-message">
+                    <%= messages.success %>
+                </div>
+            <% } %>
+
+            <form id="otpForm" method="post" action="/forgotpassword-otpverify" novalidate>
+
+                <div class="otp-inputs" id="otpInputs">
+                    <input type="text" class="otp-field" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-field" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-field" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-field" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-field" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-field" maxlength="1" inputmode="numeric">
+                </div>
+
+                <!-- Hidden input -->
+                <input type="hidden" name="otp" id="otpValue">
+
+                <button type="submit" id="submitBtn" class="btn-continue">
+                    Continue to Reset <span>→</span>
+                </button>
+
+            </form>
+
+            <div class="resend-container">
+                Didn't receive the code?
+                <span id="resendLink" class="resend-link">Resend OTP</span>
+                <span id="timerContainer" style="display: none;"> in <span id="timer" class="timer">60</span>s</span>
+            </div>
+
+            <a href="/forgotpassword" class="different-email">Use a different email</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo-box" style="justify-content: flex-start; margin-bottom: 15px;">💎 Elanora</div>
+                <p>Crafting timeless elegance and radiant refinement for those who appreciate the finer things in life.</p>
+                <div class="social-icons">
+                    <div class="social-icon">f</div>
+                    <div class="social-icon">𝕏</div>
+                    <div class="social-icon">📸</div>
+                    <div class="social-icon">▶</div>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li>Shop Collection</li>
+                    <li>About Us</li>
+                    <li>Our Story</li>
+                    <li>Contact Us</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li>FAQ</li>
+                    <li>Shipping & Returns</li>
+                    <li>Jewelry Care</li>
+                    <li>Terms & Conditions</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p>Subscribe to receive updates, access to exclusive deals, and more.</p>
+                <input type="email" class="newsletter-input" placeholder="Enter your email">
+                <button class="btn-subscribe">Subscribe</button>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 Elanora Jewelry. All rights reserved.</div>
+            <div>Privacy Policy &nbsp;&nbsp; Terms of Service</div>
+        </div>
+    </footer>
+
+    <script>
+        const form = document.getElementById('otpForm');
+        const otpFields = document.querySelectorAll('.otp-field');
+        const submitBtn = document.getElementById('submitBtn');
+        const otpValue = document.getElementById('otpValue');
+
+        const resendLink = document.getElementById('resendLink');
+        const timerContainer = document.getElementById('timerContainer');
+        const timerDisplay = document.getElementById('timer');
+
+        let timeLeft = 60;
+        let timerInterval = null;
+
+        otpFields.forEach((field, index) => {
+            field.addEventListener('input', () => {
+                if (field.value.length === 1 && index < otpFields.length - 1) {
+                    otpFields[index + 1].focus();
+                }
+            });
+
+            field.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && field.value === '' && index > 0) {
+                    otpFields[index - 1].focus();
+                }
+            });
+        });
+
+        function validateOTP() {
+            let isComplete = true;
+
+            otpFields.forEach(field => {
+                if (field.value.trim() === '' || isNaN(field.value)) {
+                    isComplete = false;
+                    field.style.borderColor = '#d8000c';
+                } else {
+                    field.style.borderColor = '';
+                }
+            });
+
+            return isComplete;
+        }
+
+        function getOTP() {
+            let otp = '';
+            otpFields.forEach(field => {
+                otp += field.value;
+            });
+            return otp;
+        }
+
+        function startTimer() {
+            timeLeft = 60;
+            timerDisplay.textContent = timeLeft;
+            timerContainer.style.display = 'inline';
+            resendLink.classList.add('disabled');
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerContainer.style.display = 'none';
+                    resendLink.classList.remove('disabled');
+                }
+            }, 1000);
+        }
+
+        resendLink.addEventListener('click', () => {
+            if (resendLink.classList.contains('disabled')) return;
+            startTimer();
+        });
+
+        form.addEventListener('submit', function (e) {
+            if (!validateOTP()) {
+                e.preventDefault();
+                return;
+            }
+
+            const otp = getOTP();
+            otpValue.value = otp;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `Verifying ⟳`;
+        });
+
+        document.getElementById('otpInputs').addEventListener('paste', (e) => {
+            const pasteData = e.clipboardData.getData('text').trim();
+
+            if (/^\d{6}$/.test(pasteData)) {
+                otpFields.forEach((field, i) => {
+                    field.value = pasteData[i];
+                });
+                otpFields[5].focus();
+            }
+        });
+
+        window.onload = startTimer;
+    </script>
+
+</body>
+
+</html>

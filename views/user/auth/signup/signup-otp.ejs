@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - Elanora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDF7F0;
+            --footer-bg: #F9F1E7;
+            --primary-gold: #BC984D;
+            --primary-gold-light: #DCC9A1;
+            --text-dark: #333333;
+            --text-light: #777777;
+            --border-color: #E0E0E0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .otp-card {
+            background: white;
+            width: 100%;
+            max-width: 440px;
+            padding: 45px 35px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            text-align: center;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--primary-gold);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .instructions {
+            color: var(--text-light);
+            font-size: 0.75rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .user-email {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .otp-field {
+            width: 42px;
+            height: 48px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .otp-field:focus {
+            border-color: var(--primary-gold);
+        }
+
+        .btn-verify {
+            background-color: var(--primary-gold-light);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 25px;
+        }
+
+        .resend-text {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+        }
+
+        .timer {
+            color: var(--primary-gold);
+            font-weight: 600;
+        }
+
+        .wrong-email {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            padding: 60px 8% 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        .footer-col p, .footer-col li {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            list-style: none;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            font-size: 0.75rem;
+        }
+
+        .newsletter-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+        }
+
+        .btn-subscribe {
+            background: var(--primary-gold);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 850px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="content-wrapper">
+    <div class="otp-card">
+        <div class="logo-box">💎 Elanora</div>
+
+        <h1>Verify Your Email</h1>
+        <p class="instructions">
+            We've sent a 6-digit code to<br>
+            <span class="user-email">as***@gmail.com</span>
+        </p>
+
+        <form method="POST" action="/signup-verification">
+
+            <!-- hidden otp -->
+            <input type="hidden" name="otp" id="otp">
+
+            <div class="otp-inputs">
+                <input type="text" class="otp-field" maxlength="1">
+                <input type="text" class="otp-field" maxlength="1">
+                <input type="text" class="otp-field" maxlength="1">
+                <input type="text" class="otp-field" maxlength="1">
+                <input type="text" class="otp-field" maxlength="1">
+                <input type="text" class="otp-field" maxlength="1">
+            </div>
+
+            <button type="submit" class="btn-verify">Verify →</button>
+        </form>
+
+        <div class="resend-text">
+            Didn't receive the code? Resend in <span class="timer">25s</span>
+        </div>
+
+        <a href="#" class="wrong-email">Wrong email? Contact us</a>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <div class="logo-box" style="justify-content: flex-start;">💎 Elanora</div>
+            <p>Crafting timeless elegance and refinement.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- ✅ SCRIPT -->
+<script>
+    const inputs = document.querySelectorAll(".otp-field");
+    const form = document.querySelector("form");
+    const hiddenOtp = document.getElementById("otp");
+
+    inputs.forEach((input, index) => {
+
+        // only numbers
+        input.addEventListener("input", (e) => {
+            input.value = input.value.replace(/[^0-9]/g, "");
+
+            if (input.value && inputs[index + 1]) {
+                inputs[index + 1].focus();
+            }
+        });
+
+        // backspace move
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !input.value && inputs[index - 1]) {
+                inputs[index - 1].focus();
+            }
+        });
+    });
+
+    form.addEventListener("submit", (e) => {
+        let otp = "";
+
+        inputs.forEach(input => {
+            otp += input.value;
+        });
+
+        if (otp.length !== 6) {
+            e.preventDefault();
+            alert("Enter full 6-digit OTP");
+            return;
+        }
+
+        hiddenOtp.value = otp;
+    });
+</script>
+
+</body>
+</html>

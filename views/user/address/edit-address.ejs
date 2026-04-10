@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Address - Elanora</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #fdfaf5;
+      color: #2c2c2c;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #d1c4a8;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: #fdfaf5;
+      transition: all 0.2s ease;
+    }
+
+    .field-input:focus {
+      outline: none;
+      border-color: #c49a2a;
+      box-shadow: 0 0 0 3px rgba(196, 154, 42, 0.15);
+    }
+
+    .field-input.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #5c5c5c;
+      font-size: 0.9rem;
+    }
+
+    .error-text {
+      color: #ef4444;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .page-message {
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+    }
+    .success-msg { 
+      background: #ecfdf5; 
+      color: #0f766e; 
+      border: 1px solid #5eead4; 
+    }
+    .error-msg { 
+      background: #fef2f2; 
+      color: #b91c1c; 
+      border: 1px solid #fecaca; 
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('partials/user/header') %>
+
+  <div style="max-width:1200px; margin:0 auto; padding:36px 24px 80px;">
+
+    <%- include('partials/user/profileBanner', { user }) %>
+
+    <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
+
+      <%- include('partials/user/profileSidebar', { activePage: 'addresses' }) %>
+
+      <!-- Main Content -->
+      <main style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04); max-width: 600px;">
+
+        <div class="mb-8">
+          <a href="/addresses" class="text-amber-700 hover:text-amber-800 flex items-center gap-2 text-sm font-medium mb-6">
+            ← Back to Saved Addresses
+          </a>
+          <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.75rem; font-weight:700; color:#2c2c2c;">
+            Edit Address
+          </h2>
+        </div>
+
+        <!-- Messages -->
+        <div id="pageMessageContainer"></div>
+        <div id="pageErrorContainer"></div>
+
+        <form id="addressForm" novalidate>
+          <input type="hidden" id="addressId" value="<%= address ? address._id : '' %>">
+
+          <div class="space-y-6">
+
+            <!-- Address Type -->
+            <div>
+              <label class="field-label">Address Type</label>
+              <select id="addressType" class="field-input">
+                <option value="">Select Address Type</option>
+                <option value="Home" <%= address && address.type === 'Home' ? 'selected' : '' %>>🏠 Home</option>
+                <option value="Office" <%= address && address.type === 'Office' ? 'selected' : '' %>>🏢 Office</option>
+                <option value="Other" <%= address && address.type === 'Other' ? 'selected' : '' %>>📍 Other</option>
+              </select>
+              <span id="typeError" class="error-text">Please select an address type</span>
+            </div>
+
+            <!-- Full Name -->
+            <div>
+              <label class="field-label">Full Name</label>
+              <input type="text" id="fullName" class="field-input" 
+                     value="<%= address ? address.fullName : '' %>" placeholder="Enter full name">
+              <span id="nameError" class="error-text">Full name must be at least 3 characters</span>
+            </div>
+
+            <!-- Phone Number -->
+            <div>
+              <label class="field-label">Phone Number</label>
+              <input type="tel" id="phone" class="field-input" maxlength="10" 
+                     value="<%= address ? address.phone : '' %>" placeholder="9876543210">
+              <span id="phoneError" class="error-text">Please enter a valid 10-digit Indian mobile number (starting with 6-9)</span>
+            </div>
+
+            <!-- Address Line -->
+            <div>
+              <label class="field-label">Address Line</label>
+              <textarea id="addressLine" rows="3" class="field-input resize-y" placeholder="House no, Street, Area">
+<%= address ? address.addressLine : '' %>
+              </textarea>
+              <span id="addressError" class="error-text">Address line must be at least 10 characters</span>
+            </div>
+
+            <!-- City & Pincode -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="field-label">City</label>
+                <input type="text" id="city" class="field-input" 
+                       value="<%= address ? address.city : '' %>" placeholder="City">
+                <span id="cityError" class="error-text">City name is required</span>
+              </div>
+              <div>
+                <label class="field-label">Pincode</label>
+                <input type="text" id="pincode" maxlength="6" class="field-input" 
+                       value="<%= address ? address.pincode : '' %>" placeholder="673001">
+                <span id="pincodeError" class="error-text">Pincode must be exactly 6 digits</span>
+              </div>
+            </div>
+
+            <!-- State -->
+            <div>
+              <label class="field-label">State</label>
+              <input type="text" id="state" class="field-input" 
+                     value="<%= address ? address.state : 'Kerala' %>" placeholder="State">
+              <span id="stateError" class="error-text">State is required</span>
+            </div>
+
+          </div>
+
+          <div class="flex gap-4 mt-10">
+            <a href="/addresses" 
+               class="btn-outline flex-1 py-3 text-center rounded-xl font-medium">Cancel</a>
+            <button type="button" onclick="updateAddress()" 
+                    class="btn-gold flex-1 py-3 rounded-xl font-medium" id="saveBtn">
+              Update Address
+            </button>
+          </div>
+        </form>
+
+      </main>
+    </div>
+  </div>
+
+  <%- include('partials/user/footer') %>
+
+  <script>
+    // Show success message
+    function showPageSuccess(message) {
+      const container = document.getElementById('pageMessageContainer');
+      container.innerHTML = `
+        <div class="page-message success-msg">
+          <strong>✓ Success</strong> 
+          <span>${message}</span>
+        </div>`;
+    }
+
+    // Show error message
+    function showPageError(message) {
+      const container = document.getElementById('pageErrorContainer');
+      container.innerHTML = `
+        <div class="page-message error-msg">
+          <strong>✕ Error</strong> 
+          <span>${message}</span>
+        </div>`;
+    }
+
+    function clearMessages() {
+      document.getElementById('pageMessageContainer').innerHTML = '';
+      document.getElementById('pageErrorContainer').innerHTML = '';
+    }
+
+    // Clear all field errors
+    function clearFieldErrors() {
+      const errors = document.querySelectorAll('.error-text');
+      errors.forEach(err => err.style.display = 'none');
+
+      const inputs = document.querySelectorAll('.field-input');
+      inputs.forEach(input => input.classList.remove('error'));
+    }
+
+    // Mark field as error
+    function markError(fieldId, errorId, message) {
+      const input = document.getElementById(fieldId);
+      const errorEl = document.getElementById(errorId);
+      
+      input.classList.add('error');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+
+    // Main Validation Function
+    function validateForm() {
+      clearFieldErrors();
+      let isValid = true;
+
+      // Address Type
+      const addressType = document.getElementById('addressType').value;
+      if (!addressType) {
+        markError('addressType', 'typeError', 'Please select an address type');
+        isValid = false;
+      }
+
+      // Full Name
+      const fullName = document.getElementById('fullName').value.trim();
+      if (fullName.length < 3) {
+        markError('fullName', 'nameError', 'Full name must be at least 3 characters');
+        isValid = false;
+      }
+
+      // Phone Number (Indian)
+      const phone = document.getElementById('phone').value.trim();
+      if (!/^[6-9]\d{9}$/.test(phone)) {
+        markError('phone', 'phoneError', 'Please enter a valid 10-digit Indian mobile number (starting with 6-9)');
+        isValid = false;
+      }
+
+      // Address Line
+      const addressLine = document.getElementById('addressLine').value.trim();
+      if (addressLine.length < 10) {
+        markError('addressLine', 'addressError', 'Please enter a complete address (minimum 10 characters)');
+        isValid = false;
+      }
+
+      // City
+      const city = document.getElementById('city').value.trim();
+      if (city.length < 2) {
+        markError('city', 'cityError', 'City name is required');
+        isValid = false;
+      }
+
+      // Pincode
+      const pincode = document.getElementById('pincode').value.trim();
+      if (!/^\d{6}$/.test(pincode)) {
+        markError('pincode', 'pincodeError', 'Pincode must be exactly 6 digits');
+        isValid = false;
+      }
+
+      // State
+      const state = document.getElementById('state').value.trim();
+      if (state.length < 2) {
+        markError('state', 'stateError', 'State is required');
+        isValid = false;
+      }
+
+      return isValid;
+    }
+
+    // Update Address Function
+    async function updateAddress() {
+      if (!validateForm()) {
+        return;
+      }
+
+      const addressId = document.getElementById('addressId').value.trim();
+      if (!addressId) {
+        showPageError("Address ID is missing. Please go back and try again.");
+        return;
+      }
+
+      const addressData = {
+        type: document.getElementById('addressType').value,
+        fullName: document.getElementById('fullName').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        addressLine: document.getElementById('addressLine').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        pincode: document.getElementById('pincode').value.trim(),
+        state: document.getElementById('state').value.trim()
+      };
+
+      const saveBtn = document.getElementById('saveBtn');
+      const originalText = saveBtn.textContent;
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Updating...";
+
+      clearMessages();
+
+      try {
+        const response = await fetch(`/addresses/edit/${addressId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(addressData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showPageSuccess(result.message || "Address updated successfully!");
+          setTimeout(() => {
+            window.location.href = '/addresses';
+          }, 1500);
+        } else {
+          // Handle backend validation errors
+          if (result.errors && Array.isArray(result.errors)) {
+            showPageError(result.errors.join(" • "));
+          } else {
+            showPageError(result.message || "Failed to update address. Please try again.");
+          }
+        }
+      } catch (error) {
+        showPageError("Network error. Please check your connection and try again.");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = originalText;
+      }
+    }
+
+    // Optional: Real-time validation on blur
+    document.addEventListener('DOMContentLoaded', function() {
+      const inputs = document.querySelectorAll('.field-input');
+      inputs.forEach(input => {
+        input.addEventListener('blur', () => {
+          validateForm();
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
