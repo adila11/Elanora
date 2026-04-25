@@ -17,6 +17,9 @@ passport.use(
                 let user = await User.findOne({ email });
 
                 if (user) {
+                    if (user.isBlocked) {
+                        return done(null, false, { message: "Your account has been blocked by the admin" });
+                    }
                     // Existing user
                     if (!user.googleId) {
                         user.googleId = profile.id;

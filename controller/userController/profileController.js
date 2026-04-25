@@ -24,7 +24,6 @@ export const editProfile = async (req, res) => {
         const { fullName, email, phone } = req.body;
         const userEmail = req.session.user;
 
-        // Basic Validation
         if (!fullName || fullName.trim().length < 2) {
             return res.status(400).json({
                 success: false,
@@ -46,13 +45,11 @@ export const editProfile = async (req, res) => {
             });
         }
 
-        // Find user
-        const user = await User.findOne({ email: userEmail });   // Import your User model
+        const user = await User.findOne({ email: userEmail });   
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
 
-        // Update fields
         let updated = false;
 
         if (fullName && fullName !== user.fullName) {
@@ -61,7 +58,6 @@ export const editProfile = async (req, res) => {
         }
 
         if (email && email !== user.email) {
-            // You already verified email via OTP, so we can trust it now
             user.email = email.trim().toLowerCase();
             updated = true;
         }
@@ -71,19 +67,18 @@ export const editProfile = async (req, res) => {
             updated = true;
         }
 
-        // Handle profile picture
         if (req.file) {
-            // Optional: Delete old image from Cloudinary if not default
-            if (user.profileIcon && user.profileIcon !== "default.png" && user.cloudinaryId) {
-                try {
-                    await cloudinary.uploader.destroy(user.cloudinaryId);
-                } catch (err) {
-                    console.log("Failed to delete old image:", err);
-                }
-            }
+            // if (user.profileIcon && user.profileIcon !== "default.png" && user.cloudinaryId) {
+            //     try {
+            //         await cloudinary.uploader.destroy(user.cloudinaryId);
+            //     } catch (err) {
+            //         console.log("Failed to delete old image:", err);
+            //     }
+            // }
 
-            user.profileIcon = req.file.path;           // Cloudinary URL
-            user.cloudinaryId = req.file.filename;      // Public ID for later deletion
+            console.log(req.file)
+            user.profileIcon = req.file.path;           
+            user.cloudinaryId = req.file.filename;      
             updated = true;
         }
 
@@ -105,7 +100,8 @@ export const editProfile = async (req, res) => {
                 email: user.email,
                 phone: user.phone,
                 profileIcon: user.profileIcon
-            }
+            },
+            redirect:"/profile"
         });
 
     } catch (error) {
@@ -137,7 +133,6 @@ export const editEmail = async (req, res) => {
             });
         }
 
-        // Find current user
         const user = await User.findOne({ email: req.session.user });
         if (!user) {
             return res.status(404).json({
@@ -146,7 +141,6 @@ export const editEmail = async (req, res) => {
             });
         }
 
-        // Check if new email is already taken 
         const existingUser = await User.findOne({
             email: newEmail,
             _id: { $ne: user._id }
@@ -159,7 +153,6 @@ export const editEmail = async (req, res) => {
             });
         }
 
-        // Send OTP
         await sentOtp(newEmail, "editEmail");
 
         res.json({
@@ -188,7 +181,6 @@ export const verifyEmail = async (req, res) => {
 
         const { newEmail, otp } = req.body;
 
-        // Proper Validation
         if (!newEmail) {
             return res.status(400).json({
                 success: false,
@@ -203,7 +195,6 @@ export const verifyEmail = async (req, res) => {
             });
         }
 
-        // Find OTP record
         const userOtp = await UserOtp
             .findOne({ email: newEmail })
             .sort({ createdAt: -1 });
@@ -215,7 +206,6 @@ export const verifyEmail = async (req, res) => {
             });
         }
 
-        // Check if OTP matches
         if (userOtp.otp != otp) {
             return res.status(400).json({
                 success: false,
@@ -223,7 +213,6 @@ export const verifyEmail = async (req, res) => {
             });
         }
 
-        // Check if OTP is expired (assuming you have expiresAt field)
         if (userOtp.expiresAt && Date.now() > new Date(userOtp.expiresAt).getTime()) {
             await UserOtp.deleteOne({ email: newEmail }); // cleanup
             return res.status(400).json({
@@ -232,7 +221,6 @@ export const verifyEmail = async (req, res) => {
             });
         }
 
-        // Find current user
         const user = await User.findOne({ email: req.session.user });
         if (!user) {
             return res.status(404).json({
@@ -241,12 +229,10 @@ export const verifyEmail = async (req, res) => {
             });
         }
 
-        // Update email
         user.email = newEmail;
         await user.save();
         req.session.user = newEmail ;
 
-        // Delete used OTP (Important for security)
         await UserOtp.deleteOne({ email: newEmail });
 
         res.json({
@@ -275,5 +261,7 @@ export const loadPagenotFound = async (req, res) => {
         res.status(500).send("Server error")
     }
 }
+
+
 
 

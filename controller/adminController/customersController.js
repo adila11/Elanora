@@ -16,10 +16,8 @@ export const loadUserManagement = async (req, res) => {
         const pageNum = parseInt(page);
         const limitNum = parseInt(limit);
 
-        // Build query
         let query = {};
 
-        // Search by name or email
         if (search) {
             query.$or = [
                 { fullName: { $regex: search, $options: 'i' } },
@@ -27,14 +25,12 @@ export const loadUserManagement = async (req, res) => {
             ];
         }
 
-        // Status filter
         if (status === 'active') {
             query.isBlocked = false;
         } else if (status === 'blocked') {
             query.isBlocked = true;
         }
 
-        // Sort options
         let sortOption = {};
         if (sort === 'newest') {
             sortOption = { createdAt: -1 };
@@ -42,16 +38,14 @@ export const loadUserManagement = async (req, res) => {
             sortOption = { createdAt: 1 };
         }
 
-        // Get total count for pagination
         const totalUsers = await User.countDocuments(query);
         const totalPages = Math.ceil(totalUsers / limitNum);
 
-        // Fetch users with pagination
         const users = await User.find(query)
             .sort(sortOption)
             .skip((pageNum - 1) * limitNum)
             .limit(limitNum)
-            .lean(); // Use lean for better performance
+            .lean(); 
 
         res.render("admin/customers", {
             title: "Customers",

@@ -7,6 +7,7 @@
   <title>Profile - Elanora</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
   
   <style>
     *, *::before, *::after {
@@ -150,33 +151,7 @@
       background: #fff;
     }
 
-    #toast {
-      position: fixed;
-      bottom: 28px;
-      right: 28px;
-      z-index: 999;
-      padding: 13px 20px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      font-family: 'DM Sans', sans-serif;
-      background: #2c2c2c;
-      color: #fff;
-      transform: translateY(14px);
-      opacity: 0;
-      transition: all 0.25s ease;
-      pointer-events: none;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    }
 
-    #toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    #toast.success { background: #166534; }
-    #toast.error { background: #991b1b; }
-    #toast.info { background: #1e3a5f; }
   </style>
 </head>
 
@@ -213,7 +188,7 @@
 
             <div id="profilePreviewContainer" style="position:relative; width:120px; height:120px; margin:0 auto;">
               <img id="profilePreview" 
-                   src="/uploads/profile/<%= user.profileIcon || 'default.png' %>" 
+                   src="<%= user.profileIcon ? (user.profileIcon.startsWith('http') ? user.profileIcon : '/' + user.profileIcon.replace('public/', '')) : '/uploads/profile/default.png' %>" 
                    alt="Profile Picture"
                    style="width:120px; height:120px; object-fit:cover; border-radius:9999px; border:4px solid #e8e0d0;">
 
@@ -226,7 +201,6 @@
             </div>
 
             <div style="margin-top:12px;">
-              <input type="file" id="profileUpload" name="profileIcon" accept="image/*" style="display:none;" onchange="previewImage(event)">
               <button type="button" onclick="document.getElementById('profileUpload').click()" id="changePhotoBtn"
                       style="display:none;" class="btn-outline text-sm">
                 Choose New Photo
@@ -237,6 +211,8 @@
 
         <!-- Main Profile Form -->
         <form id="profileForm" method="POST" action="/profile" enctype="multipart/form-data">
+          <input type="file" id="profileUpload" name="profileIcon" accept="image/*" style="display:none;" onchange="previewImage(event)">
+
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
 
             <div style="grid-column:span 2;">
@@ -304,10 +280,15 @@
           Verify & Update Email
         </button>
         
-        <button onclick="sendOtp(true)" 
-                style="width:100%; background:none; border:none; font-size:0.82rem; color:#999; cursor:pointer; font-family:'DM Sans',sans-serif; padding:4px;">
-          Resend Code
-        </button>
+        <div style="text-align:center; margin-top:10px;">
+          <button id="resendBtn" onclick="sendOtp(true)" 
+                  style="background:none; border:none; font-size:0.82rem; color:#c49a2a; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:600;">
+            Resend Code
+          </button>
+          <span id="timerContainer" style="font-size:0.82rem; color:#999; margin-left:8px; display:none;">
+            in <span id="timerValue">60</span>s
+          </span>
+        </div>
       </div>
 
       <button onclick="closeEmailModal()" 
@@ -317,20 +298,38 @@
     </div>
   </div>
 
-  <div id="toast"></div>
+  <!-- Image Cropping Modal -->
+  <div id="cropperModal" class="modal-backdrop" style="z-index: 300;">
+    <div class="modal-card" style="max-width: 500px;">
+      <h4 style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:700; color:#2c2c2c; margin-bottom:12px;">
+        Crop Profile Picture
+      </h4>
+      <div style="width: 100%; max-height: 400px; margin-bottom: 20px;">
+        <img id="imageToCrop" style="max-width: 100%; display: block;">
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <button type="button" id="cropBtn" class="btn-gold" style="flex: 1; justify-content: center;">Crop & Save</button>
+        <button type="button" onclick="closeCropperModal()" class="btn-outline" style="flex: 1; justify-content: center;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
 
   <%- include('partials/user/footer') %>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   <script>
     // Original values for cancel functionality
     const orig = {
       fullName: document.getElementById('fullName').value,
       email: document.getElementById('email').value,
       phone: document.getElementById('phone').value,
-      profileIcon: "<%= user.profileIcon || 'default.png' %>"
+      profileIcon: "<%= user.profileIcon ? (user.profileIcon.startsWith('http') ? user.profileIcon : user.profileIcon.replace('public/', '')) : 'default.png' %>"
     };
 
     let selectedFile = null;
+    let cropper = null;
+    let croppedFile = null;
 
     function enableEdit() {
       ['fullName', 'email', 'phone'].forEach(id => {
@@ -353,9 +352,12 @@
       document.getElementById('phone').disabled = true;
 
       // Reset image
-      document.getElementById('profilePreview').src = `/uploads/profile/${orig.profileIcon}`;
+      const resetSrc = orig.profileIcon.startsWith('http') ? orig.profileIcon : (orig.profileIcon.startsWith('/') ? orig.profileIcon : '/' + orig.profileIcon);
+      document.getElementById('profilePreview').src = resetSrc;
+      
       document.getElementById('profileUpload').value = '';
       selectedFile = null;
+      croppedFile = null;
 
       // Reset UI
       document.getElementById('editBtn').style.display = 'block';
@@ -371,17 +373,58 @@
       if (!file) return;
 
       if (file.size > 2 * 1024 * 1024) {
-        showToast('Image size must be less than 2MB', 'error');
+        if (typeof window.showToast === 'function') window.showToast('Image size must be less than 2MB', 'error');
         return;
       }
 
       selectedFile = file;
       const reader = new FileReader();
       reader.onload = function (e) {
-        document.getElementById('profilePreview').src = e.target.result;
+        document.getElementById('imageToCrop').src = e.target.result;
+        document.getElementById('cropperModal').classList.add('open');
+
+        if (cropper) {
+          cropper.destroy();
+        }
+
+        cropper = new Cropper(document.getElementById('imageToCrop'), {
+          aspectRatio: 1,
+          viewMode: 1,
+          autoCropArea: 0.8,
+          responsive: true,
+        });
       };
       reader.readAsDataURL(file);
+      // Reset value so same file can trigger change again if cancelled
+      event.target.value = '';
     }
+
+    function closeCropperModal() {
+      document.getElementById('cropperModal').classList.remove('open');
+      if (cropper) {
+        cropper.destroy();
+        cropper = null;
+      }
+    }
+
+    document.getElementById('cropBtn').addEventListener('click', function() {
+      if (!cropper) return;
+      const canvas = cropper.getCroppedCanvas({
+        width: 500,
+        height: 500,
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high',
+      });
+
+      // Show preview on main screen
+      document.getElementById('profilePreview').src = canvas.toDataURL('image/jpeg', 0.9);
+
+      // Create Blob for backend upload
+      canvas.toBlob(function(blob) {
+        croppedFile = new File([blob], 'profile_cropped.jpg', { type: 'image/jpeg' });
+        closeCropperModal();
+      }, 'image/jpeg', 0.9);
+    });
 
     function onEmailChange() {
       const changed = document.getElementById('email').value.trim() !== orig.email;
@@ -389,14 +432,14 @@
       document.getElementById('emailWarning').style.display = changed ? 'block' : 'none';
     }
 
-    // Form Submission
+    // Form Submission - Now refreshes the page after successful update
     document.getElementById('profileForm').addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const currentEmail = document.getElementById('email').value.trim();
 
       if (currentEmail !== orig.email) {
-        showToast('Please verify your new email before saving changes.', 'error');
+        if (typeof window.showToast === 'function') window.showToast('Please verify your new email before saving changes.', 'error');
         return;
       }
 
@@ -407,6 +450,10 @@
 
       const formData = new FormData(this);
 
+      if (croppedFile) {
+        formData.set('profileIcon', croppedFile);
+      }
+
       try {
         const res = await fetch('/profile', {
           method: 'POST',
@@ -416,21 +463,22 @@
         const data = await res.json();
 
         if (res.ok && data.success) {
-          showToast(data.message || 'Profile updated successfully!', 'success');
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Profile updated successfully!', 'success');
 
-          // Update original values
-          orig.fullName = document.getElementById('fullName').value;
-          orig.email = document.getElementById('email').value;
-          orig.phone = document.getElementById('phone').value;
+          // Refresh the entire page after successful update
+          // This ensures header, sidebar, and profile picture are updated from server
+          setTimeout(() => {
+            window.location.reload();
+          }, 1200);
 
-          cancelEdit(); // Reset UI
         } else {
-          showToast(data.message || 'Failed to update profile', 'error');
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to update profile', 'error');
+          saveBtn.textContent = originalText;
+          saveBtn.disabled = false;
         }
       } catch (err) {
         console.error(err);
-        showToast('Network error. Please try again.', 'error');
-      } finally {
+        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
         saveBtn.textContent = originalText;
         saveBtn.disabled = false;
       }
@@ -453,14 +501,45 @@
       if (e.target === document.getElementById('emailModal')) closeEmailModal();
     }
 
-    // Send OTP
+    let timerInterval = null;
+    let timeLeft = 60;
+
+    function startTimer() {
+      const resendBtn = document.getElementById('resendBtn');
+      const timerContainer = document.getElementById('timerContainer');
+      const timerValue = document.getElementById('timerValue');
+      
+      clearInterval(timerInterval);
+      timeLeft = 60;
+      resendBtn.style.opacity = '0.5';
+      resendBtn.style.pointerEvents = 'none';
+      resendBtn.style.color = '#999';
+      timerContainer.style.display = 'inline';
+      timerValue.textContent = timeLeft;
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerValue.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          resendBtn.style.opacity = '1';
+          resendBtn.style.pointerEvents = 'all';
+          resendBtn.style.color = '#c49a2a';
+          timerContainer.style.display = 'none';
+        }
+      }, 1000);
+    }
+
     async function sendOtp(isResend = false) {
       const newEmail = document.getElementById('newEmailInput').value.trim();
 
       if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
-        showToast('Please enter a valid email address.', 'error');
+        if (typeof window.showToast === 'function') window.showToast('Please enter a valid email address.', 'error');
         return;
       }
+
+      const resendBtn = document.getElementById('resendBtn');
+      if (isResend && resendBtn.style.pointerEvents === 'none') return;
 
       try {
         const res = await fetch('/profile/email/send-otp', {
@@ -475,23 +554,25 @@
           document.getElementById('otpEmailLabel').textContent = newEmail;
           document.getElementById('step1').style.display = 'none';
           document.getElementById('step2').style.display = 'block';
-          showToast(isResend ? 'Code resent successfully!' : 'Verification code sent!', 'success');
+          
+          startTimer();
+          
+          if (typeof window.showToast === 'function') window.showToast(isResend ? 'Code resent successfully!' : 'Verification code sent!', 'success');
         } else {
-          showToast(data.message || 'Could not send OTP.', 'error');
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Could not send OTP.', 'error');
         }
       } catch (err) {
         console.error(err);
-        showToast('Something went wrong. Please try again.', 'error');
+        if (typeof window.showToast === 'function') window.showToast('Something went wrong. Please try again.', 'error');
       }
     }
 
-    // Verify OTP - Updated to match your backend
     async function verifyOtp() {
       const otp = document.getElementById('otpInput').value.trim();
       const newEmail = document.getElementById('newEmailInput').value.trim();
 
       if (!otp || otp.length !== 6) {
-        showToast('Please enter a valid 6-digit verification code.', 'error');
+        if (typeof window.showToast === 'function') window.showToast('Please enter a valid 6-digit verification code.', 'error');
         return;
       }
 
@@ -505,36 +586,24 @@
         const data = await res.json();
 
         if (res.ok && data.success) {
-          // Update email in form and original values
           document.getElementById('email').value = newEmail;
           orig.email = newEmail;
 
-          // Hide verification elements
           document.getElementById('verifyEmailBtn').style.display = 'none';
           document.getElementById('emailWarning').style.display = 'none';
 
           closeEmailModal();
-          showToast(data.message || 'Email updated successfully!', 'success');
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Email updated successfully!', 'success');
         } else {
-          showToast(data.message || 'Invalid or expired code.', 'error');
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Invalid or expired code.', 'error');
         }
       } catch (err) {
         console.error(err);
-        showToast('Network error. Please try again.', 'error');
+        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
       }
     }
 
-    // Toast Notification
-    let toastTimer;
-    function showToast(msg, type = 'info') {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.className = `show ${type}`;
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => { 
-        t.className = ''; 
-      }, 4000);
-    }
+    // SweetAlert2 is handled globally now
   </script>
 </body>
 

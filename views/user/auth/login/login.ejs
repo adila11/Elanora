@@ -31,15 +31,7 @@
             min-height: 100vh;
         }
 
-        .error-message {
-            background-color: #ffe5e5;
-            color: var(--error-color);
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            margin-bottom: 15px;
-            text-align: center;
-        }
+
 
         .field-error {
             color: var(--error-color);
@@ -193,14 +185,13 @@
             <h1>Welcome Back</h1>
             <p class="subtitle">Please enter your login details</p>
 
-            <!-- Server-side error (if any) -->
-            <% if (error) { %>
-                <div class="error-message">
-                    <%= error %>
+            <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+                <div id="authError" style="background: #fcecea; color: #c0392b; padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; border: 1px solid #fca5a5; text-align: center; font-weight: 500;">
+                    <%= error_msg[0] %>
                 </div>
-                <% } %>
+            <% } %>
 
-                    <form id="loginForm" method="post" action="/login" novalidate>
+            <form id="loginForm" method="post" action="/login" novalidate>
                         <div class="form-group">
                             <label for="email">Email Address</label>
                             <input type="email" id="email" name="email" placeholder="Enter your email">
@@ -303,16 +294,6 @@
             }
         });
 
-        // Clear server error when user starts typing
-        emailInput.addEventListener('focus', () => {
-            const serverError = document.querySelector('.error-message');
-            if (serverError) serverError.style.display = 'none';
-        });
-
-        passwordInput.addEventListener('focus', () => {
-            const serverError = document.querySelector('.error-message');
-            if (serverError) serverError.style.display = 'none';
-        });
     </script>
 
 </body>

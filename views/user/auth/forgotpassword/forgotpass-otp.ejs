@@ -264,17 +264,7 @@
             <p class="instructions">Enter the 6-digit code sent to<br><span class="user-email">as***@gmail.com</span>
             </p>
 
-            <% if (typeof messages !== 'undefined' && messages.error && messages.error.length > 0) { %>
-                <div class="error-message">
-                    <%= messages.error %>
-                </div>
-            <% } %>
 
-            <% if (typeof messages !== 'undefined' && messages.success && messages.success.length > 0) { %>
-                <div class="success-message">
-                    <%= messages.success %>
-                </div>
-            <% } %>
 
             <form id="otpForm" method="post" action="/forgotpassword-otpverify" novalidate>
 
@@ -419,9 +409,43 @@
             }, 1000);
         }
 
-        resendLink.addEventListener('click', () => {
+        resendLink.addEventListener('click', async () => {
             if (resendLink.classList.contains('disabled')) return;
-            startTimer();
+
+            try {
+                // Show loading state
+                resendLink.textContent = 'Sending...';
+                resendLink.classList.add('disabled');
+
+                const response = await fetch('/resend-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (typeof window.showToast === 'function') {
+                        window.showToast("New OTP has been sent!", "success");
+                    } else {
+                        alert("New OTP has been sent!");
+                    }
+                    startTimer();
+                } else {
+                    throw new Error(data.message || "Failed to resend OTP");
+                }
+            } catch (err) {
+                console.error(err);
+                if (typeof window.showToast === 'function') {
+                    window.showToast(err.message || "Something went wrong", "error");
+                } else {
+                    alert(err.message || "Something went wrong");
+                }
+                resendLink.textContent = 'Resend OTP';
+                resendLink.classList.remove('disabled');
+            }
         });
 
         form.addEventListener('submit', function (e) {
@@ -451,6 +475,7 @@
         window.onload = startTimer;
     </script>
 
+    <%- include('../../../partials/user/flash') %>
 </body>
 
 </html>

@@ -756,7 +756,7 @@
     const originalChecked = !isBlocked;
 
     checkbox.disabled = true;
-    showMessage('Processing...', 'info');
+    if (typeof window.showToast === 'function') window.showToast('Processing...', 'info');
 
     try {
       const res = await fetch(`/admin/customers/${userId}/toggle-block`, {
@@ -771,7 +771,7 @@
         throw new Error(data.message || 'Failed to update user status');
       }
 
-      showMessage(data.message || `User ${isBlocked ? 'blocked' : 'unblocked'} successfully`, 'success');
+      if (typeof window.showToast === 'function') window.showToast(data.message || `User ${isBlocked ? 'blocked' : 'unblocked'} successfully`, 'success');
 
       // Update status text in table
       const row = checkbox.closest('tr');
@@ -788,7 +788,7 @@
 
     } catch (err) {
       console.error(err);
-      showMessage(err.message || 'Something went wrong.', 'error');
+      if (typeof window.showToast === 'function') window.showToast(err.message || 'Something went wrong.', 'error');
       checkbox.checked = originalChecked;
     } finally {
       checkbox.disabled = false;
@@ -812,39 +812,11 @@
   }
 
   function showMessage(text, type = 'info') {
-    let existing = document.getElementById('statusMessage');
-    if (existing) existing.remove();
-
-    const msgDiv = document.createElement('div');
-    msgDiv.id = 'statusMessage';
-    msgDiv.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 14px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-      z-index: 10000;
-      max-width: 380px;
-    `;
-
-    if (type === 'success') {
-      msgDiv.style.background = '#2d7a4f';
-      msgDiv.style.color = 'white';
-    } else if (type === 'error') {
-      msgDiv.style.background = '#e74c3c';
-      msgDiv.style.color = 'white';
+    if (typeof window.showToast === 'function') {
+      window.showToast(text, type);
     } else {
-      msgDiv.style.background = '#333';
-      msgDiv.style.color = 'white';
+      alert(text);
     }
-
-    msgDiv.textContent = text;
-    document.body.appendChild(msgDiv);
-
-    setTimeout(() => msgDiv.remove(), 4000);
   }
 
   // Initialize toggle labels
@@ -881,5 +853,6 @@
     if (e.target === this) closeModal();
   });
 </script>
+<%- include('../partials/user/flash') %>
 </body>
 </html>

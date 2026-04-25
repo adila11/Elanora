@@ -114,16 +114,7 @@
             margin-top: 5px;
             display: none;
         }
-        .general-error {
-            background: #ffebee;
-            color: var(--error-color);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            margin-bottom: 20px;
-            display: none;
-            text-align: left;
-        }
+
         .referral-link {
             display: block;
             text-align: left;
@@ -286,8 +277,7 @@
             <h1>Create Account</h1>
             <p class="subtitle">Join us to explore our jewelry world</p>
 
-            <!-- General Error Message -->
-            <div class="general-error" id="generalError"></div>
+
 
             <form id="signupForm">
                 <div class="form-group">
@@ -428,14 +418,15 @@
         }
 
         function showGeneralError(message) {
-            const generalError = document.getElementById('generalError');
-            generalError.textContent = message;
-            generalError.style.display = 'block';
+            if (typeof window.showToast === 'function') {
+                window.showToast(message, 'error');
+            } else {
+                alert(message);
+            }
         }
 
         function clearGeneralError() {
-            const generalError = document.getElementById('generalError');
-            generalError.style.display = 'none';
+            // No action needed for toasts
         }
 
         // Validation functions
@@ -596,5 +587,6 @@
             }
         });
     </script>
+    <%- include('../../../partials/user/flash') %>
 </body>
 </html>

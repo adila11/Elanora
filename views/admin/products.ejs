@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — Elanora Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f4f0;
+    --sidebar-bg: #fafaf8;
+    --card: #ffffff;
+    --border: #e8e6e0;
+    --text: #1a1a18;
+    --muted: #7a7870;
+    --accent: #c8a96e;
+    --accent-light: #f5edd8;
+    --green: #2d7a4f;
+    --green-bg: #e8f5ee;
+    --red: #c0392b;
+    --red-bg: #fcecea;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .content { flex: 1; overflow-y: auto; padding: 28px; }
+
+  .products-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .btn-add {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-add:hover { background: #b38a4f; transform: translateY(-1px); }
+
+  .table-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .table-toolbar {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .search-wrap {
+    flex: 1;
+    max-width: 380px;
+    position: relative;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--muted);
+  }
+  .search-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px 10px 42px;
+    font-size: 13.5px;
+    outline: none;
+  }
+  .search-input:focus { border-color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    text-align: left;
+    padding: 16px 24px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody td {
+    padding: 16px 24px;
+    font-size: 13.8px;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr:hover { background: var(--accent-light); }
+
+  .prod-cell { display: flex; align-items: center; gap: 14px; }
+  .prod-thumb {
+    width: 52px; height: 52px; border-radius: 8px; object-fit: cover;
+    border: 1px solid var(--border);
+  }
+  .prod-name { font-weight: 500; }
+  .prod-id { font-size: 11px; color: var(--muted); font-family: monospace; }
+
+  .price-cell { font-weight: 600; }
+  .status-pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  .status-listed { background: var(--green-bg); color: var(--green); }
+  .status-unlisted { background: var(--red-bg); color: var(--red); }
+
+  .actions-cell {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .action-btn {
+    width: 34px; height: 34px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .action-btn:hover { background: var(--accent-light); }
+  .action-btn.danger:hover { background: var(--red-bg); border-color: #fca5a5; color: var(--red); }
+</style>
+</head>
+<body>
+
+  <%- include('partials/admin/sidebar') %>
+
+  <div class="main">
+    <%- include('partials/admin/header') %>
+
+    <div class="content">
+
+      <div class="products-header">
+        <div class="page-title" style="font-size: 20px; font-weight: 600;">Products</div>
+        <a class="btn-add" href="/admin/products/add">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add New Product
+        </a>
+      </div>
+
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search products..." value="<%= search %>" onkeyup="if(event.key==='Enter') applyFilters()">
+          </div>
+          <div class="filter-wrap">
+            <select id="statusFilter" class="search-input" style="padding-left:14px; min-width:150px;" onchange="applyFilters()">
+              <option value="all" <%= status === 'all' ? 'selected' : '' %>>All Status</option>
+              <option value="listed" <%= status === 'listed' ? 'selected' : '' %>>Listed Only</option>
+              <option value="unlisted" <%= status === 'unlisted' ? 'selected' : '' %>>Unlisted Only</option>
+            </select>
+          </div>
+          <div class="sort-wrap">
+            <select id="sortSelect" class="search-input" style="padding-left:14px; min-width:180px;" onchange="applyFilters()">
+              <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Newest First</option>
+              <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Price: Low to High</option>
+              <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Price: High to Low</option>
+              <option value="stock-asc" <%= sort === 'stock-asc' ? 'selected' : '' %>>Stock: Low to High</option>
+              <option value="name-asc" <%= sort === 'name-asc' ? 'selected' : '' %>>Name: A-Z</option>
+            </select>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody">
+            <% if (products && products.length > 0) { %>
+              <% products.forEach(p => { %>
+                <% 
+                  const firstVariant = p.variants && p.variants.length > 0 ? p.variants[0] : null;
+                  const imageUrl = firstVariant && firstVariant.images && firstVariant.images.length > 0 
+                                  ? firstVariant.images[0].url 
+                                  : 'https://via.placeholder.com/100';
+                  const price = p.discountPrice || p.basePrice;
+                  const totalStock = p.variants ? p.variants.reduce((sum, v) => sum + (v.stock || 0), 0) : 0;
+                %>
+                <tr>
+                  <td>
+                    <div class="prod-cell">
+                      <img class="prod-thumb" src="<%= imageUrl %>">
+                      <div>
+                        <div class="prod-name"><%= p.name %></div>
+                        <div class="prod-id"><%= p._id %></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><%= p.category?.name || 'Uncategorized' %></td>
+                  <td class="price-cell">₹<%= price.toLocaleString('en-IN') %></td>
+                  <td>
+                    <span style="color: <%= totalStock === 0 ? 'var(--red)' : totalStock < 10 ? '#c05c1a' : 'var(--text)' %>; font-weight:500;">
+                      <%= totalStock %>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="status-pill <%= p.isListed ? 'status-listed' : 'status-unlisted' %>">
+                      <%= p.isListed ? 'Listed' : 'Unlisted' %>
+                    </span>
+                  </td>
+                  <td class="actions-cell">
+                    <button class="action-btn" title="Edit" onclick="location.href='/admin/products/edit/<%= p._id %>'">✏️</button>
+                    <button class="action-btn" title="<%= p.isListed ? 'Unlist' : 'List' %>" onclick="toggleStatus('<%= p._id %>', <%= p.isListed %>)">
+                      <%= p.isListed ? '↓' : '↑' %>
+                    </button>
+                    <button class="action-btn danger" title="Delete" onclick="confirmDelete('<%= p._id %>')">🗑</button>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr><td colspan="6" style="text-align:center; padding:40px; color:var(--muted);">No products found.</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+
+        <!-- PAGINATION -->
+        <% if (totalPages > 1) { %>
+        <div style="padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border);">
+          <div style="font-size: 13.5px; color: var(--muted);">
+            Showing <%= (currentPage - 1) * limit + 1 %> to <%= Math.min(currentPage * limit, totalProducts) %> of <%= totalProducts %> products
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <a href="?page=<%= currentPage - 1 %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>" 
+               class="action-btn <%= currentPage <= 1 ? 'disabled' : '' %>" style="width: auto; padding: 0 12px; text-decoration: none; <%= currentPage <= 1 ? 'pointer-events: none; opacity: 0.5;' : '' %>">
+              ← Previous
+            </a>
+            <% for(let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>" 
+                 class="action-btn <%= i === currentPage ? 'active' : '' %>" 
+                 style="width: 34px; text-decoration: none; <%= i === currentPage ? 'background: var(--accent); color: white; border-color: var(--accent);' : '' %>">
+                <%= i %>
+              </a>
+            <% } %>
+            <a href="?page=<%= currentPage + 1 %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>" 
+               class="action-btn <%= currentPage >= totalPages ? 'disabled' : '' %>" style="width: auto; padding: 0 12px; text-decoration: none; <%= currentPage >= totalPages ? 'pointer-events: none; opacity: 0.5;' : '' %>">
+              Next →
+            </a>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function applyFilters() {
+      const search = document.getElementById('searchInput').value;
+      const status = document.getElementById('statusFilter').value;
+      const sort = document.getElementById('sortSelect').value;
+      location.href = `?page=1&search=${encodeURIComponent(search)}&status=${status}&sort=${sort}`;
+    }
+
+    async function toggleStatus(id, currentlyListed) {
+      const action = currentlyListed ? 'unlist' : 'list';
+      const result = await Swal.fire({
+        title: `Confirm ${action}`,
+        text: `Are you sure you want to ${action} this product?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: currentlyListed ? 'var(--red)' : 'var(--green)',
+        confirmButtonText: `Yes, ${action} it!`
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch(`/admin/products/${id}/toggle`, { method: 'PATCH' });
+          const data = await res.json();
+          if (data.success) {
+            Swal.fire('Updated!', data.message, 'success').then(() => location.reload());
+          }
+        } catch (err) {
+          Swal.fire('Error', 'Failed to update status', 'error');
+        }
+      }
+    }
+
+    async function confirmDelete(id) {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: 'var(--red)',
+        confirmButtonText: 'Yes, delete it!'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch(`/admin/products/${id}`, { method: 'DELETE' });
+          const data = await res.json();
+          if (data.success) {
+            Swal.fire('Deleted!', data.message, 'success').then(() => location.reload());
+          }
+        } catch (err) {
+          Swal.fire('Error', 'Deletion failed', 'error');
+        }
+      }
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>

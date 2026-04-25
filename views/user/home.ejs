@@ -404,11 +404,6 @@
   </div>
   <div class="hero-image">
     <img src="images/home/Mainpic.jpeg" alt="Model wearing luxury jewelry" onerror="this.parentElement.innerHTML='<div class=img-placeholder><span>Hero Image</span></div>'"/>
-    <div class="hero-badge">
-      <img class="badge-img" src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=80&q=80" alt="Earring" onerror="this.style.display='none'"/>
-      <div class="badge-text">
-        <strong>Beautiful in Every Detail</strong>
-        <span>Learn More →</span>
       </div>
     </div>
   </div>
@@ -449,7 +444,7 @@
 <!-- ABOUT -->
 <section class="about">
   <div class="about-image">
-    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Woman with jewelry" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:500px><span>About Image</span></div>'"/>
+    <img src="images/home/Mainpic2.jpeg" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:500px><span>About Image</span></div>'"/>
   </div>
   <div class="about-content">
     <h2>The Art Of<br><em>Radiant</em> Refinement</h2>
@@ -457,7 +452,7 @@
     <p>From delicate everyday essentials to breathtaking statement pieces, discover jewellery that celebrates life's most precious moments with unparalleled elegance.</p>
     <a href="#" class="btn-outline">Learn More</a>
     <div class="about-badge">
-      <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=120&q=80" alt="Jewelry detail" onerror="this.style.display='none'"/>
+      <img src="images/home/Mainpic4.jpeg" alt="Jewelry detail" onerror="this.style.display='none'"/>
     </div>
   </div>
 </section>
@@ -472,65 +467,59 @@
     <a href="#" class="btn-see-all">See More →</a>
   </div>
   <div class="products-grid">
-    <div class="product-card">
-      <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80" alt="Gold Geometric Ring" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:240px><span>Product</span></div>'"/>
-      <div class="product-info">
-        <h3>Gold Geometric Ring</h3>
-        <div class="price">₹4000</div>
+    <% if (products && products.length > 0) { %>
+      <% products.forEach(p => { %>
+        <% 
+           const firstVariant = p.variants && p.variants.length > 0 ? p.variants[0] : null;
+           const imageUrl = firstVariant && firstVariant.images && firstVariant.images.length > 0 
+                           ? firstVariant.images[0].url 
+                           : 'https://via.placeholder.com/400';
+           const price = p.discountPrice || p.basePrice;
+        %>
+        <div class="product-card" onclick="location.href='/product/<%= p._id %>'" style="cursor:pointer">
+          <img src="<%= imageUrl %>" alt="<%= p.name %>" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:240px><span>Product</span></div>'"/>
+          <div class="product-info">
+            <h3><%= p.name %></h3>
+            <div class="price">₹<%= price.toLocaleString('en-IN') %></div>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--muted);">
+        <p>Stay tuned for our latest collections!</p>
       </div>
-    </div>
-    <div class="product-card">
-      <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80" alt="Gold Snake Chain" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:240px><span>Product</span></div>'"/>
-      <div class="product-info">
-        <h3>Gold Snake Chain</h3>
-        <div class="price">₹7000</div>
-      </div>
-    </div>
-    <div class="product-card">
-      <img src="https://images.unsplash.com/photo-1535556116002-6281ff3e9f36?w=600&q=80" alt="Gold Flower Earrings" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:240px><span>Product</span></div>'"/>
-      <div class="product-info">
-        <h3>Gold Flower Earrings</h3>
-        <div class="price">₹4000</div>
-      </div>
-    </div>
+    <% } %>
   </div>
 </section>
-
+ 
 <!-- CATEGORY CHOOSER -->
 <div class="category">
   <div class="category-image">
-    <img src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=600&q=80" alt="Jewelry model" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:360px><span>Category Image</span></div>'"/>
+    <img src="images/home/Mainpic3.jpeg" alt="Jewelry model" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:360px><span>Category Image</span></div>'"/>
   </div>
   <div class="category-content">
     <h2>Choose The Type!</h2>
     <p>Find the perfect piece that speaks to your style. Browse our collection by category to discover your next jewel.</p>
     <div class="category-types">
-      <div class="type-item">
-        <div class="type-thumb">
-          <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=80&q=80" alt="Ring" onerror="this.style.display='none'"/>
-        </div>
-        <span>Ring</span>
-      </div>
-      <div class="type-item">
-        <div class="type-thumb">
-          <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=80&q=80" alt="Necklace" onerror="this.style.display='none'"/>
-        </div>
-        <span>Necklace</span>
-      </div>
-      <div class="type-item">
-        <div class="type-thumb">
-          <img src="https://images.unsplash.com/photo-1535556116002-6281ff3e9f36?w=80&q=80" alt="Bangles" onerror="this.style.display='none'"/>
-        </div>
-        <span>Bangles</span>
-      </div>
+      <% if (categories && categories.length > 0) { %>
+        <% categories.forEach(cat => { %>
+          <div class="type-item" onclick="location.href='/shop?category=<%= cat._id %>'" style="cursor:pointer">
+            <div class="type-thumb">
+              <div class="img-placeholder" style="background: var(--gold-pale); border: none; width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                <span style="font-size: 14px; opacity: 1; color: var(--gold); font-weight: 600;"><%= cat.name.substring(0, 1) %></span>
+              </div>
+            </div>
+            <span><%= cat.name %></span>
+          </div>
+        <% }) %>
+      <% } %>
     </div>
   </div>
 </div>
 
-<!-- FOOTER -->
-<footer>
- <%- include('partials/user/footer') %>
-</footer>
+<%- include('partials/user/footer') %>
 
+<script>
+</script>
 </body>
 </html>

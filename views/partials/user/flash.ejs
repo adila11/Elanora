@@ -1,0 +1,48 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // Global SweetAlert2 Toast configuration
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'bottom-end',
+    showConfirmButton: false,
+    timer: 4000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  });
+
+  // Reusable function for frontend Fetch/AJAX requests
+  window.showToast = function(message, type = 'success') {
+    Toast.fire({
+      icon: type,
+      title: message
+    });
+  };
+
+  // Automatically trigger toasts for Server-Side Flash Messages
+  document.addEventListener("DOMContentLoaded", function() {
+    <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
+      Toast.fire({
+        icon: 'success',
+        title: '<%= success_msg[0] %>'
+      });
+    <% } %>
+
+    <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+      Toast.fire({
+        icon: 'error',
+        title: '<%= error_msg[0] %>'
+      });
+    <% } %>
+
+    // Handle legacy 'error' variable if passed directly via res.render
+    <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+      Toast.fire({
+        icon: 'error',
+        title: '<%= error %>'
+      });
+    <% } %>
+  });
+</script>

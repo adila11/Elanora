@@ -27,8 +27,7 @@ export const resetpassword = async (req, res) => {
 
         const { oldPassword, newPassword, confirmPassword } = req.body;
 
-        // ← Now this will work perfectly
-        console.log(req.body);        // You will see the data here
+        console.log(req.body);        
 
         if (!oldPassword || !newPassword || !confirmPassword) {
             return res.status(400).json({
@@ -41,7 +40,7 @@ export const resetpassword = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
-                field: "old",           // optional: helps frontend show error in correct field
+                field: "old",         
                 message: "Old password is incorrect"
             });
         }
@@ -75,9 +74,8 @@ export const resetpassword = async (req, res) => {
         user.password = hashedPassword;
         await user.save();
 
-        // Success
         req.flash("success", "Password updated successfully");
-        return res.json({ success: true });   // or redirect if you prefer
+        return res.json({ success: true });   
 
     } catch (error) {
         console.log(error);

@@ -1,18 +1,19 @@
 import multer from "multer";
-import pkg from "multer-storage-cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "./cloudinary.js";
 
-const { CloudinaryStorage } = pkg;
-
+// Cloudinary storage config
 const storage = new CloudinaryStorage({
-    cloudinary,
+    cloudinary: cloudinary,
     params: {
-        folder: "elanora_profiles",
-        allowed_formats: ["jpg", "png", "jpeg", "webp"],
-        transformation: [{ width: 500, height: 500, crop: "limit" }]
+        folder: "elanora/profiles",
+        allowed_formats: ["jpg", "jpeg", "png", "webp"]
     }
 });
 
-const upload = multer({ storage });
+const upload = multer({
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // optional: 5MB limit
+});
 
 export default upload;

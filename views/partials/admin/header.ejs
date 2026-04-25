@@ -1,4 +1,160 @@
 <!-- partials/admin/header.ejs -->
+<style>
+  /* Topbar Styles */
+  .topbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    gap: 20px;
+    height: 68px;
+    flex-shrink: 0;
+  }
+
+  .page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .search-wrap {
+    flex: 1;
+    max-width: 380px;
+    position: relative;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px 10px 42px;
+    font-size: 13.5px;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  .search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(200, 169, 110, 0.1);
+  }
+
+  /* Topbar Right Section */
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* Notification Button */
+  .icon-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .icon-btn:hover {
+    background: var(--accent-light);
+  }
+
+  .icon-btn svg {
+    width: 20px;
+    height: 20px;
+    color: var(--muted);
+  }
+
+  .notif-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+    border: 2px solid var(--card);
+    border-radius: 50%;
+    display: none;
+  }
+
+  .notif-dot.active {
+    display: block;
+  }
+
+  /* User Profile Pill */
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px 6px 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .user-pill:hover {
+    background: var(--accent-light);
+    border-color: var(--accent);
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  .user-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .user-role {
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+
+  .user-pill svg {
+    margin-left: 4px;
+    color: var(--muted);
+  }
+</style>
+
 <header class="topbar">
   <div class="page-title"><%= title || 'Dashboard' %></div>
 
@@ -7,7 +163,7 @@
       <circle cx="11" cy="11" r="8"/>
       <line x1="21" y1="21" x2="16.65" y2="16.65"/>
     </svg>
-    <input class="search-input" type="text" placeholder="Search..." id="globalSearch">
+    <input class="search-input" type="text" placeholder="Search products, orders..." id="globalSearch">
   </div>
 
   <div class="topbar-right">
@@ -27,7 +183,7 @@
         <div class="user-name">Elanora Admin</div>
         <div class="user-role">Store Manager</div>
       </div>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="6 9 12 15 18 9"/>
       </svg>
     </div>

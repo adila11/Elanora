@@ -128,6 +128,17 @@
             text-decoration: none;
         }
 
+        .resend-link {
+            color: var(--primary-gold);
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .resend-link:hover {
+            color: #A67C3D;
+        }
+
         footer {
             background-color: var(--footer-bg);
             padding: 60px 8% 30px;
@@ -255,9 +266,12 @@
     const inputs = document.querySelectorAll(".otp-field");
     const form = document.querySelector("form");
     const hiddenOtp = document.getElementById("otp");
+    const resendText = document.querySelector(".resend-text");
+    let timerInterval = null;
+    let timeLeft = 25;
 
+    // OTP input handling
     inputs.forEach((input, index) => {
-
         // only numbers
         input.addEventListener("input", (e) => {
             input.value = input.value.replace(/[^0-9]/g, "");
@@ -275,6 +289,7 @@
         });
     });
 
+    // Form submit - combine OTP
     form.addEventListener("submit", (e) => {
         let otp = "";
 
@@ -284,13 +299,121 @@
 
         if (otp.length !== 6) {
             e.preventDefault();
-            alert("Enter full 6-digit OTP");
+            if (typeof window.showToast === 'function') {
+                window.showToast("Enter full 6-digit OTP", "error");
+            } else {
+                alert("Enter full 6-digit OTP");
+            }
             return;
         }
 
         hiddenOtp.value = otp;
     });
+
+    // ==================== TIMER + RESEND FUNCTIONALITY ====================
+    function updateResendUI() {
+        if (timeLeft > 0) {
+            resendText.innerHTML = `Didn't receive the code? Resend in <span class="timer">${timeLeft}s</span>`;
+        } else {
+            resendText.innerHTML = `Didn't receive the code? <span class="resend-link" id="resend-btn">Resend OTP</span>`;
+            
+            const resendBtn = document.getElementById("resend-btn");
+            if (resendBtn) {
+                resendBtn.addEventListener("click", handleResend);
+            }
+        }
+    }
+
+    function startTimer() {
+        // Clear any existing interval
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+
+        timeLeft = 25;
+        updateResendUI();
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateResendUI();
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }, 1000);
+    }
+
+    function handleResend(e) {
+        if (e) e.preventDefault();
+
+        // Show loading state
+        resendText.innerHTML = `Sending new OTP...`;
+        
+        // Call backend to resend OTP
+        fetch('/resend-otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                if (typeof window.showToast === 'function') {
+                    window.showToast("New OTP has been sent to your email!", "success");
+                } else {
+                    alert("New OTP has been sent to your email!");
+                }
+                
+                // Restart the 25-second cooldown
+                startTimer();
+            } else {
+                const errorMsg = data.message || "Failed to resend OTP. Please try again.";
+                if (typeof window.showToast === 'function') {
+                    window.showToast(errorMsg, "error");
+                } else {
+                    alert(errorMsg);
+                }
+                // Restore UI
+                updateResendUI();
+            }
+        })
+        .catch(error => {
+            console.error("Resend OTP error:", error);
+            if (typeof window.showToast === 'function') {
+                window.showToast("Something went wrong. Please try again later.", "error");
+            } else {
+                alert("Something went wrong. Please try again later.");
+            }
+            // Restore the resend button
+            updateResendUI();
+        });
+    }
+
+    // Start the countdown timer immediately when page loads
+    window.addEventListener("load", () => {
+        startTimer();
+    });
+
+    // Bonus: Allow pressing Enter in OTP fields to submit
+    inputs.forEach((input, index) => {
+        input.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                form.dispatchEvent(new Event("submit"));
+            }
+        });
+    });
 </script>
 
+<%- include('../../../partials/user/flash') %>
 </body>
 </html>

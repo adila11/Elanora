@@ -16,7 +16,8 @@ export const isBlocked = async (req, res, next) => {
         const user = await User.findOne({ email: userEmail });
 
         if (!user || user.isBlocked) {
-            delete req.session.user
+            delete req.session.user;
+            req.flash('error', "Your account has been blocked by the admin");
             return res.redirect("/login");
         }
 

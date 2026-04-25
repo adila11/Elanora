@@ -12,7 +12,7 @@ export const loadAddress = async (req, res) => {
         const addresses = await Address.find({
             user: user._id,
             isDelete: false
-        }).sort({ isDefault: -1, createdAt: -1 });   // Default first
+        }).sort({ isDefault: -1, createdAt: -1 });   
 
         res.render("user/address/address", {
             user,
@@ -61,7 +61,6 @@ export const addAddress = async (req, res) => {
             pincode 
         } = req.body;
 
-        // Minimal Backend Validation
         const errors = [];
 
         if (!type || type.trim() === "") {
@@ -92,7 +91,6 @@ export const addAddress = async (req, res) => {
             errors.push("Valid 6-digit pincode is required");
         }
 
-        // Return errors if validation fails
         if (errors.length > 0) {
             return res.status(400).json({ 
                 message: "Validation failed", 
@@ -100,7 +98,6 @@ export const addAddress = async (req, res) => {
             });
         }
 
-        // Check address limit
         const addressCount = await Address.countDocuments({ 
             user: user._id, 
             isDelete: false 
@@ -112,7 +109,6 @@ export const addAddress = async (req, res) => {
             });
         }
 
-        // Create and save new address
         const newAddress = new Address({
             user: user._id,
             type: type.trim(),
@@ -188,7 +184,6 @@ export const editAddress = async (req, res) => {
             pincode 
         } = req.body;
 
-        // Find the address
         const address = await Address.findOne({
             _id: id,
             user: user._id,
@@ -199,7 +194,6 @@ export const editAddress = async (req, res) => {
             return res.status(404).json({ message: "Address not found" });
         }
 
-        // Minimal Backend Validation
         const errors = [];
 
         if (!type || type.trim() === "") {
@@ -230,7 +224,6 @@ export const editAddress = async (req, res) => {
             errors.push("Valid 6-digit pincode is required");
         }
 
-        // Return validation errors if any
         if (errors.length > 0) {
             return res.status(400).json({ 
                 message: "Validation failed", 
@@ -238,7 +231,6 @@ export const editAddress = async (req, res) => {
             });
         }
 
-        // Update the address fields
         address.type = type.trim();
         address.fullName = fullName.trim();
         address.phone = phone.trim();
@@ -308,14 +300,13 @@ export const deleteAddress = async (req, res) => {
 
         const address = await Address.findOne({ 
             _id: id, 
-            user: user._id   // Important: Security check
+            user: user._id   
         });
 
         if (!address) {
             return res.status(404).json({ message: "Address not found" });
         }
 
-        // Soft delete
         address.isDelete = true;
         await address.save();
 

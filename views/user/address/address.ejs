@@ -125,9 +125,7 @@
       <!-- Main Content -->
       <main style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
 
-        <!-- Page-level Messages -->
-        <div id="pageMessageContainer"></div>
-        <div id="pageErrorContainer"></div>
+
 
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:32px;">
           <h3 id="addressCount" style="font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:700; color:#2c2c2c;">
@@ -226,23 +224,19 @@
     let currentId = null;
 
     function showPageSuccess(message) {
-      const container = document.getElementById('pageMessageContainer');
-      container.innerHTML = `
-        <div class="page-message success-msg">
-          <strong>✓ Success</strong> 
-          <span>${message}</span>
-        </div>`;
-      setTimeout(() => container.innerHTML = '', 4000);
+      if (typeof window.showToast === 'function') {
+        window.showToast(message, 'success');
+      } else {
+        alert(message);
+      }
     }
 
     function showPageError(message) {
-      const container = document.getElementById('pageErrorContainer');
-      container.innerHTML = `
-        <div class="page-message error-msg">
-          <strong>✕ Error</strong> 
-          <span>${message}</span>
-        </div>`;
-      setTimeout(() => container.innerHTML = '', 5000);
+      if (typeof window.showToast === 'function') {
+        window.showToast(message, 'error');
+      } else {
+        alert(message);
+      }
     }
 
     function showConfirmationModal(title, message, actionType, id) {

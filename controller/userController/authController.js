@@ -26,35 +26,32 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.render("user/auth/login/login", { 
-                error: "All fields are required" 
-            });
+            req.flash('error', "All fields are required");
+            return res.redirect("/login");
         }
 
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.render("user/auth/login/login", { 
-                error: "User not found" 
-            });
+            req.flash('error', "User not found");
+            return res.redirect("/login");
         }
         if (user.isBlocked) {
-            return res.render("user/auth/login/login", { 
-                error: "User Has Been Blocked By the Admin" 
-            });
+            req.flash('error', "Your account has been blocked by the admin");
+            return res.redirect("/login");
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.render("user/auth/login/login", { 
-                error: "Invalid password" 
-            });
+            req.flash('error', "Invalid password");
+            return res.redirect("/login");
         }
 
         req.session.user = user.email;
         console.log(req.session.user);
-
+        
+        req.flash('success', "Logged in successfully!");
         return res.redirect('/');
 
     } catch (error) {
@@ -225,7 +222,7 @@ export const signup = async (req, res) => {
     try {
         const { fullName, email, password, confirmPassword, referralCode, agreeTerms } = req.body;
 
-        // Basic validation
+        
         if (!fullName || !email || !password || !confirmPassword) {
             return res.status(400).json({
                 success: false,
@@ -234,7 +231,7 @@ export const signup = async (req, res) => {
             });
         }
 
-        // Check if user already exists
+
         const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
             return res.status(409).json({
@@ -244,7 +241,7 @@ export const signup = async (req, res) => {
             });
         }
 
-        // Password match
+
         if (password !== confirmPassword) {
             return res.status(400).json({
                 success: false,
@@ -263,7 +260,7 @@ export const signup = async (req, res) => {
             });
         }
 
-        // Terms agreement
+
         if (!agreeTerms) {
             return res.status(400).json({
                 success: false,
@@ -273,17 +270,17 @@ export const signup = async (req, res) => {
         }
 
 
-        // Store temp user in session
+
         req.session.tempUser = {
             name: fullName,
             email: email.toLowerCase(),
             password: password
         };
 
-        // Send OTP
+
         await sentOtp(email, "signup");
 
-        // Success response
+
         return res.status(200).json({
             success: true,
             message: "OTP sent successfully",
@@ -316,11 +313,17 @@ export const SignupOTPVerification = async (req, res) => {
         if (!tempUser) return res.redirect("/signup");
 
         const otp = req.body.otp;
-        if (!otp) return res.render("user/auth/signup/signup-otp", { error: "Please Enter the Otp " });
+        if (!otp) {
+            req.flash('error', "Please Enter the Otp");
+            return res.redirect("/signup-verification");
+        }
 
         const userOtp = await UserOtp.findOne({ email: tempUser.email })
 
-        if (userOtp.otp != otp) return res.render("user/auth/signup/signup-otp", { error: "The Otp Is Incorrect" });
+        if (userOtp.otp != otp) {
+            req.flash('error', "The Otp Is Incorrect");
+            return res.redirect("/signup-verification");
+        }
 
         const hashedPassword=await bcrypt.hash(tempUser.password,10)
 
@@ -335,28 +338,53 @@ export const SignupOTPVerification = async (req, res) => {
         await UserOtp.deleteOne({ email: tempUser.email });
 
         req.session.user = tempUser.email;
-
+        
+        req.flash('success', "Account created successfully!");
         return res.redirect('/');
 
     } catch (error) {
         console.log(error)
         return res.status(500).send("Server Error");
     }
-
 }
 
 
 
-export const logout =async(req,res)=>{
+export const logout = async (req, res) => {
     try {
-        delete req.session.user
-        return res.redirect("/")
+        delete req.session.user;
+        return res.redirect("/");
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).send("Server Error");
     }
+};
 
-}
+export const resendOtp = async (req, res) => {
+    try {
+        const tempUser = req.session.tempUser;
+        if (!tempUser) {
+            return res.status(400).json({ success: false, message: "Session expired. Please start over." });
+        }
+
+        const email = typeof tempUser === 'string' ? tempUser : tempUser.email;
+        const purpose = typeof tempUser === 'string' ? "forgotpassword" : "signup";
+
+        await sentOtp(email, purpose);
+
+        return res.status(200).json({
+            success: true,
+            message: "New OTP sent successfully"
+        });
+
+    } catch (error) {
+        console.error("Resend OTP Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to resend OTP. Please try again."
+        });
+    }
+};
 
 
 
