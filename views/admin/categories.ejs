@@ -134,6 +134,42 @@
       border-color: var(--accent);
     }
 
+    .clear-search-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%) scale(0.8);
+      width: 24px;
+      height: 24px;
+      background: var(--border);
+      border: none;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 0;
+      transition: all 0.2s;
+      z-index: 5;
+    }
+
+    .clear-search-btn.visible {
+      display: flex;
+      transform: translateY(-50%) scale(1);
+    }
+
+    .clear-search-btn:hover {
+      background: var(--accent-light);
+      color: var(--accent);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .clear-search-btn svg {
+      display: block;
+      flex-shrink: 0;
+    }
+
     /* ── Table ── */
     .table-card {
       background: var(--card);
@@ -498,8 +534,11 @@
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-            <input type="text" id="catSearch" class="search-input" placeholder="Search categories..." value="<%= search %>" onkeyup="if(event.key==='Enter') applyFilters()">
-          </div>
+              <input type="text" id="catSearch" class="search-input" placeholder="Search categories..." value="<%= search %>" oninput="toggleClearButton()" onkeyup="if(event.key==='Enter') applyFilters()">
+              <button type="button" id="clearSearchBtn" class="clear-search-btn <%= search ? 'visible' : '' %>" onclick="clearSearch()" title="Clear search">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
           <div class="filter-wrap">
             <select id="statusFilter" class="search-input" style="padding-left:14px; max-width:150px;" onchange="applyFilters()">
               <option value="all" <%= status === 'all' ? 'selected' : '' %>>All Status</option>
@@ -523,7 +562,6 @@
                 <tr>
                   <th>Category Name</th>
                   <th>Description</th>
-                  <th>Products</th>
                   <th>Status</th>
                   <th style="text-align:right">Actions</th>
                 </tr>
@@ -536,7 +574,6 @@
                       <td style="color:var(--muted);max-width:220px;">
                         <%= c.description ? (c.description.substring(0, 70) + (c.description.length > 70 ? '…' : '')) : 'No description' %>
                       </td>
-                      <td><strong><%= c.productCount || 0 %></strong> items</td>
                       <td>
                         <span class="status-pill <%= c.isActive ? 'status-active' : 'status-inactive' %>">
                           <%= c.isActive ? 'Active' : 'Inactive' %>
@@ -626,6 +663,22 @@
         const status = document.getElementById('statusFilter').value;
         const sortBy = document.getElementById('catSort').value;
         location.href = `?page=1&search=${encodeURIComponent(q)}&status=${status}&sort=${sortBy}`;
+      }
+
+      function toggleClearButton() {
+        const searchInput = document.getElementById('catSearch');
+        const clearBtn = document.getElementById('clearSearchBtn');
+        if (searchInput.value) {
+          clearBtn.classList.add('visible');
+        } else {
+          clearBtn.classList.remove('visible');
+        }
+      }
+
+      function clearSearch() {
+        document.getElementById('catSearch').value = '';
+        toggleClearButton();
+        applyFilters();
       }
 
       // ── Modal ─────────────────────────────────────────────────────────────────

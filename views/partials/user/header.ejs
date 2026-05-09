@@ -176,29 +176,33 @@
   const profileDropdown = document.getElementById('profileDropdown')
   const profileChevron = document.getElementById('profileChevron')
 
-  profileBtn.addEventListener('click', (e) => {
-    e.stopPropagation()
-    const isOpen = profileDropdown.classList.contains('open')
-    profileDropdown.classList.toggle('open', !isOpen)
-    profileChevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)'
-  })
+  if (profileBtn && profileDropdown && profileChevron) {
+    profileBtn.addEventListener('click', (e) => {
+      e.stopPropagation()
+      const isOpen = profileDropdown.classList.contains('open')
+      profileDropdown.classList.toggle('open', !isOpen)
+      profileChevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)'
+    })
 
-  document.addEventListener('click', () => {
-    profileDropdown.classList.remove('open')
-    profileChevron.style.transform = 'rotate(0deg)'
-  })
+    document.addEventListener('click', () => {
+      profileDropdown.classList.remove('open')
+      profileChevron.style.transform = 'rotate(0deg)'
+    })
+  }
 
   // Hamburger
-  const btn = document.getElementById('hamburgerBtn')
-  const menu = document.getElementById('mobileMenu')
-  const icon = document.getElementById('hamburgerIcon')
-  let open = false
+  const hamburgerBtn = document.getElementById('hamburgerBtn')
+  const mobileMenu = document.getElementById('mobileMenu')
+  const hamburgerIcon = document.getElementById('hamburgerIcon')
+  let menuOpen = false
 
-  btn.addEventListener('click', () => {
-    open = !open
-    menu.classList.toggle('hidden', !open)
-    icon.innerHTML = open
-      ? `<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>`
-      : `<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>`
-  })
+  if (hamburgerBtn && mobileMenu && hamburgerIcon) {
+    hamburgerBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen
+      mobileMenu.classList.toggle('hidden', !menuOpen)
+      hamburgerIcon.innerHTML = menuOpen
+        ? `<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>`
+        : `<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>`
+    })
+  }
 </script>

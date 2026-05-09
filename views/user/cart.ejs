@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elanora — Shopping Cart</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --cream: #faf5ef;
+      --cream-dark: #f0e8db;
+      --gold: #b8832a;
+      --gold-light: #d4a843;
+      --gold-pale: #f5e6c8;
+      --text-dark: #2a2217;
+      --text-mid: #6b5d4f;
+      --text-light: #9e8e7e;
+      --red: #c0392b;
+      --white: #ffffff;
+      --shadow: 0 2px 20px rgba(90, 60, 20, 0.08);
+      --radius: 12px;
+      --border: #e8dfd4;
+    }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 44px 40px 80px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 36px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--cream-dark);
+    }
+
+    .page-header svg {
+      color: var(--text-dark);
+      width: 28px;
+      height: 28px;
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* ── CART TABLE ── */
+    .cart-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--cream-dark);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .cart-table-header {
+      display: grid;
+      grid-template-columns: 1fr 120px 140px 100px;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--cream-dark);
+      background: #fdf9f4;
+    }
+
+    .cart-table-header span {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-light);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .cart-table-header span:not(:first-child) {
+      text-align: center;
+    }
+
+    .cart-table-header span:last-child {
+      text-align: right;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 1fr 120px 140px 100px;
+      align-items: center;
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--cream-dark);
+      transition: background 0.15s, opacity 0.3s, transform 0.3s;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item:hover {
+      background: #fdfaf6;
+    }
+
+    .item-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .item-img {
+      width: 76px;
+      height: 76px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: var(--cream-dark);
+    }
+
+    .item-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .item-details h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--text-dark);
+    }
+
+    .item-color {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .remove-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--red);
+      font-size: 0.78rem;
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      padding: 0;
+      transition: opacity 0.2s;
+    }
+
+    .remove-btn:hover {
+      opacity: 0.7;
+    }
+
+    .item-price {
+      font-size: 0.92rem;
+      color: var(--text-mid);
+      text-align: center;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      border: 1px solid var(--cream-dark);
+      border-radius: 8px;
+      overflow: hidden;
+      width: fit-content;
+      margin: 0 auto;
+    }
+
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: var(--white);
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--text-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .qty-btn:hover {
+      background: var(--gold-pale);
+      color: var(--gold);
+    }
+
+    .qty-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .qty-value {
+      width: 36px;
+      height: 32px;
+      border: none;
+      border-left: 1px solid var(--cream-dark);
+      border-right: 1px solid var(--cream-dark);
+      background: var(--white);
+      text-align: center;
+      font-size: 0.88rem;
+      font-family: 'Jost', sans-serif;
+      color: var(--text-dark);
+      font-weight: 500;
+      outline: none;
+    }
+
+    .item-total {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--gold);
+      text-align: right;
+    }
+
+    /* ── ORDER SUMMARY ── */
+    .order-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--cream-dark);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 88px;
+    }
+
+    .order-card h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 22px;
+      color: var(--text-dark);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--cream-dark);
+      font-size: 0.88rem;
+      color: var(--text-mid);
+    }
+
+    .summary-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .summary-row.total {
+      padding-top: 14px;
+      font-size: 1rem;
+      color: var(--text-dark);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .summary-row.total .total-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .free-label {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .checkout-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 15px 24px;
+      background: var(--gold);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      margin-top: 22px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .checkout-btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .checkout-btn:active {
+      transform: translateY(0);
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--cream);
+      border: 1px solid var(--cream-dark);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 14px;
+    }
+
+    .secure-badge svg {
+      color: var(--gold);
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+    }
+
+    .secure-badge p {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      line-height: 1.45;
+    }
+
+    /* ── EMPTY CART ── */
+    .empty-cart {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-cart-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--cream-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .empty-cart-icon svg {
+      width: 32px;
+      height: 32px;
+      color: var(--text-light);
+    }
+
+    .empty-cart h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+    }
+
+    .empty-cart p {
+      font-size: 0.88rem;
+      color: var(--text-light);
+      margin-bottom: 24px;
+    }
+
+    .shop-now-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .shop-now-btn:hover {
+      background: var(--gold-light);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .cart-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .order-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 24px 16px 60px;
+      }
+
+      .cart-table-header {
+        display: none;
+      }
+
+      .cart-item {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 18px 16px;
+      }
+
+      .item-price,
+      .item-total {
+        text-align: left;
+      }
+
+      .qty-control {
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <%- include('partials/user/header') %>
+
+  <!-- MAIN -->
+  <main>
+    <div class="page-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <path d="M16 10a4 4 0 0 1-8 0" />
+      </svg>
+      <h1>Shopping Cart</h1>
+    </div>
+
+    <% if (cart && cart.items.length > 0) { %>
+
+    <div class="cart-layout">
+
+      <!-- Cart Items -->
+      <div class="cart-card">
+        <div class="cart-table-header">
+          <span>Product</span>
+          <span>Price</span>
+          <span>Quantity</span>
+          <span>Total</span>
+        </div>
+
+        <% let canCheckout = true; %>
+        <% cart.items.forEach(item => { %>
+          <% const product = item.productId; %>
+          <% if (product) { %>
+            <% 
+               const variant = product.variants.find(v => v._id.toString() === item.variantId.toString()); 
+               const image = variant?.images[0]?.url || 'https://via.placeholder.com/150'; 
+               const completelyUnavailable = !product.isListed || !variant || !variant.isActive || variant.stock === 0;
+               const isOutOfStock = !completelyUnavailable && variant && variant.stock < item.qty;
+               const isAvailable = product.isListed && variant && variant.isActive && variant.stock >= item.qty;
+               
+               if (completelyUnavailable || isOutOfStock) {
+                   canCheckout = false;
+               }
+            %>
+
+            <div class="cart-item <%= completelyUnavailable ? 'unavailable' : '' %>" data-product-id="<%= product._id %>" data-variant-id="<%= item.variantId %>">
+              <div class="item-info">
+                <a href="/product/<%= product._id %>" class="item-img" style="display: block;">
+                  <img src="<%= image %>" alt="<%= product.name %>" style="<%= completelyUnavailable ? 'filter: grayscale(100%); opacity: 0.7;' : '' %>"/>
+                </a>
+
+                <div class="item-details">
+                  <a href="/product/<%= product._id %>" style="text-decoration: none; color: inherit;">
+                    <h3><%= product.name %></h3>
+                  </a>
+                  <p class="item-color">Color: <%= variant?.color || 'N/A' %></p>
+                  
+                  <% if (completelyUnavailable) { %>
+                    <p style="color: var(--red); font-size: 0.8rem; font-weight: 500; margin-bottom: 6px;">This product is out of stock.</p>
+                  <% } else if (isOutOfStock) { %>
+                    <p style="color: #d35400; font-size: 0.8rem; font-weight: 500; margin-bottom: 6px;">Only <%= variant.stock %> quantity available.</p>
+                  <% } %>
+
+                  <button class="remove-btn" onclick="removeItem(this, '<%= product._id %>', '<%= item.variantId %>')">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                    Remove
+                  </button>
+                </div>
+              </div>
+
+              <div class="item-price">₹<%= item.price.toLocaleString('en-IN') %></div>
+
+              <div class="qty-control" style="<%= completelyUnavailable ? 'opacity: 0.5; pointer-events: none;' : '' %>">
+                <button class="qty-btn" onclick="changeQty(this, -1, '<%= product._id %>', '<%= item.variantId %>')" <%= item.qty <= 1 || completelyUnavailable ? 'disabled' : '' %>>−</button>
+                <input class="qty-value" value="<%= item.qty %>" readonly />
+                <button class="qty-btn" onclick="changeQty(this, 1, '<%= product._id %>', '<%= item.variantId %>')" <%= item.qty >= 10 || completelyUnavailable || (variant && item.qty >= variant.stock) ? 'disabled' : '' %>>+</button>
+              </div>
+
+              <div class="item-total">₹<%= item.total.toLocaleString('en-IN') %></div>
+            </div>
+          <% } %>
+        <% }) %>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-card">
+        <h2>Order Summary</h2>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="subtotal">₹<%= subtotal.toLocaleString('en-IN') %></span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span class="free-label">Free</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span class="total-amount" id="total">₹<%= subtotal.toLocaleString('en-IN') %></span>
+        </div>
+
+        <button class="checkout-btn" 
+          onclick="<% if (!canCheckout) { %> showModal('error', 'Update Required', 'Please update your cart before proceeding.', [{ label: 'Close', primary: true, action: 'closeModal()' }]); <% } else { %> location.href='/checkout' <% } %>">
+          Proceed to Checkout
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </button>
+
+        <div class="secure-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          <p>Secure checkout. All transactions are encrypted and authenticated.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <% } else { %>
+
+    <div class="empty-cart">
+      <div class="empty-cart-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 0 1-8 0" />
+        </svg>
+      </div>
+      <h2>Your Cart is Empty</h2>
+      <p>Looks like you haven't added any items yet. Explore our collection and find something you love.</p>
+      <a href="/shop" class="shop-now-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+        Shop Now
+      </a>
+    </div>
+
+    <% } %>
+  </main>
+
+  <%- include('partials/user/footer') %>
+
+  <script>
+    async function changeQty(btn, delta, productId, variantId) {
+      const row = btn.closest('.cart-item');
+      const input = row.querySelector('.qty-value');
+      const newQty = parseInt(input.value) + delta;
+
+      if (newQty < 1 || newQty > 10) return;
+
+      try {
+        const res = await fetch('/update-cart', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId, variantId, qty: newQty })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          const finalQty = data.updatedQty !== undefined ? data.updatedQty : newQty;
+          input.value = finalQty;
+          row.querySelector('.item-total').textContent = '₹' + data.itemTotal.toLocaleString('en-IN');
+          document.getElementById('subtotal').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
+          document.getElementById('total').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
+
+          // Update button disabled states
+          const minusBtn = row.querySelectorAll('.qty-btn')[0];
+          const plusBtn = row.querySelectorAll('.qty-btn')[1];
+          minusBtn.disabled = finalQty <= 1;
+          plusBtn.disabled = finalQty >= 10 || (data.message && data.message !== "Cart updated");
+
+          if (data.message && data.message !== "Cart updated") {
+             showModal('info', 'Stock Updated', data.message, [{ label: 'OK', primary: true, action: 'closeModal()' }]);
+          }
+        } else {
+          showModal('error', 'Update Error', data.message || 'Failed to update cart', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+        }
+      } catch (err) {
+        console.error(err);
+        showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+      }
+    }
+
+    function confirmRemoveItem(btn, productId, variantId) {
+      showModal('info', 'Remove Item', 'Are you sure you want to remove this item from your cart?', [
+        { label: 'Yes, Remove', primary: true, action: `removeItem(document.getElementById('btn-remove-${productId}-${variantId}'), '${productId}', '${variantId}'); closeModal();` },
+        { label: 'Cancel', primary: false, action: 'closeModal()' }
+      ]);
+      // Temporarily assign ID to button for the callback
+      btn.id = `btn-remove-${productId}-${variantId}`;
+    }
+
+    async function removeItem(btn, productId, variantId) {
+      const row = btn.closest('.cart-item');
+
+      try {
+        const res = await fetch('/remove-cart-item', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId, variantId })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          row.style.opacity = '0';
+          row.style.transform = 'translateX(-20px)';
+          setTimeout(() => {
+            row.remove();
+
+            if (data.cartCount === 0) {
+              // Reload page to show empty cart state
+              location.reload();
+            } else {
+              document.getElementById('subtotal').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
+              document.getElementById('total').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
+            }
+          }, 300);
+        } else {
+          showModal('error', 'Remove Error', data.message || 'Failed to remove item', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+        }
+      } catch (err) {
+        console.error(err);
+        showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+      }
+    }
+  </script>
+
+  <%- include('partials/user/modal') %>
+</body>
+
+</html>

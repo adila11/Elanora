@@ -8,6 +8,8 @@ import upload from '../config/multerCloudinary.js'
 import { loadresetpassword,resetpassword } from '../controller/userController/resetPasswordController.js'
 import passport from 'passport'
 import { loadShop , loadProductDetail } from '../controller/userController/shopController.js'
+import { addToCart, loadCart, updateCartItem, removeCartItem } from '../controller/userController/cartController.js'
+import { loadWishlist, addToWishlist, removeFromWishlist } from '../controller/userController/wishlistController.js'
 const router=express.Router()
 
 
@@ -58,9 +60,7 @@ router.post("/profile",isLoggedIn,isBlocked,upload.single("profileIcon"),editPro
 router.post("/profile/email/send-otp",isLoggedIn,isBlocked,editEmail)
 router.post("/profile/email/verify-otp",isLoggedIn,isBlocked,verifyEmail)
 
-
 router.get("/orders",isLoggedIn,isBlocked,loadPagenotFound)
-
 
 router.get("/addresses",isLoggedIn,isBlocked,loadAddress)
 
@@ -84,9 +84,21 @@ router.get("/shop",loadShop)
 
 router.get("/product/:id",loadProductDetail)
 
+router.post("/add-to-cart", isLoggedIn, isBlocked, addToCart);
+router.patch("/update-cart", isLoggedIn, isBlocked, updateCartItem);
+router.delete("/remove-cart-item", isLoggedIn, isBlocked, removeCartItem);
+router.get("/cart", isLoggedIn, isBlocked, loadCart)
+
+router.get("/wishlist", isLoggedIn, isBlocked, loadWishlist)
+router.post("/add-to-wishlist", isLoggedIn, isBlocked, addToWishlist)
+router.post("/remove-from-wishlist", isLoggedIn, isBlocked, removeFromWishlist)
+
 router.post("/resend-otp", resendOtp)
+
 router.get("/logout",logout)
+
 
 router.use(loadPagenotFound);
 export default router
+
 

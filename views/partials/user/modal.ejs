@@ -1,0 +1,163 @@
+<!-- ── CUSTOM MODAL ── -->
+<style>
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 32px 28px 24px;
+        max-width: 400px;
+        width: 90%;
+        position: relative;
+        border: 1px solid #e8dfd4;
+        text-align: center;
+        animation: modalIn 0.22s ease;
+    }
+
+    @keyframes modalIn {
+        from { transform: translateY(20px); opacity: 0; }
+        to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .modal-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+    }
+
+    .modal-icon.success { background: #edf7ed; color: #2e7d32; }
+    .modal-icon.error   { background: #fdecea; color: #c62828; }
+    .modal-icon.info    { background: #f0e0bb; color: #b8892a; }
+
+    .modal-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #1c1a17;
+        margin-bottom: 10px;
+    }
+
+    .modal-message {
+        font-size: 0.88rem;
+        color: #4a4540;
+        line-height: 1.65;
+        margin-bottom: 22px;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .modal-btn-primary {
+        background: #b8892a;
+        color: #fff;
+        border: none;
+        border-radius: 100px;
+        padding: 11px 26px;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.86rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .modal-btn-primary:hover { background: #d4a843; }
+
+    .modal-btn-secondary {
+        background: transparent;
+        color: #4a4540;
+        border: 1.5px solid #e8dfd4;
+        border-radius: 100px;
+        padding: 11px 26px;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.86rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .modal-btn-secondary:hover { border-color: #b8892a; color: #b8892a; }
+
+    .modal-close {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #8a8078;
+        font-size: 1.3rem;
+        line-height: 1;
+    }
+
+    .modal-close:hover { color: #1c1a17; }
+</style>
+
+<div class="modal-overlay" id="customModalOverlay">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div class="modal-icon" id="customModalIcon"></div>
+        <div class="modal-title" id="customModalTitle"></div>
+        <div class="modal-message" id="customModalMessage"></div>
+        <div class="modal-actions" id="customModalActions"></div>
+    </div>
+</div>
+
+<script>
+    const CUSTOM_MODAL_ICONS = {
+        success: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`,
+        error:   `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
+        info:    `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+    };
+
+    function showModal(type, title, message, actions) {
+        const iconEl    = document.getElementById('customModalIcon');
+        const titleEl   = document.getElementById('customModalTitle');
+        const msgEl     = document.getElementById('customModalMessage');
+        const actionsEl = document.getElementById('customModalActions');
+
+        iconEl.className    = 'modal-icon ' + type;
+        iconEl.innerHTML    = CUSTOM_MODAL_ICONS[type] || CUSTOM_MODAL_ICONS.info;
+        titleEl.textContent = title;
+        msgEl.innerHTML     = message;
+
+        actionsEl.innerHTML = '';
+        if (!actions || actions.length === 0) {
+            actions = [{ label: 'Close', primary: true, action: 'closeModal()' }];
+        }
+        
+        actions.forEach(a => {
+            const btn = document.createElement('button');
+            btn.className = a.primary ? 'modal-btn-primary' : 'modal-btn-secondary';
+            btn.textContent = a.label;
+            btn.setAttribute('onclick', a.action);
+            actionsEl.appendChild(btn);
+        });
+
+        document.getElementById('customModalOverlay').classList.add('open');
+    }
+
+    function closeModal() {
+        document.getElementById('customModalOverlay').classList.remove('open');
+    }
+
+    // Close on overlay click
+    document.getElementById('customModalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+</script>

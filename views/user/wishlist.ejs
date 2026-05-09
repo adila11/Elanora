@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elanora – My Wishlist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #f5f0ea;
+      --cream-dark: #e8dfd3;
+      --gold: #b8892a;
+      --gold-light: #d4a843;
+      --gold-pale: #f0e0bb;
+      --gold-btn: #a07820;
+      --text-dark: #2c2416;
+      --text-mid: #6b5c42;
+      --text-light: #9e8e76;
+      --white: #ffffff;
+      --card-bg: #fffdf9;
+      --border: #e8dfd4;
+      --red: #c0392b;
+    }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .wishlist-hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+      background: #faf8f5;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-icon-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .hero-icon-wrap svg { width: 28px; height: 28px; color: var(--text-mid); }
+
+    .wishlist-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 500;
+      color: var(--text-dark);
+      letter-spacing: 0.01em;
+    }
+
+    .wishlist-hero p {
+      margin-top: 10px;
+      color: var(--text-light);
+      font-size: 0.92rem;
+      font-weight: 300;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── PRODUCTS ── */
+    .products-section {
+      padding: 56px 48px 72px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 28px;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      transition: transform 0.28s ease, box-shadow 0.28s ease;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    }
+
+    .product-img-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1/1;
+      background: #ecddd0;
+    }
+
+    .product-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-img-wrap img { transform: scale(1.04); }
+
+    .remove-wishlist-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.2s;
+      color: #e05050;
+    }
+
+    .remove-wishlist-btn:hover { background: var(--white); transform: scale(1.1); }
+    .remove-wishlist-btn svg { width: 16px; height: 16px; }
+
+    .product-info {
+      padding: 16px 18px 20px;
+      text-align: center;
+    }
+
+    .product-category {
+      font-size: 0.72rem;
+      color: var(--text-light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .product-price {
+      font-size: 0.9rem;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .add-to-cart-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--gold);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 0.82rem;
+      font-family: 'Jost', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .add-to-cart-btn:hover { background: var(--gold-light); transform: scale(1.01); }
+    .add-to-cart-btn svg { width: 16px; height: 16px; }
+
+    .view-product-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      color: var(--gold);
+      border: 1.5px solid var(--gold);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.82rem;
+      font-family: 'Jost', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .view-product-btn:hover { background: var(--gold-pale); }
+
+    /* ── EMPTY STATE ── */
+    .empty-wishlist {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .empty-wishlist-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--cream-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .empty-wishlist-icon svg { width: 32px; height: 32px; color: var(--text-light); }
+
+    .empty-wishlist h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+    }
+
+    .empty-wishlist p {
+      font-size: 0.88rem;
+      color: var(--text-light);
+      margin-bottom: 24px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .shop-now-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .shop-now-btn:hover { background: var(--gold-light); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .products-section { padding: 40px 20px 56px; }
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    }
+
+    @media (max-width: 480px) {
+      .products-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<%- include('partials/user/header') %>
+
+<!-- ── WISHLIST HERO ── -->
+<section class="wishlist-hero">
+  <div class="hero-icon-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+  </div>
+  <h1>My Wishlist</h1>
+  <p>Your curated collection of brilliant pieces waiting to be yours.</p>
+</section>
+
+<!-- ── PRODUCTS ── -->
+<section class="products-section">
+  <% if (wishlistItems && wishlistItems.length > 0) { %>
+  <div class="products-grid" id="wishlistGrid">
+
+    <% wishlistItems.forEach(item => { %>
+      <% const product = item.productId; %>
+      <% if (product) { %>
+        <%
+          const firstVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
+          const imageUrl = firstVariant && firstVariant.images && firstVariant.images.length > 0
+                          ? firstVariant.images[0].url
+                          : 'https://via.placeholder.com/400';
+          const price = product.discountPrice || product.basePrice;
+        %>
+        <div class="product-card" id="wishlist-card-<%= product._id %>">
+          <div class="product-img-wrap">
+            <img src="<%= imageUrl %>" alt="<%= product.name %>" loading="lazy"/>
+            <button class="remove-wishlist-btn" onclick="removeFromWishlist('<%= product._id %>')" title="Remove from wishlist">
+              <svg viewBox="0 0 24 24" fill="#e05050" stroke="#e05050" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <p class="product-category"><%= product.category?.name || 'Jewelry' %></p>
+            <h3 class="product-name"><%= product.name %></h3>
+            <p class="product-price">₹<%= price.toLocaleString('en-IN') %></p>
+            <div class="card-actions">
+              <button class="add-to-cart-btn" onclick="addToCartFromWishlist('<%= product._id %>', '<%= firstVariant ? firstVariant._id : '' %>')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                Add to Cart
+              </button>
+              <a href="/product/<%= product._id %>" class="view-product-btn" title="View Product">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    <% }) %>
+
+  </div>
+  <% } else { %>
+
+  <div class="empty-wishlist">
+    <div class="empty-wishlist-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </div>
+    <h2>Your Wishlist is Empty</h2>
+    <p>Start adding your favorite pieces to keep them saved for later. Explore our collection to find something you love.</p>
+    <a href="/shop" class="shop-now-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      Explore Collection
+    </a>
+  </div>
+
+  <% } %>
+</section>
+
+<%- include('partials/user/footer') %>
+
+<script>
+  async function removeFromWishlist(productId) {
+    try {
+      const res = await fetch('/remove-from-wishlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        const card = document.getElementById('wishlist-card-' + productId);
+        if (card) {
+          card.style.transition = 'opacity 0.3s, transform 0.3s';
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            card.remove();
+            // Check if grid is empty
+            const grid = document.getElementById('wishlistGrid');
+            if (grid && grid.children.length === 0) {
+              location.reload();
+            }
+          }, 300);
+        }
+      } else {
+        showModal('error', 'Remove Error', data.message || 'Failed to remove from wishlist', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+      }
+    } catch (err) {
+      console.error(err);
+      showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+    }
+  }
+
+  async function addToCartFromWishlist(productId, variantId) {
+    if (!variantId) {
+      showModal('error', 'Variant Unavailable', 'This product has no available variant.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+      return;
+    }
+
+    try {
+      const res = await fetch('/add-to-cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId, variantId, qty: 1 })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        // Change button to show success
+        const card = document.getElementById('wishlist-card-' + productId);
+        if (card) {
+          const btn = card.querySelector('.add-to-cart-btn');
+          btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Added!`;
+          btn.style.background = '#2e7d32';
+          setTimeout(() => {
+            card.style.transition = 'opacity 0.3s, transform 0.3s';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+              card.remove();
+              // Check if grid is empty
+              const grid = document.getElementById('wishlistGrid');
+              if (grid && grid.children.length === 0) {
+                location.reload();
+              }
+            }, 300);
+          }, 1000);
+        }
+      } else {
+        showModal('error', 'Could Not Add to Cart', data.message || 'Failed to add to cart', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+      }
+    } catch (err) {
+      console.error(err);
+      showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+    }
+  }
+</script>
+
+<%- include('partials/user/modal') %>
+
+</body>
+</html>

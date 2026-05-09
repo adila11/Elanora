@@ -1,6 +1,5 @@
 import Category from "../../model/categoriesSchema.js";
 
-// ─── Page Render ─────────────────────────────────────────────────────────────
 export const loadCategories = async (req, res) => {
     try {
         if (!req.session.admin) return res.redirect('/admin');
@@ -159,7 +158,6 @@ export const editCategory = async (req, res) => {
     }
 };
 
-// ─── JSON API: Toggle Active ──────────────────────────────────────────────────
 export const toggleCategory = async (req, res) => {
     try {
         if (!req.session.admin) return res.status(401).json({ message: 'Unauthorized' });

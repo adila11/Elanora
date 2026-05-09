@@ -193,13 +193,11 @@ export const editProduct = async (req, res) => {
 
             let images = [];
             
-            // Handle existing images
             if (v.existingImages) {
                 const kept = Array.isArray(v.existingImages) ? v.existingImages : [v.existingImages];
                 images = kept.filter(url => typeof url === 'string' && url.length > 0).map(url => ({ url }));
             }
 
-            // Handle new image uploads
             const newImages = files
                 .filter(f => f.fieldname === `images-${v.tempId}`)
                 .map(f => ({ url: f.path }));
@@ -217,7 +215,6 @@ export const editProduct = async (req, res) => {
                 images: images
             };
 
-            // Preserve ID if existing to avoid unnecessary subdocument recreation
             if (v.tempId && v.tempId.startsWith('v')) {
                 const possibleId = v.tempId.substring(1);
                 if (mongoose.Types.ObjectId.isValid(possibleId)) {
