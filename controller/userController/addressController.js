@@ -58,7 +58,8 @@ export const addAddress = async (req, res) => {
             addressLine, 
             city, 
             state, 
-            pincode 
+            pincode,
+            isDefault
         } = req.body;
 
         const errors = [];
@@ -109,6 +110,15 @@ export const addAddress = async (req, res) => {
             });
         }
 
+        let setAsDefault = isDefault === true || isDefault === "true";
+        if (addressCount === 0) {
+            setAsDefault = true;
+        }
+
+        if (setAsDefault) {
+            await Address.updateMany({ user: user._id }, { $set: { isDefault: false } });
+        }
+
         const newAddress = new Address({
             user: user._id,
             type: type.trim(),
@@ -118,7 +128,7 @@ export const addAddress = async (req, res) => {
             city: city.trim(),
             state: state.trim(),
             pincode: pincode.trim(),
-            isDefault: false,
+            isDefault: setAsDefault,
             isDelete: false
         });
 
@@ -181,7 +191,8 @@ export const editAddress = async (req, res) => {
             addressLine, 
             city, 
             state, 
-            pincode 
+            pincode,
+            isDefault
         } = req.body;
 
         const address = await Address.findOne({
@@ -238,6 +249,16 @@ export const editAddress = async (req, res) => {
         address.city = city.trim();
         address.state = state.trim();
         address.pincode = pincode.trim();
+
+        let setAsDefault = isDefault === true || isDefault === "true";
+        if (setAsDefault) {
+            await Address.updateMany({ user: user._id, _id: { $ne: address._id } }, { $set: { isDefault: false } });
+            address.isDefault = true;
+        } else {
+            // If they are unsetting the default, check if there are no other defaults
+            // Just let it be false.
+            address.isDefault = false;
+        }
 
         await address.save();
 

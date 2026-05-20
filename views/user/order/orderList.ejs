@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elanora – My Orders</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --gold: #C9952A;
+    --gold-light: #E8C97A;
+    --gold-muted: #D4AA50;
+    --cream: #FAF6F1;
+    --cream-deep: #F2EAE0;
+    --brown-soft: #8B6B3D;
+    --text-dark: #2C1F0E;
+    --text-mid: #6B5335;
+    --text-light: #A08B6E;
+    --white: #FFFFFF;
+    --border: #E8DDD0;
+    --green: #4CAF7D;
+    --blue: #5B9BD5;
+    --shadow: 0 2px 20px rgba(44,31,14,0.08);
+    --shadow-hover: 0 8px 40px rgba(44,31,14,0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .logo svg { width: 28px; height: 28px; }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-mid);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-icons { display: flex; gap: 18px; align-items: center; }
+  .nav-icons svg { width: 20px; height: 20px; color: var(--text-mid); cursor: pointer; }
+  .cart-badge {
+    position: relative;
+  }
+  .badge {
+    position: absolute;
+    top: -6px; right: -6px;
+    background: var(--gold);
+    color: white;
+    border-radius: 50%;
+    width: 16px; height: 16px;
+    font-size: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600;
+  }
+
+  /* ── LAYOUT ── */
+  .page-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 24px 80px;
+  }
+
+  /* ── PROFILE CARD ── */
+  .profile-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px 36px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+  }
+  .avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--gold-muted);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    color: white;
+    font-weight: 600;
+  }
+  .edit-btn {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid white;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .edit-btn svg { width: 12px; height: 12px; color: white; }
+  .profile-info h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+  .profile-info p {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 12px;
+  }
+  .profile-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text-mid);
+    font-weight: 500;
+  }
+  .tag svg { width: 14px; height: 14px; color: var(--gold); }
+
+  /* ── MAIN GRID ── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 12px 0;
+    box-shadow: var(--shadow);
+  }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    text-decoration: none;
+  }
+  .sidebar-item:hover {
+    background: var(--cream);
+    color: var(--text-dark);
+  }
+  .sidebar-item.active {
+    background: var(--cream-deep);
+    color: var(--gold);
+    border-left-color: var(--gold);
+    font-weight: 500;
+  }
+  .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  /* ── ORDERS PANEL ── */
+  .orders-panel {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+  }
+  .orders-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .orders-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  /* ── SEARCH BAR ── */
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 340px;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px; height: 16px;
+    color: var(--text-light);
+    pointer-events: none;
+  }
+  #searchInput {
+    width: 100%;
+    padding: 9px 14px 9px 36px;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--text-dark);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #searchInput:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,149,42,0.1);
+  }
+  #searchInput::placeholder { color: var(--text-light); }
+
+  /* ── NO RESULTS ── */
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 48px 0;
+    color: var(--text-light);
+    font-size: 14px;
+  }
+  .no-results svg { width: 40px; height: 40px; margin-bottom: 12px; opacity: 0.4; display: block; margin-left: auto; margin-right: auto; }
+
+  /* ── ORDER CARDS ── */
+  .order-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.25s, transform 0.2s;
+    animation: fadeIn 0.35s ease both;
+  }
+  .order-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .order-meta {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .meta-group label {
+    font-size: 11px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .meta-group span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dark);
+  }
+  .order-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+  }
+  .status-badge.processing {
+    background: #EBF3FD;
+    color: var(--blue);
+    border: 1px solid #C5DCEF;
+  }
+  .status-badge.delivered {
+    background: #EBF8F2;
+    color: var(--green);
+    border: 1px solid #B5E5CE;
+  }
+  .dl-btn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .dl-btn:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .dl-btn:hover svg { color: white; }
+  .dl-btn svg { width: 15px; height: 15px; color: var(--text-mid); }
+
+  /* ── CANCEL BTN ── */
+  .cancel-order-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    background: transparent;
+    color: #C0392B;
+    border: 1px solid #E8B4B0;
+    border-radius: 20px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .cancel-order-btn:hover {
+    background: #FDF0EE;
+    border-color: #C0392B;
+  }
+  .cancel-order-btn svg { width: 13px; height: 13px; }
+
+  /* ── CANCELLED BADGE ── */
+  .status-badge.cancelled {
+    background: #FDF0EE;
+    color: #C0392B;
+    border: 1px solid #E8B4B0;
+  }
+
+  /* ── CANCEL MODAL OVERLAY ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(44,31,14,0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+  .modal-overlay.open { display: flex; }
+
+  .cancel-modal {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 36px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(44,31,14,0.18);
+    animation: modalIn 0.25s ease both;
+    position: relative;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 30px; height: 30px;
+    border: none;
+    background: var(--cream);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-mid);
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: var(--cream-deep); }
+  .modal-close svg { width: 14px; height: 14px; }
+
+  .modal-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: #FDF0EE;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 18px;
+  }
+  .modal-icon svg { width: 26px; height: 26px; color: #C0392B; }
+
+  .cancel-modal h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+  }
+  .cancel-modal .modal-sub {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* Items checklist inside modal */
+  .cancel-items-list {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .cancel-item-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .cancel-item-row:last-child { border-bottom: none; }
+  .cancel-item-row:hover { background: var(--cream); }
+  .cancel-item-row input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--gold);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .cancel-item-row label {
+    font-size: 13px;
+    color: var(--text-dark);
+    cursor: pointer;
+    flex: 1;
+    font-weight: 500;
+  }
+  .cancel-item-row .item-price {
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 400;
+  }
+
+  /* Reason textarea */
+  .reason-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-mid);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .reason-optional { font-weight: 400; color: var(--text-light); text-transform: none; letter-spacing: 0; }
+  #cancelReason {
+    width: 100%;
+    height: 90px;
+    resize: none;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--text-dark);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    margin-bottom: 22px;
+  }
+  #cancelReason:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,149,42,0.1);
+  }
+  #cancelReason::placeholder { color: var(--text-light); }
+
+  .modal-actions { display: flex; gap: 12px; }
+  .btn-keep {
+    flex: 1;
+    padding: 11px;
+    background: var(--cream-deep);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-keep:hover { background: var(--border); }
+  .btn-confirm-cancel {
+    flex: 1;
+    padding: 11px;
+    background: #C0392B;
+    border: none;
+    border-radius: 24px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-confirm-cancel:hover { background: #A93226; }
+  .btn-confirm-cancel:disabled { background: #E0A09A; cursor: not-allowed; }
+
+  /* ── ORDER ITEM ROW ── */
+  .order-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .item-left { display: flex; align-items: center; gap: 14px; }
+  .item-img {
+    width: 52px; height: 52px;
+    border-radius: 10px;
+    background: var(--cream-deep);
+    object-fit: cover;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .item-img svg { width: 22px; height: 22px; color: var(--gold-muted); }
+  .item-info p {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+  }
+  .item-info small {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  /* ── VIEW DETAILS BTN ── */
+  .view-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0;
+  }
+  .view-btn:hover { background: var(--brown-soft); transform: scale(1.03); }
+  .view-btn svg { width: 14px; height: 14px; }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 28px;
+  }
+  .page-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: white;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--text-mid);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .page-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .page-btn.active { background: var(--gold); border-color: var(--gold); color: white; font-weight: 600; }
+  .page-btn svg { width: 14px; height: 14px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 56px 48px 32px;
+    margin-top: 60px;
+  }
+  .footer-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  .footer-brand .logo { margin-bottom: 14px; display: inline-flex; }
+  .footer-brand p { font-size: 13px; color: var(--text-light); line-height: 1.6; margin-bottom: 18px; }
+  .social-icons { display: flex; gap: 10px; }
+  .social-icon {
+    width: 34px; height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-light);
+  }
+  .social-icon:hover { border-color: var(--gold); color: var(--gold); }
+  .social-icon svg { width: 15px; height: 15px; }
+  .footer-col h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
+  }
+  .footer-col a {
+    display: block;
+    font-size: 13px;
+    color: var(--text-light);
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--gold); }
+  .newsletter-form { display: flex; flex-direction: column; gap: 10px; }
+  .newsletter-form input {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    outline: none;
+    background: var(--cream);
+    transition: border-color 0.2s;
+  }
+  .newsletter-form input:focus { border-color: var(--gold); }
+  .newsletter-form button {
+    padding: 10px;
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .newsletter-form button:hover { background: var(--brown-soft); }
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-light);
+  }
+  .footer-bottom-links { display: flex; gap: 20px; }
+  .footer-bottom-links a { color: var(--text-light); text-decoration: none; }
+  .footer-bottom-links a:hover { color: var(--gold); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    background: var(--text-dark);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    z-index: 999;
+    pointer-events: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast svg { width: 16px; height: 16px; color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <svg viewBox="0 0 32 32" fill="none">
+      <polygon points="16,2 28,10 28,22 16,30 4,22 4,10" fill="none" stroke="currentColor" stroke-width="2"/>
+      <polygon points="16,8 22,12 22,20 16,24 10,20 10,12" fill="currentColor" opacity="0.3"/>
+    </svg>
+    Elanora
+  </a>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Shop</a>
+    <a href="#">About Us</a>
+    <a href="#">Contact Us</a>
+  </div>
+  <div class="nav-icons">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    <div class="cart-badge" style="position:relative;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="badge">1</span>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- PROFILE CARD -->
+  <div class="profile-card">
+    <div class="avatar-wrap">
+      <div class="avatar">A</div>
+      <div class="edit-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </div>
+    </div>
+    <div class="profile-info">
+      <h2>Adila K A</h2>
+      <p>adila@gmail.com</p>
+      <div class="profile-tags">
+        <div class="tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Member since 2023
+        </div>
+        <div class="tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          Balance: ₹150000
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Personal Info
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Password
+      </a>
+      <a class="sidebar-item active" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Order History
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Addresses
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        Wallet
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+        Referral Code
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </a>
+    </aside>
+
+    <!-- ORDERS PANEL -->
+    <div class="orders-panel">
+      <div class="orders-header">
+        <h3>Order History</h3>
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Search by order # or item…" oninput="filterOrders()">
+        </div>
+      </div>
+
+      <div id="orderList">
+
+        <!-- ORDER 1 -->
+        <div class="order-card" data-order="#ORD-84729" data-item="Gold Geometric Ring" data-date="Oct 24, 2023">
+          <div class="order-meta">
+            <div class="meta-group">
+              <label>Order Placed</label>
+              <span>Oct 24, 2023</span>
+            </div>
+            <div class="meta-group">
+              <label>Total Amount</label>
+              <span>₹9000</span>
+            </div>
+            <div class="meta-group">
+              <label>Order Number</label>
+              <span>#ORD-84729</span>
+            </div>
+            <div class="order-actions">
+              <span class="status-badge processing" id="badge-ORD-84729">Processing</span>
+              <button class="cancel-order-btn" id="cancel-btn-ORD-84729" onclick="openCancelModal('ORD-84729', 'Oct 24, 2023', ['Gold Geometric Ring','Diamond Stud Earrings'], [4500,4500])">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                Cancel
+              </button>
+              <button class="dl-btn" onclick="downloadInvoice('ORD-84729','Oct 24, 2023','₹9000','Processing',['Gold Geometric Ring','Diamond Stud Earrings'])" title="Download Invoice">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="order-item-row">
+            <div class="item-left">
+              <div class="item-img">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 8a4 4 0 0 1 4 4"/></svg>
+              </div>
+              <div class="item-info">
+                <p>2 Items in this order</p>
+                <small>Includes Gold Geometric Ring</small>
+              </div>
+            </div>
+            <button class="view-btn">
+              View Details
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ORDER 2 -->
+        <div class="order-card" data-order="#ORD-73618" data-item="Gold Geometric Ring" data-date="Sep 12, 2023">
+          <div class="order-meta">
+            <div class="meta-group">
+              <label>Order Placed</label>
+              <span>Sep 12, 2023</span>
+            </div>
+            <div class="meta-group">
+              <label>Total Amount</label>
+              <span>₹4000</span>
+            </div>
+            <div class="meta-group">
+              <label>Order Number</label>
+              <span>#ORD-73618</span>
+            </div>
+            <div class="order-actions">
+              <span class="status-badge delivered" id="badge-ORD-73618">Delivered</span>
+              <button class="dl-btn" onclick="downloadInvoice('ORD-73618','Sep 12, 2023','₹4000','Delivered',['Gold Geometric Ring'])" title="Download Invoice">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="order-item-row">
+            <div class="item-left">
+              <div class="item-img">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 8a4 4 0 0 1 4 4"/></svg>
+              </div>
+              <div class="item-info">
+                <p>1 Item in this order</p>
+                <small>Includes Gold Geometric Ring.</small>
+              </div>
+            </div>
+            <button class="view-btn">
+              View Details
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ORDER 3 -->
+        <div class="order-card" data-order="#ORD-59201" data-item="Gold Cuff Choker" data-date="Jul 05, 2023">
+          <div class="order-meta">
+            <div class="meta-group">
+              <label>Order Placed</label>
+              <span>Jul 05, 2023</span>
+            </div>
+            <div class="meta-group">
+              <label>Total Amount</label>
+              <span>₹10000</span>
+            </div>
+            <div class="meta-group">
+              <label>Order Number</label>
+              <span>#ORD-59201</span>
+            </div>
+            <div class="order-actions">
+              <span class="status-badge delivered" id="badge-ORD-59201">Delivered</span>
+              <button class="dl-btn" onclick="downloadInvoice('ORD-59201','Jul 05, 2023','₹10000','Delivered',['Gold Cuff Choker','Pearl Drop Earrings','Twisted Bangle'])" title="Download Invoice">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="order-item-row">
+            <div class="item-left">
+              <div class="item-img">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12a8 8 0 0 1 16 0"/><path d="M12 4v2"/></svg>
+              </div>
+              <div class="item-info">
+                <p>3 Items in this order</p>
+                <small>Includes Gold Cuff Choker</small>
+              </div>
+            </div>
+            <button class="view-btn">
+              View Details
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- NO RESULTS -->
+      <div class="no-results" id="noResults">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        No orders match your search.
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination">
+        <button class="page-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" style="width:22px;height:22px;margin-right:7px;">
+          <polygon points="16,2 28,10 28,22 16,30 4,22 4,10" fill="none" stroke="currentColor" stroke-width="2"/>
+          <polygon points="16,8 22,12 22,20 16,24 10,20 10,12" fill="currentColor" opacity="0.3"/>
+        </svg>
+        Elanora
+      </a>
+      <p>Crafting timeless elegance and radiant refinement for those who appreciate the finer things in life.</p>
+      <div class="social-icons">
+        <div class="social-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></div>
+        <div class="social-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></div>
+        <div class="social-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+        <div class="social-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="#">Shop Collection</a>
+      <a href="#">About Us</a>
+      <a href="#">Our Story</a>
+      <a href="#">Contact Us</a>
+    </div>
+    <div class="footer-col">
+      <h4>Customer Service</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Shipping &amp; Returns</a>
+      <a href="#">Jewelry Care</a>
+      <a href="#">Terms &amp; Conditions</a>
+    </div>
+    <div class="footer-col">
+      <h4>Newsletter</h4>
+      <p style="font-size:13px;color:var(--text-light);line-height:1.6;margin-bottom:14px;">Subscribe to receive updates, access to exclusive deals, and more.</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="Enter your email">
+        <button>Subscribe</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Elanora Jewelry. All rights reserved.</span>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CANCEL MODAL -->
+<div class="modal-overlay" id="cancelModalOverlay" onclick="handleOverlayClick(event)">
+  <div class="cancel-modal">
+    <button class="modal-close" onclick="closeCancelModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    </div>
+    <h3>Cancel Order</h3>
+    <p class="modal-sub" id="modalSubText">Select the items you'd like to cancel. Stock will be restored for cancelled items.</p>
+
+    <div class="cancel-items-list" id="cancelItemsList"></div>
+
+    <label class="reason-label">
+      Reason for cancellation <span class="reason-optional">(optional)</span>
+    </label>
+    <textarea id="cancelReason" placeholder="e.g. Changed my mind, found a better deal, ordered by mistake…"></textarea>
+
+    <div class="modal-actions">
+      <button class="btn-keep" onclick="closeCancelModal()">Keep Order</button>
+      <button class="btn-confirm-cancel" id="confirmCancelBtn" onclick="confirmCancel()">Confirm Cancellation</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg">Invoice downloaded!</span>
+</div>
+
+<script>
+  // ── CANCEL ORDER ──
+  let currentCancelOrder = null;
+  // stock tracker (simulated; in real app this would be server-side)
+  const stock = {};
+
+  function openCancelModal(orderId, date, items, prices) {
+    currentCancelOrder = { orderId, date, items, prices };
+    document.getElementById('cancelReason').value = '';
+    document.getElementById('modalSubText').textContent =
+      items.length > 1
+        ? `Select the items you'd like to cancel from order #${orderId}. Stock will be restored automatically.`
+        : `Are you sure you want to cancel order #${orderId}? This cannot be undone.`;
+
+    // Build item checklist
+    const list = document.getElementById('cancelItemsList');
+    list.innerHTML = '';
+    items.forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'cancel-item-row';
+      row.innerHTML = `
+        <input type="checkbox" id="ci_${i}" value="${i}" checked onchange="updateConfirmBtn()">
+        <label for="ci_${i}">${item}</label>
+        <span class="item-price">₹${(prices[i] || 0).toLocaleString('en-IN')}</span>
+      `;
+      list.appendChild(row);
+    });
+
+    updateConfirmBtn();
+    document.getElementById('cancelModalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateConfirmBtn() {
+    const checked = document.querySelectorAll('#cancelItemsList input[type="checkbox"]:checked');
+    document.getElementById('confirmCancelBtn').disabled = checked.length === 0;
+  }
+
+  function closeCancelModal() {
+    document.getElementById('cancelModalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    currentCancelOrder = null;
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('cancelModalOverlay')) closeCancelModal();
+  }
+
+  function confirmCancel() {
+    if (!currentCancelOrder) return;
+    const { orderId, items, prices } = currentCancelOrder;
+    const checkedEls = document.querySelectorAll('#cancelItemsList input[type="checkbox"]:checked');
+    const cancelledIndices = Array.from(checkedEls).map(el => parseInt(el.value));
+    const cancelledItems = cancelledIndices.map(i => items[i]);
+    const reason = document.getElementById('cancelReason').value.trim();
+
+    // ── Increment stock for cancelled items ──
+    cancelledItems.forEach(item => {
+      stock[item] = (stock[item] || 10) + 1; // simulate stock increment
+      console.log(`Stock restored for "${item}": ${stock[item]} units`);
+    });
+
+    const allCancelled = cancelledIndices.length === items.length;
+
+    // Update badge
+    const badge = document.getElementById(`badge-${orderId}`);
+    if (badge && allCancelled) {
+      badge.className = 'status-badge cancelled';
+      badge.textContent = 'Cancelled';
+    }
+
+    // Hide cancel button if fully cancelled
+    const cancelBtn = document.getElementById(`cancel-btn-${orderId}`);
+    if (cancelBtn && allCancelled) cancelBtn.style.display = 'none';
+
+    // Update item count text
+    const card = document.querySelector(`[data-order="#${orderId}"]`);
+    if (card) {
+      const infoP = card.querySelector('.item-info p');
+      const infoSmall = card.querySelector('.item-info small');
+      if (allCancelled) {
+        if (infoP) infoP.textContent = 'Order Cancelled';
+        if (infoSmall) infoSmall.textContent = cancelledItems.join(', ');
+      } else {
+        const remaining = items.filter((_, i) => !cancelledIndices.includes(i));
+        if (infoP) infoP.textContent = `${remaining.length} Item${remaining.length > 1 ? 's' : ''} remaining`;
+        if (infoSmall) infoSmall.textContent = `Cancelled: ${cancelledItems.join(', ')}`;
+      }
+    }
+
+    closeCancelModal();
+
+    const msg = allCancelled
+      ? `Order #${orderId} cancelled${reason ? ' — Reason saved' : ''}.`
+      : `${cancelledItems.length} item${cancelledItems.length > 1 ? 's' : ''} cancelled from #${orderId}.`;
+    showToast(msg, 'cancel');
+  }
+
+  function filterOrders() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const cards = document.querySelectorAll('.order-card');
+    let visible = 0;
+    cards.forEach(card => {
+      const order = card.dataset.order.toLowerCase();
+      const item  = card.dataset.item.toLowerCase();
+      const date  = card.dataset.date.toLowerCase();
+      const match = !q || order.includes(q) || item.includes(q) || date.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  // ── TOAST ──
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.style.background = type === 'cancel' ? '#C0392B' : '';
+    t.classList.add('show');
+    setTimeout(() => { t.classList.remove('show'); t.style.background = ''; }, 3000);
+  }
+
+  // ── PDF INVOICE ──
+  function downloadInvoice(orderNum, date, total, status, items) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+    const W = doc.internal.pageSize.getWidth();
+    const gold = [201, 149, 42];
+    const dark = [44, 31, 14];
+    const mid  = [107, 83, 53];
+    const light = [160, 139, 110];
+
+    // header strip
+    doc.setFillColor(...gold);
+    doc.rect(0, 0, W, 90, 'F');
+
+    // brand name
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(28);
+    doc.text('ELANORA', 48, 48);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text('Fine Jewelry & Elegance', 48, 66);
+
+    // invoice label (right)
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.text('INVOICE', W - 48, 40, { align: 'right' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text(`#${orderNum}`, W - 48, 58, { align: 'right' });
+    doc.text(`Date: ${date}`, W - 48, 74, { align: 'right' });
+
+    // thin gold bar
+    doc.setFillColor(...gold);
+    doc.rect(0, 90, W, 3, 'F');
+
+    // bill to section
+    let y = 120;
+    doc.setTextColor(...mid);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.text('BILLED TO', 48, y);
+    y += 14;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(...dark);
+    doc.text('Adila K A', 48, y);
+    y += 14;
+    doc.setFontSize(10);
+    doc.setTextColor(...mid);
+    doc.text('adila@gmail.com', 48, y);
+
+    // status badge area
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    const statusColor = status === 'Delivered' ? [76, 175, 125] : [91, 155, 213];
+    doc.setTextColor(...statusColor);
+    doc.text(`STATUS: ${status.toUpperCase()}`, W - 48, 120 + 4, { align: 'right' });
+
+    // divider
+    y = 180;
+    doc.setDrawColor(...gold);
+    doc.setLineWidth(0.5);
+    doc.line(48, y, W - 48, y);
+
+    // table header
+    y += 20;
+    doc.setFillColor(250, 246, 241);
+    doc.rect(40, y - 14, W - 80, 22, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...mid);
+    doc.text('ITEM', 52, y);
+    doc.text('QTY', W / 2, y, { align: 'center' });
+    doc.text('AMOUNT', W - 52, y, { align: 'right' });
+
+    // table rows
+    y += 18;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    const perItem = Math.round(parseInt(total.replace(/[^0-9]/g, '')) / items.length);
+    items.forEach((item, i) => {
+      if (i % 2 === 0) {
+        doc.setFillColor(255, 255, 255);
+      } else {
+        doc.setFillColor(252, 249, 245);
+      }
+      doc.rect(40, y - 14, W - 80, 20, 'F');
+      doc.setTextColor(...dark);
+      doc.text(item, 52, y);
+      doc.setTextColor(...mid);
+      doc.text('1', W / 2, y, { align: 'center' });
+      doc.setTextColor(...dark);
+      doc.text(`₹${perItem.toLocaleString('en-IN')}`, W - 52, y, { align: 'right' });
+      y += 24;
+    });
+
+    // total section
+    y += 10;
+    doc.setDrawColor(...gold);
+    doc.setLineWidth(0.5);
+    doc.line(48, y, W - 48, y);
+    y += 20;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(...mid);
+    doc.text('Subtotal', W - 200, y);
+    doc.setTextColor(...dark);
+    doc.text(total, W - 52, y, { align: 'right' });
+    y += 18;
+
+    doc.setTextColor(...mid);
+    doc.text('Shipping', W - 200, y);
+    doc.setTextColor(...dark);
+    doc.text('Free', W - 52, y, { align: 'right' });
+    y += 18;
+
+    doc.setTextColor(...mid);
+    doc.text('Tax (GST 3%)', W - 200, y);
+    const taxAmt = Math.round(parseInt(total.replace(/[^0-9]/g, '')) * 0.03);
+    doc.setTextColor(...dark);
+    doc.text(`₹${taxAmt.toLocaleString('en-IN')}`, W - 52, y, { align: 'right' });
+    y += 10;
+
+    doc.setDrawColor(...gold);
+    doc.line(W - 200, y, W - 48, y);
+    y += 16;
+
+    doc.setFillColor(...gold);
+    doc.rect(W - 200, y - 14, 152, 26, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.text('TOTAL', W - 180, y);
+    const totalNum = parseInt(total.replace(/[^0-9]/g, ''));
+    const grandTotal = totalNum + taxAmt;
+    doc.text(`₹${grandTotal.toLocaleString('en-IN')}`, W - 52, y, { align: 'right' });
+
+    // footer note
+    y += 50;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(...light);
+    doc.text('Thank you for shopping with Elanora. For queries, contact support@elanora.com', W / 2, y, { align: 'center' });
+
+    // bottom gold strip
+    const pH = doc.internal.pageSize.getHeight();
+    doc.setFillColor(...gold);
+    doc.rect(0, pH - 18, W, 18, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(8);
+    doc.text('© 2026 Elanora Jewelry. Crafting timeless elegance.', W / 2, pH - 6, { align: 'center' });
+
+    doc.save(`Elanora_Invoice_${orderNum}.pdf`);
+    showToast(`Invoice ${orderNum} downloaded!`);
+  }
+</script>
+</body>
+</html>

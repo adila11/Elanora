@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Elanora</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <style>
         :root {
             --bg-cream: #FDF7F0;
@@ -121,6 +120,39 @@
             box-shadow: 0 0 0 3px rgba(188, 152, 77, 0.1);
         }
 
+        /* Password wrapper */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 48px;
+        }
+
+        .eye-btn {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .eye-btn:hover {
+            color: var(--primary-gold);
+        }
+
+        .eye-btn i {
+            font-size: 20px;
+        }
+
         .btn-signin {
             width: 100%;
             background-color: var(--primary-gold);
@@ -148,15 +180,9 @@
             cursor: not-allowed;
         }
 
-        /* Spinner Animation */
         @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -176,32 +202,37 @@
 
         <div class="login-card">
 
-    <!-- Backend Error Message -->
-    <% if (typeof error !== 'undefined' && error) { %>
-        <div class="message error-box" id="backendError">
-            <%= error %>
+            <!-- Backend Error Message -->
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="message error-box" id="backendError">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <!-- Frontend JS Message Box -->
+            <div id="messageBox" class="message"></div>
+
+            <form id="loginForm" method="post" action="/admin">
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="text" id="email" name="email" placeholder="Enter admin email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Enter password">
+                        <button class="eye-btn" id="eyeBtn" type="button" aria-label="Toggle password visibility">
+                            <i class="ti ti-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-signin">
+                    Sign in
+                </button>
+            </form>
         </div>
-    <% } %>
-
-    <!-- Frontend JS Message Box -->
-    <div id="messageBox" class="message"></div>
-
-    <form id="loginForm" method="post" action="/admin">
-        <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="text" id="email" name="email" placeholder="Enter admin email">
-        </div>
-
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter password">
-        </div>
-
-        <button type="submit" id="submitBtn" class="btn-signin">
-            Sign in
-        </button>
-    </form>
-</div>
     </div>
 
     <script>
@@ -210,6 +241,16 @@
         const submitBtn = document.getElementById('submitBtn');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
+        const eyeBtn = document.getElementById('eyeBtn');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        // Toggle password visibility
+        eyeBtn.addEventListener('click', function () {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            eyeIcon.className = isPassword ? 'ti ti-eye-off' : 'ti ti-eye';
+            eyeBtn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+        });
 
         function showMessage(message, type) {
             messageBox.textContent = message;
@@ -271,8 +312,6 @@
         // Clear error message when user starts typing
         emailInput.addEventListener('input', clearMessage);
         passwordInput.addEventListener('input', clearMessage);
-
-        // Optional: Press Enter key support (already handled by form)
     </script>
 
 </body>

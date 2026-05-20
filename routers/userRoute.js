@@ -10,6 +10,7 @@ import passport from 'passport'
 import { loadShop , loadProductDetail } from '../controller/userController/shopController.js'
 import { addToCart, loadCart, updateCartItem, removeCartItem } from '../controller/userController/cartController.js'
 import { loadWishlist, addToWishlist, removeFromWishlist } from '../controller/userController/wishlistController.js'
+import { loadCheckoutAddress,loadCheckoutPayment,loadCheckoutReview,placeOrder} from "../controller/userController/checkoutController.js";
 const router=express.Router()
 
 
@@ -60,7 +61,7 @@ router.post("/profile",isLoggedIn,isBlocked,upload.single("profileIcon"),editPro
 router.post("/profile/email/send-otp",isLoggedIn,isBlocked,editEmail)
 router.post("/profile/email/verify-otp",isLoggedIn,isBlocked,verifyEmail)
 
-router.get("/orders",isLoggedIn,isBlocked,loadPagenotFound)
+router.get("/orders",isLoggedIn,isBlocked)
 
 router.get("/addresses",isLoggedIn,isBlocked,loadAddress)
 
@@ -92,6 +93,21 @@ router.get("/cart", isLoggedIn, isBlocked, loadCart)
 router.get("/wishlist", isLoggedIn, isBlocked, loadWishlist)
 router.post("/add-to-wishlist", isLoggedIn, isBlocked, addToWishlist)
 router.post("/remove-from-wishlist", isLoggedIn, isBlocked, removeFromWishlist)
+
+router.get("/checkout/address", isLoggedIn, isBlocked, loadCheckoutAddress);
+
+router.get("/checkout/payment", isLoggedIn, isBlocked, loadCheckoutPayment);
+
+router.get("/checkout/review", isLoggedIn, isBlocked, loadCheckoutReview);
+router.post("/place-order", isLoggedIn, isBlocked, placeOrder);
+
+// router.get("/my-orders", isLoggedIn, isBlocked, getMyOrders);
+// router.get("/order/:orderId", isLoggedIn, isBlocked, getOrderDetails);
+
+// router.patch("/order/:orderId/cancel", isLoggedIn, isBlocked, cancelOrder);
+
+// router.patch("/order/:orderId/return", isLoggedIn, isBlocked, returnOrder);
+
 
 router.post("/resend-otp", resendOtp)
 

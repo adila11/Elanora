@@ -19,7 +19,7 @@ export const addToCart = async (req, res) => {
         const userId = user._id;
         const { productId, variantId, qty } = req.body;
 
-        if (!qty || isNaN(qty) || qty < 1) {
+        if (!qty || isNaN(qty) || qty < 1 ) {
             return res.json({ success: false, message: "Invalid quantity" });
         }
 
@@ -43,6 +43,9 @@ export const addToCart = async (req, res) => {
             }
             return res.json({ success: false, message: `You can only add ${remaining} more items to the cart.` });
         }
+
+
+        
 
         let existingItemQty = 0;
         let itemIndex = -1;

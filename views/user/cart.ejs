@@ -44,7 +44,7 @@
     main {
       max-width: 1160px;
       margin: 0 auto;
-      padding: 44px 40px 80px;
+      padding: 110px 40px 80px;
     }
 
     .page-header {
@@ -550,7 +550,7 @@
         </div>
 
         <button class="checkout-btn" 
-          onclick="<% if (!canCheckout) { %> showModal('error', 'Update Required', 'Please update your cart before proceeding.', [{ label: 'Close', primary: true, action: 'closeModal()' }]); <% } else { %> location.href='/checkout' <% } %>">
+          onclick="<% if (!canCheckout) { %> showModal('error', 'Update Required', 'Please update your cart before proceeding.', [{ label: 'Close', primary: true, action: 'closeModal()' }]); <% } else { %> location.href='/checkout/address' <% } %>">
           Proceed to Checkout
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -680,6 +680,16 @@
   </script>
 
   <%- include('partials/user/modal') %>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('error') && urlParams.get('error') === 'unavailable') {
+        showModal('error', 'Update Required', 'One or more items in your cart are no longer available or out of stock. Please update your cart to proceed.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    });
+  </script>
 </body>
 
 </html>

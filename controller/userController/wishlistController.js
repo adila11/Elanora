@@ -15,7 +15,6 @@ export const loadWishlist = async (req, res) => {
         const wishlist = await Wishlist.findOne({ userId: user._id })
             .populate("products.productId");
 
-        // Filter out any products that are null (deleted) or unlisted
         let wishlistItems = [];
         if (wishlist && wishlist.products.length > 0) {
             wishlistItems = wishlist.products.filter(
@@ -54,7 +53,6 @@ export const addToWishlist = async (req, res) => {
             return res.json({ success: false, message: "Product not found" });
         }
 
-        // Validate: Check if product already exists in the cart
         const cart = await Cart.findOne({ userId: user._id });
         if (cart) {
             const inCart = cart.items.some(item => item.productId.toString() === productId.toString());
@@ -71,7 +69,6 @@ export const addToWishlist = async (req, res) => {
                 products: [{ productId }]
             });
         } else {
-            // Check if product already exists in wishlist
             const exists = wishlist.products.some(
                 item => item.productId.toString() === productId
             );
