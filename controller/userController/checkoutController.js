@@ -104,6 +104,13 @@ export const loadCheckoutReview = async (req, res) => {
     }
 };
 
+const generateOrderId = () => {
+    const date = new Date();
+    const year = date.getFullYear().toString().slice(2);
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const random = Math.floor(100000 + Math.random() * 900000); // 6 digits
+    return `ORD${year}${month}${random}`;
+};
 
 export const placeOrder = async (req, res) => {
     try {
@@ -171,7 +178,12 @@ export const placeOrder = async (req, res) => {
         const deliveryCharge = 0;
         const finalAmount = subtotal + deliveryCharge;
 
-        const order = new Order({
+
+    
+
+
+        const order = new Order({     
+            orderId: generateOrderId(),     
             userId,
             items: orderItems,
             shippingAddress: {
@@ -210,11 +222,40 @@ export const placeOrder = async (req, res) => {
             success: true,
             message: "Order placed successfully!",
             orderId: order.orderId || order._id,
-            redirectUrl: `/order-confirmation?orderId=${order._id}`
+            redirectUrl: `/order-success/${order._id}`
         });
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Failed to place order" });
+    }
+
+};
+
+
+
+
+export const loadOrderSuccess = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+        if (!order) return res.redirect("/");
+
+        const from = new Date(order.createdAt);
+        const to   = new Date(order.createdAt);
+        from.setDate(from.getDate() + 3);
+        to.setDate(to.getDate() + 5);
+        const fmt = d => d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+
+        res.render("user/checkout/orderSuccess", {
+            order: {
+                _id:           order._id,
+                orderId:       order.orderId || order._id,
+                totalAmount:   order.finalAmount,
+                deliveryRange: `${fmt(from)} – ${fmt(to)}`
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.redirect("/");
     }
 };

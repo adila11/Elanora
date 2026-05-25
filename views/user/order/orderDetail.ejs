@@ -1,1216 +1,1046 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Elanora – Order Detail</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --gold: #C9973A;
-    --gold-light: #E8C97A;
-    --gold-pale: #F5EDD8;
-    --cream: #FAF6F0;
-    --cream-dark: #F0E8DC;
-    --text-dark: #1A1410;
-    --text-mid: #5C4E3A;
-    --text-light: #9A8A76;
-    --white: #FFFFFF;
-    --border: #E8DDD0;
-    --green: #4CAF7D;
-    --radius: 14px;
-    --shadow: 0 4px 24px rgba(100,70,30,0.08);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Jost', sans-serif;
-    background: var(--cream);
-    color: var(--text-dark);
-    min-height: 100vh;
-  }
-
-  /* ─── NAV ─── */
-  nav {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 60px;
-    height: 64px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--gold);
-    text-decoration: none;
-  }
-
-  .logo svg { width: 26px; height: 26px; }
-
-  .nav-links {
-    display: flex;
-    gap: 36px;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-size: 0.85rem;
-    font-weight: 400;
-    color: var(--text-mid);
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--gold); }
-
-  .nav-icons {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    color: var(--text-mid);
-  }
-
-  .nav-icons svg { width: 20px; height: 20px; cursor: pointer; }
-  .nav-icons .badge {
-    position: relative;
-  }
-  .nav-icons .badge::after {
-    content: '2';
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    background: var(--gold);
-    color: white;
-    font-size: 0.6rem;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* ─── MAIN LAYOUT ─── */
-  .page-wrap {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-  }
-
-  /* ─── PROFILE CARD ─── */
-  .profile-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 28px 32px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 32px;
-  }
-
-  .avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--gold);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
-    color: white;
-    font-weight: 600;
-    flex-shrink: 0;
-    position: relative;
-  }
-
-  .avatar-edit {
-    position: absolute;
-    bottom: 0; right: 0;
-    width: 20px; height: 20px;
-    background: white;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-  }
-
-  .avatar-edit svg { width: 10px; height: 10px; color: var(--text-mid); }
-
-  .profile-info h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-
-  .profile-info p {
-    font-size: 0.82rem;
-    color: var(--text-light);
-    margin-bottom: 10px;
-  }
-
-  .profile-tags {
-    display: flex;
-    gap: 10px;
-  }
-
-  .tag {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 0.78rem;
-    color: var(--text-mid);
-  }
-
-  .tag svg { width: 14px; height: 14px; color: var(--gold); }
-
-  /* ─── BODY GRID ─── */
-  .body-grid {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 24px;
-  }
-
-  /* ─── SIDEBAR ─── */
-  .sidebar {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 16px 0;
-    height: fit-content;
-  }
-
-  .sidebar-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 24px;
-    font-size: 0.85rem;
-    color: var(--text-mid);
-    cursor: pointer;
-    transition: all 0.2s;
-    border-left: 3px solid transparent;
-    text-decoration: none;
-  }
-
-  .sidebar-item:hover { background: var(--cream); color: var(--gold); }
-
-  .sidebar-item.active {
-    border-left-color: var(--gold);
-    background: var(--gold-pale);
-    color: var(--gold);
-    font-weight: 500;
-  }
-
-  .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-
-  /* ─── ORDER CARD ─── */
-  .order-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 32px;
-  }
-
-  .order-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 28px;
-  }
-
-  .back-btn {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s;
-    background: none;
-  }
-
-  .back-btn:hover { background: var(--cream); }
-  .back-btn svg { width: 16px; height: 16px; color: var(--text-mid); }
-
-  .order-header h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem;
-    font-weight: 600;
-  }
-
-  /* ─── ORDER META ─── */
-  .order-meta {
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px 24px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr auto;
-    gap: 16px;
-    align-items: center;
-    margin-bottom: 32px;
-  }
-
-  .meta-item label {
-    display: block;
-    font-size: 0.72rem;
-    color: var(--text-light);
-    letter-spacing: 0.05em;
-    margin-bottom: 4px;
-    text-transform: uppercase;
-  }
-
-  .meta-item span {
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--text-dark);
-  }
-
-  .meta-address {
-    font-size: 0.82rem;
-    color: var(--text-mid);
-    line-height: 1.5;
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .meta-address svg { width: 14px; margin-top: 2px; color: var(--gold); flex-shrink: 0; }
-
-  .status-badge {
-    background: #EDF7FF;
-    color: #2E7FBB;
-    border: 1px solid #B8DCFA;
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 0.78rem;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-
-  /* ─── TRACKER ─── */
-  .tracker {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 36px;
-    position: relative;
-    padding: 0 12px;
-  }
-
-  .tracker-line {
-    position: absolute;
-    top: 20px;
-    left: 32px;
-    right: 32px;
-    height: 2px;
-    background: var(--border);
-    z-index: 0;
-  }
-
-  .tracker-fill {
-    position: absolute;
-    top: 20px;
-    left: 32px;
-    width: 60%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--gold), var(--gold-light));
-    z-index: 1;
-  }
-
-  .tracker-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    z-index: 2;
-  }
-
-  .step-dot {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: var(--border);
-    display: flex; align-items: center; justify-content: center;
-    border: 2px solid var(--border);
-  }
-
-  .step-dot.done {
-    background: var(--gold);
-    border-color: var(--gold);
-  }
-
-  .step-dot svg { width: 18px; height: 18px; color: white; }
-
-  .tracker-step span {
-    font-size: 0.72rem;
-    color: var(--text-light);
-    text-align: center;
-    white-space: nowrap;
-    font-weight: 400;
-  }
-
-  .tracker-step.done span { color: var(--gold); font-weight: 500; }
-
-  /* ─── ITEMS ─── */
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--text-dark);
-  }
-
-  .order-items { display: flex; flex-direction: column; gap: 16px; }
-
-  .order-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    transition: box-shadow 0.2s;
-  }
-
-  .order-item:hover { box-shadow: 0 2px 12px rgba(100,70,30,0.07); }
-
-  .item-img {
-    width: 72px; height: 72px;
-    border-radius: 8px;
-    object-fit: cover;
-    background: var(--cream-dark);
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-  }
-
-  .item-img img { width: 100%; height: 100%; object-fit: cover; }
-
-  .item-details { flex: 1; }
-
-  .item-details h4 {
-    font-weight: 500;
-    font-size: 0.92rem;
-    margin-bottom: 3px;
-  }
-
-  .item-details p {
-    font-size: 0.78rem;
-    color: var(--text-light);
-    margin-bottom: 6px;
-  }
-
-  .item-qty {
-    font-size: 0.8rem;
-    color: var(--text-mid);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .item-qty .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text-light); }
-  .item-qty strong { color: var(--text-dark); font-weight: 500; }
-
-  .item-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
-  }
-
-  .delivered-badge {
-    background: #EDFBF3;
-    color: var(--green);
-    border: 1px solid #B2EDD0;
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 0.78rem;
-    font-weight: 500;
-  }
-
-  .return-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid var(--gold);
-    background: white;
-    color: var(--gold);
-    border-radius: 20px;
-    padding: 6px 16px;
-    font-size: 0.78rem;
-    font-family: 'Jost', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .return-btn:hover { background: var(--gold); color: white; }
-  .return-btn svg { width: 13px; height: 13px; }
-
-  /* ─── SUMMARY ─── */
-  .order-summary {
-    margin-top: 28px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-  }
-
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 0.85rem;
-    color: var(--text-mid);
-  }
-
-  .summary-row.total {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-top: 14px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-  }
-
-  /* ─── FOOTER ─── */
-  footer {
-    background: var(--cream-dark);
-    border-top: 1px solid var(--border);
-    padding: 60px 60px 32px;
-    margin-top: 80px;
-  }
-
-  .footer-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
-    gap: 40px;
-    max-width: 1080px;
-    margin: 0 auto 40px;
-  }
-
-  .footer-brand .logo { margin-bottom: 12px; font-size: 1.3rem; }
-
-  .footer-brand p {
-    font-size: 0.82rem;
-    color: var(--text-light);
-    line-height: 1.7;
-    margin-bottom: 16px;
-  }
-
-  .social-icons {
-    display: flex;
-    gap: 10px;
-  }
-
-  .social-icon {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: white;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-
-  .social-icon:hover { border-color: var(--gold); }
-  .social-icon svg { width: 14px; height: 14px; color: var(--text-mid); }
-
-  footer h4 {
-    font-size: 0.88rem;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--text-dark);
-    letter-spacing: 0.03em;
-  }
-
-  footer ul { list-style: none; }
-  footer ul li { margin-bottom: 10px; }
-  footer ul a {
-    font-size: 0.82rem;
-    color: var(--text-light);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  footer ul a:hover { color: var(--gold); }
-
-  .newsletter-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .newsletter-form input {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 0.82rem;
-    font-family: 'Jost', sans-serif;
-    background: white;
-    color: var(--text-dark);
-    outline: none;
-  }
-
-  .newsletter-form input:focus { border-color: var(--gold); }
-
-  .subscribe-btn {
-    background: var(--gold);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 11px;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .subscribe-btn:hover { background: #B8862E; }
-
-  .footer-bottom {
-    max-width: 1080px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    border-top: 1px solid var(--border);
-    padding-top: 20px;
-    font-size: 0.75rem;
-    color: var(--text-light);
-  }
-
-  .footer-bottom a { color: var(--text-light); text-decoration: none; }
-  .footer-bottom a:hover { color: var(--gold); }
-  .footer-legal { display: flex; gap: 20px; }
-
-  /* ─── MODAL OVERLAY ─── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(20,14,8,0.45);
-    backdrop-filter: blur(3px);
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-
-  .modal-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  /* ─── MODAL ─── */
-  .modal {
-    background: white;
-    border-radius: 18px;
-    width: 100%;
-    max-width: 420px;
-    padding: 28px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    transform: translateY(20px) scale(0.97);
-    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    position: relative;
-  }
-
-  .modal-overlay.active .modal {
-    transform: translateY(0) scale(1);
-  }
-
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-
-  .modal-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-  }
-
-  .modal-title svg { width: 18px; height: 18px; color: var(--gold); }
-
-  .modal-close {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    border: none;
-    background: var(--cream);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .modal-close:hover { background: var(--cream-dark); }
-  .modal-close svg { width: 14px; height: 14px; color: var(--text-mid); }
-
-  .modal-item-card {
-    background: var(--cream);
-    border-radius: 10px;
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 24px;
-    border: 1px solid var(--border);
-  }
-
-  .modal-item-img {
-    width: 52px; height: 52px;
-    border-radius: 8px;
-    background: var(--cream-dark);
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-
-  .modal-item-img img { width: 100%; height: 100%; object-fit: cover; }
-
-  .modal-item-info h4 {
-    font-weight: 500;
-    font-size: 0.88rem;
-    margin-bottom: 3px;
-  }
-
-  .modal-item-info p {
-    font-size: 0.75rem;
-    color: var(--text-light);
-  }
-
-  .reasons-label {
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--text-dark);
-    margin-bottom: 12px;
-  }
-
-  .reasons-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  .reason-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.18s;
-    font-size: 0.84rem;
-    color: var(--text-mid);
-  }
-
-  .reason-option:hover {
-    border-color: var(--gold-light);
-    background: var(--gold-pale);
-  }
-
-  .reason-option.selected {
-    border-color: var(--gold);
-    background: var(--gold-pale);
-    color: var(--text-dark);
-  }
-
-  .radio-circle {
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border);
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: border-color 0.18s;
-  }
-
-  .reason-option.selected .radio-circle {
-    border-color: var(--gold);
-    background: var(--gold);
-  }
-
-  .radio-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: white;
-    display: none;
-  }
-
-  .reason-option.selected .radio-dot { display: block; }
-
-  .additional-label {
-    font-size: 0.82rem;
-    font-weight: 500;
-    margin-bottom: 8px;
-    color: var(--text-dark);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .additional-label span {
-    font-size: 0.75rem;
-    color: var(--text-light);
-    font-weight: 400;
-  }
-
-  .additional-textarea {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 0.82rem;
-    font-family: 'Jost', sans-serif;
-    color: var(--text-dark);
-    resize: none;
-    height: 80px;
-    outline: none;
-    transition: border-color 0.18s;
-    margin-bottom: 20px;
-  }
-
-  .additional-textarea:focus { border-color: var(--gold); }
-  .additional-textarea::placeholder { color: var(--text-light); }
-
-  .modal-actions {
-    display: flex;
-    gap: 12px;
-  }
-
-  .cancel-btn {
-    flex: 1;
-    padding: 12px;
-    border: 1.5px solid var(--gold);
-    background: white;
-    color: var(--gold);
-    border-radius: 10px;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .cancel-btn:hover { background: var(--gold-pale); }
-
-  .submit-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    background: var(--gold);
-    color: white;
-    border-radius: 10px;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .submit-btn:hover { background: #B8862E; }
-  .submit-btn:disabled { background: var(--border); color: var(--text-light); cursor: not-allowed; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Detail – Elanora</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #fdfaf5;
+      color: #2c2c2c;
+    }
+
+    /* ── ORDER HEADER ── */
+    .order-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid #f0ece4;
+      padding-bottom: 18px;
+      margin-bottom: 28px;
+    }
+
+    .back-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid #e8e0d0;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s;
+      flex-shrink: 0;
+      text-decoration: none;
+      color: #888;
+    }
+
+    .back-btn:hover { background: #fdfaf5; }
+
+    .order-header h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #2c2c2c;
+    }
+
+    /* ── META GRID ── */
+    .order-meta {
+      background: #fdfaf5;
+      border: 1px solid #e8e0d0;
+      border-radius: 10px;
+      padding: 18px 22px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .meta-group label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+
+    .meta-group span {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #2c2c2c;
+    }
+
+    .meta-address {
+      font-size: 0.8rem;
+      color: #888;
+      line-height: 1.55;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .meta-address svg {
+      width: 13px;
+      margin-top: 2px;
+      color: #c49a2a;
+      flex-shrink: 0;
+    }
+
+    /* ── STATUS BADGES ── */
+    .status-badge {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .status-badge.pending,
+    .status-badge.processing,
+    .status-badge.shipped,
+    .status-badge.out_for_delivery { background: #EBF3FD; color: #5B9BD5; border: 1px solid #C5DCEF; }
+
+    .status-badge.delivered { background: #EBF8F2; color: #4CAF7D; border: 1px solid #B5E5CE; }
+
+    .status-badge.cancelled,
+    .status-badge.returned { background: #FDF0EE; color: #C0392B; border: 1px solid #E8B4B0; }
+
+    /* ── TRACKER ── */
+    .tracker-wrap {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 34px;
+      padding: 0 12px;
+    }
+
+    .tracker-line {
+      position: absolute;
+      top: 20px;
+      left: 32px;
+      right: 32px;
+      height: 2px;
+      background: #e8e0d0;
+      z-index: 0;
+    }
+
+    .tracker-fill {
+      position: absolute;
+      top: 20px;
+      left: 32px;
+      height: 2px;
+      background: linear-gradient(90deg, #c49a2a, #e8c97a);
+      z-index: 1;
+      transition: width 0.4s ease;
+    }
+
+    .tracker-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .step-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e8e0d0;
+      border: 2px solid #e8e0d0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-dot.done {
+      background: #c49a2a;
+      border-color: #c49a2a;
+    }
+
+    .step-dot svg { width: 18px; height: 18px; color: #fff; }
+
+    .tracker-step span {
+      font-size: 0.7rem;
+      color: #aaa;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .tracker-step.done span {
+      color: #c49a2a;
+      font-weight: 600;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2c2c2c;
+      margin-bottom: 14px;
+    }
+
+    /* ── ITEM ROWS ── */
+    .order-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid #e8e0d0;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      transition: box-shadow 0.2s;
+    }
+
+    .order-item:hover {
+      box-shadow: 0 4px 18px rgba(44, 31, 14, 0.07);
+    }
+
+    .item-img {
+      width: 68px;
+      height: 68px;
+      border-radius: 9px;
+      background: #f7f3ec;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .item-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .item-details { flex: 1; }
+
+    .item-details h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #2c2c2c;
+      margin-bottom: 3px;
+    }
+
+    .item-details p {
+      font-size: 0.78rem;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    .item-qty {
+      font-size: 0.8rem;
+      color: #888;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .item-qty .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #ccc;
+    }
+
+    .item-qty strong { color: #2c2c2c; font-weight: 600; }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ── ACTION BUTTONS ── */
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #c49a2a;
+      color: #fff;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 30px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-gold:hover { background: #a87820; }
+
+    .btn-outline-red {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 16px;
+      background: transparent;
+      color: #C0392B;
+      border: 1px solid #E8B4B0;
+      border-radius: 30px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-outline-red:hover { background: #FDF0EE; border-color: #C0392B; }
+
+    .btn-outline-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 16px;
+      background: transparent;
+      color: #c49a2a;
+      border: 1px solid #c49a2a;
+      border-radius: 30px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-outline-gold:hover { background: #c49a2a; color: #fff; }
+
+    /* ── ITEM STATUS BADGE ── */
+    .item-status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: #EBF8F2;
+      color: #4CAF7D;
+      border: 1px solid #B5E5CE;
+    }
+
+    /* ── SUMMARY ── */
+    .order-summary {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid #e8e0d0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    .summary-row.total {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #2c2c2c;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #e8e0d0;
+    }
+
+    /* ── MODALS ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 31, 14, 0.4);
+      backdrop-filter: blur(3px);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 440px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(44, 31, 14, 0.15);
+      transform: translateY(16px) scale(0.97);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #2c2c2c;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-title svg { width: 18px; height: 18px; color: #c49a2a; }
+
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: #f7f3ec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #888;
+      transition: background 0.15s;
+    }
+
+    .modal-close:hover { background: #e8e0d0; }
+    .modal-close svg { width: 13px; height: 13px; }
+
+    .modal-item-card {
+      background: #fdfaf5;
+      border: 1px solid #e8e0d0;
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .modal-item-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      background: #f7f3ec;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .modal-item-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .modal-item-info h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 3px; }
+    .modal-item-info p { font-size: 0.75rem; color: #aaa; }
+
+    /* Reasons */
+    .reasons-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #2c2c2c;
+      margin-bottom: 10px;
+    }
+
+    .reasons-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+
+    .reason-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border: 1.5px solid #e8e0d0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.83rem;
+      color: #888;
+      transition: all 0.15s;
+    }
+
+    .reason-option:hover { border-color: #c49a2a; background: #fdf9ef; }
+
+    .reason-option.selected { border-color: #c49a2a; background: #fdf9ef; color: #2c2c2c; }
+
+    .radio-circle {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      border: 1.5px solid #e8e0d0;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.15s;
+    }
+
+    .reason-option.selected .radio-circle { border-color: #c49a2a; background: #c49a2a; }
+
+    .radio-dot { width: 7px; height: 7px; border-radius: 50%; background: #fff; display: none; }
+    .reason-option.selected .radio-dot { display: block; }
+
+    /* Textarea */
+    .modal-label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #2c2c2c;
+      margin-bottom: 7px;
+    }
+
+    .modal-label span { font-weight: 400; text-transform: none; letter-spacing: 0; color: #bbb; }
+
+    .modal-textarea {
+      width: 100%;
+      height: 88px;
+      resize: none;
+      padding: 12px 14px;
+      border: 1px solid #e8e0d0;
+      border-radius: 9px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      color: #2c2c2c;
+      background: #fdfaf5;
+      outline: none;
+      transition: border-color 0.15s;
+      margin-bottom: 20px;
+    }
+
+    .modal-textarea:focus { border-color: #c49a2a; background: #fff; }
+    .modal-textarea::placeholder { color: #bbb; }
+
+    /* Modal actions */
+    .modal-actions { display: flex; gap: 12px; }
+
+    .modal-btn-cancel {
+      flex: 1;
+      padding: 11px;
+      background: #f7f3ec;
+      border: 1px solid #e8e0d0;
+      border-radius: 30px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #888;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .modal-btn-cancel:hover { background: #e8e0d0; }
+
+    .modal-btn-submit {
+      flex: 1;
+      padding: 11px;
+      background: #c49a2a;
+      border: none;
+      border-radius: 30px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .modal-btn-submit:hover { background: #a87820; }
+    .modal-btn-submit:disabled { background: #e8e0d0; color: #bbb; cursor: not-allowed; }
+
+    .modal-btn-danger {
+      flex: 1;
+      padding: 11px;
+      background: #C0392B;
+      border: none;
+      border-radius: 30px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .modal-btn-danger:hover { background: #a93226; }
+  </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="logo" href="#">
-    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="20,2 36,12 36,28 20,38 4,28 4,12" stroke="#C9973A" stroke-width="2" fill="none"/>
-      <polygon points="20,8 30,15 30,25 20,32 10,25 10,15" fill="#C9973A" opacity="0.3"/>
-    </svg>
-    Elanora
-  </a>
-  <ul class="nav-links">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Shop</a></li>
-    <li><a href="#">About Us</a></li>
-    <li><a href="#">Contact Us</a></li>
-  </ul>
-  <div class="nav-icons">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
-    <div class="badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </div>
-    <div class="badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+  <%- include('partials/user/header') %>
+
+  <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
+
+    <%- include('partials/user/profileBanner', { user }) %>
+
+    <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
+
+      <%- include('partials/user/profileSidebar', { activePage: 'orders' }) %>
+
+      <main style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+
+        <!-- Header row -->
+        <div class="order-header">
+          <a href="/orders" class="back-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </a>
+          <h3>Order #<%= order.orderId %></h3>
+
+          <% if (['pending', 'processing'].includes(order.orderStatus)) { %>
+            <button class="btn-outline-red" style="margin-left:auto;" onclick="openFullCancelModal()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+              </svg>
+              Cancel Order
+            </button>
+          <% } %>
+        </div>
+
+        <!-- Meta -->
+        <div class="order-meta">
+          <div class="meta-group">
+            <label>Order Date</label>
+            <span><%= new Date(order.createdAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) %></span>
+          </div>
+          <div class="meta-group">
+            <label>Total</label>
+            <span>₹<%= order.finalAmount %></span>
+          </div>
+          <div class="meta-group">
+            <label>Payment</label>
+            <span><%= order.paymentMethod.toUpperCase() %></span>
+          </div>
+          <div class="meta-address">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span>
+              <%= order.shippingAddress.fullName %><br>
+              <%= order.shippingAddress.addressLine %>, <%= order.shippingAddress.city %><br>
+              <%= order.shippingAddress.state %> – <%= order.shippingAddress.pincode %><br>
+              Phone: <%= order.shippingAddress.phone %>
+            </span>
+          </div>
+          <span class="status-badge <%= order.orderStatus %>">
+            <%= String(order.orderStatus).replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %>
+          </span>
+        </div>
+
+        <!-- Tracker -->
+        <%
+          const statusSteps = ['pending','processing','shipped','out_for_delivery','delivered'];
+          let currentStep = statusSteps.indexOf(order.orderStatus);
+          if (currentStep < 0) currentStep = 0;
+          const fillPct = (currentStep / (statusSteps.length - 1)) * 100;
+        %>
+        <div class="tracker-wrap">
+          <div class="tracker-line"></div>
+          <div class="tracker-fill" style="width:<%= fillPct %>%;"></div>
+
+          <% const trackerSteps = [
+            { label:'Order Placed',     icon:'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
+            { label:'Processing',       icon:'M20 6L9 17l-5-5' },
+            { label:'Shipped',          icon:'M1 3h15v13H1zM16 8l4 0 3 3 0 5-7 0' },
+            { label:'Out for Delivery', icon:'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0zM12 10m-3 0a3 3 0 106 0 3 3 0 10-6 0' },
+            { label:'Delivered',        icon:'M20 6L9 17l-5-5' },
+          ]; %>
+
+          <% trackerSteps.forEach((step, i) => { %>
+            <div class="tracker-step <%= currentStep >= i ? 'done' : '' %>">
+              <div class="step-dot <%= currentStep >= i ? 'done' : '' %>">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="<%= step.icon %>"/>
+                </svg>
+              </div>
+              <span><%= step.label %></span>
+            </div>
+          <% }) %>
+        </div>
+
+        <!-- Items -->
+        <p class="section-title">Items in this Order</p>
+
+        <% order.items.forEach(item => { %>
+          <div class="order-item">
+            <div class="item-img">
+              <% if (item.productImage) { %>
+                <img src="<%= item.productImage %>" alt="<%= item.productName %>">
+              <% } else { %>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c49a2a" stroke-width="1.5">
+                  <rect x="2" y="3" width="20" height="14" rx="2"/>
+                </svg>
+              <% } %>
+            </div>
+
+            <div class="item-details">
+              <h4><%= item.productName %></h4>
+              <p><%= item.variantName || 'Default Variant' %></p>
+              <div class="item-qty">
+                <span>Qty: <%= item.qty %></span>
+                <div class="dot"></div>
+                <strong>₹<%= item.total %></strong>
+              </div>
+            </div>
+
+            <div class="item-actions">
+              <%# itemStatus: 'active' | 'cancelled' | 'returned' — show order status when item is active %>
+              <span class="item-status-badge" style="<%= item.itemStatus === 'cancelled' ? 'background:#FDF0EE;color:#C0392B;border-color:#E8B4B0;' : item.itemStatus === 'returned' ? 'background:#FDF0EE;color:#C0392B;border-color:#E8B4B0;' : '' %>">
+                <% if (item.itemStatus === 'active') { %>
+                  <%= String(order.orderStatus).replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %>
+                <% } else { %>
+                  <%= String(item.itemStatus).replace(/\b\w/g, c => c.toUpperCase()) %>
+                <% } %>
+              </span>
+
+              <%# Return: only after delivered, and item not already returned or cancelled %>
+              <% if (order.orderStatus === 'delivered' && item.itemStatus === 'active') { %>
+                <% const rId = JSON.stringify(String(item._id)); const rName = JSON.stringify(item.productName); const rSub = JSON.stringify(item.variantName || 'Default Variant'); const rImg = JSON.stringify(item.productImage || ''); %>
+<button
+  class="btn-outline-gold"
+  data-id="<%= item._id %>"
+  data-name="<%= item.productName %>"
+  data-sub="<%= item.variantName || 'Default Variant' %>"
+  data-img="<%= item.productImage || '' %>"
+  onclick="openReturnModal(this)"
+>                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+                  </svg>
+                  Return
+                </button>
+              <% } %>
+
+              <%# Cancel Item: only before shipped (pending/processing), and item is still active %>
+              <% if (['pending', 'processing'].includes(order.orderStatus) && item.itemStatus === 'active') { %>
+                <% const cId = JSON.stringify(String(item._id)); const cName = JSON.stringify(item.productName); const cSub = JSON.stringify(item.variantName || 'Default Variant'); const cImg = JSON.stringify(item.productImage || ''); %>
+<button
+  class="btn-outline-red"
+  data-id="<%= item._id %>"
+  data-name="<%= item.productName %>"
+  data-sub="<%= item.variantName || 'Default Variant' %>"
+  data-img="<%= item.productImage || '' %>"
+  onclick="openPartialCancelModal(this)"
+>                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                  </svg>
+                  Cancel Item
+                </button>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+
+        <!-- Summary -->
+        <div class="order-summary">
+          <div class="summary-row"><span>Subtotal</span><span>₹<%= order.orderTotal %></span></div>
+          <div class="summary-row"><span>Delivery Charge</span><span>₹<%= order.deliveryCharge %></span></div>
+          <div class="summary-row"><span>Discount</span><span>– ₹<%= order.discount %></span></div>
+          <div class="summary-row total"><span>Total</span><span>₹<%= order.finalAmount %></span></div>
+        </div>
+
+      </main>
     </div>
   </div>
-</nav>
 
-<div class="page-wrap">
+  <%- include('partials/user/footer') %>
 
-  <!-- PROFILE CARD -->
-  <div class="profile-card">
-    <div class="avatar">
-      A
-      <div class="avatar-edit">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      </div>
-    </div>
-    <div class="profile-info">
-      <h2>Adila K A</h2>
-      <p>adila@gmail.com</p>
-      <div class="profile-tags">
-        <div class="tag">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
-          Member since 2023
+  <!-- ── RETURN ITEM MODAL ── -->
+  <div class="modal-overlay" id="returnModal" onclick="if(event.target===this) closeReturnModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+          </svg>
+          Return Item
         </div>
-        <div class="tag">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-          Balance: ₹150000
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- BODY GRID -->
-  <div class="body-grid">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <a class="sidebar-item" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
-        Personal Info
-      </a>
-      <a class="sidebar-item" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        Password
-      </a>
-      <a class="sidebar-item active" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
-        Order History
-      </a>
-      <a class="sidebar-item" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Addresses
-      </a>
-      <a class="sidebar-item" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-        Wallet
-      </a>
-      <a class="sidebar-item" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7m0 0H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zm0 0h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
-        Referral Code
-      </a>
-      <a class="sidebar-item" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Logout
-      </a>
-    </aside>
-
-    <!-- ORDER DETAIL CARD -->
-    <div class="order-card">
-      <div class="order-header">
-        <button class="back-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <button class="modal-close" onclick="closeReturnModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
         </button>
-        <h2>Order &nbsp;#ORD-84729</h2>
       </div>
 
-      <!-- META -->
-      <div class="order-meta">
-        <div class="meta-item">
-          <label>Order Date</label>
-          <span>Oct 24, 2023</span>
-        </div>
-        <div class="meta-item">
-          <label>Total Amount</label>
-          <span>₹9000</span>
-        </div>
-        <div class="meta-item">
-          <label>Payment Method</label>
-          <span>Visa ending in 4242</span>
-        </div>
-        <div class="meta-address">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span>24, Rose Garden Apartment<br>Kerala, Kochi, 682016<br>India</span>
-        </div>
-        <span class="status-badge">Shipped</span>
-      </div>
-
-      <!-- TRACKER -->
-      <div class="tracker">
-        <div class="tracker-line"></div>
-        <div class="tracker-fill"></div>
-
-        <div class="tracker-step done">
-          <div class="step-dot done">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-          </div>
-          <span>Order Placed</span>
-        </div>
-
-        <div class="tracker-step done">
-          <div class="step-dot done">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <span>Confirmed</span>
-        </div>
-
-        <div class="tracker-step done">
-          <div class="step-dot done">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          </div>
-          <span>Shipped</span>
-        </div>
-
-        <div class="tracker-step">
-          <div class="step-dot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#9A8A76" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          </div>
-          <span>Out for Delivery</span>
-        </div>
-
-        <div class="tracker-step">
-          <div class="step-dot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#9A8A76" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <span>Delivered</span>
+      <div class="modal-item-card">
+        <div class="modal-item-img"><img id="returnItemImg" src="" alt=""></div>
+        <div class="modal-item-info">
+          <h4 id="returnItemName"></h4>
+          <p id="returnItemSub"></p>
         </div>
       </div>
 
-      <!-- ITEMS -->
-      <p class="section-title">Items in this Order</p>
-      <div class="order-items">
-
-        <div class="order-item">
-          <div class="item-img">
-            <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=200&q=80" alt="Gold Geometric Ring">
+      <p class="reasons-label">Select a reason for return:</p>
+      <div class="reasons-list" id="returnReasonsList">
+        <% ['Item is defective or damaged','Wrong item received','Item doesn\'t match description','Changed my mind','Item arrived too late','Other'].forEach(r => { %>
+          <div class="reason-option" onclick="selectReason(this, 'returnSubmitBtn')">
+            <div class="radio-circle"><div class="radio-dot"></div></div>
+            <%= r %>
           </div>
-          <div class="item-details">
-            <h4>Gold Geometric Ring</h4>
-            <p>14k Yellow Gold, Size 6</p>
-            <div class="item-qty">
-              <span>Qty: 1</span>
-              <div class="dot"></div>
-              <strong>₹4000</strong>
-            </div>
-          </div>
-          <div class="item-actions">
-            <span class="delivered-badge">Delivered</span>
-            <button class="return-btn" onclick="openModal('Gold Geometric Ring', '14k Gold, Color Gold', 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=200&q=80')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-              Return Item
-            </button>
-          </div>
-        </div>
-
-        <div class="order-item">
-          <div class="item-img">
-            <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=200&q=80" alt="Gold Chain Necklace">
-          </div>
-          <div class="item-details">
-            <h4>Gold Chain Necklace</h4>
-            <p>18k Yellow Gold, 18"</p>
-            <div class="item-qty">
-              <span>Qty: 1</span>
-              <div class="dot"></div>
-              <strong>₹5000</strong>
-            </div>
-          </div>
-          <div class="item-actions">
-            <span class="delivered-badge">Delivered</span>
-            <button class="return-btn" onclick="openModal('Gold Chain Necklace', '18k Gold, 18 inch', 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=200&q=80')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-              Return Item
-            </button>
-          </div>
-        </div>
-
+        <% }) %>
       </div>
 
-      <!-- SUMMARY -->
-      <div class="order-summary">
-        <div class="summary-row"><span>Subtotal</span><span>₹9000</span></div>
-        <div class="summary-row"><span>Shipping</span><span>Free</span></div>
-        <div class="summary-row"><span>Tax</span><span>₹0.00</span></div>
-        <div class="summary-row total"><span>Total</span><span>₹9000</span></div>
-      </div>
-    </div>
+      <label class="modal-label">Additional details <span>(optional)</span></label>
+      <textarea class="modal-textarea" id="returnDetails" placeholder="Please provide more information…"></textarea>
 
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a class="logo" href="#">
-        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
-          <polygon points="20,2 36,12 36,28 20,38 4,28 4,12" stroke="#C9973A" stroke-width="2" fill="none"/>
-          <polygon points="20,8 30,15 30,25 20,32 10,25 10,15" fill="#C9973A" opacity="0.3"/>
-        </svg>
-        Elanora
-      </a>
-      <p>Crafting timeless elegance and radiant refinement for those who appreciate the finer things in life.</p>
-      <div class="social-icons">
-        <div class="social-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></div>
-        <div class="social-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></div>
-        <div class="social-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
-        <div class="social-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></div>
-      </div>
-    </div>
-    <div>
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="#">Shop Collection</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Our Story</a></li>
-        <li><a href="#">Contact Us</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Customer Service</h4>
-      <ul>
-        <li><a href="#">FAQ</a></li>
-        <li><a href="#">Shipping & Returns</a></li>
-        <li><a href="#">Jewelry Care</a></li>
-        <li><a href="#">Terms & Conditions</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Newsletter</h4>
-      <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:14px;line-height:1.6;">Subscribe to receive updates, access to exclusive deals, and more.</p>
-      <div class="newsletter-form">
-        <input type="email" placeholder="Enter your email">
-        <button class="subscribe-btn">Subscribe</button>
+      <div class="modal-actions">
+        <button class="modal-btn-cancel" onclick="closeReturnModal()">Cancel</button>
+        <button class="modal-btn-submit" id="returnSubmitBtn" disabled onclick="submitReturn()">Submit Return</button>
       </div>
     </div>
   </div>
-  <div class="footer-bottom">
-    <span>© 2026. Elanora Jewelry. All rights reserved.</span>
-    <div class="footer-legal">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
+
+  <!-- ── FULL CANCEL MODAL ── -->
+  <div class="modal-overlay" id="fullCancelModal" onclick="if(event.target===this) closeFullCancelModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Cancel Entire Order</div>
+        <button class="modal-close" onclick="closeFullCancelModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <p style="font-size:0.82rem;color:#aaa;margin-bottom:18px;">This will cancel all items in your order. This action cannot be undone.</p>
+      <label class="modal-label">Reason</label>
+      <textarea class="modal-textarea" id="fullCancelReason" placeholder="Tell us why you're cancelling…"></textarea>
+      <div class="modal-actions">
+        <button class="modal-btn-cancel" onclick="closeFullCancelModal()">Keep Order</button>
+        <button class="modal-btn-danger" onclick="submitFullCancel()">Yes, Cancel Order</button>
+      </div>
     </div>
   </div>
-</footer>
 
-<!-- RETURN ITEM MODAL -->
-<div class="modal-overlay" id="returnModal" onclick="handleOverlayClick(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-        Return Item
+  <!-- ── PARTIAL ITEM CANCEL MODAL ── -->
+  <div class="modal-overlay" id="partialCancelModal" onclick="if(event.target===this) closePartialCancelModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Cancel Item</div>
+        <button class="modal-close" onclick="closePartialCancelModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
-      <button class="modal-close" onclick="closeModal()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-
-    <div class="modal-item-card">
-      <div class="modal-item-img">
-        <img id="modalItemImg" src="" alt="">
+      <div class="modal-item-card">
+        <div class="modal-item-img"><img id="partialCancelImg" src="" alt=""></div>
+        <div class="modal-item-info">
+          <h4 id="partialCancelName"></h4>
+          <p id="partialCancelSub"></p>
+        </div>
       </div>
-      <div class="modal-item-info">
-        <h4 id="modalItemName">Gold Geometric Ring</h4>
-        <p id="modalItemSub">14k Gold, Color Gold</p>
+      <label class="modal-label">Reason</label>
+      <textarea class="modal-textarea" id="partialCancelReason" placeholder="Tell us why you're cancelling this item…"></textarea>
+      <div class="modal-actions">
+        <button class="modal-btn-cancel" onclick="closePartialCancelModal()">Keep Item</button>
+        <button class="modal-btn-danger" onclick="submitPartialCancel()">Cancel Item</button>
       </div>
-    </div>
-
-    <p class="reasons-label">Select a reason for return:</p>
-    <div class="reasons-list" id="reasonsList">
-      <div class="reason-option" onclick="selectReason(this)">
-        <div class="radio-circle"><div class="radio-dot"></div></div>
-        Item is defective or damaged
-      </div>
-      <div class="reason-option" onclick="selectReason(this)">
-        <div class="radio-circle"><div class="radio-dot"></div></div>
-        Wrong item received
-      </div>
-      <div class="reason-option" onclick="selectReason(this)">
-        <div class="radio-circle"><div class="radio-dot"></div></div>
-        Item doesn't match description
-      </div>
-      <div class="reason-option" onclick="selectReason(this)">
-        <div class="radio-circle"><div class="radio-dot"></div></div>
-        Changed my mind
-      </div>
-      <div class="reason-option" onclick="selectReason(this)">
-        <div class="radio-circle"><div class="radio-dot"></div></div>
-        Item arrived too late
-      </div>
-      <div class="reason-option" onclick="selectReason(this)">
-        <div class="radio-circle"><div class="radio-dot"></div></div>
-        Other
-      </div>
-    </div>
-
-    <div class="additional-label">Additional details <span>(optional)</span></div>
-    <textarea class="additional-textarea" placeholder="Please provide more information..."></textarea>
-
-    <div class="modal-actions">
-      <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-      <button class="submit-btn" id="submitBtn" disabled onclick="submitReturn()">Submit Return</button>
     </div>
   </div>
-</div>
 
-<script>
-  function openModal(name, sub, imgSrc) {
-    document.getElementById('modalItemName').textContent = name;
-    document.getElementById('modalItemSub').textContent = sub;
-    document.getElementById('modalItemImg').src = imgSrc;
-    document.getElementById('modalItemImg').alt = name;
-    // reset
-    document.querySelectorAll('.reason-option').forEach(r => r.classList.remove('selected'));
-    document.querySelector('.additional-textarea').value = '';
-    document.getElementById('submitBtn').disabled = true;
-    document.getElementById('returnModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
+  <script>
+    let returnItemId = null;
+    let partialCancelItemId = null;
 
-  function closeModal() {
-    document.getElementById('returnModal').classList.remove('active');
-    document.body.style.overflow = '';
-  }
+    // ── Escape key closes all modals
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeReturnModal();
+        closeFullCancelModal();
+        closePartialCancelModal();
+      }
+    });
 
-  function handleOverlayClick(e) {
-    if (e.target === document.getElementById('returnModal')) closeModal();
-  }
+    // ── Reason selector
+    function selectReason(el, submitBtnId) {
+      el.closest('.reasons-list').querySelectorAll('.reason-option').forEach(r => r.classList.remove('selected'));
+      el.classList.add('selected');
+      if (submitBtnId) document.getElementById(submitBtnId).disabled = false;
+    }
 
-  function selectReason(el) {
-    document.querySelectorAll('.reason-option').forEach(r => r.classList.remove('selected'));
-    el.classList.add('selected');
-    document.getElementById('submitBtn').disabled = false;
-  }
+    // ── Return modal
+    function openReturnModal(btn) {
 
-  function submitReturn() {
-    const selected = document.querySelector('.reason-option.selected');
-    if (!selected) return;
-    const reason = selected.textContent.trim();
-    const details = document.querySelector('.additional-textarea').value;
-    alert(`Return request submitted!\n\nReason: ${reason}${details ? '\nDetails: ' + details : ''}`);
-    closeModal();
-  }
+  const itemId = btn.dataset.id;
+  const name = btn.dataset.name;
+  const sub = btn.dataset.sub;
+  const img = btn.dataset.img;
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-  });
-</script>
+  returnItemId = itemId;
+
+  document.getElementById('returnItemName').textContent = name;
+  document.getElementById('returnItemSub').textContent = sub;
+  document.getElementById('returnItemImg').src = img || '';
+
+  document.getElementById('returnDetails').value = '';
+
+  document.getElementById('returnSubmitBtn').disabled = true;
+
+  document.querySelectorAll('#returnReasonsList .reason-option')
+    .forEach(r => r.classList.remove('selected'));
+
+  document.getElementById('returnModal').classList.add('active');
+
+  document.body.style.overflow = 'hidden';
+}
+
+    function closeReturnModal() {
+      document.getElementById('returnModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    async function submitReturn() {
+      const selected = document.querySelector('#returnReasonsList .reason-option.selected');
+      if (!selected) return;
+      const reason = selected.textContent.trim();
+      const details = document.getElementById('returnDetails').value;
+      const btn = document.getElementById('returnSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+      try {
+        const res = await fetch(`/return-item/${returnItemId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason, details })
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeReturnModal();
+          if (typeof window.showToast === 'function') window.showToast('Return request submitted!', 'success');
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Something went wrong.', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Submit Return';
+        }
+      } catch (err) {
+        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Submit Return';
+      }
+    }
+
+    // ── Full cancel modal
+    function openFullCancelModal() {
+      document.getElementById('fullCancelReason').value = '';
+      document.getElementById('fullCancelModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeFullCancelModal() {
+      document.getElementById('fullCancelModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    async function submitFullCancel() {
+      const reason = document.getElementById('fullCancelReason').value.trim();
+      if (!reason) {
+        if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
+        return;
+      }
+      const btn = document.querySelector('#fullCancelModal .modal-btn-danger');
+      btn.disabled = true;
+      btn.textContent = 'Cancelling…';
+      try {
+        const res = await fetch(`/cancel-order/<%= order._id %>`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason })
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeFullCancelModal();
+          if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Yes, Cancel Order';
+        }
+      } catch (err) {
+        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Yes, Cancel Order';
+      }
+    }
+
+    // ── Partial item cancel modal
+    function openPartialCancelModal(btn) {
+
+      partialCancelItemId = btn.dataset.id;
+
+      document.getElementById('partialCancelName').textContent =
+        btn.dataset.name;
+
+      document.getElementById('partialCancelSub').textContent =
+        btn.dataset.sub;
+
+      document.getElementById('partialCancelImg').src =
+        btn.dataset.img || '';
+
+      document.getElementById('partialCancelReason').value = '';
+
+      document.getElementById('partialCancelModal').classList.add('active');
+
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePartialCancelModal() {
+      document.getElementById('partialCancelModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    async function submitPartialCancel() {
+      const reason = document.getElementById('partialCancelReason').value.trim();
+      if (!reason) {
+        if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
+        return;
+      }
+      const btn = document.querySelector('#partialCancelModal .modal-btn-danger');
+      btn.disabled = true;
+      btn.textContent = 'Cancelling…';
+      try {
+        const res = await fetch(`/cancel-item/${partialCancelItemId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason })
+        });
+        const data = await res.json();
+        if (data.success) {
+          closePartialCancelModal();
+          if (typeof window.showToast === 'function') window.showToast('Item cancelled successfully.', 'success');
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel item.', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Cancel Item';
+        }
+      } catch (err) {
+        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Cancel Item';
+      }
+    }
+  </script>
 </body>
-</html> 
+
+</html>

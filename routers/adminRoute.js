@@ -4,6 +4,7 @@ import { loadDashboard } from "../controller/adminController/dashboardController
 import { blockUser, loadUserManagement } from "../controller/adminController/customersController.js"
 import { loadProduct, loadAddProduct, addProduct, loadEditProduct, editProduct, toggleProductStatus, deleteProduct } from "../controller/adminController/productController.js"
 import { loadCategories, addCategory, editCategory, toggleCategory, deleteCategory } from "../controller/adminController/categoriesController.js"
+import { getOrdersPage, updateOrderStatus } from "../controller/adminController/orderController.js"
 import upload from "../config/multerCloudinary.js"
 const router=express.Router()
 
@@ -31,6 +32,11 @@ router.post("/categories/add", addCategory)
 router.put("/categories/edit/:id", editCategory)
 router.patch("/categories/:id/toggle", toggleCategory)
 router.delete("/categories/:id", deleteCategory)
+
+
+router.get("/orders", getOrdersPage);
+router.patch("/orders/:orderId/status",updateOrderStatus);
+
 
 
 router.get('/logout',logout) ;

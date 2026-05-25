@@ -10,7 +10,8 @@ import passport from 'passport'
 import { loadShop , loadProductDetail } from '../controller/userController/shopController.js'
 import { addToCart, loadCart, updateCartItem, removeCartItem } from '../controller/userController/cartController.js'
 import { loadWishlist, addToWishlist, removeFromWishlist } from '../controller/userController/wishlistController.js'
-import { loadCheckoutAddress,loadCheckoutPayment,loadCheckoutReview,placeOrder} from "../controller/userController/checkoutController.js";
+import { loadCheckoutAddress,loadCheckoutPayment,loadCheckoutReview,placeOrder,loadOrderSuccess} from "../controller/userController/checkoutController.js";
+import {  cancelFullOrder, cancelSingleItem, getOrderDetail, getOrders, returnItem } from '../controller/userController/orderController.js'
 const router=express.Router()
 
 
@@ -95,13 +96,19 @@ router.post("/add-to-wishlist", isLoggedIn, isBlocked, addToWishlist)
 router.post("/remove-from-wishlist", isLoggedIn, isBlocked, removeFromWishlist)
 
 router.get("/checkout/address", isLoggedIn, isBlocked, loadCheckoutAddress);
-
 router.get("/checkout/payment", isLoggedIn, isBlocked, loadCheckoutPayment);
-
 router.get("/checkout/review", isLoggedIn, isBlocked, loadCheckoutReview);
 router.post("/place-order", isLoggedIn, isBlocked, placeOrder);
 
-// router.get("/my-orders", isLoggedIn, isBlocked, getMyOrders);
+router.get("/order-success/:id", isLoggedIn, isBlocked, loadOrderSuccess); 
+
+router.get("/orders", isLoggedIn, isBlocked, getOrders);
+router.get("/orders/:id",isLoggedIn, isBlocked, getOrderDetail );
+router.post('/cancel-full-order', cancelFullOrder);
+router.post('/cancel-item', cancelSingleItem);
+router.post('/return-item', returnItem);
+
+
 // router.get("/order/:orderId", isLoggedIn, isBlocked, getOrderDetails);
 
 // router.patch("/order/:orderId/cancel", isLoggedIn, isBlocked, cancelOrder);
@@ -112,7 +119,6 @@ router.post("/place-order", isLoggedIn, isBlocked, placeOrder);
 router.post("/resend-otp", resendOtp)
 
 router.get("/logout",logout)
-
 
 router.use(loadPagenotFound);
 export default router

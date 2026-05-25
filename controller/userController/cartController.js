@@ -99,7 +99,6 @@ export const addToCart = async (req, res) => {
 
         await cart.save();
 
-        // Remove from wishlist if present
         const wishlist = await Wishlist.findOne({ userId: userId });
         console.log(wishlist)
         if (wishlist) {
@@ -113,6 +112,7 @@ export const addToCart = async (req, res) => {
         }
 
         res.json({ success: true, message: "Added to cart" });
+
 
     } catch (error) {
         console.error("ADD TO CART ERROR:", error);

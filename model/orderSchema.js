@@ -1,20 +1,25 @@
 import mongoose from "mongoose";
 
 const orderItemSchema = new mongoose.Schema({
+
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
         required: true
     },
+
     variantId: {
         type: mongoose.Schema.Types.ObjectId,
         required: false
     },
+
     productName: {
         type: String,
         required: true
     },
+
     variantName: String,
+
     productImage: String,
 
     qty: {
@@ -22,21 +27,49 @@ const orderItemSchema = new mongoose.Schema({
         required: true,
         min: 1
     },
-    price: {           // price per unit at time of purchase
+
+    price: {
         type: Number,
         required: true
     },
-    total: {           // qty * price
+
+    total: {
         type: Number,
         required: true
-    }
+    },
+
+    itemStatus: {
+        type: String,
+        enum: [
+            'active',
+            'cancelled',
+            'returned'
+        ],
+        default: 'active'
+    },
+
+    cancelReason: String,
+
+    returnReason: String,
+
+    cancelledAt: Date,
+
+    returnedAt: Date
+
 });
 
 const orderSchema = new mongoose.Schema({
     orderId: {
         type: String,
         unique: true,
-        required: true
+        required: true,
+        default: function () {
+            const date = new Date();
+            const year = date.getFullYear().toString().slice(2);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const random = Math.floor(100000 + Math.random() * 900000);
+            return `ORD${year}${month}${random}`;
+        }
     },
 
     userId: {
@@ -45,12 +78,12 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
 
-    items: [orderItemSchema],        // Embedded array as per your ERD
+    items: [orderItemSchema],
 
     shippingAddress: {
         fullName: { type: String, required: true, trim: true },
         phone: { type: String, required: true },
-        addressLine: { type: String, required: true, trim: true},
+        addressLine: { type: String, required: true, trim: true },
         apartment: String,
         city: { type: String, required: true, trim: true },
         state: { type: String, required: true },
@@ -90,7 +123,7 @@ const orderSchema = new mongoose.Schema({
         default: 'pending'
     },
 
-    transactionId: String,           // razorpayPaymentId etc.
+    transactionId: String,
 
     couponCode: String,
     isCouponApplied: {
@@ -102,8 +135,7 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: [
             'pending',
-            'confirmed',
-            'packed',
+            'processing',
             'shipped',
             'out_for_delivery',
             'delivered',
@@ -115,7 +147,6 @@ const orderSchema = new mongoose.Schema({
 
     returnReason: String,
     cancelReason: String,
-    
     cancelledAt: Date,
     deliveredAt: Date,
 
@@ -123,16 +154,6 @@ const orderSchema = new mongoose.Schema({
     timestamps: true 
 });
 
-// Auto generate orderId before saving
-orderSchema.pre("save", function (next) {
-    if (!this.orderId) {
-        const date = new Date();
-        const prefix = `ORD${date.getFullYear().toString().slice(2)}${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-        const random = Math.floor(10000 + Math.random() * 90000);
-        this.orderId = `${prefix}${random}`;
-    }
-    next();
-});
 
 const Order = mongoose.model("Order", orderSchema);
 
