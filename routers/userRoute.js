@@ -104,7 +104,7 @@ router.get("/order-success/:id", isLoggedIn, isBlocked, loadOrderSuccess);
 
 router.get("/orders", isLoggedIn, isBlocked, getOrders);
 router.get("/orders/:id",isLoggedIn, isBlocked, getOrderDetail );
-router.post('/cancel-full-order', cancelFullOrder);
+router.post('/orders/:id/cancel', cancelFullOrder);
 router.post('/cancel-item', cancelSingleItem);
 router.post('/return-item', returnItem);
 

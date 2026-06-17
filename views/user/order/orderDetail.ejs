@@ -6,10 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Detail – Elanora</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
 
   <style>
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -47,7 +51,9 @@
       color: #888;
     }
 
-    .back-btn:hover { background: #fdfaf5; }
+    .back-btn:hover {
+      background: #fdfaf5;
+    }
 
     .order-header h3 {
       font-family: 'Cormorant Garamond', serif;
@@ -111,15 +117,59 @@
       white-space: nowrap;
     }
 
-    .status-badge.pending,
-    .status-badge.processing,
-    .status-badge.shipped,
-    .status-badge.out_for_delivery { background: #EBF3FD; color: #5B9BD5; border: 1px solid #C5DCEF; }
+    .status-badge.pending {
+      background: #EBF3FD;
+      color: #5B9BD5;
+      border: 1px solid #C5DCEF;
+    }
 
-    .status-badge.delivered { background: #EBF8F2; color: #4CAF7D; border: 1px solid #B5E5CE; }
+    .status-badge.processing {
+      background: #EBF3FD;
+      color: #5B9BD5;
+      border: 1px solid #C5DCEF;
+    }
 
-    .status-badge.cancelled,
-    .status-badge.returned { background: #FDF0EE; color: #C0392B; border: 1px solid #E8B4B0; }
+    .status-badge.shipped {
+      background: #EBF3FD;
+      color: #5B9BD5;
+      border: 1px solid #C5DCEF;
+    }
+
+    .status-badge.out_for_delivery {
+      background: #EBF3FD;
+      color: #5B9BD5;
+      border: 1px solid #C5DCEF;
+    }
+
+    .status-badge.delivered {
+      background: #EBF8F2;
+      color: #4CAF7D;
+      border: 1px solid #B5E5CE;
+    }
+
+    .status-badge.cancelled {
+      background: #FDF0EE;
+      color: #C0392B;
+      border: 1px solid #E8B4B0;
+    }
+
+    .status-badge.partially_cancelled {
+      background: #FDF0EE;
+      color: #C0392B;
+      border: 1px solid #E8B4B0;
+    }
+
+    .status-badge.returned {
+      background: #FDF0EE;
+      color: #C0392B;
+      border: 1px solid #E8B4B0;
+    }
+
+    .status-badge.partially_returned {
+      background: #FDF0EE;
+      color: #C0392B;
+      border: 1px solid #E8B4B0;
+    }
 
     /* ── TRACKER ── */
     .tracker-wrap {
@@ -151,6 +201,10 @@
       transition: width 0.4s ease;
     }
 
+    .tracker-fill.red-fill {
+      background: linear-gradient(90deg, #C0392B, #e87a7a);
+    }
+
     .tracker-step {
       display: flex;
       flex-direction: column;
@@ -175,7 +229,16 @@
       border-color: #c49a2a;
     }
 
-    .step-dot svg { width: 18px; height: 18px; color: #fff; }
+    .step-dot.done-red {
+      background: #C0392B;
+      border-color: #C0392B;
+    }
+
+    .step-dot svg {
+      width: 18px;
+      height: 18px;
+      color: #fff;
+    }
 
     .tracker-step span {
       font-size: 0.7rem;
@@ -186,6 +249,11 @@
 
     .tracker-step.done span {
       color: #c49a2a;
+      font-weight: 600;
+    }
+
+    .tracker-step.done-red span {
+      color: #C0392B;
       font-weight: 600;
     }
 
@@ -201,7 +269,7 @@
     /* ── ITEM ROWS ── */
     .order-item {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 16px;
       padding: 16px;
       border: 1px solid #e8e0d0;
@@ -226,9 +294,15 @@
       justify-content: center;
     }
 
-    .item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .item-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-    .item-details { flex: 1; }
+    .item-details {
+      flex: 1;
+    }
 
     .item-details h4 {
       font-size: 0.9rem;
@@ -258,16 +332,63 @@
       background: #ccc;
     }
 
-    .item-qty strong { color: #2c2c2c; font-weight: 600; }
+    .item-qty strong {
+      color: #2c2c2c;
+      font-weight: 600;
+    }
+
+    .item-meta-info {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      line-height: 1.6;
+    }
+
+    .item-meta-info.cancelled-meta {
+      background: #FDF0EE;
+      border: 1px solid #F5C6C2;
+    }
+
+    .item-meta-info.returned-meta {
+      background: #F5EEFF;
+      border: 1px solid #D4B8F0;
+    }
+
+    .item-meta-info .meta-label {
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .item-meta-info.cancelled-meta .meta-label {
+      color: #C0392B;
+    }
+
+    .item-meta-info.returned-meta .meta-label {
+      color: #7B4FA6;
+    }
+
+    .item-meta-info.cancelled-meta .meta-value {
+      color: #8B3A30;
+    }
+
+    .item-meta-info.returned-meta .meta-value {
+      color: #5A3578;
+    }
 
     .item-actions {
       display: flex;
       align-items: center;
       gap: 10px;
       flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
-    /* ── ACTION BUTTONS ── */
     .btn-gold {
       display: inline-flex;
       align-items: center;
@@ -284,7 +405,9 @@
       transition: background 0.15s;
     }
 
-    .btn-gold:hover { background: #a87820; }
+    .btn-gold:hover {
+      background: #a87820;
+    }
 
     .btn-outline-red {
       display: inline-flex;
@@ -302,7 +425,10 @@
       transition: all 0.15s;
     }
 
-    .btn-outline-red:hover { background: #FDF0EE; border-color: #C0392B; }
+    .btn-outline-red:hover {
+      background: #FDF0EE;
+      border-color: #C0392B;
+    }
 
     .btn-outline-gold {
       display: inline-flex;
@@ -320,17 +446,54 @@
       transition: all 0.15s;
     }
 
-    .btn-outline-gold:hover { background: #c49a2a; color: #fff; }
+    .btn-outline-gold:hover {
+      background: #c49a2a;
+      color: #fff;
+    }
 
-    /* ── ITEM STATUS BADGE ── */
+    /* ── ITEM STATUS BADGES ── */
     .item-status-badge {
       padding: 4px 12px;
       border-radius: 20px;
       font-size: 0.7rem;
       font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .item-status-badge.item-active-delivered {
       background: #EBF8F2;
       color: #4CAF7D;
       border: 1px solid #B5E5CE;
+    }
+
+    .item-status-badge.item-active-progress {
+      background: #EBF3FD;
+      color: #5B9BD5;
+      border: 1px solid #C5DCEF;
+    }
+
+    .item-status-badge.item-cancelled {
+      background: #FDF0EE;
+      color: #C0392B;
+      border: 1px solid #E8B4B0;
+    }
+
+    .item-status-badge.item-returned {
+      background: #F5EEFF;
+      color: #7B4FA6;
+      border: 1px solid #D4B8F0;
+    }
+
+    .item-status-badge.item-return-requested {
+      background: #FFF3E6;
+      color: #D4730A;
+      border: 1px solid #F5C97A;
+    }
+
+    .item-status-badge.item-return-rejected {
+      background: #FDF0EE;
+      color: #C0392B;
+      border: 1px solid #E8B4B0;
     }
 
     /* ── SUMMARY ── */
@@ -389,7 +552,9 @@
       position: relative;
     }
 
-    .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+    .modal-overlay.active .modal {
+      transform: translateY(0) scale(1);
+    }
 
     .modal-header {
       display: flex;
@@ -408,7 +573,11 @@
       gap: 10px;
     }
 
-    .modal-title svg { width: 18px; height: 18px; color: #c49a2a; }
+    .modal-title svg {
+      width: 18px;
+      height: 18px;
+      color: #c49a2a;
+    }
 
     .modal-close {
       width: 28px;
@@ -424,8 +593,14 @@
       transition: background 0.15s;
     }
 
-    .modal-close:hover { background: #e8e0d0; }
-    .modal-close svg { width: 13px; height: 13px; }
+    .modal-close:hover {
+      background: #e8e0d0;
+    }
+
+    .modal-close svg {
+      width: 13px;
+      height: 13px;
+    }
 
     .modal-item-card {
       background: #fdfaf5;
@@ -447,12 +622,23 @@
       flex-shrink: 0;
     }
 
-    .modal-item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .modal-item-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-    .modal-item-info h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 3px; }
-    .modal-item-info p { font-size: 0.75rem; color: #aaa; }
+    .modal-item-info h4 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
 
-    /* Reasons */
+    .modal-item-info p {
+      font-size: 0.75rem;
+      color: #aaa;
+    }
+
     .reasons-label {
       font-size: 0.78rem;
       font-weight: 600;
@@ -462,7 +648,12 @@
       margin-bottom: 10px;
     }
 
-    .reasons-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+    .reasons-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 18px;
+    }
 
     .reason-option {
       display: flex;
@@ -477,9 +668,16 @@
       transition: all 0.15s;
     }
 
-    .reason-option:hover { border-color: #c49a2a; background: #fdf9ef; }
+    .reason-option:hover {
+      border-color: #c49a2a;
+      background: #fdf9ef;
+    }
 
-    .reason-option.selected { border-color: #c49a2a; background: #fdf9ef; color: #2c2c2c; }
+    .reason-option.selected {
+      border-color: #c49a2a;
+      background: #fdf9ef;
+      color: #2c2c2c;
+    }
 
     .radio-circle {
       width: 17px;
@@ -493,12 +691,23 @@
       transition: border-color 0.15s;
     }
 
-    .reason-option.selected .radio-circle { border-color: #c49a2a; background: #c49a2a; }
+    .reason-option.selected .radio-circle {
+      border-color: #c49a2a;
+      background: #c49a2a;
+    }
 
-    .radio-dot { width: 7px; height: 7px; border-radius: 50%; background: #fff; display: none; }
-    .reason-option.selected .radio-dot { display: block; }
+    .radio-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fff;
+      display: none;
+    }
 
-    /* Textarea */
+    .reason-option.selected .radio-dot {
+      display: block;
+    }
+
     .modal-label {
       display: block;
       font-size: 0.7rem;
@@ -509,7 +718,12 @@
       margin-bottom: 7px;
     }
 
-    .modal-label span { font-weight: 400; text-transform: none; letter-spacing: 0; color: #bbb; }
+    .modal-label span {
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      color: #bbb;
+    }
 
     .modal-textarea {
       width: 100%;
@@ -527,11 +741,19 @@
       margin-bottom: 20px;
     }
 
-    .modal-textarea:focus { border-color: #c49a2a; background: #fff; }
-    .modal-textarea::placeholder { color: #bbb; }
+    .modal-textarea:focus {
+      border-color: #c49a2a;
+      background: #fff;
+    }
 
-    /* Modal actions */
-    .modal-actions { display: flex; gap: 12px; }
+    .modal-textarea::placeholder {
+      color: #bbb;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
 
     .modal-btn-cancel {
       flex: 1;
@@ -547,7 +769,9 @@
       transition: background 0.15s;
     }
 
-    .modal-btn-cancel:hover { background: #e8e0d0; }
+    .modal-btn-cancel:hover {
+      background: #e8e0d0;
+    }
 
     .modal-btn-submit {
       flex: 1;
@@ -563,8 +787,15 @@
       transition: background 0.15s;
     }
 
-    .modal-btn-submit:hover { background: #a87820; }
-    .modal-btn-submit:disabled { background: #e8e0d0; color: #bbb; cursor: not-allowed; }
+    .modal-btn-submit:hover {
+      background: #a87820;
+    }
+
+    .modal-btn-submit:disabled {
+      background: #e8e0d0;
+      color: #bbb;
+      cursor: not-allowed;
+    }
 
     .modal-btn-danger {
       flex: 1;
@@ -580,7 +811,9 @@
       transition: background 0.15s;
     }
 
-    .modal-btn-danger:hover { background: #a93226; }
+    .modal-btn-danger:hover {
+      background: #a93226;
+    }
   </style>
 </head>
 
@@ -588,459 +821,820 @@
 
   <%- include('partials/user/header') %>
 
-  <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
+    <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
 
-    <%- include('partials/user/profileBanner', { user }) %>
+      <%- include('partials/user/profileBanner', { user }) %>
 
-    <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
+        <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
 
-      <%- include('partials/user/profileSidebar', { activePage: 'orders' }) %>
+          <%- include('partials/user/profileSidebar', { activePage: 'orders' }) %>
 
-      <main style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <main
+              style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
 
-        <!-- Header row -->
-        <div class="order-header">
-          <a href="/orders" class="back-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="15 18 9 12 15 6"/>
-            </svg>
-          </a>
-          <h3>Order #<%= order.orderId %></h3>
+              <% /* ═══════════════════════════════════════════════════ HELPER MAPPINGS
+                ═══════════════════════════════════════════════════ */ const orderStatusLabel={ pending: 'Pending' ,
+                processing: 'Processing' , shipped: 'Shipped' , out_for_delivery: 'Out for Delivery' ,
+                delivered: 'Delivered' , cancelled: 'Cancelled' , partially_cancelled: 'Partially Cancelled' ,
+                returned: 'Returned' , partially_returned: 'Partially Returned' , }; const itemStatusLabel={
+                active: 'Active' , cancelled: 'Cancelled' , returned: 'Returned' , }; const returnStatusLabel={
+                pending: 'Return Requested' , approved: 'Returned' , rejected: 'Return Rejected' , };
+                /* ═══════════════════════════════════════════════════ DERIVE EFFECTIVE ORDER STATUS FROM ITEMS
+                ═══════════════════════════════════════════════════ The DB `orderStatus` drives the forward-progress
+                steps. We compute an overlay status for cancel / return badges and tracker extra steps.
+                ═══════════════════════════════════════════════════ */ const os=order.orderStatus;
+                /* ── Cancellation analysis (only valid before shipping) ── */ const preShipStatuses=['pending', 'processing'
+                , 'shipped' ]; const isPreShip=preShipStatuses.includes(os); const cancelledItems=order.items.filter(i=>
+                i.itemStatus === 'cancelled');
+                const hasCancelledItems = cancelledItems.length > 0 && isPreShip;
 
-          <% if (['pending', 'processing'].includes(order.orderStatus)) { %>
-            <button class="btn-outline-red" style="margin-left:auto;" onclick="openFullCancelModal()">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                // "all cancelled" means every item is cancelled
+                const allCancelled = order.items.length > 0 &&
+                order.items.every(i => i.itemStatus === 'cancelled');
+                const someCancelled = hasCancelledItems && !allCancelled;
+
+                /* ── Return analysis (only valid after delivery) ── */
+                const isDelivered = os === 'delivered';
+
+                // an item counts as returned if its itemStatus = 'returned'
+                // OR if it has an approved return request
+                const isItemReturned = (item) => {
+                if (item.itemStatus === 'returned') return true;
+                const rr = item.returnRequest || null;
+                return rr && rr.status === 'approved';
+                };
+
+                const returnedItems = order.items.filter(isItemReturned);
+                const hasReturnedItems = returnedItems.length > 0 && isDelivered;
+
+                const allReturned = order.items.length > 0 && isDelivered &&
+                order.items.every(isItemReturned);
+                const someReturned = hasReturnedItems && !allReturned;
+
+                /* ── Derive the display status shown in the badge ── */
+                let displayStatus;
+                if (allCancelled) displayStatus = 'cancelled';
+                else if (someCancelled) displayStatus = 'partially_cancelled';
+                else if (allReturned) displayStatus = 'returned';
+                else if (someReturned) displayStatus = 'partially_returned';
+                else displayStatus = os;
+
+                /* CSS class for the order-level badge */
+                const badgeCssMap = {
+                  pending: 'pending',
+                  processing: 'processing',
+                  shipped: 'shipped',
+                  out_for_delivery: 'out_for_delivery',
+                  delivered: 'delivered',
+                  cancelled: 'cancelled',
+                  partially_cancelled: 'partially_cancelled',
+                  returned: 'returned',
+                  partially_returned: 'partially_returned',
+                };
+                const orderBadgeClass = badgeCssMap[displayStatus] || displayStatus;
+
+                /* ── Tracker fill calculation ──
+                   Base 5 steps use the raw DB orderStatus.
+                   Cancel/return extras are appended after. */
+                const baseSteps = ['pending', 'processing', 'shipped', 'out_for_delivery', 'delivered'];
+                let currentStep = baseSteps.indexOf(os);
+                if (currentStep < 0) currentStep = 0;
+                // Fill covers the base pipeline up to the current DB step.
+                // If all items are cancelled we show 0% on the base line (the extra cancelled dot is red, so the gold line stays at 0).
+                let fillPct = 0;
+                if (!allCancelled) {
+                    fillPct = (currentStep / (baseSteps.length - 1)) * 100;
+                }
+                /* ── Should we show extra terminal step in tracker? ── */
+                const showCancelledStep = allCancelled;
+                const showPartiallyCancelledStep = someCancelled;
+                const showReturnedStep = allReturned;
+                const showPartiallyReturnedStep = someReturned;
+                const trackerSteps = [
+                  {
+                    key: 'pending' ,
+                    label: 'Order Placed' ,
+                    icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+                  },
+                  {
+                    key: 'processing' ,
+                    label: 'Processing' ,
+                    icon: 'M20 6L9 17l-5-5'
+                  },
+                  {
+                    key: 'shipped' ,
+                    label: 'Shipped' ,
+                    icon: 'M1 3h15v13H1zM16 8l4 0 3 3 0 5-7 0'
+                  },
+                  {
+                    key: 'out_for_delivery' ,
+                    label: 'Out for Delivery' ,
+                    icon: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0zM12 10m-3 0a3 3 0 106 0 3 3 0 10-6 0'
+                  },
+                  {
+                    key: 'delivered' ,
+                    label: 'Delivered' ,
+                    icon: 'M20 6L9 17l-5-5'
+                  }
+                ];
+                %>
+
+                  <!-- ── Header row ── -->
+                  <div class="order-header">
+                    <a href="/orders" class="back-btn">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                    </a>
+                    <h3>Order #<%= order.orderId %>
+                    </h3>
+
+
+                        <%# Show "Cancel Order" only when order-level cancel is possible (pending/processing) AND not
+                          ALL items already individually cancelled %>
+                          <% if (['pending', 'processing' ].includes(os) && !allCancelled) { %>
+                            <button class="btn-outline-red" style="margin-left:auto;" onclick="openFullCancelModal()">
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="15" y1="9" x2="9" y2="15" />
+                                <line x1="9" y1="9" x2="15" y2="15" />
+                              </svg>
+                              Cancel Order
+                            </button>
+                            <% } %>
+                  </div>
+
+                  <!-- ── Meta ── -->
+                  <div class="order-meta">
+                    <div class="meta-group">
+                      <label>Order Date</label>
+                      <span>
+                        <%= new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric' , month: 'short' ,
+                          year: 'numeric' }) %>
+                      </span>
+                    </div>
+                    <div class="meta-group">
+                      <label>Total</label>
+                      <span>₹<%= order.finalAmount %></span>
+                    </div>
+                    <div class="meta-group">
+                      <label>Payment</label>
+                      <span>
+                        <%= order.paymentMethod.toUpperCase() %>
+                      </span>
+                    </div>
+                    <div class="meta-address">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                      <span>
+                        <%= order.shippingAddress.fullName %><br>
+                          <%= order.shippingAddress.addressLine %>, <%= order.shippingAddress.city %><br>
+                              <%= order.shippingAddress.state %> – <%= order.shippingAddress.pincode %><br>
+                                  Phone: <%= order.shippingAddress.phone %>
+                      </span>
+                    </div>
+                    <span class="status-badge <%= orderBadgeClass %>">
+                      <%= orderStatusLabel[displayStatus] || displayStatus %>
+                    </span>
+                  </div>
+
+                  <!-- ══════════════════════════════════
+     ORDER TRACKER
+     ══════════════════════════════════ -->
+                  <% /* * Build renderNodes for the tracker. * Each node: { label, icon, state } * state: 'done'
+                    | 'pending' | 'cancelled' | 'partial-cancel' | 'returned' | 'partial-return' */ const
+                    cancelIcon='M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM15 9l-6 6M9 9l6 6'
+                    ; const returnIcon='M1 4v6h6M3.51 15a9 9 0 102.13-9.36L1 10' ; const trackerStepDefs=[ {
+                    key: 'pending' , label: 'Order Placed' ,
+                    icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+                    }, { key: 'processing' , label: 'Processing' , icon: 'M20 6L9 17l-5-5' }, { key: 'shipped' ,
+                    label: 'Shipped' , icon: 'M1 3h15v13H1zM16 8l4 0 3 3 0 5-7 0' }, { key: 'out_for_delivery' ,
+                    label: 'Out for Delivery' ,
+                    icon: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0zM12 10m-3 0a3 3 0 106 0 3 3 0 10-6 0' }, {
+                    key: 'delivered' , label: 'Delivered' , icon: 'M20 6L9 17l-5-5' }, ]; let trackerNodes=[]; if
+                    (allCancelled) { // Show completed base steps as gold, then red Cancelled dot at end
+                    trackerStepDefs.slice(0, currentStep + 1).forEach(s=> {
+                    trackerNodes.push({ label: s.label, icon: s.icon, state: 'done' });
+                    });
+                    trackerNodes.push({ label: 'Cancelled', icon: cancelIcon, state: 'cancelled' });
+
+                    } else if (someCancelled) {
+                    // Gold steps up to currentStep, then red Partially Cancelled dot INLINE,
+                    // then remaining base steps as grey/pending
+                    trackerStepDefs.forEach((s, i) => {
+                    if (i <= currentStep) { trackerNodes.push({ label: s.label, icon: s.icon, state: 'done' }); } if
+                      (i===currentStep) { trackerNodes.push({ label: 'Partially<br>Cancelled' , icon: cancelIcon,
+                      state: 'partial-cancel' }); } if (i> currentStep) {
+                      trackerNodes.push({ label: s.label, icon: s.icon, state: 'pending' });
+                      }
+                      });
+
+                      } else if (allReturned) {
+                      // All 5 gold, then red Returned dot appended
+                      trackerStepDefs.forEach(s => trackerNodes.push({ label: s.label, icon: s.icon, state: 'done' }));
+                      trackerNodes.push({ label: 'Returned', icon: returnIcon, state: 'returned' });
+
+                      } else if (someReturned) {
+                      // All 5 gold, then red Partially Returned dot appended
+                      trackerStepDefs.forEach(s => trackerNodes.push({ label: s.label, icon: s.icon, state: 'done' }));
+                      trackerNodes.push({ label: 'Partially<br>Returned', icon: returnIcon, state: 'partial-return' });
+
+                      } else {
+                      // Normal flow
+                      trackerStepDefs.forEach((s, i) => {
+                      trackerNodes.push({ label: s.label, icon: s.icon, state: currentStep >= i ? 'done' : 'pending' });
+                      });
+                      }
+
+                      /*
+                      * Fill bar calculation:
+                      * Gold segment covers from node 0 to the last 'done' node.
+                      * Red segment covers from last 'done' node to the cancel/return node (if any).
+                      * For partial-cancel: gold fills up to currentStep node index,
+                      * red fills from there to the partial-cancel node index.
+                      */
+                      const totalNodes = trackerNodes.length;
+
+                      // Index of last gold 'done' node
+                      let lastDoneIdx = -1;
+                      trackerNodes.forEach((n, i) => { if (n.state === 'done') lastDoneIdx = i; });
+
+                      // Index of red terminal node (cancelled / partial-cancel / returned / partial-return)
+                      const redStates = ['cancelled', 'partial-cancel', 'returned', 'partial-return'];
+                      const redIdx = trackerNodes.findIndex(n => redStates.includes(n.state));
+
+                      // Gold fill: 0% to lastDoneIdx position
+                      const goldFillPct = totalNodes > 1 && lastDoneIdx >= 0
+                      ? (lastDoneIdx / (totalNodes - 1)) * 100
+                      : 0;
+
+                      // Red fill: from lastDoneIdx to redIdx (only when there's a red terminal node)
+                      const redFillStart = totalNodes > 1 && lastDoneIdx >= 0
+                      ? (lastDoneIdx / (totalNodes - 1)) * 100
+                      : 0;
+                      const redFillEnd = totalNodes > 1 && redIdx >= 0
+                      ? (redIdx / (totalNodes - 1)) * 100
+                      : 0;
+                      const hasRedSegment = redIdx >= 0;
+                      %>
+
+                      <div class="tracker-wrap">
+                        <div class="tracker-line"></div>
+
+                        <%# Gold progress fill %>
+                          <% if (goldFillPct> 0) { %>
+                            <div class="tracker-fill" style="width:<%= goldFillPct %>%;"></div>
+                            <% } %>
+
+                              <%# Red segment fill (from last gold dot to cancel/return dot) %>
+                                <% if (hasRedSegment && redFillEnd> redFillStart) { %>
+                                  <div class="tracker-fill red-fill"
+                                    style="left:calc(32px + <%= redFillStart %>% * (100% - 64px) / 100); width:calc(<%= redFillEnd - redFillStart %>% * (100% - 64px) / 100);">
+                                  </div>
+                                  <% } %>
+
+                                    <% trackerNodes.forEach(node=> {
+                                      const isDone = node.state === 'done';
+                                      const isCancelled = node.state === 'cancelled' || node.state === 'partial-cancel';
+                                      const isReturned = node.state === 'returned' || node.state === 'partial-return';
+                                      const stepClass = isDone ? 'done' : isCancelled ? 'done-red' : isReturned ?
+                                      'done-red' : '';
+                                      const dotClass = isDone ? 'done' : isCancelled ? 'done-red' : isReturned ?
+                                      'done-red' : '';
+                                      %>
+                                      <div class="tracker-step <%= stepClass %>">
+                                        <div class="step-dot <%= dotClass %>">
+                                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="<%= node.icon %>" />
+                                          </svg>
+                                        </div>
+                                        <span><%- node.label %></span>
+                                      </div>
+                                      <% }) %>
+                      </div>
+
+                      <!-- ══════════════════════════════════
+             ITEMS
+             ══════════════════════════════════ -->
+                      <p class="section-title">Items in this Order</p>
+
+                      <% order.items.forEach(item=> {
+                        const safeId = String(item._id);
+                        const safeName = (item.productName || '').replace(/"/g, '&quot;');
+                        const safeSub = (item.variantName || 'Default Variant').replace(/"/g, '&quot;');
+                        const safeImg = (item.productImage || '').replace(/"/g, '&quot;');
+
+                        const rr = item.returnRequest || null;
+                        const rrStatus = rr ? rr.status : null;
+
+                        let badgeClass = '';
+                        let badgeText = '';
+                        let showCancelItemBtn = false;
+                        let showReturnItemBtn = false;
+
+                        if (item.itemStatus === 'cancelled') {
+                        badgeClass = 'item-cancelled';
+                        badgeText = 'Cancelled';
+
+                        } else if (item.itemStatus === 'returned') {
+                        badgeClass = 'item-returned';
+                        badgeText = 'Returned';
+
+                        } else if (rrStatus === 'pending') {
+                        badgeClass = 'item-return-requested';
+                        badgeText = 'Return Requested';
+
+                        } else if (rrStatus === 'approved') {
+                        badgeClass = 'item-returned';
+                        badgeText = 'Returned';
+
+                        } else if (rrStatus === 'rejected') {
+                        badgeClass = 'item-return-rejected';
+                        badgeText = 'Return Rejected';
+
+                        } else {
+                        /* Active item — show contextual badge & buttons */
+                        if (os === 'delivered') {
+                        badgeClass = 'item-active-delivered';
+                        badgeText = 'Active';
+                        } else {
+                        badgeClass = 'item-active-progress';
+                        badgeText = 'Active';
+                        }
+
+                        /* Cancel button: only before shipment */
+                        if (['pending', 'processing', 'shipped'].includes(os)) {
+                        showCancelItemBtn = true;
+                        }
+                        /* Return button: only after delivery */
+                        if (os === 'delivered') {
+                        showReturnItemBtn = true;
+                        }
+                        }
+                        %>
+
+                        <div class="order-item">
+                          <div class="item-img">
+                            <% if (item.productImage) { %>
+                              <img src="<%= item.productImage %>" alt="<%= safeName %>">
+                              <% } else { %>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c49a2a"
+                                  stroke-width="1.5">
+                                  <rect x="2" y="3" width="20" height="14" rx="2" />
+                                </svg>
+                                <% } %>
+                          </div>
+
+                          <div class="item-details">
+                            <h4>
+                              <%= item.productName %>
+                            </h4>
+                            <p>
+                              <%= item.variantName || 'Default Variant' %>
+                            </p>
+                            <div class="item-qty">
+                              <span>Qty: <%= item.qty %></span>
+                              <div class="dot"></div>
+                              <strong>₹<%= item.total %></strong>
+                            </div>
+
+                            <%# Cancelled-item info %>
+                              <% if (item.itemStatus==='cancelled' && (item.cancelReason || item.cancelledAt)) { %>
+                                <div class="item-meta-info cancelled-meta">
+                                  <% if (item.cancelReason) { %>
+                                    <span class="meta-label">Reason</span>
+                                    <span class="meta-value">
+                                      <%= item.cancelReason %>
+                                    </span><br>
+                                    <% } %>
+                                      <% if (item.cancelledAt) { %>
+                                        <span class="meta-label">Cancelled on</span>
+                                        <span class="meta-value">
+                                          <%= new Date(item.cancelledAt).toLocaleDateString('en-IN', { day: 'numeric' ,
+                                            month: 'short' , year: 'numeric' }) %>
+                                        </span>
+                                        <% } %>
+                                </div>
+                                <% } %>
+
+                                  <%# Returned-item info %>
+                                    <% if (item.itemStatus==='returned' && (item.returnReason || item.returnedAt)) { %>
+                                      <div class="item-meta-info returned-meta">
+                                        <% if (item.returnReason) { %>
+                                          <span class="meta-label">Reason</span>
+                                          <span class="meta-value">
+                                            <%= item.returnReason %>
+                                          </span><br>
+                                          <% } %>
+                                            <% if (item.returnedAt) { %>
+                                              <span class="meta-label">Returned on</span>
+                                              <span class="meta-value">
+                                                <%= new Date(item.returnedAt).toLocaleDateString('en-IN', {
+                                                  day: 'numeric' , month: 'short' , year: 'numeric' }) %>
+                                              </span>
+                                              <% } %>
+                                      </div>
+                                      <% } %>
+
+                                        <%# Return request – pending %>
+                                          <% if (rrStatus==='pending' && rr.reason) { %>
+                                            <div class="item-meta-info returned-meta"
+                                              style="background:#FFF3E6;border-color:#F5C97A;">
+                                              <span class="meta-label" style="color:#D4730A;">Reason Filed</span>
+                                              <span class="meta-value" style="color:#8B5A10;">
+                                                <%= rr.reason %>
+                                              </span>
+                                              <% if (rr.requestedAt) { %>
+                                                <br>
+                                                <span class="meta-label" style="color:#D4730A;">Requested on</span>
+                                                <span class="meta-value" style="color:#8B5A10;">
+                                                  <%= new Date(rr.requestedAt).toLocaleDateString('en-IN', {
+                                                    day: 'numeric' , month: 'short' , year: 'numeric' }) %>
+                                                </span>
+                                                <% } %>
+                                            </div>
+                                            <% } %>
+
+                                              <%# Return request – approved %>
+                                                <% if (rrStatus==='approved' ) { %>
+                                                  <div class="item-meta-info returned-meta">
+                                                    <% if (rr.refundAmount) { %>
+                                                      <span class="meta-label">Refund</span>
+                                                      <span class="meta-value">₹<%= rr.refundAmount %></span>
+                                                      <% } %>
+                                                        <% if (rr.processedAt) { %>
+                                                          <% if (rr.refundAmount) { %>&nbsp;&bull;&nbsp;<% } %>
+                                                              <span class="meta-label">Returned on</span>
+                                                              <span class="meta-value">
+                                                                <%= new Date(rr.processedAt).toLocaleDateString('en-IN',
+                                                                  { day: 'numeric' , month: 'short' , year: 'numeric' })
+                                                                  %>
+                                                              </span>
+                                                              <% } %>
+                                                                <% if (rr.adminRemark) { %>
+                                                                  <br>
+                                                                  <span class="meta-label">Admin Note</span>
+                                                                  <span class="meta-value">
+                                                                    <%= rr.adminRemark %>
+                                                                  </span>
+                                                                  <% } %>
+                                                  </div>
+                                                  <% } %>
+
+                                                    <%# Return request – rejected %>
+                                                      <% if (rrStatus==='rejected' ) { %>
+                                                        <div class="item-meta-info cancelled-meta">
+                                                          <% if (rr.reason) { %>
+                                                            <span class="meta-label">Your Reason</span>
+                                                            <span class="meta-value">
+                                                              <%= rr.reason %>
+                                                            </span><br>
+                                                            <% } %>
+                                                              <% if (rr.processedAt) { %>
+                                                                <span class="meta-label">Rejected on</span>
+                                                                <span class="meta-value">
+                                                                  <%= new
+                                                                    Date(rr.processedAt).toLocaleDateString('en-IN', {
+                                                                    day: 'numeric' , month: 'short' , year: 'numeric' })
+                                                                    %>
+                                                                </span><br>
+                                                                <% } %>
+                                                                  <% if (rr.adminRemark) { %>
+                                                                    <span class="meta-label">Admin Note</span>
+                                                                    <span class="meta-value">
+                                                                      <%= rr.adminRemark %>
+                                                                    </span>
+                                                                    <% } %>
+                                                        </div>
+                                                        <% } %>
+                          </div>
+
+                          <div class="item-actions">
+                            <span class="item-status-badge <%= badgeClass %>">
+                              <%= badgeText %>
+                            </span>
+
+                            <% if (showReturnItemBtn) { %>
+                              <button class="btn-outline-gold" data-id="<%= safeId %>" data-name="<%= safeName %>"
+                                data-sub="<%= safeSub %>" data-img="<%= safeImg %>" onclick="openReturnModal(this)">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                  stroke-width="2.5">
+                                  <polyline points="1 4 1 10 7 10" />
+                                  <path d="M3.51 15a9 9 0 102.13-9.36L1 10" />
+                                </svg>
+                                Return
+                              </button>
+                              <% } %>
+
+                                <% if (showCancelItemBtn) { %>
+                                  <button class="btn-outline-red" data-id="<%= safeId %>" data-name="<%= safeName %>"
+                                    data-sub="<%= safeSub %>" data-img="<%= safeImg %>"
+                                    onclick="openPartialCancelModal(this)">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                      stroke-width="2.5">
+                                      <circle cx="12" cy="12" r="10" />
+                                      <line x1="15" y1="9" x2="9" y2="15" />
+                                      <line x1="9" y1="9" x2="15" y2="15" />
+                                    </svg>
+                                    Cancel Item
+                                  </button>
+                                  <% } %>
+                          </div>
+                        </div>
+                        <% }) %>
+
+                          <!-- ── Summary ── -->
+                          <div class="order-summary">
+                            <div class="summary-row"><span>Subtotal</span><span>₹<%= order.orderTotal %></span></div>
+                            <div class="summary-row"><span>Delivery Charge</span><span>₹<%= order.deliveryCharge %>
+                                  </span></div>
+                            <div class="summary-row"><span>Discount</span><span>– ₹<%= order.discount %></span></div>
+                            <div class="summary-row total"><span>Total</span><span>₹<%= order.finalAmount %></span>
+                            </div>
+                          </div>
+
+            </main>
+        </div>
+    </div>
+
+    <%- include('partials/user/footer') %>
+
+      <!-- ══════════════════════════════════
+       RETURN ITEM MODAL
+       ══════════════════════════════════ -->
+      <div class="modal-overlay" id="returnModal" onclick="if(event.target===this) closeReturnModal()">
+        <div class="modal">
+          <div class="modal-header">
+            <div class="modal-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polyline points="1 4 1 10 7 10" />
+                <path d="M3.51 15a9 9 0 102.13-9.36L1 10" />
               </svg>
-              Cancel Order
+              Return Item
+            </div>
+            <button class="modal-close" onclick="closeReturnModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
             </button>
-          <% } %>
-        </div>
-
-        <!-- Meta -->
-        <div class="order-meta">
-          <div class="meta-group">
-            <label>Order Date</label>
-            <span><%= new Date(order.createdAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) %></span>
           </div>
-          <div class="meta-group">
-            <label>Total</label>
-            <span>₹<%= order.finalAmount %></span>
-          </div>
-          <div class="meta-group">
-            <label>Payment</label>
-            <span><%= order.paymentMethod.toUpperCase() %></span>
-          </div>
-          <div class="meta-address">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
-            </svg>
-            <span>
-              <%= order.shippingAddress.fullName %><br>
-              <%= order.shippingAddress.addressLine %>, <%= order.shippingAddress.city %><br>
-              <%= order.shippingAddress.state %> – <%= order.shippingAddress.pincode %><br>
-              Phone: <%= order.shippingAddress.phone %>
-            </span>
-          </div>
-          <span class="status-badge <%= order.orderStatus %>">
-            <%= String(order.orderStatus).replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %>
-          </span>
-        </div>
 
-        <!-- Tracker -->
-        <%
-          const statusSteps = ['pending','processing','shipped','out_for_delivery','delivered'];
-          let currentStep = statusSteps.indexOf(order.orderStatus);
-          if (currentStep < 0) currentStep = 0;
-          const fillPct = (currentStep / (statusSteps.length - 1)) * 100;
-        %>
-        <div class="tracker-wrap">
-          <div class="tracker-line"></div>
-          <div class="tracker-fill" style="width:<%= fillPct %>%;"></div>
+          <div class="modal-item-card">
+            <div class="modal-item-img"><img id="returnItemImg" src="" alt=""></div>
+            <div class="modal-item-info">
+              <h4 id="returnItemName"></h4>
+              <p id="returnItemSub"></p>
+            </div>
+          </div>
 
-          <% const trackerSteps = [
-            { label:'Order Placed',     icon:'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
-            { label:'Processing',       icon:'M20 6L9 17l-5-5' },
-            { label:'Shipped',          icon:'M1 3h15v13H1zM16 8l4 0 3 3 0 5-7 0' },
-            { label:'Out for Delivery', icon:'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0zM12 10m-3 0a3 3 0 106 0 3 3 0 10-6 0' },
-            { label:'Delivered',        icon:'M20 6L9 17l-5-5' },
-          ]; %>
-
-          <% trackerSteps.forEach((step, i) => { %>
-            <div class="tracker-step <%= currentStep >= i ? 'done' : '' %>">
-              <div class="step-dot <%= currentStep >= i ? 'done' : '' %>">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="<%= step.icon %>"/>
-                </svg>
+          <p class="reasons-label">Select a reason for return:</p>
+          <div class="reasons-list" id="returnReasonsList">
+            <% ['Item is defective or damaged', 'Wrong item received' , "Item doesn't match description"
+              , 'Changed my mind' , 'Item arrived too late' , 'Other' ].forEach(r=> { %>
+              <div class="reason-option" onclick="selectReason(this, 'returnSubmitBtn')">
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <%= r %>
               </div>
-              <span><%= step.label %></span>
-            </div>
-          <% }) %>
+              <% }) %>
+          </div>
+
+          <label class="modal-label">Additional details <span>(optional)</span></label>
+          <textarea class="modal-textarea" id="returnDetails" placeholder="Please provide more information…"></textarea>
+
+          <div class="modal-actions">
+            <button class="modal-btn-cancel" onclick="closeReturnModal()">Cancel</button>
+            <button class="modal-btn-submit" id="returnSubmitBtn" disabled onclick="submitReturn()">Submit
+              Return</button>
+          </div>
         </div>
+      </div>
 
-        <!-- Items -->
-        <p class="section-title">Items in this Order</p>
+      <!-- ══════════════════════════════════
+       FULL ORDER CANCEL MODAL
+       ══════════════════════════════════ -->
+      <div class="modal-overlay" id="fullCancelModal" onclick="if(event.target===this) closeFullCancelModal()">
+        <div class="modal">
+          <div class="modal-header">
+            <div class="modal-title">Cancel Entire Order</div>
+            <button class="modal-close" onclick="closeFullCancelModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <p style="font-size:0.82rem;color:#aaa;margin-bottom:18px;">This will cancel all items in your order. This
+            action cannot be undone.</p>
+          <label class="modal-label">Reason</label>
+          <textarea class="modal-textarea" id="fullCancelReason"
+            placeholder="Tell us why you're cancelling…"></textarea>
+          <div class="modal-actions">
+            <button class="modal-btn-cancel" onclick="closeFullCancelModal()">Keep Order</button>
+            <button class="modal-btn-danger" onclick="submitFullCancel()">Yes, Cancel Order</button>
+          </div>
+        </div>
+      </div>
 
-        <% order.items.forEach(item => { %>
-          <div class="order-item">
-            <div class="item-img">
-              <% if (item.productImage) { %>
-                <img src="<%= item.productImage %>" alt="<%= item.productName %>">
-              <% } else { %>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c49a2a" stroke-width="1.5">
-                  <rect x="2" y="3" width="20" height="14" rx="2"/>
-                </svg>
-              <% } %>
-            </div>
-
-            <div class="item-details">
-              <h4><%= item.productName %></h4>
-              <p><%= item.variantName || 'Default Variant' %></p>
-              <div class="item-qty">
-                <span>Qty: <%= item.qty %></span>
-                <div class="dot"></div>
-                <strong>₹<%= item.total %></strong>
-              </div>
-            </div>
-
-            <div class="item-actions">
-              <%# itemStatus: 'active' | 'cancelled' | 'returned' — show order status when item is active %>
-              <span class="item-status-badge" style="<%= item.itemStatus === 'cancelled' ? 'background:#FDF0EE;color:#C0392B;border-color:#E8B4B0;' : item.itemStatus === 'returned' ? 'background:#FDF0EE;color:#C0392B;border-color:#E8B4B0;' : '' %>">
-                <% if (item.itemStatus === 'active') { %>
-                  <%= String(order.orderStatus).replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %>
-                <% } else { %>
-                  <%= String(item.itemStatus).replace(/\b\w/g, c => c.toUpperCase()) %>
-                <% } %>
-              </span>
-
-              <%# Return: only after delivered, and item not already returned or cancelled %>
-              <% if (order.orderStatus === 'delivered' && item.itemStatus === 'active') { %>
-                <% const rId = JSON.stringify(String(item._id)); const rName = JSON.stringify(item.productName); const rSub = JSON.stringify(item.variantName || 'Default Variant'); const rImg = JSON.stringify(item.productImage || ''); %>
-<button
-  class="btn-outline-gold"
-  data-id="<%= item._id %>"
-  data-name="<%= item.productName %>"
-  data-sub="<%= item.variantName || 'Default Variant' %>"
-  data-img="<%= item.productImage || '' %>"
-  onclick="openReturnModal(this)"
->                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
-                  </svg>
-                  Return
-                </button>
-              <% } %>
-
-              <%# Cancel Item: only before shipped (pending/processing), and item is still active %>
-              <% if (['pending', 'processing'].includes(order.orderStatus) && item.itemStatus === 'active') { %>
-                <% const cId = JSON.stringify(String(item._id)); const cName = JSON.stringify(item.productName); const cSub = JSON.stringify(item.variantName || 'Default Variant'); const cImg = JSON.stringify(item.productImage || ''); %>
-<button
-  class="btn-outline-red"
-  data-id="<%= item._id %>"
-  data-name="<%= item.productName %>"
-  data-sub="<%= item.variantName || 'Default Variant' %>"
-  data-img="<%= item.productImage || '' %>"
-  onclick="openPartialCancelModal(this)"
->                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-                  </svg>
-                  Cancel Item
-                </button>
-              <% } %>
+      <!-- ══════════════════════════════════
+       PARTIAL ITEM CANCEL MODAL
+       ══════════════════════════════════ -->
+      <div class="modal-overlay" id="partialCancelModal" onclick="if(event.target===this) closePartialCancelModal()">
+        <div class="modal">
+          <div class="modal-header">
+            <div class="modal-title">Cancel Item</div>
+            <button class="modal-close" onclick="closePartialCancelModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <div class="modal-item-card">
+            <div class="modal-item-img"><img id="partialCancelImg" src="" alt=""></div>
+            <div class="modal-item-info">
+              <h4 id="partialCancelName"></h4>
+              <p id="partialCancelSub"></p>
             </div>
           </div>
-        <% }) %>
-
-        <!-- Summary -->
-        <div class="order-summary">
-          <div class="summary-row"><span>Subtotal</span><span>₹<%= order.orderTotal %></span></div>
-          <div class="summary-row"><span>Delivery Charge</span><span>₹<%= order.deliveryCharge %></span></div>
-          <div class="summary-row"><span>Discount</span><span>– ₹<%= order.discount %></span></div>
-          <div class="summary-row total"><span>Total</span><span>₹<%= order.finalAmount %></span></div>
-        </div>
-
-      </main>
-    </div>
-  </div>
-
-  <%- include('partials/user/footer') %>
-
-  <!-- ── RETURN ITEM MODAL ── -->
-  <div class="modal-overlay" id="returnModal" onclick="if(event.target===this) closeReturnModal()">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
-          </svg>
-          Return Item
-        </div>
-        <button class="modal-close" onclick="closeReturnModal()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-
-      <div class="modal-item-card">
-        <div class="modal-item-img"><img id="returnItemImg" src="" alt=""></div>
-        <div class="modal-item-info">
-          <h4 id="returnItemName"></h4>
-          <p id="returnItemSub"></p>
-        </div>
-      </div>
-
-      <p class="reasons-label">Select a reason for return:</p>
-      <div class="reasons-list" id="returnReasonsList">
-        <% ['Item is defective or damaged','Wrong item received','Item doesn\'t match description','Changed my mind','Item arrived too late','Other'].forEach(r => { %>
-          <div class="reason-option" onclick="selectReason(this, 'returnSubmitBtn')">
-            <div class="radio-circle"><div class="radio-dot"></div></div>
-            <%= r %>
+          <label class="modal-label">Reason</label>
+          <textarea class="modal-textarea" id="partialCancelReason"
+            placeholder="Tell us why you're cancelling this item…"></textarea>
+          <div class="modal-actions">
+            <button class="modal-btn-cancel" onclick="closePartialCancelModal()">Keep Item</button>
+            <button class="modal-btn-danger" onclick="submitPartialCancel()">Cancel Item</button>
           </div>
-        <% }) %>
-      </div>
-
-      <label class="modal-label">Additional details <span>(optional)</span></label>
-      <textarea class="modal-textarea" id="returnDetails" placeholder="Please provide more information…"></textarea>
-
-      <div class="modal-actions">
-        <button class="modal-btn-cancel" onclick="closeReturnModal()">Cancel</button>
-        <button class="modal-btn-submit" id="returnSubmitBtn" disabled onclick="submitReturn()">Submit Return</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── FULL CANCEL MODAL ── -->
-  <div class="modal-overlay" id="fullCancelModal" onclick="if(event.target===this) closeFullCancelModal()">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Cancel Entire Order</div>
-        <button class="modal-close" onclick="closeFullCancelModal()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-      <p style="font-size:0.82rem;color:#aaa;margin-bottom:18px;">This will cancel all items in your order. This action cannot be undone.</p>
-      <label class="modal-label">Reason</label>
-      <textarea class="modal-textarea" id="fullCancelReason" placeholder="Tell us why you're cancelling…"></textarea>
-      <div class="modal-actions">
-        <button class="modal-btn-cancel" onclick="closeFullCancelModal()">Keep Order</button>
-        <button class="modal-btn-danger" onclick="submitFullCancel()">Yes, Cancel Order</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── PARTIAL ITEM CANCEL MODAL ── -->
-  <div class="modal-overlay" id="partialCancelModal" onclick="if(event.target===this) closePartialCancelModal()">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Cancel Item</div>
-        <button class="modal-close" onclick="closePartialCancelModal()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-      <div class="modal-item-card">
-        <div class="modal-item-img"><img id="partialCancelImg" src="" alt=""></div>
-        <div class="modal-item-info">
-          <h4 id="partialCancelName"></h4>
-          <p id="partialCancelSub"></p>
         </div>
       </div>
-      <label class="modal-label">Reason</label>
-      <textarea class="modal-textarea" id="partialCancelReason" placeholder="Tell us why you're cancelling this item…"></textarea>
-      <div class="modal-actions">
-        <button class="modal-btn-cancel" onclick="closePartialCancelModal()">Keep Item</button>
-        <button class="modal-btn-danger" onclick="submitPartialCancel()">Cancel Item</button>
-      </div>
-    </div>
-  </div>
 
-  <script>
-    let returnItemId = null;
-    let partialCancelItemId = null;
+      <script>
+        let returnItemId = null;
+        let partialCancelItemId = null;
 
-    // ── Escape key closes all modals
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        closeReturnModal();
-        closeFullCancelModal();
-        closePartialCancelModal();
-      }
-    });
+        const ORDER_ID = "<%= order._id %>";
 
-    // ── Reason selector
-    function selectReason(el, submitBtnId) {
-      el.closest('.reasons-list').querySelectorAll('.reason-option').forEach(r => r.classList.remove('selected'));
-      el.classList.add('selected');
-      if (submitBtnId) document.getElementById(submitBtnId).disabled = false;
-    }
-
-    // ── Return modal
-    function openReturnModal(btn) {
-
-  const itemId = btn.dataset.id;
-  const name = btn.dataset.name;
-  const sub = btn.dataset.sub;
-  const img = btn.dataset.img;
-
-  returnItemId = itemId;
-
-  document.getElementById('returnItemName').textContent = name;
-  document.getElementById('returnItemSub').textContent = sub;
-  document.getElementById('returnItemImg').src = img || '';
-
-  document.getElementById('returnDetails').value = '';
-
-  document.getElementById('returnSubmitBtn').disabled = true;
-
-  document.querySelectorAll('#returnReasonsList .reason-option')
-    .forEach(r => r.classList.remove('selected'));
-
-  document.getElementById('returnModal').classList.add('active');
-
-  document.body.style.overflow = 'hidden';
-}
-
-    function closeReturnModal() {
-      document.getElementById('returnModal').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    async function submitReturn() {
-      const selected = document.querySelector('#returnReasonsList .reason-option.selected');
-      if (!selected) return;
-      const reason = selected.textContent.trim();
-      const details = document.getElementById('returnDetails').value;
-      const btn = document.getElementById('returnSubmitBtn');
-      btn.disabled = true;
-      btn.textContent = 'Submitting…';
-      try {
-        const res = await fetch(`/return-item/${returnItemId}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ reason, details })
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape') {
+            closeReturnModal();
+            closeFullCancelModal();
+            closePartialCancelModal();
+          }
         });
-        const data = await res.json();
-        if (data.success) {
-          closeReturnModal();
-          if (typeof window.showToast === 'function') window.showToast('Return request submitted!', 'success');
-          setTimeout(() => location.reload(), 1000);
-        } else {
-          if (typeof window.showToast === 'function') window.showToast(data.message || 'Something went wrong.', 'error');
-          btn.disabled = false;
-          btn.textContent = 'Submit Return';
+
+        function selectReason(el, submitBtnId) {
+          el.closest('.reasons-list').querySelectorAll('.reason-option').forEach(r => r.classList.remove('selected'));
+          el.classList.add('selected');
+          if (submitBtnId) document.getElementById(submitBtnId).disabled = false;
         }
-      } catch (err) {
-        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
-        btn.disabled = false;
-        btn.textContent = 'Submit Return';
-      }
-    }
 
-    // ── Full cancel modal
-    function openFullCancelModal() {
-      document.getElementById('fullCancelReason').value = '';
-      document.getElementById('fullCancelModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeFullCancelModal() {
-      document.getElementById('fullCancelModal').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    async function submitFullCancel() {
-      const reason = document.getElementById('fullCancelReason').value.trim();
-      if (!reason) {
-        if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
-        return;
-      }
-      const btn = document.querySelector('#fullCancelModal .modal-btn-danger');
-      btn.disabled = true;
-      btn.textContent = 'Cancelling…';
-      try {
-        const res = await fetch(`/cancel-order/<%= order._id %>`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ reason })
-        });
-        const data = await res.json();
-        if (data.success) {
-          closeFullCancelModal();
-          if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
-          setTimeout(() => location.reload(), 1000);
-        } else {
-          if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
-          btn.disabled = false;
-          btn.textContent = 'Yes, Cancel Order';
+        /* ── Return modal ── */
+        function openReturnModal(btn) {
+          returnItemId = btn.dataset.id;
+          document.getElementById('returnItemName').textContent = btn.dataset.name;
+          document.getElementById('returnItemSub').textContent = btn.dataset.sub;
+          document.getElementById('returnItemImg').src = btn.dataset.img || '';
+          document.getElementById('returnDetails').value = '';
+          document.getElementById('returnSubmitBtn').disabled = true;
+          document.querySelectorAll('#returnReasonsList .reason-option').forEach(r => r.classList.remove('selected'));
+          document.getElementById('returnModal').classList.add('active');
+          document.body.style.overflow = 'hidden';
         }
-      } catch (err) {
-        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
-        btn.disabled = false;
-        btn.textContent = 'Yes, Cancel Order';
-      }
-    }
 
-    // ── Partial item cancel modal
-    function openPartialCancelModal(btn) {
-
-      partialCancelItemId = btn.dataset.id;
-
-      document.getElementById('partialCancelName').textContent =
-        btn.dataset.name;
-
-      document.getElementById('partialCancelSub').textContent =
-        btn.dataset.sub;
-
-      document.getElementById('partialCancelImg').src =
-        btn.dataset.img || '';
-
-      document.getElementById('partialCancelReason').value = '';
-
-      document.getElementById('partialCancelModal').classList.add('active');
-
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closePartialCancelModal() {
-      document.getElementById('partialCancelModal').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    async function submitPartialCancel() {
-      const reason = document.getElementById('partialCancelReason').value.trim();
-      if (!reason) {
-        if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
-        return;
-      }
-      const btn = document.querySelector('#partialCancelModal .modal-btn-danger');
-      btn.disabled = true;
-      btn.textContent = 'Cancelling…';
-      try {
-        const res = await fetch(`/cancel-item/${partialCancelItemId}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ reason })
-        });
-        const data = await res.json();
-        if (data.success) {
-          closePartialCancelModal();
-          if (typeof window.showToast === 'function') window.showToast('Item cancelled successfully.', 'success');
-          setTimeout(() => location.reload(), 1000);
-        } else {
-          if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel item.', 'error');
-          btn.disabled = false;
-          btn.textContent = 'Cancel Item';
+        function closeReturnModal() {
+          document.getElementById('returnModal').classList.remove('active');
+          document.body.style.overflow = '';
         }
-      } catch (err) {
-        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
-        btn.disabled = false;
-        btn.textContent = 'Cancel Item';
-      }
-    }
-  </script>
+
+        async function submitReturn() {
+          const selected = document.querySelector('#returnReasonsList .reason-option.selected');
+          if (!selected) return;
+          const reason = selected.textContent.trim();
+          const details = document.getElementById('returnDetails').value.trim();
+          const btn = document.getElementById('returnSubmitBtn');
+          btn.disabled = true;
+          btn.textContent = 'Submitting…';
+          try {
+            const res = await fetch('/return-item', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ orderId: ORDER_ID, itemId: returnItemId, reason: reason + (details ? ' - ' + details : '') })
+            });
+            const data = await res.json();
+            if (data.success) {
+              closeReturnModal();
+              if (typeof window.showToast === 'function') window.showToast('Return request submitted!', 'success');
+              setTimeout(() => location.reload(), 1000);
+            } else {
+              if (typeof window.showToast === 'function') window.showToast(data.message || 'Something went wrong.', 'error');
+              btn.disabled = false;
+              btn.textContent = 'Submit Return';
+            }
+          } catch {
+            if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Submit Return';
+          }
+        }
+
+        /* ── Full cancel modal ── */
+        function openFullCancelModal() {
+          document.getElementById('fullCancelReason').value = '';
+          document.getElementById('fullCancelModal').classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeFullCancelModal() {
+          document.getElementById('fullCancelModal').classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
+        async function submitFullCancel() {
+          const reason = document.getElementById('fullCancelReason').value.trim();
+          if (!reason) {
+            if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
+            return;
+          }
+          const btn = document.querySelector('#fullCancelModal .modal-btn-danger');
+          btn.disabled = true;
+          btn.textContent = 'Cancelling…';
+          try {
+            const res = await fetch('/cancel-full-order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ orderId: ORDER_ID, reason })
+            });
+            const data = await res.json();
+            if (data.success) {
+              closeFullCancelModal();
+              if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
+              setTimeout(() => location.reload(), 1000);
+            } else {
+              if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
+              btn.disabled = false;
+              btn.textContent = 'Yes, Cancel Order';
+            }
+          } catch {
+            if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Yes, Cancel Order';
+          }
+        }
+
+        /* ── Partial item cancel modal ── */
+        function openPartialCancelModal(btn) {
+          partialCancelItemId = btn.dataset.id;
+          document.getElementById('partialCancelName').textContent = btn.dataset.name;
+          document.getElementById('partialCancelSub').textContent = btn.dataset.sub;
+          document.getElementById('partialCancelImg').src = btn.dataset.img || '';
+          document.getElementById('partialCancelReason').value = '';
+          document.getElementById('partialCancelModal').classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closePartialCancelModal() {
+          document.getElementById('partialCancelModal').classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
+        async function submitPartialCancel() {
+          const reason = document.getElementById('partialCancelReason').value.trim();
+          if (!reason) {
+            if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
+            return;
+          }
+          const btn = document.querySelector('#partialCancelModal .modal-btn-danger');
+          btn.disabled = true;
+          btn.textContent = 'Cancelling…';
+          try {
+            const res = await fetch('/cancel-item', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ orderId: ORDER_ID, itemId: partialCancelItemId, reason })
+            });
+            const data = await res.json();
+            if (data.success) {
+              closePartialCancelModal();
+              if (typeof window.showToast === 'function') window.showToast('Item cancelled successfully.', 'success');
+              setTimeout(() => location.reload(), 1000);
+            } else {
+              if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel item.', 'error');
+              btn.disabled = false;
+              btn.textContent = 'Cancel Item';
+            }
+          } catch {
+            if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Cancel Item';
+          }
+        }
+      </script>
+
 </body>
 
 </html>

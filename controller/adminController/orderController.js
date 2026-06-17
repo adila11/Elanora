@@ -18,23 +18,9 @@ export const getOrdersPage = async (req, res) => {
 
         let query = {};
 
-        // 1. Filter by status
+        // 1. Filter by status (filter dropdown now sends raw DB enum values)
         if (status) {
-            if (status === 'Processing') {
-                query.orderStatus = { $in: ['confirmed', 'packed'] };
-            } else if (status === 'Pending') {
-                query.orderStatus = 'pending';
-            } else if (status === 'Shipped') {
-                query.orderStatus = 'shipped';
-            } else if (status === 'Out for Delivery') {
-                query.orderStatus = 'out_for_delivery';
-            } else if (status === 'Delivered') {
-                query.orderStatus = 'delivered';
-            } else if (status === 'Cancelled') {
-                query.orderStatus = 'cancelled';
-            } else if (status === 'Returned') {
-                query.orderStatus = 'returned';
-            }
+            query.orderStatus = status;
         }
 
         // 2. Filter by payment status
@@ -108,11 +94,12 @@ export const getOrdersPage = async (req, res) => {
                 case 'Out for Delivery': return 'out';
                 case 'Delivered': return 'delivered';
                 case 'Cancelled': return 'cancelled';
+                case 'Returned': return 'returned';
                 default: return 'pending';
             }
         };
 
-        res.render("admin/order", {
+        res.render("admin/orderList", {
             orders,
             currentStatus: status,
             currentPayment: payment,
@@ -139,19 +126,16 @@ function capitalize(text) {
 }
 
 function formatOrderStatus(status) {
-
     const statusMap = {
-        pending: "Pending",
-        confirmed: "Processing",
-        packed: "Processing",
-        shipped: "Shipped",
-        out_for_delivery: "Out for Delivery",
-        delivered: "Delivered",
-        cancelled: "Cancelled",
-        returned: "Returned"
+        pending: 'Pending',
+        processing: 'Processing',
+        shipped: 'Shipped',
+        out_for_delivery: 'Out for Delivery',
+        delivered: 'Delivered',
+        cancelled: 'Cancelled',
+        returned: 'Returned'
     };
-
-    return statusMap[status] || "Pending";
+    return statusMap[status] || 'Pending';
 }
 
 
@@ -177,23 +161,78 @@ export const updateOrderStatus = async (req, res) => {
         }
 
         const statusMap = {
-            "Pending": "pending",
-            "Processing": "processing",
-            "Shipped": "shipped",
-            "Out for Delivery": "out_for_delivery",
-            "Delivered": "delivered",
-            "Cancelled": "cancelled"
+            'Pending': 'pending',
+            'Processing': 'processing',
+            'Shipped': 'shipped',
+            'Out for Delivery': 'out_for_delivery',
+            'Delivered': 'delivered',
+            'Cancelled': 'cancelled',
+            'Returned': 'returned',
+            'pending': 'pending',
+            'processing': 'processing',
+            'shipped': 'shipped',
+            'out_for_delivery': 'out_for_delivery',
+            'delivered': 'delivered',
+            'cancelled': 'cancelled',
+            'returned': 'returned'
         };
 
         const dbStatus = statusMap[status];
+        const allowedTransitions = {
+            pending: [
+                "processing",
+                "shipped",
+                "out_for_delivery",
+                "delivered",
+                "cancelled",
+                "returned"
+            ],
+
+            processing: [
+                "shipped",
+                "out_for_delivery",
+                "delivered",
+                "cancelled",
+                "returned"
+            ],
+
+            shipped: [
+                "out_for_delivery",
+                "delivered",
+                "cancelled",
+                "returned"
+            ],
+
+            out_for_delivery: [
+                "delivered",
+                "cancelled",
+                "returned"
+            ],
+
+            delivered: [],
+            cancelled: [],
+            returned: []
+        };
+
+        const currentStatus = existingOrder.orderStatus;
+
+        if (
+            currentStatus !== dbStatus &&
+            !allowedTransitions[currentStatus]?.includes(dbStatus)
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: `Invalid status transition from ${currentStatus} to ${dbStatus}`
+            });
+        }
         if (!dbStatus) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid status value."
             });
         }
-        
- 
+
+
         existingOrder.orderStatus = dbStatus;
         console.log(existingOrder.orderStatus)
         if (dbStatus === 'delivered') {
@@ -215,6 +254,28 @@ export const updateOrderStatus = async (req, res) => {
             success: false,
             message: "An error occurred while updating the status."
         });
+    }
+};
+
+export const getOrderDetail = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+
+        const order = await Order.findOne({ orderId })
+            .populate('userId', 'name email')   // populates user name + email
+            .lean();
+
+        if (!order) {
+            return res.status(404).render('admin/404', { message: 'Order not found' });
+        }
+
+        // Attach populated user onto order as `order.user` for easy template access
+        order.user = order.userId;
+
+        res.render('admin/orderDetail', { order, title: "Order Details" });
+    } catch (err) {
+        console.error('getOrderDetail error:', err);
+        res.status(500).render('admin/error', { message: 'Server error' });
     }
 };
 

@@ -6,11 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Orders – Elanora</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -291,8 +295,15 @@
     }
 
     @keyframes modalIn {
-      from { opacity: 0; transform: translateY(14px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .modal-close {
@@ -312,7 +323,9 @@
       transition: background 0.2s;
     }
 
-    .modal-close:hover { background: #e8e0d0; }
+    .modal-close:hover {
+      background: #e8e0d0;
+    }
 
     .cancel-modal h3 {
       font-family: 'Cormorant Garamond', serif;
@@ -345,8 +358,13 @@
       transition: background 0.15s;
     }
 
-    .cancel-item-row:last-child { border-bottom: none; }
-    .cancel-item-row:hover { background: #fdfaf5; }
+    .cancel-item-row:last-child {
+      border-bottom: none;
+    }
+
+    .cancel-item-row:hover {
+      background: #fdfaf5;
+    }
 
     .cancel-item-row input[type="checkbox"] {
       width: 15px;
@@ -400,7 +418,10 @@
       background: #fff;
     }
 
-    .modal-actions { display: flex; gap: 12px; }
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
 
     .btn-keep {
       flex: 1;
@@ -416,7 +437,9 @@
       transition: all 0.2s;
     }
 
-    .btn-keep:hover { background: #e8e0d0; }
+    .btn-keep:hover {
+      background: #e8e0d0;
+    }
 
     .btn-confirm-cancel {
       flex: 1;
@@ -432,8 +455,14 @@
       transition: background 0.2s;
     }
 
-    .btn-confirm-cancel:hover { background: #a93226; }
-    .btn-confirm-cancel:disabled { background: #e0a09a; cursor: not-allowed; }
+    .btn-confirm-cancel:hover {
+      background: #a93226;
+    }
+
+    .btn-confirm-cancel:disabled {
+      background: #e0a09a;
+      cursor: not-allowed;
+    }
 
     /* ── NO RESULTS ── */
     .no-results {
@@ -458,227 +487,302 @@
 
   <%- include('partials/user/header') %>
 
-  <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
+    <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
 
-    <%- include('partials/user/profileBanner', { user }) %>
+      <%- include('partials/user/profileBanner', { user }) %>
 
-    <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
+        <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
 
-      <%- include('partials/user/profileSidebar', { activePage: 'orders' }) %>
+          <%- include('partials/user/profileSidebar', { activePage: 'orders' }) %>
 
-      <main style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <main
+              style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
 
-        <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #f0ece4; padding-bottom:18px; margin-bottom:28px; gap:16px; flex-wrap:wrap;">
-          <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#2c2c2c;">
-            Order History
-          </h3>
-          <div class="search-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <input type="text" id="searchInput" placeholder="Search by order # or item…" oninput="filterOrders()">
-          </div>
-        </div>
-
-        <div id="orderList">
-          <% if (orders && orders.length > 0) { %>
-            <% orders.forEach(order => { %>
-              <div class="order-card"
-                   data-search-string="<%= String(order.orderId || order._id || '').toLowerCase() %> <%= order.items ? order.items.map(i => String(i.productName || i.name || '').toLowerCase()).join(' ') : '' %>">
-
-                <div class="order-meta">
-                  <div class="meta-group">
-                    <label>Order Placed</label>
-                    <span>
-                      <%= order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : 'N/A' %>
-                    </span>
-                  </div>
-
-                  <div class="meta-group">
-                    <label>Total</label>
-                    <span>₹<%= (order.grandTotal ?? order.totalPrice ?? order.finalAmount ?? 0).toLocaleString('en-IN') %></span>
-                  </div>
-
-                  <div class="meta-group">
-                    <label>Order #</label>
-                    <span>#<%= order.orderId || order._id %></span>
-                  </div>
-
-                  <div class="order-actions">
-                    <span class="status-badge <%= order.orderStatus || 'pending' %>">
-                      <%= String(order.orderStatus || 'pending').replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %>
-                    </span>
-                    <% if (order.orderStatus !== 'cancelled' && order.orderStatus !== 'delivered') { %>
-                      <button class="cancel-order-btn" onclick="openCancelModal('<%= order._id %>')">
-                        Cancel
-                      </button>
-                    <% } %>
-                  </div>
+              <div
+                style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #f0ece4; padding-bottom:18px; margin-bottom:28px; gap:16px; flex-wrap:wrap;">
+                <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#2c2c2c;">
+                  Order History
+                </h3>
+                <div class="search-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <input type="text" id="searchInput" placeholder="Search by order # or item…" oninput="filterOrders()">
                 </div>
-
-                <div class="order-item-row">
-                  <div class="item-left">
-                    <div class="item-img">
-                      <% if (order.items?.[0]?.productImage) { %>
-                        <img src="<%= order.items[0].productImage %>" alt="product" style="width:100%;height:100%;object-fit:cover;">
-                      <% } else { %>
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c49a2a" stroke-width="1.5">
-                          <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                        </svg>
-                      <% } %>
-                    </div>
-                    <div class="item-info">
-                      <p><%= order.items ? order.items.length : 0 %> Item<%= (order.items && order.items.length > 1) ? 's' : '' %> in this order</p>
-                      <small>Includes <%= order.items?.[0]?.productName || 'Product' %></small>
-                    </div>
-                  </div>
-
-                  <a href="/orders/<%= order._id %>" class="view-btn">
-                    View Details
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <polyline points="9 18 15 12 9 6"/>
-                    </svg>
-                  </a>
-                </div>
-
               </div>
-            <% }) %>
-          <% } else { %>
-            <div style="text-align:center; padding:60px 0; color:#bbb;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="margin:0 auto 16px; display:block; opacity:0.35;">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              <p style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:#888; margin-bottom:6px;">No orders yet</p>
-              <p style="font-size:0.82rem;">Your order history will appear here once you've made a purchase.</p>
-            </div>
-          <% } %>
-        </div>
 
-        <div class="no-results" id="noResults">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              <div id="orderList">
+                <% if (orders && orders.length> 0) { %>
+                  <% orders.forEach(order=> { %>
+                    <div class="order-card"
+                      data-search-string="<%= String(order.orderId || order._id || '').toLowerCase() %> <%= order.items ? order.items.map(i => String(i.productName || i.name || '').toLowerCase()).join(' ') : '' %>">
+
+                      <div class="order-meta">
+                        <div class="meta-group">
+                          <label>Order Placed</label>
+                          <span>
+                            <%= order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day:'numeric',
+                              month:'short', year:'numeric' }) : 'N/A' %>
+                          </span>
+                        </div>
+
+                        <div class="meta-group">
+                          <label>Total</label>
+                          <span>₹<%= (order.grandTotal ?? order.totalPrice ?? order.finalAmount ??
+                              0).toLocaleString('en-IN') %></span>
+                        </div>
+
+                        <div class="meta-group">
+                          <label>Order #</label>
+                          <span>#<%= order.orderId || order._id %></span>
+                        </div>
+
+                        <div class="order-actions">
+
+    <span class="status-badge <%= order.orderStatus || 'pending' %>">
+        <%= String(order.orderStatus || 'pending')
+            .replaceAll('_',' ')
+            .replace(/\b\w/g, c => c.toUpperCase()) %>
+    </span>
+
+    <% if (
+        order.orderStatus === 'pending' ||
+        order.orderStatus === 'processing'
+    ) { %>
+
+        <button class="cancel-order-btn"
+            onclick='openCancelModal(
+                "<%= order._id %>",
+                <%- JSON.stringify(order.items) %>
+            )'>
+            Cancel
+        </button>
+
+    <% } %>
+
+</div>
+                      </div>
+
+                      <div class="order-item-row">
+                        <div class="item-left">
+                          <div class="item-img">
+                            <% if (order.items?.[0]?.productImage) { %>
+                              <img src="<%= order.items[0].productImage %>" alt="product"
+                                style="width:100%;height:100%;object-fit:cover;">
+                              <% } else { %>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c49a2a"
+                                  stroke-width="1.5">
+                                  <rect x="2" y="3" width="20" height="14" rx="2" />
+                                  <line x1="8" y1="21" x2="16" y2="21" />
+                                  <line x1="12" y1="17" x2="12" y2="21" />
+                                </svg>
+                                <% } %>
+                          </div>
+                          <div class="item-info">
+                            <p>
+                              <%= order.items ? order.items.length : 0 %> Item<%= (order.items && order.items.length> 1)
+                                  ? 's' : '' %> in this order
+                            </p>
+                            <small>Includes <%= order.items?.[0]?.productName || 'Product' %></small>
+                          </div>
+                        </div>
+
+                        <a href="/orders/<%= order._id %>" class="view-btn">
+                          View Details
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                        </a>
+                      </div>
+
+                    </div>
+                    <% }) %>
+                      <% } else { %>
+                        <div style="text-align:center; padding:60px 0; color:#bbb;">
+                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.2" style="margin:0 auto 16px; display:block; opacity:0.35;">
+                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <path d="M16 10a4 4 0 01-8 0" />
+                          </svg>
+                          <p
+                            style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:#888; margin-bottom:6px;">
+                            No orders yet</p>
+                          <p style="font-size:0.82rem;">Your order history will appear here once you've made a purchase.
+                          </p>
+                        </div>
+                        <% } %>
+              </div>
+
+              <div class="no-results" id="noResults">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                No orders match your search.
+              </div>
+
+              <div class="pagination">
+                <button class="page-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </button>
+              </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Cancel Modal -->
+    <div id="cancelModal" class="modal-overlay" onclick="outsideCancelClose(event)">
+      <div class="cancel-modal">
+        <button class="modal-close" onclick="closeCancelModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
-          No orders match your search.
+        </button>
+        <div
+          style="width:48px;height:48px;border-radius:12px;background:#FDF0EE;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+          </svg>
         </div>
+        <h3>Cancel Order</h3>
+        <p class="modal-sub">Are you sure you want to cancel this order? This action cannot be undone.</p>
 
-        <div class="pagination">
-          <button class="page-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="15 18 9 12 15 6"/>
-            </svg>
-          </button>
-          <button class="page-btn active">1</button>
-          <button class="page-btn">2</button>
-          <button class="page-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          </button>
+        <div class="cancel-items-list" id="cancelItemsList"></div>
+
+        <label class="reason-label">
+          Reason <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;">(optional)</span>
+        </label>
+        <textarea id="cancelReason" placeholder="Tell us why you're cancelling…"></textarea>
+
+        <div class="modal-actions">
+          <button class="btn-keep" onclick="closeCancelModal()">Keep Order</button>
+          <button class="btn-confirm-cancel" id="confirmCancelBtn" onclick="submitCancel()">Yes, Cancel</button>
         </div>
-
-      </main>
-    </div>
-  </div>
-
-  <!-- Cancel Modal -->
-  <div id="cancelModal" class="modal-overlay" onclick="outsideCancelClose(event)">
-    <div class="cancel-modal">
-      <button class="modal-close" onclick="closeCancelModal()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
-      <div style="width:48px;height:48px;border-radius:12px;background:#FDF0EE;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-        </svg>
-      </div>
-      <h3>Cancel Order</h3>
-      <p class="modal-sub">Are you sure you want to cancel this order? This action cannot be undone.</p>
-
-      <div class="cancel-items-list" id="cancelItemsList"></div>
-
-      <label class="reason-label">
-        Reason <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;">(optional)</span>
-      </label>
-      <textarea id="cancelReason" placeholder="Tell us why you're cancelling…"></textarea>
-
-      <div class="modal-actions">
-        <button class="btn-keep" onclick="closeCancelModal()">Keep Order</button>
-        <button class="btn-confirm-cancel" id="confirmCancelBtn" onclick="submitCancel()">Yes, Cancel</button>
       </div>
     </div>
-  </div>
 
-  <%- include('partials/user/footer') %>
+    <%- include('partials/user/footer') %>
 
-  <script>
-    // ── Search ──────────────────────────────────────────────
-    function filterOrders() {
-      const q = document.getElementById('searchInput').value.trim().toLowerCase();
-      const cards = document.querySelectorAll('#orderList .order-card');
-      let visible = 0;
+      <script>
+        // ── Search ──────────────────────────────────────────────
+        function filterOrders() {
+          const q = document.getElementById('searchInput').value.trim().toLowerCase();
+          const cards = document.querySelectorAll('#orderList .order-card');
+          let visible = 0;
 
-      cards.forEach(card => {
-        const haystack = card.dataset.searchString || '';
-        const show = !q || haystack.includes(q);
-        card.style.display = show ? '' : 'none';
-        if (show) visible++;
-      });
+          cards.forEach(card => {
+            const haystack = card.dataset.searchString || '';
+            const show = !q || haystack.includes(q);
+            card.style.display = show ? '' : 'none';
+            if (show) visible++;
+          });
 
-      document.getElementById('noResults').style.display = (q && visible === 0) ? 'block' : 'none';
-    }
-
-    // ── Cancel Modal ─────────────────────────────────────────
-    let currentOrderId = null;
-
-    function openCancelModal(orderId) {
-      currentOrderId = orderId;
-      document.getElementById('cancelReason').value = '';
-      document.getElementById('cancelItemsList').innerHTML =
-        '<div class="cancel-item-row"><label style="color:#aaa;font-size:0.82rem;">Loading items…</label></div>';
-      document.getElementById('cancelModal').classList.add('open');
-    }
-
-    function closeCancelModal() {
-      document.getElementById('cancelModal').classList.remove('open');
-      currentOrderId = null;
-    }
-
-    function outsideCancelClose(e) {
-      if (e.target === document.getElementById('cancelModal')) closeCancelModal();
-    }
-
-    async function submitCancel() {
-      if (!currentOrderId) return;
-      const reason = document.getElementById('cancelReason').value.trim();
-      const btn = document.getElementById('confirmCancelBtn');
-      btn.disabled = true;
-      btn.textContent = 'Cancelling…';
-
-      try {
-        const res = await fetch(`/orders/${currentOrderId}/cancel`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ reason })
-        });
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
-          closeCancelModal();
-          setTimeout(() => window.location.reload(), 1000);
-        } else {
-          if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
+          document.getElementById('noResults').style.display = (q && visible === 0) ? 'block' : 'none';
         }
-      } catch (err) {
-        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Yes, Cancel';
-      }
-    }
-  </script>
+
+        // ── Cancel Modal ─────────────────────────────────────────
+        let currentOrderId = null;
+
+        function openCancelModal(orderId, items) {
+
+          currentOrderId = orderId;
+
+          document.getElementById('cancelReason').value = '';
+
+          const list = document.getElementById('cancelItemsList');
+
+          list.innerHTML = items.map(item => `
+        <div class="cancel-item-row">
+            <div style="display:flex;align-items:center;gap:12px;width:100%;">
+                
+                <img
+                    src="${item.productImage || '/images/no-image.png'}"
+                    alt="${item.productName}"
+                    style="
+                        width:50px;
+                        height:50px;
+                        object-fit:cover;
+                        border-radius:8px;
+                        border:1px solid #eee;
+                    "
+                >
+
+                <div style="flex:1;">
+                    <div style="font-weight:600;">
+                        ${item.productName}
+                    </div>
+
+                    <div style="font-size:12px;color:#888;">
+                        Qty: ${item.qty}
+                    </div>
+                </div>
+
+                <div style="font-weight:600;">
+                    ₹${item.total}
+                </div>
+
+            </div>
+        </div>
+    `).join('');
+
+          document.getElementById('cancelModal').classList.add('open');
+        }
+
+        function closeCancelModal() {
+          document.getElementById('cancelModal').classList.remove('open');
+          currentOrderId = null;
+        }
+
+        function outsideCancelClose(e) {
+          if (e.target === document.getElementById('cancelModal')) closeCancelModal();
+        }
+
+        async function submitCancel() {
+          if (!currentOrderId) return;
+          const reason = document.getElementById('cancelReason').value.trim();
+          const btn = document.getElementById('confirmCancelBtn');
+          btn.disabled = true;
+          btn.textContent = 'Cancelling…';
+
+          try {
+            const res = await fetch(`/orders/${currentOrderId}/cancel`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ reason })
+            });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+              if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
+              closeCancelModal();
+              setTimeout(() => window.location.reload(), 1000);
+            } else {
+              if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
+            }
+          } catch (err) {
+            if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Yes, Cancel';
+          }
+        }
+      </script>
 </body>
 
 </html>

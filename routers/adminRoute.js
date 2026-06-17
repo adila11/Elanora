@@ -4,7 +4,8 @@ import { loadDashboard } from "../controller/adminController/dashboardController
 import { blockUser, loadUserManagement } from "../controller/adminController/customersController.js"
 import { loadProduct, loadAddProduct, addProduct, loadEditProduct, editProduct, toggleProductStatus, deleteProduct } from "../controller/adminController/productController.js"
 import { loadCategories, addCategory, editCategory, toggleCategory, deleteCategory } from "../controller/adminController/categoriesController.js"
-import { getOrdersPage, updateOrderStatus } from "../controller/adminController/orderController.js"
+import { getOrdersPage, updateOrderStatus, getOrderDetail } from "../controller/adminController/orderController.js"
+import { approveReturn, getReturnsPage, rejectReturn } from "../controller/adminController/returnController.js"
 import upload from "../config/multerCloudinary.js"
 const router=express.Router()
 
@@ -14,13 +15,10 @@ router.post("/",login)
 router.get("/dashboard",loadDashboard)
 
 router.get("/products",loadProduct)
-
 router.get("/products/add",loadAddProduct)
 router.post("/products/add",upload.any(),addProduct)
-
 router.get("/products/edit/:id", loadEditProduct)
 router.post("/products/edit/:id", upload.any(), editProduct)
-
 router.patch("/products/:id/toggle", toggleProductStatus)
 router.delete("/products/:id", deleteProduct)
 
@@ -33,10 +31,13 @@ router.put("/categories/edit/:id", editCategory)
 router.patch("/categories/:id/toggle", toggleCategory)
 router.delete("/categories/:id", deleteCategory)
 
-
 router.get("/orders", getOrdersPage);
+router.get("/orders/:orderId", getOrderDetail);
 router.patch("/orders/:orderId/status",updateOrderStatus);
 
+router.get("/returns",getReturnsPage);
+router.patch("/returns/:id/approve",approveReturn);
+router.patch("/returns/:id/reject",rejectReturn);
 
 
 router.get('/logout',logout) ;

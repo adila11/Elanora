@@ -6,287 +6,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elanora — Returns</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet">
   <style>
-    *,
-    *::before,
-    *::after {
+    :root {
+      --bg: #f5f4f0;
+      --sidebar-bg: #fafaf8;
+      --card: #ffffff;
+      --card-bg: #ffffff;
+      --border: #e8e6e0;
+      --text: #1a1a18;
+      --text-primary: #1a1a18;
+      --text-secondary: #7a7870;
+      --text-muted: #7a7870;
+      --accent: #c8a96e;
+      --accent-light: #f5edd8;
+      --accent-hover: #b38a4f;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 2px 16px rgba(26, 23, 20, 0.07);
+      --shadow-lg: 0 8px 40px rgba(26, 23, 20, 0.13);
+
+      --green: #2d7a4f;
+      --green-bg: #e8f5ee;
+      --red: #c0392b;
+      --red-bg: #fcecea;
+      --yellow: #9a7b2f;
+      --yellow-bg: #fdf6e3;
+    }
+
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    :root {
-      --gold: #C9944A;
-      --gold-light: #F5ECD9;
-      --gold-pale: #FBF6EE;
-      --sidebar-bg: #FAFAF9;
-      --border: #EEEBE5;
-      --text-dark: #1A1714;
-      --text-mid: #6B6560;
-      --text-light: #A09890;
-      --white: #FFFFFF;
-      --green: #3A7D5C;
-      --green-bg: #EBF5EF;
-      --red: #C0392B;
-      --red-bg: #FDECEA;
-      --yellow: #B8860B;
-      --yellow-bg: #FEF9EC;
-      --radius: 10px;
-      --shadow: 0 4px 24px rgba(60, 40, 10, 0.07);
-    }
-
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #F7F4EF;
-      color: var(--text-dark);
+      background: var(--bg);
+      color: var(--text-primary);
       display: flex;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    /* ── SIDEBAR ── */
-    .sidebar {
-      width: 240px;
-      min-height: 100vh;
-      background: var(--sidebar-bg);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 0 0 24px;
-      flex-shrink: 0;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 28px 24px 32px;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text-dark);
-      letter-spacing: 0.02em;
-    }
-
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--gold) 0%, #E8B86D 100%);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 16px;
-    }
-
-    .nav-label {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-light);
-      padding: 0 24px 8px;
-      margin-top: 8px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 24px;
-      font-size: 13.5px;
-      color: var(--text-mid);
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      border-left: 3px solid transparent;
-      text-decoration: none;
-    }
-
-    .nav-item:hover {
-      background: var(--gold-light);
-      color: var(--gold);
-    }
-
-    .nav-item.active {
-      background: var(--gold-light);
-      color: var(--gold);
-      border-left-color: var(--gold);
-      font-weight: 500;
-    }
-
-    .nav-item svg {
-      opacity: 0.7;
-      flex-shrink: 0;
-    }
-
-    .nav-item.active svg {
-      opacity: 1;
-    }
-
-    .sidebar-spacer {
-      flex: 1;
-    }
-
-    .logout {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 24px;
-      color: var(--text-light);
-      font-size: 13.5px;
-      cursor: pointer;
-      transition: color 0.15s;
-    }
-
-    .logout:hover {
-      color: var(--red);
-    }
-
-    /* ── MAIN ── */
     .main {
       flex: 1;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      overflow: hidden;
     }
 
-    /* ── TOPBAR ── */
-    .topbar {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .topbar-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    .topbar-search {
+    /* ── CONTENT ── */
+    .content {
+      padding: 28px 32px;
       flex: 1;
-      max-width: 340px;
-      margin-left: auto;
-      position: relative;
-    }
-
-    .topbar-search input {
-      width: 100%;
-      padding: 8px 14px 8px 36px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 13px;
-      background: var(--sidebar-bg);
-      color: var(--text-mid);
-      outline: none;
-      font-family: 'DM Sans', sans-serif;
-      transition: border 0.2s;
-    }
-
-    .topbar-search input:focus {
-      border-color: var(--gold);
-    }
-
-    .topbar-search svg {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      opacity: 0.4;
-    }
-
-    .topbar-bell {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
-      color: var(--text-mid);
-      transition: background 0.15s;
-    }
-
-    .topbar-bell:hover {
-      background: var(--gold-light);
-    }
-
-    .bell-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--red);
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      border: 1.5px solid white;
-    }
-
-    .topbar-user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold) 0%, #E8B86D 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-    }
-
-    .user-info {
-      line-height: 1.3;
-    }
-
-    .user-name {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-dark);
-    }
-
-    .user-role {
-      font-size: 11px;
-      color: var(--text-light);
-    }
-
-    /* ── PAGE ── */
-    .page {
-      padding: 32px;
-      flex: 1;
+      overflow-y: auto;
     }
 
     .page-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
-    .page-heading {
+    .page-header h2 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 26px;
       font-weight: 600;
-      color: var(--text-dark);
     }
 
+    /* ── SEARCH ── */
     .search-returns {
       position: relative;
       width: 260px;
@@ -294,32 +85,40 @@
 
     .search-returns input {
       width: 100%;
-      padding: 9px 14px 9px 14px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      padding: 7px 14px 7px 34px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
       font-size: 13px;
-      background: var(--white);
-      color: var(--text-mid);
-      outline: none;
       font-family: 'DM Sans', sans-serif;
-      transition: border 0.2s;
+      color: var(--text-primary);
+      background: var(--bg);
+      outline: none;
+      transition: border 0.18s;
     }
 
     .search-returns input:focus {
-      border-color: var(--gold);
+      border-color: var(--accent);
     }
 
-    .search-returns input::placeholder {
-      color: var(--text-light);
+    .search-returns svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
     }
 
     /* ── TABLE CARD ── */
-    .card {
-      background: var(--white);
+    .table-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      border: 1px solid var(--border);
       overflow: hidden;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
     }
 
     /* ── TABS ── */
@@ -327,13 +126,13 @@
       display: flex;
       gap: 0;
       border-bottom: 1px solid var(--border);
-      padding: 0 24px;
+      padding: 0 20px;
     }
 
     .tab {
-      padding: 16px 18px 14px;
+      padding: 15px 18px 13px;
       font-size: 13.5px;
-      color: var(--text-mid);
+      color: var(--text-muted);
       cursor: pointer;
       border-bottom: 2px solid transparent;
       transition: color 0.15s, border-color 0.15s;
@@ -341,13 +140,11 @@
       user-select: none;
     }
 
-    .tab:hover {
-      color: var(--gold);
-    }
+    .tab:hover { color: var(--accent); }
 
     .tab.active {
-      color: var(--gold);
-      border-bottom-color: var(--gold);
+      color: var(--accent);
+      border-bottom-color: var(--accent);
       font-weight: 500;
     }
 
@@ -355,45 +152,42 @@
     table {
       width: 100%;
       border-collapse: collapse;
+      min-width: 720px;
     }
 
     thead tr {
-      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      border-bottom: 2px solid var(--border);
     }
 
     th {
-      padding: 12px 20px;
+      padding: 13px 16px;
       text-align: left;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
       text-transform: uppercase;
-      color: var(--text-light);
+      letter-spacing: 0.07em;
+      white-space: nowrap;
     }
 
     tbody tr {
       border-bottom: 1px solid var(--border);
-      transition: background 0.12s;
+      transition: background 0.14s;
     }
 
-    tbody tr:last-child {
-      border-bottom: none;
-    }
-
-    tbody tr:hover {
-      background: var(--gold-pale);
-    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--accent-light); }
 
     td {
-      padding: 18px 20px;
+      padding: 14px 16px;
       font-size: 13.5px;
-      color: var(--text-dark);
       vertical-align: middle;
     }
 
     .order-link {
-      color: var(--gold);
-      font-weight: 500;
+      color: var(--accent);
+      font-weight: 600;
       font-size: 13px;
       display: block;
       margin-bottom: 2px;
@@ -401,7 +195,7 @@
 
     .customer-name {
       font-size: 12.5px;
-      color: var(--text-mid);
+      color: var(--text-muted);
     }
 
     .product-name {
@@ -411,103 +205,94 @@
       margin-bottom: 2px;
     }
 
-    .product-reason {
-      font-size: 12px;
-      color: var(--text-mid);
-    }
-
-    .product-reason span {
-      color: var(--text-light);
-      margin-right: 4px;
-    }
-
-    .date-cell {
-      color: var(--text-mid);
-      font-size: 13px;
-    }
+    .product-reason { font-size: 12px; color: var(--text-muted); }
+    .product-reason span { color: var(--text-secondary); margin-right: 4px; }
+    .date-cell { color: var(--text-muted); font-size: 13px; }
 
     /* ── BADGES ── */
     .badge {
       display: inline-flex;
       align-items: center;
-      padding: 4px 12px;
-      border-radius: 20px;
+      padding: 4px 10px;
+      border-radius: 50px;
       font-size: 12px;
       font-weight: 500;
-      letter-spacing: 0.02em;
+      white-space: nowrap;
+      gap: 5px;
     }
 
-    .badge-pending {
-      background: var(--yellow-bg);
-      color: var(--yellow);
+    .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
     }
 
-    .badge-approved {
-      background: var(--green-bg);
-      color: var(--green);
-    }
+    .badge-pending  { background: var(--yellow-bg); color: var(--yellow); }
+    .badge-approved { background: var(--green-bg);  color: var(--green);  }
+    .badge-rejected { background: var(--red-bg);    color: var(--red);    }
 
-    .badge-rejected {
-      background: var(--red-bg);
-      color: var(--red);
-    }
-
-    /* ── VIEW BUTTON ── */
-    .btn-view {
+    /* ── ACTIONS ── */
+    .action-btn {
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 7px 16px;
-      border-radius: 7px;
-      border: 1.5px solid var(--gold);
-      background: transparent;
-      color: var(--gold);
-      font-size: 12.5px;
-      font-weight: 500;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      transition: background 0.15s, color 0.15s;
+      gap: 5px;
+      transition: all 0.18s;
+      white-space: nowrap;
     }
 
-    .btn-view:hover {
-      background: var(--gold);
-      color: white;
+    .action-btn:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .action-btn svg { width: 13px; height: 13px; }
+
+    .processed-text {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      font-style: italic;
     }
 
     /* ── MODAL OVERLAY ── */
-    .overlay {
+    .modal-overlay {
+      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(26, 23, 20, 0.45);
-      backdrop-filter: blur(3px);
-      z-index: 100;
-      display: flex;
+      background: rgba(26, 26, 24, 0.6);
+      z-index: 200;
       align-items: center;
       justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.22s;
+      backdrop-filter: blur(3px);
     }
 
-    .overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
+    .modal-overlay.open { display: flex; }
 
     /* ── MODAL ── */
     .modal {
-      background: var(--white);
-      border-radius: 14px;
+      background: var(--card-bg);
+      border-radius: 16px;
       width: 100%;
       max-width: 440px;
-      box-shadow: 0 20px 60px rgba(60, 40, 10, 0.18);
+      box-shadow: var(--shadow-lg);
       overflow: hidden;
-      transform: translateY(18px) scale(0.98);
-      transition: transform 0.25s cubic-bezier(.22, .68, 0, 1.2);
+      animation: slideUp 0.22s ease;
     }
 
-    .overlay.open .modal {
-      transform: translateY(0) scale(1);
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
     }
 
     .modal-header {
@@ -518,13 +303,11 @@
       justify-content: space-between;
     }
 
-    .modal-header-left {}
-
     .modal-tag {
       font-size: 11px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--text-light);
+      color: var(--text-muted);
       margin-bottom: 4px;
     }
 
@@ -532,24 +315,24 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 22px;
       font-weight: 600;
-      color: var(--text-dark);
+      color: var(--text-primary);
     }
 
     .modal-close {
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--border);
       background: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-light);
-      transition: background 0.15s, color 0.15s;
+      color: var(--text-muted);
       font-size: 18px;
       line-height: 1;
       flex-shrink: 0;
+      transition: all 0.15s;
     }
 
     .modal-close:hover {
@@ -562,16 +345,16 @@
       padding: 24px 28px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
 
     .detail-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 16px;
-      background: var(--gold-pale);
-      border-radius: 8px;
+      padding: 13px 16px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
       border: 1px solid var(--border);
     }
 
@@ -579,19 +362,19 @@
       font-size: 11.5px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--text-light);
+      color: var(--text-muted);
       font-weight: 500;
     }
 
     .detail-value {
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-dark);
+      color: var(--text-primary);
       text-align: right;
     }
 
     .detail-value.reason {
-      color: var(--text-mid);
+      color: var(--text-muted);
       font-weight: 400;
       font-style: italic;
     }
@@ -599,7 +382,7 @@
     .detail-value.price {
       font-family: 'Cormorant Garamond', serif;
       font-size: 18px;
-      color: var(--gold);
+      color: var(--accent);
       font-weight: 600;
     }
 
@@ -610,11 +393,10 @@
       border-top: 1px solid var(--border);
     }
 
-    .btn-approve,
-    .btn-reject {
+    .btn-approve, .btn-reject, .btn-cancel {
       flex: 1;
-      padding: 12px;
-      border-radius: 8px;
+      padding: 11px;
+      border-radius: var(--radius-sm);
       border: none;
       font-size: 13.5px;
       font-weight: 500;
@@ -627,274 +409,202 @@
       transition: opacity 0.15s, transform 0.1s;
     }
 
-    .btn-approve:hover,
-    .btn-reject:hover {
-      opacity: 0.88;
+    .btn-approve:hover, .btn-reject:hover, .btn-cancel:hover { opacity: 0.88; }
+    .btn-approve:active, .btn-reject:active, .btn-cancel:active { transform: scale(0.97); }
+
+    .btn-approve { background: var(--green); color: white; }
+    .btn-reject  { background: var(--red);   color: white; }
+    .btn-cancel  {
+      background: #f5f4f0;
+      color: var(--text-muted);
+      border: 1.5px solid var(--border);
+      opacity: 1 !important;
+    }
+    .btn-cancel:hover { background: #ebe9e3; opacity: 1 !important; }
+
+    /* ── REJECTION MODAL SPECIFICS ── */
+    .warning-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      background: #fff8f7;
+      border: 1px solid #f5cdc9;
+      border-radius: var(--radius-sm);
     }
 
-    .btn-approve:active,
-    .btn-reject:active {
-      transform: scale(0.97);
+    .warning-banner svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--red);
+      margin-top: 1px;
     }
 
-    .btn-approve {
-      background: var(--green);
-      color: white;
+    .warning-banner p {
+      font-size: 13px;
+      color: #7a2020;
+      line-height: 1.55;
     }
 
-    .btn-reject {
-      background: var(--red);
-      color: white;
+    .field-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 7px;
     }
 
-    /* processed state in action */
-    .processed-text {
-      font-size: 12.5px;
-      color: var(--text-light);
-      font-style: italic;
+    .field-label span {
+      color: #b0ada6;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
     }
+
+    .remark-textarea {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      resize: vertical;
+      min-height: 92px;
+      outline: none;
+      transition: border 0.18s;
+      line-height: 1.5;
+    }
+
+    .remark-textarea:focus { border-color: var(--red); }
+    .remark-textarea::placeholder { color: #b0ada6; }
+
+    .char-count {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: 5px;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.22s, transform 0.22s;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.error   { background: var(--red);   }
+    .toast.success { background: var(--green);  }
   </style>
 </head>
 
 <body>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="logo">
-      <div class="logo-icon">◆</div>
-      Elanora
-    </div>
+  <%- include('partials/admin/sidebar') %>
 
-    <div class="nav-label">Main</div>
-
-    <a class="nav-item" href="#">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-        <rect x="3" y="3" width="7" height="7" rx="1" />
-        <rect x="14" y="3" width="7" height="7" rx="1" />
-        <rect x="3" y="14" width="7" height="7" rx="1" />
-        <rect x="14" y="14" width="7" height="7" rx="1" />
-      </svg>
-      Dashboard
-    </a>
-    <a class="nav-item" href="#">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-        <circle cx="9" cy="21" r="1" />
-        <circle cx="20" cy="21" r="1" />
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-      </svg>
-      Orders
-    </a>
-    <a class="nav-item" href="#">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-        <path
-          d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-      </svg>
-      Products
-    </a>
-    <a class="nav-item" href="#">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-      </svg>
-      Categories
-    </a>
-
-    <div class="nav-label" style="margin-top:16px">Customers</div>
-    <a class="nav-item" href="#">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-      Customers
-    </a>
-    <a class="nav-item" href="#">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-        <path
-          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-      </svg>
-      Coupons
-    </a>
-
-    <div class="nav-label" style="margin-top:16px">Analytics</div>
-    <a class="nav-item" href="#">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-        <line x1="18" y1="20" x2="18" y2="10" />
-        <line x1="12" y1="20" x2="12" y2="4" />
-        <line x1="6" y1="20" x2="6" y2="14" />
-      </svg>
-      Sales Reports
-    </a>
-    <a class="nav-item active" href="#">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-        <polyline points="1 4 1 10 7 10" />
-        <path d="M3.51 15a9 9 0 1 0 .49-3.51" />
-      </svg>
-      Returns
-    </a>
-
-    <div class="sidebar-spacer"></div>
-
-    <div class="logout">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-        <polyline points="16 17 21 12 16 7" />
-        <line x1="21" y1="12" x2="9" y2="12" />
-      </svg>
-      Logout
-    </div>
-  </aside>
-
-  <!-- MAIN -->
   <div class="main">
-    <!-- TOPBAR -->
-    <header class="topbar">
-      <span class="topbar-title">Returns</span>
-      <div class="topbar-search">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8" />
-          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
-        <input type="text" placeholder="Search…">
-      </div>
-      <div class="topbar-bell">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
-        <span class="bell-dot"></span>
-      </div>
-      <div class="topbar-user">
-        <div class="user-avatar">EA</div>
-        <div class="user-info">
-          <div class="user-name">Elanora Admin</div>
-          <div class="user-role">Store Manager</div>
-        </div>
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </div>
-    </header>
 
-    <!-- PAGE -->
-    <div class="page">
+    <%- include('partials/admin/header') %>
+
+    <div class="content">
       <div class="page-header">
-        <h1 class="page-heading">Returns &amp; Refunds</h1>
+        <h2>Returns &amp; Refunds</h2>
         <div class="search-returns">
-          <input type="text" placeholder="Search returns…">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="searchInp" placeholder="Search returns…" onkeyup="filterSearch(this.value)">
         </div>
       </div>
 
-      <div class="card">
+      <div class="table-card">
         <!-- TABS -->
         <div class="tabs">
-          <div class="tab active" onclick="filterTab(this,'all')">All</div>
-          <div class="tab" onclick="filterTab(this,'pending')">Pending</div>
-          <div class="tab" onclick="filterTab(this,'approved')">Approved</div>
-          <div class="tab" onclick="filterTab(this,'rejected')">Rejected</div>
+          <div class="tab active"    onclick="filterTab(this,'all')">All</div>
+          <div class="tab"           onclick="filterTab(this,'pending')">Pending</div>
+          <div class="tab"           onclick="filterTab(this,'approved')">Approved</div>
+          <div class="tab"           onclick="filterTab(this,'rejected')">Rejected</div>
         </div>
 
         <!-- TABLE -->
-        <table id="returns-table">
-          <thead>
-            <tr>
-              <th>Order &amp; Customer</th>
-              <th>Product &amp; Reason</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th style="text-align:right">Action</th>
-            </tr>
-          </thead>
-          <tbody id="table-body">
-
-            <% returns.forEach((r)=> { %>
-
-              <tr data-status="<%= r.status %>">
-
-                <td>
-                  <span class="order-link">
-                    <%= r.orderId %>
-                  </span>
-
-                  <span class="customer-name">
-                    <%= r.customer %>
-                  </span>
-                </td>
-
-                <td>
-                  <span class="product-name">
-                    <%= r.product %>
-                  </span>
-
-                  <span class="product-reason">
-                    <span>Reason:</span>
-                    <%= r.reason %>
-                  </span>
-                </td>
-
-                <td class="date-cell">
-
-                  <%= new Date(r.date).toLocaleDateString('en-IN', { day: 'numeric' , month: 'short' , year: 'numeric'
-                    }) %>
-
-                </td>
-
-                <td>
-
-                  <span class="badge 
-          <%= r.status === 'pending'
-              ? 'badge-pending'
-              : r.status === 'approved'
-              ? 'badge-approved'
-              : 'badge-rejected' %>">
-
-                    <%= r.status.charAt(0).toUpperCase() + r.status.slice(1) %>
-
-                  </span>
-
-                </td>
-
-                <td style="text-align:right">
-
-                  <% if(r.status==='pending' ){ %>
-
-                    <button class="btn-view" onclick="openModal(
-              '<%= r.orderId %>',
-              '<%= r.itemId %>',
-              '<%= r.product %>',
-              '<%= r.price %>',
-              '<%= r.reason %>',
-              '<%= r.customer %>',
-              '<%= r.date %>'
-            )">
-
-                      View
-
-                    </button>
-
-                    <% } else { %>
-
-                      <span class="processed-text">
-                        Processed
-                      </span>
-
-                      <% } %>
-
-                </td>
-
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Order &amp; Customer</th>
+                <th>Product &amp; Reason</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th style="text-align:right">Action</th>
               </tr>
-
+            </thead>
+            <tbody id="table-body">
+              <% returns.forEach((r, idx) => { %>
+              <tr data-status="<%= r.status %>" data-idx="<%= idx %>" data-return-id="<%= r._id %>" data-price="₹<%= r.price %>">
+                <td>
+                  <span class="order-link"><%= r.orderId %></span>
+                  <span class="customer-name"><%= r.customerName %></span>
+                </td>
+                <td>
+                  <span class="product-name"><%= r.product %></span>
+                  <span class="product-reason"><span>Reason:</span><%= r.reason %></span>
+                </td>
+                <td class="date-cell">
+                  <%= new Date(r.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                </td>
+                <td>
+                  <span class="badge badge-<%= r.status %>">
+                    <%= r.status.charAt(0).toUpperCase() + r.status.slice(1) %>
+                  </span>
+                </td>
+                <td style="text-align:right">
+                  <% if (r.status === 'pending') { %>
+                  <button class="action-btn" onclick="openModal(<%= idx %>)">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    View
+                  </button>
+                  <% } else { %>
+                  <span class="processed-text">Processed</span>
+                  <% } %>
+                </td>
+              </tr>
               <% }) %>
-
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL OVERLAY -->
-  <div class="overlay" id="modal-overlay" onclick="closeOnBackdrop(event)">
-    <div class="modal" id="modal">
+  <!-- ── REVIEW MODAL ── -->
+  <div class="modal-overlay" id="returnModal" onclick="if(event.target===this) closeModal()">
+    <div class="modal">
       <div class="modal-header">
-        <div class="modal-header-left">
+        <div>
           <div class="modal-tag">Return Details</div>
           <div class="modal-title" id="modal-order"></div>
         </div>
@@ -922,17 +632,16 @@
           <span class="detail-value" id="modal-date"></span>
         </div>
       </div>
-      <div class="modal-footer" id="modal-footer">
-        <button class="btn-approve" id="btn-approve" onclick="handleAction('approve')">
+      <div class="modal-footer">
+        <button class="btn-approve" onclick="handleApprove()">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <polyline points="20 6 9 17 4 12" />
+            <polyline points="20 6 9 17 4 12"/>
           </svg>
           Approve
         </button>
-        <button class="btn-reject" id="btn-reject" onclick="handleAction('reject')">
+        <button class="btn-reject" onclick="openRejectModal()">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
           Reject
         </button>
@@ -940,82 +649,172 @@
     </div>
   </div>
 
-  <script>
+  <!-- ── REJECTION MODAL ── -->
+  <div class="modal-overlay" id="rejectModal" onclick="if(event.target===this) closeRejectModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-tag">Reject Return</div>
+          <div class="modal-title" id="reject-modal-order"></div>
+        </div>
+        <button class="modal-close" onclick="closeRejectModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-banner">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8"  x2="12"    y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p>This action cannot be undone. The customer will be notified that their return request has been rejected.</p>
+        </div>
+        <div>
+          <div class="field-label">Reason for rejection <span>(optional)</span></div>
+          <textarea
+            id="rejectRemark"
+            class="remark-textarea"
+            maxlength="300"
+            placeholder="e.g. Item shows signs of use beyond the return policy period…"
+            oninput="document.getElementById('rejectCharCount').textContent = this.value.length + '/300'"
+          ></textarea>
+          <div class="char-count" id="rejectCharCount">0/300</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeRejectModal()">Cancel</button>
+        <button class="btn-reject" onclick="submitRejection()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Confirm Reject
+        </button>
+      </div>
+    </div>
+  </div>
 
+  <!-- ── TOAST ── -->
+  <div class="toast" id="toast"></div>
+
+  <script>
     let currentIdx = null;
     let currentFilter = 'all';
 
-    function renderTable(filter) {
-      const body = document.getElementById('table-body');
-      body.innerHTML = '';
-      const filtered = returns.filter(r => filter === 'all' || r.status === filter);
-
-      filtered.forEach((r, i) => {
-        const realIdx = returns.indexOf(r);
-        const badgeClass = { pending: 'badge-pending', approved: 'badge-approved', rejected: 'badge-rejected' }[r.status];
-        const badgeLabel = r.status.charAt(0).toUpperCase() + r.status.slice(1);
-
-        const actionCell = r.status === 'pending'
-          ? `<button class="btn-view" onclick="openModal(${realIdx})">
-             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-             View
-           </button>`
-          : `<span class="processed-text">Processed</span>`;
-
-        body.innerHTML += `
-        <tr data-status="${r.status}">
-          <td>
-            <span class="order-link">${r.order}</span>
-            <span class="customer-name">${r.customer}</span>
-          </td>
-          <td>
-            <span class="product-name">${r.product}</span>
-            <span class="product-reason"><span>Reason:</span>${r.reason}</span>
-          </td>
-          <td class="date-cell">${r.date}</td>
-          <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
-          <td style="text-align:right">${actionCell}</td>
-        </tr>`;
-      });
-    }
-
+    /* ── TABS & SEARCH ── */
     function filterTab(el, filter) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       el.classList.add('active');
       currentFilter = filter;
-      renderTable(filter);
+      applyVisibility();
     }
 
+    function filterSearch(val) { applyVisibility(val.toLowerCase()); }
+
+    function applyVisibility(search = '') {
+      document.querySelectorAll('#table-body tr').forEach(row => {
+        const statusMatch = currentFilter === 'all' || row.dataset.status === currentFilter;
+        const searchMatch = !search || row.textContent.toLowerCase().includes(search);
+        row.style.display = statusMatch && searchMatch ? '' : 'none';
+      });
+    }
+
+    /* ── REVIEW MODAL ── */
     function openModal(idx) {
       currentIdx = idx;
-      const r = returns[idx];
-      document.getElementById('modal-order').textContent = r.order + ' — ' + r.customer;
-      document.getElementById('modal-product').textContent = r.product;
-      document.getElementById('modal-price').textContent = r.price;
-      document.getElementById('modal-reason').textContent = r.reason;
-      document.getElementById('modal-customer').textContent = r.customer;
-      document.getElementById('modal-date').textContent = r.date;
-      document.getElementById('modal-overlay').classList.add('open');
+      const row  = getRow(idx);
+      const cells = row.querySelectorAll('td');
+
+      const orderId   = cells[0].querySelector('.order-link').textContent.trim();
+      const customer  = cells[0].querySelector('.customer-name').textContent.trim();
+      const product   = cells[1].querySelector('.product-name').textContent.trim();
+      const reason    = cells[1].querySelector('.product-reason').textContent.replace('Reason:', '').trim();
+      const date      = cells[2].textContent.trim();
+
+      document.getElementById('modal-order').textContent    = orderId + ' — ' + customer;
+      document.getElementById('modal-product').textContent  = product;
+      document.getElementById('modal-price').textContent    = row.dataset.price || '—';
+      document.getElementById('modal-reason').textContent   = reason;
+      document.getElementById('modal-customer').textContent = customer;
+      document.getElementById('modal-date').textContent     = date;
+
+      document.getElementById('returnModal').classList.add('open');
     }
 
     function closeModal() {
-      document.getElementById('modal-overlay').classList.remove('open');
+      document.getElementById('returnModal').classList.remove('open');
       currentIdx = null;
     }
 
-    function closeOnBackdrop(e) {
-      if (e.target === document.getElementById('modal-overlay')) closeModal();
+    /* ── REJECTION MODAL ── */
+    function openRejectModal() {
+      const row   = getRow(currentIdx);
+      const cells = row.querySelectorAll('td');
+      const orderId  = cells[0].querySelector('.order-link').textContent.trim();
+      const customer = cells[0].querySelector('.customer-name').textContent.trim();
+
+      document.getElementById('reject-modal-order').textContent = orderId + ' — ' + customer;
+      document.getElementById('rejectRemark').value             = '';
+      document.getElementById('rejectCharCount').textContent    = '0/300';
+
+      document.getElementById('returnModal').classList.remove('open');
+      document.getElementById('rejectModal').classList.add('open');
     }
 
-    function handleAction(action) {
+    function closeRejectModal() {
+      document.getElementById('rejectModal').classList.remove('open');
+      currentIdx = null;
+    }
+
+    async function submitRejection() {
+      const row        = getRow(currentIdx);
+      const adminRemark = document.getElementById('rejectRemark').value.trim();
+      const success    = await sendAction(row.dataset.returnId, 'rejected', adminRemark);
+      if (success) { closeRejectModal(); location.reload(); }
+    }
+
+    /* ── APPROVE ── */
+    async function handleApprove() {
       if (currentIdx === null) return;
-      returns[currentIdx].status = action === 'approve' ? 'approved' : 'rejected';
-      closeModal();
-      renderTable(currentFilter);
+      const row     = getRow(currentIdx);
+      const success = await sendAction(row.dataset.returnId, 'approved', '');
+      if (success) { closeModal(); location.reload(); }
     }
 
-    // Init
-    renderTable('all');
+    /* ── API CALL ── */
+    async function sendAction(returnId, action, adminRemark) {
+      const url = action === 'approved'
+        ? `/admin/returns/${returnId}/approve`
+        : `/admin/returns/${returnId}/reject`;
+      try {
+        const response = await fetch(url, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ adminRemark })
+        });
+        const data = await response.json();
+        if (data.success) return true;
+        showToast(data.message || 'Something went wrong', 'error');
+        return false;
+      } catch (err) {
+        console.error(err);
+        showToast('Network error — please try again', 'error');
+        return false;
+      }
+    }
+
+    /* ── HELPERS ── */
+    function getRow(idx) {
+      return [...document.querySelectorAll('#table-body tr')].find(r => +r.dataset.idx === idx);
+    }
+
+    function showToast(msg, type = 'error') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className   = 'toast ' + type;
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
   </script>
 </body>
 

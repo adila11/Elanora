@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elanora – Order Detail</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --bg: #f5f4f0;
+      --sidebar-bg: #fafaf8;
+      --card: #ffffff;
+      --card-bg: #ffffff;
+      --border: #e8e6e0;
+      --text: #1a1a18;
+      --text-primary: #1a1a18;
+      --text-secondary: #7a7870;
+      --text-muted: #7a7870;
+      --accent: #c8a96e;
+      --accent-light: #f5edd8;
+      --accent-hover: #b38a4f;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 2px 16px rgba(26, 23, 20, 0.07);
+      --shadow-lg: 0 8px 40px rgba(26, 23, 20, 0.13);
+
+      --status-delivered-bg: #e8f5ee;
+      --status-delivered-text: #2d7a4f;
+      --status-processing-bg: #eaf0fb;
+      --status-processing-text: #3460b5;
+      --status-shipped-bg: #f3eafc;
+      --status-shipped-text: #7b3bbd;
+      --status-out-bg: #fff4e0;
+      --status-out-text: #c47a10;
+      --status-cancelled-bg: #fcecea;
+      --status-cancelled-text: #c0392b;
+      --status-pending-bg: #fdf6e3;
+      --status-pending-text: #9a7b2f;
+      --status-returned-bg: #f0eafc;
+      --status-returned-text: #6d3dab;
+      --pay-paid-bg: #e8f5ee;
+      --pay-paid-text: #2d7a4f;
+      --pay-pending-bg: #fdf6e3;
+      --pay-pending-text: #9a7b2f;
+      --pay-failed-bg: #fcecea;
+      --pay-failed-text: #c0392b;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      padding: 28px 32px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card-bg);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.18s;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .back-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .header-info {
+      flex: 1;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .order-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .placed-at {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card-bg);
+      font-size: 13px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .download-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .download-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .download-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* ── LAYOUT ── */
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card:last-child {
+      margin-bottom: 0;
+    }
+
+    .card-header {
+      padding: 18px 22px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .card-body {
+      padding: 20px 22px;
+    }
+
+    /* ── PRODUCT ROWS ── */
+    .product-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .product-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .product-row:first-child {
+      padding-top: 0;
+    }
+
+    .product-img {
+      width: 68px;
+      height: 68px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .product-img-placeholder {
+      width: 68px;
+      height: 68px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--accent);
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .product-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+    }
+
+    .product-meta {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .product-qty {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .item-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 50px;
+      font-size: 11.5px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .item-badge.cancelled {
+      background: var(--status-cancelled-bg);
+      color: var(--status-cancelled-text);
+    }
+
+    .item-badge.returned {
+      background: var(--status-returned-bg);
+      color: var(--status-returned-text);
+    }
+
+    /* ── PER-ITEM STATUS UPDATE ── */
+    .item-status-update {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .item-status-select {
+      padding: 6px 28px 6px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      color: var(--text-primary);
+      background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a7268'/%3E%3C/svg%3E") no-repeat right 8px center;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      transition: border 0.18s;
+      min-width: 140px;
+    }
+
+    .item-status-select:focus {
+      border-color: var(--accent);
+    }
+
+    .item-status-select:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-item-update {
+      padding: 6px 14px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.18s;
+      white-space: nowrap;
+    }
+
+    .btn-item-update:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-item-update:disabled {
+      background: #d4c8b0;
+      cursor: not-allowed;
+    }
+
+    .item-locked-note {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .product-prices {
+      text-align: right;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+
+    .unit-price {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .total-price {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ── PRICE BREAKDOWN ── */
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 0;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .breakdown-row:last-child {
+      border-bottom: none;
+    }
+
+    .breakdown-row.total {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding-top: 14px;
+      margin-top: 4px;
+      border-top: 1.5px dashed var(--border);
+      border-bottom: none;
+    }
+
+    .breakdown-row.total .total-amount {
+      color: var(--accent);
+      font-size: 16px;
+    }
+
+    .discount-val {
+      color: #2d7a4f;
+      font-weight: 500;
+    }
+
+    /* ── RIGHT SIDEBAR CARDS ── */
+    .sidebar-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Customer & address info rows */
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .info-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .info-icon svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .info-content {}
+
+    .info-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .info-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* shipping method */
+    .shipping-method {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .shipping-method .info-icon {
+      background: var(--bg);
+      color: var(--text-muted);
+    }
+
+    .shipping-label {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .shipping-est {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    /* payment */
+    .payment-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .payment-icon {
+      width: 38px;
+      height: 28px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+
+    .payment-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .payment-info {}
+
+    .payment-label {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .payment-status-text {
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+
+    .payment-status-text.paid {
+      color: var(--status-delivered-text);
+    }
+
+    .payment-status-text.pending {
+      color: var(--status-pending-text);
+    }
+
+    .payment-status-text.failed {
+      color: var(--status-cancelled-text);
+    }
+
+    /* ── UPDATE ORDER STATUS ── */
+    .status-select-full {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      color: var(--text-primary);
+      background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a7268'/%3E%3C/svg%3E") no-repeat right 12px center;
+      appearance: none;
+      outline: none;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: border 0.18s;
+    }
+
+    .status-select-full:focus {
+      border-color: var(--accent);
+    }
+
+    .status-select-full:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-update {
+      width: 100%;
+      padding: 11px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+
+    .btn-update:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-update:disabled {
+      background: #d4c8b0;
+      cursor: not-allowed;
+    }
+
+    .locked-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 12.5px;
+      font-weight: 500;
+      white-space: nowrap;
+      gap: 5px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .badge-delivered {
+      background: var(--status-delivered-bg);
+      color: var(--status-delivered-text);
+    }
+
+    .badge-processing {
+      background: var(--status-processing-bg);
+      color: var(--status-processing-text);
+    }
+
+    .badge-shipped {
+      background: var(--status-shipped-bg);
+      color: var(--status-shipped-text);
+    }
+
+    .badge-out {
+      background: var(--status-out-bg);
+      color: var(--status-out-text);
+    }
+
+    .badge-cancelled {
+      background: var(--status-cancelled-bg);
+      color: var(--status-cancelled-text);
+    }
+
+    .badge-pending {
+      background: var(--status-pending-bg);
+      color: var(--status-pending-text);
+    }
+
+    .badge-returned {
+      background: var(--status-returned-bg);
+      color: var(--status-returned-text);
+    }
+
+    /* ── CONFIRM MODAL ── */
+    .sm-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 24, 0.55);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .sm-modal-overlay.open {
+      display: flex;
+    }
+
+    .sm-modal {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 28px 28px 24px;
+      width: 400px;
+      max-width: 94vw;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.2s ease;
+    }
+
+    .sm-modal-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+
+    .sm-modal-icon.warning {
+      background: #fff4e0;
+      color: #c47a10;
+    }
+
+    .sm-modal-icon.error {
+      background: var(--status-cancelled-bg);
+      color: var(--status-cancelled-text);
+    }
+
+    .sm-modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .sm-modal-body {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.55;
+      margin-bottom: 22px;
+    }
+
+    .sm-modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .sm-btn {
+      padding: 9px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      border: 1.5px solid transparent;
+      transition: all 0.18s;
+    }
+
+    .sm-btn-cancel {
+      background: none;
+      border-color: var(--border);
+      color: var(--text-secondary);
+    }
+
+    .sm-btn-cancel:hover {
+      background: var(--bg);
+    }
+
+    .sm-btn-confirm {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .sm-btn-confirm:hover {
+      background: var(--accent-hover);
+    }
+
+    .sm-btn-ok {
+      background: var(--status-cancelled-bg);
+      color: var(--status-cancelled-text);
+      border-color: var(--status-cancelled-bg);
+    }
+
+    .sm-btn-ok:hover {
+      opacity: 0.85;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .detail-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <%- include('partials/admin/sidebar') %>
+
+    <div class="main">
+      <%- include('partials/admin/header') %>
+
+        <div class="content">
+
+          <!-- PAGE HEADER -->
+          <div class="page-header">
+            <a href="/admin/orders" class="back-btn" title="Back to orders">
+              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </a>
+            <div class="header-info">
+              <div class="header-top">
+                <h2 class="order-title">Order # &nbsp;<%= order.orderId %>
+                </h2>
+                <% const statusBadgeMap={ pending: 'badge-pending' , processing: 'badge-processing' ,
+                  shipped: 'badge-shipped' , out_for_delivery: 'badge-out' , delivered: 'badge-delivered' ,
+                  cancelled: 'badge-cancelled' , returned: 'badge-returned' }; const statusLabel={ pending: 'Pending' ,
+                  processing: 'Processing' , shipped: 'Shipped' , out_for_delivery: 'Out for Delivery' ,
+                  delivered: 'Delivered' , cancelled: 'Cancelled' , returned: 'Returned' }; %>
+                  <span class="badge <%= statusBadgeMap[order.orderStatus] || 'badge-pending' %>">
+                    <%= statusLabel[order.orderStatus] || order.orderStatus %>
+                  </span>
+              </div>
+              <div class="placed-at">
+                Placed on <%= new Date(order.createdAt).toLocaleDateString('en-US', {month:'long', day:'numeric',
+                  year:'numeric'}) %>
+                  at <%= new Date(order.createdAt).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'}) %>
+              </div>
+            </div>
+            <!-- CHANGE 1: Download Invoice button instead of Print -->
+            <button class="download-btn" id="downloadInvoiceBtn" onclick="downloadInvoice()">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download Invoice
+            </button>
+          </div>
+
+          <!-- MAIN GRID -->
+          <div class="detail-layout" id="invoiceContent">
+
+            <!-- LEFT COLUMN -->
+            <div class="left-col">
+
+              <!-- Ordered Products -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Ordered Products</div>
+                </div>
+                <div class="card-body">
+                  <%
+                    // CHANGE 3: item status flow for per-item updates
+                    const itemStatusFlow = {
+                      pending:          ['pending','processing','shipped','out_for_delivery','delivered','cancelled','returned'],
+                      processing:       ['processing','shipped','out_for_delivery','delivered','cancelled','returned'],
+                      shipped:          ['shipped','out_for_delivery','delivered','cancelled','returned'],
+                      out_for_delivery: ['out_for_delivery','delivered','cancelled','returned'],
+                      delivered:        ['delivered'],
+                      cancelled:        ['cancelled'],
+                      returned:         ['returned']
+                    };
+                    const itemStatusLabels = {
+                      pending: 'Pending', processing: 'Processing', shipped: 'Shipped',
+                      out_for_delivery: 'Out for Delivery', delivered: 'Delivered',
+                      cancelled: 'Cancelled', returned: 'Returned'
+                    };
+                  %>
+                  <% order.items.forEach((item, idx) => {
+                    const currentItemStatus = item.itemStatus || order.orderStatus || 'pending';
+                    const isItemLocked = ['delivered','cancelled','returned'].includes(currentItemStatus);
+                    const allowedItemStatuses = itemStatusFlow[currentItemStatus] || [currentItemStatus];
+                  %>
+                    <div class="product-row">
+                      <% if(item.productImage) { %>
+                        <img src="<%= item.productImage %>" alt="<%= item.productName %>" class="product-img" />
+                        <% } else { %>
+                          <div class="product-img-placeholder">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"
+                              viewBox="0 0 24 24">
+                              <rect x="3" y="3" width="18" height="18" rx="2" />
+                              <path d="M3 9h18M9 21V9" />
+                            </svg>
+                          </div>
+                          <% } %>
+                            <div class="product-info">
+                              <div class="product-name">
+                                <%= item.productName %>
+                              </div>
+                              <% if(item.variantName) { %>
+                                <div class="product-meta">Color: <%= item.variantName %></div>
+                              <% } %>
+                              <div class="product-qty">Qty: <%= item.qty %></div>
+
+                              <% if(currentItemStatus === 'cancelled') { %>
+                                <span class="item-badge cancelled">Cancelled</span>
+                              <% } else if(currentItemStatus === 'returned') { %>
+                                <span class="item-badge returned">Returned</span>
+                              <% } %>
+
+                              <!-- CHANGE 3: Per-item status update controls -->
+                              <div class="item-status-update" id="item-status-row-<%= idx %>">
+                                <% if(isItemLocked) { %>
+                                  <span class="item-locked-note">Status is final</span>
+                                <% } else { %>
+                                  <select
+                                    class="item-status-select"
+                                    id="item-select-<%= idx %>"
+                                    data-item-index="<%= idx %>"
+                                    data-item-id="<%= item._id || item.productId %>"
+                                  >
+                                    <% allowedItemStatuses.forEach(status => { %>
+                                      <option value="<%= status %>" <%= currentItemStatus === status ? 'selected' : '' %>>
+                                        <%= itemStatusLabels[status] %>
+                                      </option>
+                                    <% }) %>
+                                  </select>
+                                  <button
+                                    class="btn-item-update"
+                                    onclick="confirmItemStatusChange(<%= idx %>, '<%= item._id || item.productId %>', '<%= item.productName.replace(/'/g, "\\'") %>')"
+                                  >
+                                    Update
+                                  </button>
+                                <% } %>
+                              </div>
+                            </div>
+                            <div class="product-prices">
+                              <div class="unit-price">₹<%= item.price.toLocaleString('en-IN') %></div>
+                              <div class="total-price">₹<%= item.total.toLocaleString('en-IN') %></div>
+                            </div>
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+
+              <!-- CHANGE 2: Price Breakdown — Tax (8%) row removed -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Price Breakdown</div>
+                </div>
+                <div class="card-body" style="padding-top:12px; padding-bottom:12px;">
+                  <div class="breakdown-row">
+                    <span>Subtotal</span>
+                    <span>₹<%= order.orderTotal.toLocaleString('en-IN') %></span>
+                  </div>
+                  <div class="breakdown-row">
+                    <span>Shipping (Standard)</span>
+                    <span>₹<%= (order.deliveryCharge || 0).toLocaleString('en-IN') %></span>
+                  </div>
+                  <% if(order.discount && order.discount > 0) { %>
+                    <div class="breakdown-row">
+                      <span>Discount<% if(order.couponCode) { %> (<%= order.couponCode %>)<% } %></span>
+                      <span class="discount-val">−₹<%= order.discount.toLocaleString('en-IN') %></span>
+                    </div>
+                  <% } %>
+                  <div class="breakdown-row total">
+                    <span>Total</span>
+                    <span class="total-amount">₹<%= order.finalAmount.toLocaleString('en-IN') %></span>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /left-col -->
+
+            <!-- RIGHT SIDEBAR -->
+            <div class="sidebar-col">
+
+              <!-- Customer Details -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Customer Details</div>
+                </div>
+                <div class="card-body">
+                  <div class="info-row">
+                    <div class="info-icon">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </div>
+                    <div class="info-content">
+                      <div class="info-name">
+                        <%= order.shippingAddress.fullName %>
+                      </div>
+                      <div class="info-sub">
+                        <% if(order.user && order.user.email) { %>
+                          <%= order.user.email %><br />
+                        <% } %>
+                        <%= order.shippingAddress.phone %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shipping Address -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Shipping Address</div>
+                </div>
+                <div class="card-body">
+                  <div class="info-row">
+                    <div class="info-icon">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </div>
+                    <div class="info-content">
+                      <div class="info-name">
+                        <%= order.shippingAddress.addressLine %>
+                      </div>
+                      <div class="info-sub">
+                        <% if(order.shippingAddress.apartment) { %>
+                          <%= order.shippingAddress.apartment %><br />
+                        <% } %>
+                        <%= order.shippingAddress.city %>, <%= order.shippingAddress.state %>
+                        <%= order.shippingAddress.pincode %><br />
+                        <%= order.shippingAddress.country || 'India' %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="shipping-method">
+                    <div class="info-icon" style="background:var(--bg);">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="1" y="3" width="15" height="13" />
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                        <circle cx="5.5" cy="18.5" r="2.5" />
+                        <circle cx="18.5" cy="18.5" r="2.5" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="shipping-label">Standard Shipping</div>
+                      <% if(order.deliveredAt) { %>
+                        <div class="shipping-est">Delivered on <%= new Date(order.deliveredAt).toLocaleDateString('en-US',{month:'short',day:'numeric'}) %></div>
+                      <% } else { %>
+                        <div class="shipping-est">Est. delivery: 3–5 business days</div>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Method -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Payment Method</div>
+                </div>
+                <div class="card-body">
+                  <div class="payment-row">
+                    <div class="payment-icon">
+                      <% if(order.paymentMethod==='razorpay') { %>
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <rect x="1" y="4" width="22" height="16" rx="2" />
+                          <line x1="1" y1="10" x2="23" y2="10" />
+                        </svg>
+                      <% } else if(order.paymentMethod==='wallet') { %>
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
+                          <path d="M16 12h.01" />
+                        </svg>
+                      <% } else { %>
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2" />
+                          <rect x="9" y="11" width="12" height="10" rx="2" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                      <% } %>
+                    </div>
+                    <div class="payment-info">
+                      <div class="payment-label">
+                        <% if(order.paymentMethod==='razorpay') { %>
+                          Razorpay<% if(order.transactionId) { %> · <%= order.transactionId.slice(-4) %><% } %>
+                        <% } else if(order.paymentMethod==='wallet') { %>
+                          Wallet
+                        <% } else { %>
+                          Cash on Delivery
+                        <% } %>
+                      </div>
+                      <% const psMap={ paid: 'Paid successfully', pending: 'Payment pending', failed: 'Payment failed', refunded: 'Refunded' };
+                        const psClass = order.paymentStatus==='paid' ? 'paid' : (order.paymentStatus==='failed' ? 'failed' : 'pending'); %>
+                      <div class="payment-status-text <%= psClass %>">
+                        <%= psMap[order.paymentStatus] || order.paymentStatus %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Update Order Status (overall) -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Update Order Status</div>
+                </div>
+                <div class="card-body">
+                  <% const isLocked = ['delivered','cancelled','returned'].includes(order.orderStatus); %>
+                  <% const statusFlow = {
+                    pending:          ['pending','processing','shipped','out_for_delivery','delivered','cancelled','returned'],
+                    processing:       ['processing','shipped','out_for_delivery','delivered','cancelled','returned'],
+                    shipped:          ['shipped','out_for_delivery','delivered','cancelled','returned'],
+                    out_for_delivery: ['out_for_delivery','delivered','cancelled','returned'],
+                    delivered:        ['delivered'],
+                    cancelled:        ['cancelled'],
+                    returned:         ['returned']
+                  };
+                  const statusLabels = {
+                    pending: 'Pending', processing: 'Processing', shipped: 'Shipped',
+                    out_for_delivery: 'Out for Delivery', delivered: 'Delivered',
+                    cancelled: 'Cancelled', returned: 'Returned'
+                  };
+                  const allowedStatuses = statusFlow[order.orderStatus] || [order.orderStatus]; %>
+
+                  <select id="orderStatusSelect" class="status-select-full" <%= isLocked ? 'disabled' : '' %>>
+                    <% allowedStatuses.forEach(status => { %>
+                      <option value="<%= status %>" <%= order.orderStatus === status ? 'selected' : '' %>>
+                        <%= statusLabels[status] %>
+                      </option>
+                    <% }) %>
+                  </select>
+                  <button class="btn-update" id="updateStatusBtn" onclick="confirmStatusChange()" <%= isLocked ? 'disabled' : '' %>>
+                    Update Order Status
+                  </button>
+                  <% if(isLocked) { %>
+                    <div class="locked-note">This order's status is final and cannot be changed.</div>
+                  <% } %>
+                </div>
+              </div>
+
+            </div><!-- /sidebar-col -->
+          </div><!-- /detail-layout -->
+        </div><!-- /content -->
+    </div><!-- /main -->
+
+    <!-- ORDER STATUS CONFIRM MODAL -->
+    <div id="confirmModal" class="sm-modal-overlay" onclick="if(event.target===this)cancelUpdate()">
+      <div class="sm-modal">
+        <div class="sm-modal-icon warning">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+        </div>
+        <div class="sm-modal-title">Confirm Status Change</div>
+        <div class="sm-modal-body" id="confirmBody">Are you sure you want to update this order's status?</div>
+        <div class="sm-modal-actions">
+          <button class="sm-btn sm-btn-cancel" onclick="cancelUpdate()">Cancel</button>
+          <button class="sm-btn sm-btn-confirm" onclick="executeUpdate()">Yes, Update</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEM STATUS CONFIRM MODAL -->
+    <div id="itemConfirmModal" class="sm-modal-overlay" onclick="if(event.target===this)cancelItemUpdate()">
+      <div class="sm-modal">
+        <div class="sm-modal-icon warning">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+        </div>
+        <div class="sm-modal-title">Update Item Status</div>
+        <div class="sm-modal-body" id="itemConfirmBody">Are you sure you want to update this item's status?</div>
+        <div class="sm-modal-actions">
+          <button class="sm-btn sm-btn-cancel" onclick="cancelItemUpdate()">Cancel</button>
+          <button class="sm-btn sm-btn-confirm" onclick="executeItemUpdate()">Yes, Update</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ERROR MODAL -->
+    <div id="errorModal" class="sm-modal-overlay" onclick="if(event.target===this)closeError()">
+      <div class="sm-modal">
+        <div class="sm-modal-icon error">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+          </svg>
+        </div>
+        <div class="sm-modal-title">Update Failed</div>
+        <div class="sm-modal-body" id="errorBody">An error occurred while updating the status.</div>
+        <div class="sm-modal-actions">
+          <button class="sm-btn sm-btn-ok" onclick="closeError()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const ORDER_ID = '<%= order.orderId %>';
+      let _pendingStatus = null;
+      let _pendingItemUpdate = null; // { itemId, status, idx }
+
+      /* ── CHANGE 1: Download Invoice ── */
+      function downloadInvoice() {
+        const btn = document.getElementById('downloadInvoiceBtn');
+        btn.disabled = true;
+        btn.innerHTML = `
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="15" height="15">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          Generating…`;
+
+        // Temporarily hide interactive controls that shouldn't appear in PDF
+        const controls = document.querySelectorAll('.item-status-update, #updateStatusBtn, #orderStatusSelect, .locked-note, .download-btn, .back-btn, .print-btn');
+        controls.forEach(el => el.style.display = 'none');
+
+        const element = document.getElementById('invoiceContent');
+        const opt = {
+          margin:       [10, 10, 10, 10],
+          filename:     `Invoice_${ORDER_ID}.pdf`,
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2, useCORS: true, logging: false },
+          jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+          // Restore hidden elements
+          controls.forEach(el => el.style.display = '');
+          btn.disabled = false;
+          btn.innerHTML = `
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="15" height="15">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download Invoice`;
+        }).catch(() => {
+          controls.forEach(el => el.style.display = '');
+          btn.disabled = false;
+          btn.innerHTML = `
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="15" height="15">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download Invoice`;
+          showError('Failed to generate PDF. Please try again.');
+        });
+      }
+
+      /* ── CHANGE 3: Per-item status update ── */
+      function confirmItemStatusChange(idx, itemId, productName) {
+        const sel = document.getElementById(`item-select-${idx}`);
+        const newStatus = sel.value;
+        const labelMap = {
+          pending: 'Pending', processing: 'Processing', shipped: 'Shipped',
+          out_for_delivery: 'Out for Delivery', delivered: 'Delivered',
+          cancelled: 'Cancelled', returned: 'Returned'
+        };
+        _pendingItemUpdate = { idx, itemId, status: newStatus };
+        document.getElementById('itemConfirmBody').textContent =
+          `Change "${productName}" status to "${labelMap[newStatus] || newStatus}"?`;
+        document.getElementById('itemConfirmModal').classList.add('open');
+      }
+
+      function cancelItemUpdate() {
+        document.getElementById('itemConfirmModal').classList.remove('open');
+        _pendingItemUpdate = null;
+      }
+
+      async function executeItemUpdate() {
+        document.getElementById('itemConfirmModal').classList.remove('open');
+        const { idx, itemId, status } = _pendingItemUpdate;
+        _pendingItemUpdate = null;
+        try {
+          const res = await fetch(`/admin/orders/${ORDER_ID}/item-status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ itemId, status })
+          });
+          const data = await res.json();
+          if (data.success) {
+            window.location.reload();
+          } else {
+            showError(data.message || 'Failed to update item status.');
+          }
+        } catch (err) {
+          showError('A network error occurred. Please try again.');
+        }
+      }
+
+      /* ── ORDER-LEVEL STATUS UPDATE ── */
+      function confirmStatusChange() {
+        const sel = document.getElementById('orderStatusSelect');
+        _pendingStatus = sel.value;
+        const labelMap = {
+          pending: 'Pending', processing: 'Processing', shipped: 'Shipped',
+          out_for_delivery: 'Out for Delivery', delivered: 'Delivered',
+          cancelled: 'Cancelled', returned: 'Returned'
+        };
+        document.getElementById('confirmBody').textContent =
+          `Change order #${ORDER_ID} status to "${labelMap[_pendingStatus] || _pendingStatus}"?`;
+        document.getElementById('confirmModal').classList.add('open');
+      }
+
+      function cancelUpdate() {
+        document.getElementById('confirmModal').classList.remove('open');
+        _pendingStatus = null;
+      }
+
+      async function executeUpdate() {
+        document.getElementById('confirmModal').classList.remove('open');
+        const status = _pendingStatus;
+        _pendingStatus = null;
+        try {
+          const res = await fetch(`/admin/orders/${ORDER_ID}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+          });
+          const data = await res.json();
+          if (data.success) {
+            window.location.reload();
+          } else {
+            showError(data.message || 'Failed to update order status.');
+          }
+        } catch (err) {
+          showError('A network error occurred. Please try again.');
+        }
+      }
+
+      function showError(msg) {
+        document.getElementById('errorBody').textContent = msg;
+        document.getElementById('errorModal').classList.add('open');
+      }
+
+      function closeError() {
+        document.getElementById('errorModal').classList.remove('open');
+      }
+    </script>
+
+</body>
+
+</html>
