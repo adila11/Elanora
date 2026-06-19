@@ -141,12 +141,19 @@ export const cancelFullOrder = async (req, res) => {
         order.cancelReason = reason || "";
         order.cancelledAt = new Date();
 
-        // Update all items
-        order.items.forEach(item => {
-            item.itemStatus = "cancelled";
-            item.cancelReason = reason || "";
-            item.cancelledAt = new Date();
-        });
+        // Update all items & restore stock
+        for (let item of order.items) {
+            if (item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
+                item.itemStatus = "cancelled";
+                item.cancelReason = reason || "";
+                item.cancelledAt = new Date();
+
+                await Product.findOneAndUpdate(
+                    { "_id": item.productId, "variants._id": item.variantId },
+                    { $inc: { "variants.$.stock": item.qty } }
+                );
+            }
+        }
 
         await order.save();
 
@@ -214,17 +221,24 @@ export const cancelSingleItem = async (req, res) => {
             });
         }
 
-        item.itemStatus = "cancelled";
-        item.cancelReason = reason;
-        item.cancelledAt = new Date();
+        if (item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
+            item.itemStatus = "cancelled";
+            item.cancelReason = reason;
+            item.cancelledAt = new Date();
 
-        // RECALCULATE TOTAL
-        order.orderTotal -= item.total;
-        order.finalAmount -= item.total;
+            await Product.findOneAndUpdate(
+                { "_id": item.productId, "variants._id": item.variantId },
+                { $inc: { "variants.$.stock": item.qty } }
+            );
+
+            // RECALCULATE TOTAL
+            order.orderTotal -= item.total;
+            order.finalAmount -= item.total;
+        }
 
         // CHECK ALL ITEMS CANCELLED
         const activeItems = order.items.filter(
-            item => item.itemStatus === "active"
+            item => item.itemStatus !== "cancelled" && item.itemStatus !== "returned"
         );
 
         if (activeItems.length === 0) {

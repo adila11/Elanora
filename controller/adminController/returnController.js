@@ -1,5 +1,6 @@
 import Return from "../../model/returnSchema.js";
 import Order from "../../model/orderSchema.js";
+import Product from "../../model/productSchema.js";
 
 // ── GET /admin/returns ──────────────────────────────────────────────────────
 export const getReturnsPage = async (req, res) => {
@@ -83,9 +84,17 @@ export const approveReturn = async (req, res) => {
         if (order) {
             const item = order.items.id(returnRequest.itemId);
             if (item) {
+                const oldStatus = item.itemStatus;
                 item.itemStatus = "returned";
                 item.returnedAt = new Date();
                 item.returnReason = returnRequest.reason;
+
+                if (oldStatus !== "returned" && oldStatus !== "cancelled") {
+                    await Product.findOneAndUpdate(
+                        { "_id": item.productId, "variants._id": item.variantId },
+                        { $inc: { "variants.$.stock": item.qty } }
+                    );
+                }
             }
             await order.save();
         }

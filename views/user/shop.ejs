@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Elanora – Shop Collection</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <style>
     :root {
       --cream: #f5f0ea;
@@ -17,10 +20,16 @@
       --text-light: #8a8078;
       --border: #e8dfd4;
       --card-bg: #ffffff;
-      --shadow: 0 2px 20px rgba(0,0,0,0.07);
+      --shadow: 0 2px 20px rgba(0, 0, 0, 0.07);
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: 'Jost', sans-serif;
@@ -89,7 +98,9 @@
       margin-bottom: 20px;
     }
 
-    .filter-section { margin-bottom: 24px; }
+    .filter-section {
+      margin-bottom: 24px;
+    }
 
     .filter-section h4 {
       font-size: 0.75rem;
@@ -111,14 +122,20 @@
       transition: color 0.2s;
     }
 
-    .filter-option:hover { color: var(--gold); }
+    .filter-option:hover {
+      color: var(--gold);
+    }
 
     .filter-option input[type="radio"] {
       accent-color: var(--gold);
-      width: 14px; height: 14px;
+      width: 14px;
+      height: 14px;
     }
 
-    .filter-option.active-label { color: var(--gold); font-weight: 500; }
+    .filter-option.active-label {
+      color: var(--gold);
+      font-weight: 500;
+    }
 
     .divider {
       height: 1px;
@@ -194,7 +211,8 @@
 
     .range-track {
       position: absolute;
-      left: 0; right: 0;
+      left: 0;
+      right: 0;
       height: 3px;
       background: var(--border);
       border-radius: 4px;
@@ -231,7 +249,7 @@
       border: 2px solid var(--gold);
       cursor: pointer;
       pointer-events: all;
-      box-shadow: 0 1px 6px rgba(184,137,42,0.25);
+      box-shadow: 0 1px 6px rgba(184, 137, 42, 0.25);
       transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
     }
 
@@ -243,13 +261,13 @@
       border: 2px solid var(--gold);
       cursor: pointer;
       pointer-events: all;
-      box-shadow: 0 1px 6px rgba(184,137,42,0.25);
+      box-shadow: 0 1px 6px rgba(184, 137, 42, 0.25);
     }
 
     .range-slider-wrap input[type="range"]::-webkit-slider-thumb:hover,
     .range-slider-wrap input[type="range"]:active::-webkit-slider-thumb {
       border-color: var(--gold-light);
-      box-shadow: 0 2px 10px rgba(184,137,42,0.35);
+      box-shadow: 0 2px 10px rgba(184, 137, 42, 0.35);
       transform: scale(1.15);
     }
 
@@ -295,10 +313,15 @@
       transition: color 0.2s;
     }
 
-    .price-reset-link:hover { color: var(--gold); }
+    .price-reset-link:hover {
+      color: var(--gold);
+    }
 
     /* ── PRODUCT AREA ── */
-    .product-area { flex: 1; min-width: 0; }
+    .product-area {
+      flex: 1;
+      min-width: 0;
+    }
 
     .toolbar {
       display: flex;
@@ -318,7 +341,10 @@
       white-space: nowrap;
     }
 
-    .result-count span { color: var(--text-dark); font-weight: 500; }
+    .result-count span {
+      color: var(--text-dark);
+      font-weight: 500;
+    }
 
     /* ── IMPROVED SEARCH BAR ── */
     .search-bar {
@@ -354,17 +380,19 @@
 
     .search-bar input:focus {
       border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(184,137,42,0.08);
+      box-shadow: 0 0 0 3px rgba(184, 137, 42, 0.08);
     }
 
-    .search-bar input:focus ~ .search-icon,
+    .search-bar input:focus~.search-icon,
     .search-bar:focus-within .search-icon {
       color: var(--gold);
     }
 
-    .search-bar input::placeholder { color: var(--text-light); }
+    .search-bar input::placeholder {
+      color: var(--text-light);
+    }
 
-    /* Clear button — refined pill design */
+    /* Clear button */
     .clear-search-btn {
       position: absolute;
       right: 7px;
@@ -443,7 +471,7 @@
     }
 
     .product-card:hover {
-      box-shadow: 0 8px 32px rgba(184,137,42,0.13);
+      box-shadow: 0 8px 32px rgba(184, 137, 42, 0.13);
       transform: translateY(-3px);
     }
 
@@ -461,15 +489,19 @@
       transition: transform 0.4s ease;
     }
 
-    .product-card:hover .card-img-wrap img { transform: scale(1.05); }
+    .product-card:hover .card-img-wrap img {
+      transform: scale(1.05);
+    }
 
     .wishlist-btn {
       position: absolute;
-      top: 10px; right: 10px;
-      background: rgba(255,255,255,0.85);
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.85);
       border: none;
       border-radius: 50%;
-      width: 34px; height: 34px;
+      width: 34px;
+      height: 34px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -478,9 +510,18 @@
       transition: color 0.2s, background 0.2s;
     }
 
-    .wishlist-btn:hover { color: #e05050; background: #fff; }
-    .wishlist-btn.liked { color: #e05050; }
-    .wishlist-btn.liked svg { fill: #e05050; }
+    .wishlist-btn:hover {
+      color: #e05050;
+      background: #fff;
+    }
+
+    .wishlist-btn.liked {
+      color: #e05050;
+    }
+
+    .wishlist-btn.liked svg {
+      fill: #e05050;
+    }
 
     .card-body {
       padding: 14px 16px 16px;
@@ -543,7 +584,8 @@
     }
 
     .page-btn {
-      width: 36px; height: 36px;
+      width: 36px;
+      height: 36px;
       border: 1px solid var(--border);
       border-radius: 8px;
       background: var(--card-bg);
@@ -558,398 +600,685 @@
       text-decoration: none;
     }
 
-    .page-btn:hover { border-color: var(--gold); color: var(--gold); }
-    .page-btn.active { background: var(--gold); color: #fff; border-color: var(--gold); }
-    .page-btn.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+    .page-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .page-btn.active {
+      background: var(--gold);
+      color: #fff;
+      border-color: var(--gold);
+    }
+
+    .page-btn.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ── TOAST NOTIFICATION ── */
+    #toast-container {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 10px;
+      padding: 12px 18px 12px 14px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-dark);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+      pointer-events: auto;
+      min-width: 220px;
+      max-width: 340px;
+      opacity: 0;
+      transform: translateY(12px) scale(0.97);
+      transition: opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+
+    .toast.toast-show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .toast.toast-hide {
+      opacity: 0;
+      transform: translateY(8px) scale(0.97);
+    }
+
+    .toast-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--gold-pale);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+    }
+
+    .toast-icon.toast-icon-remove {
+      background: #fdf0f0;
+      color: #c0392b;
+    }
+
+    .toast-icon.toast-icon-error {
+      background: #fdf0f0;
+      color: #c0392b;
+    }
+
+    .toast-body {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 500;
+      font-size: 0.86rem;
+      color: var(--text-dark);
+      line-height: 1.3;
+    }
+
+    .toast-sub {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-light);
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      border-radius: 4px;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toast-close:hover {
+      color: var(--text-dark);
+    }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     @media (max-width: 768px) {
-      .shop-layout { flex-direction: column; }
-      .sidebar { width: 100%; position: static; }
-      .toolbar { flex-wrap: wrap; }
+      .shop-layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        position: static;
+      }
+
+      .toolbar {
+        flex-wrap: wrap;
+      }
     }
 
     @media (max-width: 500px) {
-      .product-grid { grid-template-columns: 1fr; }
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #toast-container {
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+        transform: none;
+      }
+
+      .toast {
+        min-width: unset;
+        width: 100%;
+        max-width: 100%;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<%- include('partials/user/header') %>
+  <%- include('partials/user/header') %>
 
-<!-- HERO -->
-<div class="shop-hero">
-  <h1>Shop Collection</h1>
-  <p>Discover our complete range of handcrafted jewelry pieces, designed to bring elegance to every moment.</p>
-</div>
-
-<!-- MAIN -->
-<div class="shop-layout">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="filter-title">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-      Filters
+    <!-- HERO -->
+    <div class="shop-hero">
+      <h1>Shop Collection</h1>
+      <p>Discover our complete range of handcrafted jewelry pieces, designed to bring elegance to every moment.</p>
     </div>
 
-    <!-- Category Filter -->
-    <div class="filter-section">
-      <h4>Category</h4>
-      <label class="filter-option <%= selectedCategory === 'all' ? 'active-label' : '' %>" onclick="filterBy('category', 'all')">
-        <input type="radio" name="category" <%= selectedCategory === 'all' ? 'checked' : '' %>/> All
-      </label>
-      <% categories.forEach(cat => { %>
-        <label class="filter-option <%= selectedCategory === String(cat._id) ? 'active-label' : '' %>" onclick="filterBy('category', '<%= cat._id %>')">
-          <input type="radio" name="category" <%= selectedCategory === String(cat._id) ? 'checked' : '' %>/> <%= cat.name %>
-        </label>
-      <% }) %>
-    </div>
+    <!-- MAIN -->
+    <div class="shop-layout">
 
-    <div class="divider"></div>
-
-    <!-- Price Range Filter -->
-    <div class="filter-section">
-      <h4>Price Range</h4>
-      <div class="price-range-wrap">
-        <div class="price-inputs">
-          <div class="price-input-box">
-            <span>₹</span>
-            <input type="number" id="priceMin" placeholder="Min"
-              value="<%= selectedPriceMin || '' %>"
-              min="0" max="5000"
-              oninput="syncRangeFromInputs()" />
-          </div>
-          <span class="price-sep">–</span>
-          <div class="price-input-box">
-            <span>₹</span>
-            <input type="number" id="priceMax" placeholder="Max"
-              value="<%= selectedPriceMax || '' %>"
-              min="0" max="5000"
-              oninput="syncRangeFromInputs()" />
-          </div>
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="filter-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+          </svg>
+          Filters
         </div>
 
-        <div class="range-slider-wrap">
-          <div class="range-track"></div>
-          <div class="range-fill" id="rangeFill"></div>
-          <input type="range" id="rangeMin" min="0" max="5000" step="100"
-            value="<%= selectedPriceMin || 0 %>"
-            oninput="onRangeInput('min')" />
-          <input type="range" id="rangeMax" min="0" max="5000" step="100"
-            value="<%= selectedPriceMax || 5000 %>"
-            oninput="onRangeInput('max')" />
+        <!-- Category Filter -->
+        <div class="filter-section">
+          <h4>Category</h4>
+          <label class="filter-option <%= selectedCategory === 'all' ? 'active-label' : '' %>"
+            onclick="filterBy('category', 'all')">
+            <input type="radio" name="category" <%=selectedCategory==='all' ? 'checked' : '' %>/> All
+          </label>
+          <% categories.forEach(cat=> { %>
+            <label class="filter-option <%= selectedCategory === String(cat._id) ? 'active-label' : '' %>"
+              onclick="filterBy('category', '<%= cat._id %>')">
+              <input type="radio" name="category" <%=selectedCategory===String(cat._id) ? 'checked' : '' %>/> <%=
+                cat.name %>
+            </label>
+            <% }) %>
         </div>
 
-        <div class="price-range-labels">
-          <span>₹0</span>
-          <span>₹5,000</span>
-        </div>
+        <div class="divider"></div>
 
-        <button class="price-apply-btn" onclick="applyPriceFilter()">Apply Price</button>
-
-        <% if (selectedPriceMin || selectedPriceMax) { %>
-          <span class="price-reset-link" onclick="resetPriceFilter()">Clear price filter</span>
-        <% } else { %>
-          <span class="price-reset-link" id="priceResetLink" style="display:none;" onclick="resetPriceFilter()">Clear price filter</span>
-        <% } %>
-      </div>
-    </div>
-
-  </aside>
-
-  <!-- PRODUCTS -->
-  <div class="product-area">
-    <div class="toolbar">
-      <span class="result-count">Showing <span><%= products.length %></span> of <span><%= totalProducts %></span> results</span>
-
-      <!-- Improved Search Bar -->
-      <div class="search-bar">
-        <span class="search-icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </span>
-        <input type="text" id="shopSearch"
-          placeholder="Search products…"
-          value="<%= search %>"
-          oninput="onSearchInput()"
-          onkeyup="if(event.key==='Enter') applyFilters()" />
-        <button type="button"
-          id="clearSearchBtn"
-          class="clear-search-btn <%= search ? 'visible' : '' %>"
-          onclick="clearSearch()"
-          title="Clear search"
-          aria-label="Clear search">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-
-      <div class="sort-select">
-        Sort by:
-        <select id="shopSort" onchange="applyFilters()">
-          <option value="newest" <%= selectedSort === 'newest' ? 'selected' : '' %>>Newest</option>
-          <option value="price-low" <%= selectedSort === 'price-low' ? 'selected' : '' %>>Price: Low – High</option>
-          <option value="price-high" <%= selectedSort === 'price-high' ? 'selected' : '' %>>Price: High – Low</option>
-          <option value="name-asc" <%= selectedSort === 'name-asc' ? 'selected' : '' %>>Name: A–Z</option>
-          <option value="name-desc" <%= selectedSort === 'name-desc' ? 'selected' : '' %>>Name: Z–A</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="product-grid" id="productGrid">
-      <% if (products && products.length > 0) { %>
-        <% products.forEach(p => { %>
-          <%
-             const firstVariant = p.variants && p.variants.length > 0 ? p.variants[0] : null;
-             const imageUrl = firstVariant && firstVariant.images && firstVariant.images.length > 0
-                             ? firstVariant.images[0].url
-                             : 'https://via.placeholder.com/400';
-             const price = p.discountPrice || p.basePrice;
-             const isWishlisted = wishlistProductIds && wishlistProductIds.includes(p._id.toString());
-          %>
-          <div class="product-card" onclick="location.href='/product/<%= p._id %>'" style="cursor:pointer">
-            <div class="card-img-wrap">
-              <img src="<%= imageUrl %>" alt="<%= p.name %>" loading="lazy"/>
-              <button class="wishlist-btn <%= isWishlisted ? 'liked' : '' %>" id="wish-<%= p._id %>" onclick="event.stopPropagation(); toggleWishlist('<%= p._id %>')" title="<%= isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' %>">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="<%= isWishlisted ? 'currentColor' : 'none' %>" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              </button>
+        <!-- Price Range Filter -->
+        <div class="filter-section">
+          <h4>Price Range</h4>
+          <div class="price-range-wrap">
+            <div class="price-inputs">
+              <div class="price-input-box">
+                <span>₹</span>
+                <input type="number" id="priceMin" placeholder="Min" value="<%= selectedPriceMin || '' %>" min="0"
+                  max="5000" oninput="syncRangeFromInputs()" />
+              </div>
+              <span class="price-sep">–</span>
+              <div class="price-input-box">
+                <span>₹</span>
+                <input type="number" id="priceMax" placeholder="Max" value="<%= selectedPriceMax || '' %>" min="0"
+                  max="5000" oninput="syncRangeFromInputs()" />
+              </div>
             </div>
-            <div class="card-body">
-              <div class="card-category"><%= p.category?.name || 'Uncategorized' %></div>
-              <div class="card-name"><%= p.name %></div>
-              <div class="card-price">₹<%= price.toLocaleString('en-IN') %></div>
-              <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('<%= p._id %>', '<%= firstVariant ? firstVariant._id : '' %>', this)">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                Add to Cart
-              </button>
+
+            <div class="range-slider-wrap">
+              <div class="range-track"></div>
+              <div class="range-fill" id="rangeFill"></div>
+              <input type="range" id="rangeMin" min="0" max="5000" step="100" value="<%= selectedPriceMin || 0 %>"
+                oninput="onRangeInput('min')" />
+              <input type="range" id="rangeMax" min="0" max="5000" step="100" value="<%= selectedPriceMax || 5000 %>"
+                oninput="onRangeInput('max')" />
             </div>
+
+            <div class="price-range-labels">
+              <span>₹0</span>
+              <span>₹5,000</span>
+            </div>
+
+            <button class="price-apply-btn" onclick="applyPriceFilter()">Apply Price</button>
+
+            <% if (selectedPriceMin || selectedPriceMax) { %>
+              <span class="price-reset-link" onclick="resetPriceFilter()">Clear price filter</span>
+              <% } else { %>
+                <span class="price-reset-link" id="priceResetLink" style="display:none;"
+                  onclick="resetPriceFilter()">Clear price filter</span>
+                <% } %>
           </div>
-        <% }) %>
-      <% } else { %>
-        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-light);">
-          <p style="font-size: 1.1rem; font-family: 'Cormorant Garamond', serif;">No products found in this collection.</p>
         </div>
-      <% } %>
+
+      </aside>
+
+      <!-- PRODUCTS -->
+      <div class="product-area">
+        <div class="toolbar">
+          <span class="result-count">Showing <span>
+              <%= products.length %>
+            </span> of <span>
+              <%= totalProducts %>
+            </span> results</span>
+
+          <!-- Improved Search Bar -->
+          <div class="search-bar">
+            <span class="search-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </span>
+            <input type="text" id="shopSearch" placeholder="Search products…" value="<%= search %>"
+              oninput="onSearchInput()" onkeyup="if(event.key==='Enter') applyFilters()" />
+            <button type="button" id="clearSearchBtn" class="clear-search-btn <%= search ? 'visible' : '' %>"
+              onclick="clearSearch()" title="Clear search" aria-label="Clear search">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="sort-select">
+            Sort by:
+            <select id="shopSort" onchange="applyFilters()">
+              <option value="newest" <%=selectedSort==='newest' ? 'selected' : '' %>>Newest</option>
+              <option value="price-low" <%=selectedSort==='price-low' ? 'selected' : '' %>>Price: Low – High</option>
+              <option value="price-high" <%=selectedSort==='price-high' ? 'selected' : '' %>>Price: High – Low</option>
+              <option value="name-asc" <%=selectedSort==='name-asc' ? 'selected' : '' %>>Name: A–Z</option>
+              <option value="name-desc" <%=selectedSort==='name-desc' ? 'selected' : '' %>>Name: Z–A</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+          <% if (products && products.length> 0) { %>
+            <% products.forEach(p=> { %>
+              <% const firstVariant=p.variants && p.variants.length> 0 ? p.variants[0] : null;
+                const imageUrl = firstVariant && firstVariant.images && firstVariant.images.length > 0
+                ? firstVariant.images[0].url
+                : 'https://via.placeholder.com/400';
+                const price = p.discountPrice || p.basePrice;
+                const isWishlisted = wishlistProductIds && wishlistProductIds.includes(p._id.toString());
+                %>
+                <div class="product-card" onclick="location.href='/product/<%= p._id %>'" style="cursor:pointer">
+                  <div class="card-img-wrap">
+                    <img src="<%= imageUrl %>" alt="<%= p.name %>" loading="lazy" />
+                    <button class="wishlist-btn <%= isWishlisted ? 'liked' : '' %>" id="wish-<%= p._id %>"
+                      onclick="event.stopPropagation(); toggleWishlist('<%= p._id %>', '<%= p.name %>')"
+                      title="<%= isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' %>">
+                      <svg width="15" height="15" viewBox="0 0 24 24"
+                        fill="<%= isWishlisted ? 'currentColor' : 'none' %>" stroke="currentColor" stroke-width="2">
+                        <path
+                          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="card-body">
+                    <div class="card-category">
+                      <%= p.category?.name || 'Uncategorized' %>
+                    </div>
+                    <div class="card-name">
+                      <%= p.name %>
+                    </div>
+                    <div class="card-price">₹<%= price.toLocaleString('en-IN') %>
+                    </div>
+                    <button class="add-to-cart"
+                      onclick="event.stopPropagation(); addToCart('<%= p._id %>', '<%= firstVariant ? firstVariant._id : '' %>', this)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                      </svg>
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+                <% }) %>
+                  <% } else { %>
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-light);">
+                      <p style="font-size: 1.1rem; font-family: 'Cormorant Garamond', serif;">No products found in this
+                        collection.</p>
+                    </div>
+                    <% } %>
+        </div>
+
+        <% if (totalPages> 1 && totalProducts > 9) { %>
+          <div class="pagination">
+            <a href="<%= currentPage > 1 ? '?' + buildQuery(currentPage - 1) : '#' %>"
+              class="page-btn <%= currentPage <= 1 ? 'disabled' : '' %>">&#8592;</a>
+
+            <% for (let i=1; i <=totalPages; i++) { %>
+              <% if (i===1 || i===totalPages || (i>= currentPage - 1 && i <= currentPage + 1)) { %>
+                  <a href="?<%= buildQuery(i) %>" class="page-btn <%= i === currentPage ? 'active' : '' %>">
+                    <%= i %>
+                  </a>
+                  <% } else if (i===currentPage - 2 || i===currentPage + 2) { %>
+                    <span class="page-btn disabled" style="border:none;background:none;">…</span>
+                    <% } %>
+                      <% } %>
+
+                        <a href="<%= currentPage < totalPages ? '?' + buildQuery(currentPage + 1) : '#' %>"
+                          class="page-btn <%= currentPage >= totalPages ? 'disabled' : '' %>">&#8594;</a>
+          </div>
+          <% } %>
+      </div>
     </div>
 
-    <% if (totalPages > 1 && totalProducts > 9) { %>
-    <div class="pagination">
-      <a href="<%= currentPage > 1 ? '?' + buildQuery(currentPage - 1) : '#' %>"
-         class="page-btn <%= currentPage <= 1 ? 'disabled' : '' %>">&#8592;</a>
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" role="region" aria-live="polite" aria-label="Notifications"></div>
 
-      <% for (let i = 1; i <= totalPages; i++) { %>
-        <% if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) { %>
-          <a href="?<%= buildQuery(i) %>" class="page-btn <%= i === currentPage ? 'active' : '' %>"><%= i %></a>
-        <% } else if (i === currentPage - 2 || i === currentPage + 2) { %>
-          <span class="page-btn disabled" style="border:none;background:none;">…</span>
-        <% } %>
-      <% } %>
+    <%- include('partials/user/footer') %>
 
-      <a href="<%= currentPage < totalPages ? '?' + buildQuery(currentPage + 1) : '#' %>"
-         class="page-btn <%= currentPage >= totalPages ? 'disabled' : '' %>">&#8594;</a>
-    </div>
-    <% } %>
-  </div>
-</div>
+      <script>
+        /* ══════════════════════════════════════
+           TOAST SYSTEM
+        ══════════════════════════════════════ */
+        const toastContainer = document.getElementById('toast-container');
 
-<%- include('partials/user/footer') %>
+        /**
+         * showToast({ type, title, subtitle, duration })
+         * type: 'wishlist-add' | 'wishlist-remove' | 'error'
+         */
+        function showToast({ type = 'wishlist-add', title, subtitle = '', duration = 3500 }) {
+          const toast = document.createElement('div');
+          toast.className = 'toast';
+          toast.setAttribute('role', 'status');
 
-<script>
-  /* ── SEARCH ── */
-  function onSearchInput() {
-    const val = document.getElementById('shopSearch').value;
-    const btn = document.getElementById('clearSearchBtn');
-    if (val) {
-      btn.classList.add('visible');
-    } else {
-      btn.classList.remove('visible');
-    }
-  }
+          let iconHTML = '';
+          let iconClass = 'toast-icon';
 
-  function clearSearch() {
-    const input = document.getElementById('shopSearch');
-    input.value = '';
-    input.focus();
-    document.getElementById('clearSearchBtn').classList.remove('visible');
-    applyFilters();
-  }
+          if (type === 'wishlist-add') {
+            iconClass = 'toast-icon';
+            iconHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>`;
+          } else if (type === 'wishlist-remove') {
+            iconClass = 'toast-icon toast-icon-remove';
+            iconHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>`;
+          } else if (type === 'error') {
+            iconClass = 'toast-icon toast-icon-error';
+            iconHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>`;
+          }
 
-  function applyFilters() {
-    const search = document.getElementById('shopSearch').value;
-    const sort   = document.getElementById('shopSort').value;
-    const url    = new URL(window.location.href);
-    url.searchParams.set('search', search);
-    url.searchParams.set('sort', sort);
-    
-    // Preserve price filters if they exist
-    const minVal = document.getElementById('priceMin').value;
-    const maxVal = document.getElementById('priceMax').value;
-    if (minVal) url.searchParams.set('priceMin', minVal);
-    else url.searchParams.delete('priceMin');
-    if (maxVal) url.searchParams.set('priceMax', maxVal);
-    else url.searchParams.delete('priceMax');
+          toast.innerHTML = `
+            <div class="${iconClass}" aria-hidden="true">${iconHTML}</div>
+            <div class="toast-body">
+              <div class="toast-title">${title}</div>
+              ${subtitle ? `<div class="toast-sub">${subtitle}</div>` : ''}
+            </div>
+            <button class="toast-close" onclick="dismissToast(this.closest('.toast'))" aria-label="Dismiss notification">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          `;
 
-    url.searchParams.delete('page');
-    window.location.href = url.toString();
-  }
+          toastContainer.appendChild(toast);
 
-  function filterBy(key, value) {
-    const url = new URL(window.location.href);
-    url.searchParams.set(key, value);
-    url.searchParams.delete('page');
-    window.location.href = url.toString();
-  }
+          /* Trigger enter animation on next frame */
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => toast.classList.add('toast-show'));
+          });
 
-  /* ── PRICE RANGE ── */
-  const PRICE_MAX_LIMIT = 5000;
+          /* Auto-dismiss */
+          const timer = setTimeout(() => dismissToast(toast), duration);
+          toast._dismissTimer = timer;
 
-  function updateRangeFill() {
-    const minVal = parseInt(document.getElementById('rangeMin').value) || 0;
-    const maxVal = parseInt(document.getElementById('rangeMax').value) || PRICE_MAX_LIMIT;
-    const fill   = document.getElementById('rangeFill');
-    const pctMin = (minVal / PRICE_MAX_LIMIT) * 100;
-    const pctMax = (maxVal / PRICE_MAX_LIMIT) * 100;
-    fill.style.left  = pctMin + '%';
-    fill.style.width = (pctMax - pctMin) + '%';
-  }
-
-  function onRangeInput(which) {
-    let minVal = parseInt(document.getElementById('rangeMin').value);
-    let maxVal = parseInt(document.getElementById('rangeMax').value);
-    const GAP  = 100;
-
-    if (which === 'min' && minVal > maxVal - GAP) {
-      minVal = maxVal - GAP;
-      document.getElementById('rangeMin').value = minVal;
-    }
-    if (which === 'max' && maxVal < minVal + GAP) {
-      maxVal = minVal + GAP;
-      document.getElementById('rangeMax').value = maxVal;
-    }
-
-    document.getElementById('priceMin').value = minVal === 0        ? '' : minVal;
-    document.getElementById('priceMax').value = maxVal === PRICE_MAX_LIMIT ? '' : maxVal;
-    updateRangeFill();
-    showPriceReset();
-  }
-
-  function syncRangeFromInputs() {
-    let minVal = parseInt(document.getElementById('priceMin').value) || 0;
-    let maxVal = parseInt(document.getElementById('priceMax').value) || PRICE_MAX_LIMIT;
-    minVal = Math.max(0, Math.min(minVal, PRICE_MAX_LIMIT));
-    maxVal = Math.max(0, Math.min(maxVal, PRICE_MAX_LIMIT));
-    if (minVal > maxVal) minVal = maxVal;
-    document.getElementById('rangeMin').value = minVal;
-    document.getElementById('rangeMax').value = maxVal;
-    updateRangeFill();
-    showPriceReset();
-  }
-
-  function showPriceReset() {
-    const link = document.getElementById('priceResetLink');
-    if (link) link.style.display = 'block';
-  }
-
-  function applyPriceFilter() {
-    const minVal = parseInt(document.getElementById('priceMin').value) || '';
-    const maxVal = parseInt(document.getElementById('priceMax').value) || '';
-    const url    = new URL(window.location.href);
-    if (minVal !== '') url.searchParams.set('priceMin', minVal);
-    else url.searchParams.delete('priceMin');
-    if (maxVal !== '') url.searchParams.set('priceMax', maxVal);
-    else url.searchParams.delete('priceMax');
-    url.searchParams.delete('page');
-    window.location.href = url.toString();
-  }
-
-  function resetPriceFilter() {
-    const url = new URL(window.location.href);
-    url.searchParams.delete('priceMin');
-    url.searchParams.delete('priceMax');
-    url.searchParams.delete('page');
-    window.location.href = url.toString();
-  }
-
-  // Init fill on page load
-  updateRangeFill();
-
-  /* ── WISHLIST ── */
-  async function toggleWishlist(productId) {
-    const btn = document.getElementById('wish-' + productId);
-    const isLiked = btn.classList.contains('liked');
-    const endpoint = isLiked ? '/remove-from-wishlist' : '/add-to-wishlist';
-
-    try {
-      const res  = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId })
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        btn.classList.toggle('liked');
-        const svg = btn.querySelector('svg');
-        svg.setAttribute('fill', btn.classList.contains('liked') ? 'currentColor' : 'none');
-      } else {
-        if (data.message === 'Please login first') {
-          window.location.href = '/login';
-        } else {
-          showModal('error', 'Wishlist Error', data.message || 'Something went wrong', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+          /* Pause auto-dismiss on hover */
+          toast.addEventListener('mouseenter', () => clearTimeout(toast._dismissTimer));
+          toast.addEventListener('mouseleave', () => {
+            toast._dismissTimer = setTimeout(() => dismissToast(toast), 1800);
+          });
         }
-      }
-    } catch (err) {
-      console.error(err);
-      showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
-    }
-  }
 
-  /* ── ADD TO CART ── */
-  async function addToCart(productId, variantId, btnEl) {
-    if (!variantId) {
-      showModal('error', 'Variant Unavailable', 'This product has no available variant.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
-      return;
-    }
-
-    try {
-      const res  = await fetch('/add-to-cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, variantId, qty: 1 })
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        const origHTML = btnEl.innerHTML;
-        btnEl.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Added!`;
-        btnEl.style.background = '#2e7d32';
-        setTimeout(() => { btnEl.innerHTML = origHTML; btnEl.style.background = ''; }, 2000);
-
-        const wishBtn = document.getElementById('wish-' + productId);
-        if (wishBtn && wishBtn.classList.contains('liked')) {
-          wishBtn.classList.remove('liked');
-          const svg = wishBtn.querySelector('svg');
-          if (svg) svg.setAttribute('fill', 'none');
+        function dismissToast(toast) {
+          if (!toast || toast._dismissed) return;
+          toast._dismissed = true;
+          clearTimeout(toast._dismissTimer);
+          toast.classList.remove('toast-show');
+          toast.classList.add('toast-hide');
+          toast.addEventListener('transitionend', () => toast.remove(), { once: true });
         }
-      } else {
-        if (data.message === 'Please login first') {
-          window.location.href = '/login';
-        } else {
-          showModal('error', 'Could Not Add to Cart', data.message || 'Failed to add to cart', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
-    }
-  }
-</script>
 
-<%- include('partials/user/modal') %>
+        /* ══════════════════════════════════════
+           SEARCH
+        ══════════════════════════════════════ */
+        function onSearchInput() {
+          const val = document.getElementById('shopSearch').value;
+          const btn = document.getElementById('clearSearchBtn');
+          if (val) {
+            btn.classList.add('visible');
+          } else {
+            btn.classList.remove('visible');
+          }
+        }
+
+        function clearSearch() {
+          const input = document.getElementById('shopSearch');
+          input.value = '';
+          input.focus();
+          document.getElementById('clearSearchBtn').classList.remove('visible');
+          applyFilters();
+        }
+
+        function applyFilters() {
+          const search = document.getElementById('shopSearch').value;
+          const sort = document.getElementById('shopSort').value;
+          const url = new URL(window.location.href);
+          url.searchParams.set('search', search);
+          url.searchParams.set('sort', sort);
+
+          const minVal = document.getElementById('priceMin').value;
+          const maxVal = document.getElementById('priceMax').value;
+          if (minVal) url.searchParams.set('priceMin', minVal);
+          else url.searchParams.delete('priceMin');
+          if (maxVal) url.searchParams.set('priceMax', maxVal);
+          else url.searchParams.delete('priceMax');
+
+          url.searchParams.delete('page');
+          window.location.href = url.toString();
+        }
+
+        function filterBy(key, value) {
+          const url = new URL(window.location.href);
+          url.searchParams.set(key, value);
+          url.searchParams.delete('page');
+          window.location.href = url.toString();
+        }
+
+        /* ══════════════════════════════════════
+           PRICE RANGE
+        ══════════════════════════════════════ */
+        const PRICE_MAX_LIMIT = 5000;
+
+        function updateRangeFill() {
+          const minVal = parseInt(document.getElementById('rangeMin').value) || 0;
+          const maxVal = parseInt(document.getElementById('rangeMax').value) || PRICE_MAX_LIMIT;
+          const fill = document.getElementById('rangeFill');
+          const pctMin = (minVal / PRICE_MAX_LIMIT) * 100;
+          const pctMax = (maxVal / PRICE_MAX_LIMIT) * 100;
+          fill.style.left = pctMin + '%';
+          fill.style.width = (pctMax - pctMin) + '%';
+        }
+
+        function onRangeInput(which) {
+          let minVal = parseInt(document.getElementById('rangeMin').value);
+          let maxVal = parseInt(document.getElementById('rangeMax').value);
+          const GAP = 100;
+
+          if (which === 'min' && minVal > maxVal - GAP) {
+            minVal = maxVal - GAP;
+            document.getElementById('rangeMin').value = minVal;
+          }
+          if (which === 'max' && maxVal < minVal + GAP) {
+            maxVal = minVal + GAP;
+            document.getElementById('rangeMax').value = maxVal;
+          }
+
+          document.getElementById('priceMin').value = minVal === 0 ? '' : minVal;
+          document.getElementById('priceMax').value = maxVal === PRICE_MAX_LIMIT ? '' : maxVal;
+          updateRangeFill();
+          showPriceReset();
+        }
+
+        function syncRangeFromInputs() {
+          let minVal = parseInt(document.getElementById('priceMin').value) || 0;
+          let maxVal = parseInt(document.getElementById('priceMax').value) || PRICE_MAX_LIMIT;
+          minVal = Math.max(0, Math.min(minVal, PRICE_MAX_LIMIT));
+          maxVal = Math.max(0, Math.min(maxVal, PRICE_MAX_LIMIT));
+          if (minVal > maxVal) minVal = maxVal;
+          document.getElementById('rangeMin').value = minVal;
+          document.getElementById('rangeMax').value = maxVal;
+          updateRangeFill();
+          showPriceReset();
+        }
+
+        function showPriceReset() {
+          const link = document.getElementById('priceResetLink');
+          if (link) link.style.display = 'block';
+        }
+
+        function applyPriceFilter() {
+          const minVal = parseInt(document.getElementById('priceMin').value) || '';
+          const maxVal = parseInt(document.getElementById('priceMax').value) || '';
+          const url = new URL(window.location.href);
+          if (minVal !== '') url.searchParams.set('priceMin', minVal);
+          else url.searchParams.delete('priceMin');
+          if (maxVal !== '') url.searchParams.set('priceMax', maxVal);
+          else url.searchParams.delete('priceMax');
+          url.searchParams.delete('page');
+          window.location.href = url.toString();
+        }
+
+        function resetPriceFilter() {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('priceMin');
+          url.searchParams.delete('priceMax');
+          url.searchParams.delete('page');
+          window.location.href = url.toString();
+        }
+
+        updateRangeFill();
+
+        /* ══════════════════════════════════════
+           WISHLIST  ← updated with toast
+        ══════════════════════════════════════ */
+        async function toggleWishlist(productId, productName) {
+          const btn = document.getElementById('wish-' + productId);
+          const isLiked = btn.classList.contains('liked');
+          const endpoint = isLiked ? '/remove-from-wishlist' : '/add-to-wishlist';
+
+          try {
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ productId })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+              btn.classList.toggle('liked');
+              const svg = btn.querySelector('svg');
+              svg.setAttribute('fill', btn.classList.contains('liked') ? 'currentColor' : 'none');
+
+              if (btn.classList.contains('liked')) {
+                /* ── Added to wishlist ── */
+                showToast({
+                  type: 'wishlist-add',
+                  title: 'Added to wishlist',
+                  subtitle: productName || 'Item saved to your wishlist'
+                });
+              } else {
+                /* ── Removed from wishlist ── */
+                showToast({
+                  type: 'wishlist-remove',
+                  title: 'Removed from wishlist',
+                  subtitle: productName || 'Item removed from your wishlist'
+                });
+              }
+            } else {
+              if (data.message === 'Please login first') {
+                window.location.href = '/login';
+              } else {
+                showToast({
+                  type: 'error',
+                  title: 'Wishlist error',
+                  subtitle: data.message || 'Something went wrong. Please try again.',
+                  duration: 4000
+                });
+              }
+            }
+          } catch (err) {
+            console.error(err);
+            showToast({
+              type: 'error',
+              title: 'Network error',
+              subtitle: 'Could not update wishlist. Please check your connection.',
+              duration: 4000
+            });
+          }
+        }
+
+        /* ══════════════════════════════════════
+           ADD TO CART
+        ══════════════════════════════════════ */
+        async function addToCart(productId, variantId, btnEl) {
+          if (!variantId) {
+            showModal('error', 'Variant Unavailable', 'This product has no available variant.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+            return;
+          }
+
+          try {
+            const res = await fetch('/add-to-cart', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ productId, variantId, qty: 1 })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+              const badge = document.getElementById("cart-badge");
+              if (badge && data.cartCount !== undefined) {
+                badge.textContent = data.cartCount > 99 ? "99+" : data.cartCount;
+              }
+              const origHTML = btnEl.innerHTML;
+              btnEl.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Added!`;
+              btnEl.style.background = '#2e7d32';
+              setTimeout(() => { btnEl.innerHTML = origHTML; btnEl.style.background = ''; }, 2000);
+
+              const wishBtn = document.getElementById('wish-' + productId);
+              if (wishBtn && wishBtn.classList.contains('liked')) {
+                wishBtn.classList.remove('liked');
+                const svg = wishBtn.querySelector('svg');
+                if (svg) svg.setAttribute('fill', 'none');
+              }
+            } else {
+              if (data.message === 'Please login first') {
+                window.location.href = '/login';
+              } else {
+                showModal('error', 'Could Not Add to Cart', data.message || 'Failed to add to cart', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+              }
+            }
+          } catch (err) {
+            console.error(err);
+            showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+          }
+        }
+      </script>
+
+      <%- include('partials/user/modal') %>
 
 </body>
+
 </html>

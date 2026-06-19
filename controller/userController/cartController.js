@@ -19,7 +19,7 @@ export const addToCart = async (req, res) => {
         const userId = user._id;
         const { productId, variantId, qty } = req.body;
 
-        if (!qty || isNaN(qty) || qty < 1 ) {
+        if (!qty || isNaN(qty) || qty < 1) {
             return res.json({ success: false, message: "Invalid quantity" });
         }
 
@@ -45,7 +45,7 @@ export const addToCart = async (req, res) => {
         }
 
 
-        
+
 
         let existingItemQty = 0;
         let itemIndex = -1;
@@ -99,6 +99,11 @@ export const addToCart = async (req, res) => {
 
         await cart.save();
 
+        const cartCount = cart.items.reduce(
+            (total, item) => total + item.qty,
+            0
+        );
+
         const wishlist = await Wishlist.findOne({ userId: userId });
         console.log(wishlist)
         if (wishlist) {
@@ -111,7 +116,11 @@ export const addToCart = async (req, res) => {
             }
         }
 
-        res.json({ success: true, message: "Added to cart" });
+        res.json({
+            success: true,
+            message: "Added to cart",
+            cartCount
+        });
 
 
     } catch (error) {
@@ -234,11 +243,15 @@ export const removeCartItem = async (req, res) => {
 
         cart.items = cart.items.filter(item =>
             !(item.productId.toString() === productId &&
-              item.variantId.toString() === variantId)
+                item.variantId.toString() === variantId)
         );
 
         await cart.save();
 
+        const cartCount = cart.items.reduce(
+            (total, item) => total + item.qty,
+            0
+        );
         // Calculate new subtotal
         let subtotal = 0;
         cart.items.forEach(item => {
@@ -248,7 +261,7 @@ export const removeCartItem = async (req, res) => {
         res.json({
             success: true,
             subtotal,
-            cartCount: cart.items.length,
+            cartCount,
             message: "Item removed from cart"
         });
 

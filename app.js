@@ -9,6 +9,7 @@ import nocache from 'nocache';
 import flash from 'connect-flash';
 import MongoStore from 'connect-mongo';
 import passport from'./config/passport.js' ;
+import cartCountMiddleware from "./middleware/cartCount.js";
 
 dotenv.config(); 
 
@@ -51,6 +52,8 @@ app.use((req, res, next) => {
 });
 
 app.use(nocache());
+
+app.use(cartCountMiddleware);
 
 app.use('/admin', adminRouter);
 app.use('/', userRouter);

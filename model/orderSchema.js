@@ -42,6 +42,11 @@ const orderItemSchema = new mongoose.Schema({
         type: String,
         enum: [
             'active',
+            'pending',
+            'processing',
+            'shipped',
+            'out_for_delivery',
+            'delivered',
             'cancelled',
             'returned'
         ],
