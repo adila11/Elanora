@@ -16,7 +16,7 @@ export const loadShop = async (req, res) => {
         if (category !== 'all') {
             query.category = category;
         }
-``
+
         if (priceMin || priceMax) {
             query.$or = [
                 {
@@ -42,15 +42,32 @@ export const loadShop = async (req, res) => {
         else if (sort === 'name-desc') sortOption = { name: -1 };
 
         // Get total count for pagination
-        const totalProducts = await Products.countDocuments(query);
+        const totalProducts = await Products.find(query)
+            .populate({
+                path: "category",
+                match: {
+                    isActive: true
+                }
+            })
+            .then(products => products.filter(p => p.category).length);
         const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
         const skip = (currentPage - 1) * ITEMS_PER_PAGE;
 
         const products = await Products.find(query)
-            .populate('category')
+            .populate({
+                path: "category",
+                match: {
+                    isActive: true
+                }
+            })
             .sort(sortOption)
             .skip(skip)
             .limit(ITEMS_PER_PAGE);
+
+
+        const activeProducts = products.filter(
+            product => product.category
+        );
 
         const categories = await Category.find({ isActive: true });
 
@@ -79,7 +96,7 @@ export const loadShop = async (req, res) => {
         };
 
         res.render("user/shop", {
-            products,
+            products: activeProducts,
             categories,
             search,
             selectedCategory: category,
@@ -101,8 +118,16 @@ export const loadShop = async (req, res) => {
 
 export const loadProductDetail = async (req, res) => {
     try {
-        const product = await Products.findById(req.params.id).populate('category');
-        if (!product || !product.isListed) {
+        const product = await Products.findById(req.params.id)
+            .populate({
+                path: "category",
+                match: {
+                    isActive: true
+                }
+            });
+
+
+        if (!product || !product.isListed || !product.category) {
             return res.redirect('/shop');
         }
 

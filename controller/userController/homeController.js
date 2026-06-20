@@ -6,10 +6,24 @@ import { User } from '../../model/userSchema.js';
 const loadHome = async (req, res) => {
     try {
 
-        const products = await Products.find({ isListed: true })
-            .populate("category")
-            .sort({ createdAt: -1 })
+        const products = await Products.find({
+            isListed: true
+        })
+            .populate({
+                path: "category",
+                match: {
+                    isActive: true
+                }
+            })
+            .sort({
+                createdAt: -1
+            })
             .limit(6);
+
+        const activeProducts = products.filter(
+            product => product.category
+        );
+
 
         const categories = await Category.find({
             isActive: true
@@ -34,7 +48,7 @@ const loadHome = async (req, res) => {
         }
 
         return res.render("user/home", {
-            products,
+            products:activeProducts,
             categories,
             cartLength
         });

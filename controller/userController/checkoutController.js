@@ -2,7 +2,7 @@ import Order from "../../model/orderSchema.js";
 import Address from "../../model/addressSchema.js";
 import Cart from "../../model/cartSchema.js";
 import Product from "../../model/productSchema.js";
-import {User} from "../../model/userSchema.js";  
+import { User } from "../../model/userSchema.js";
 
 const checkCartAvailability = (cart) => {
     if (!cart || cart.items.length === 0) return false;
@@ -23,13 +23,13 @@ export const loadCheckoutAddress = async (req, res) => {
         const user = await User.findOne({ email: userEmail });
         if (!user) return res.redirect("/login");
 
-        const addresses = await Address.find({ 
-            user: user._id, 
-            isDelete: false 
+        const addresses = await Address.find({
+            user: user._id,
+            isDelete: false
         }).sort({ isDefault: -1, createdAt: -1 });
 
         const cart = await Cart.findOne({ userId: user._id })
-                              .populate("items.productId");
+            .populate("items.productId");
 
         if (!checkCartAvailability(cart)) {
             return res.redirect("/cart?error=unavailable");
@@ -55,7 +55,7 @@ export const loadCheckoutPayment = async (req, res) => {
         if (!user) return res.redirect("/login");
 
         const cart = await Cart.findOne({ userId: user._id })
-                              .populate("items.productId");
+            .populate("items.productId");
 
         if (!checkCartAvailability(cart)) {
             return res.redirect("/cart?error=unavailable");
@@ -77,15 +77,15 @@ export const loadCheckoutReview = async (req, res) => {
         if (!user) return res.redirect("/login");
 
         const cart = await Cart.findOne({ userId: user._id })
-                              .populate("items.productId");
+            .populate("items.productId");
 
         if (!checkCartAvailability(cart)) {
             return res.redirect("/cart?error=unavailable");
         }
 
-        const address = await Address.findOne({ 
-            _id: req.query.addressId, 
-            user: user._id 
+        const address = await Address.findOne({
+            _id: req.query.addressId,
+            user: user._id
         });
 
         if (!cart || !address) {
@@ -142,23 +142,56 @@ export const placeOrder = async (req, res) => {
         const orderItems = [];
 
         for (let item of cart.items) {
+
             const product = item.productId;
-            if (!product) continue;
+
+
+            if (!product) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Product not found"
+                });
+            }
+
+
+            // CHECK PRODUCT AVAILABILITY
+            if (!product.isListed) {
+
+                return res.status(400).json({
+                    success: false,
+                    message: `${product.name} is currently unavailable`
+                });
+
+            }
+
 
             const variant = product.variants.id(item.variantId);
-            const variantStock = variant ? variant.stock : 0;
 
-            if (variantStock < item.qty) {
-                return res.status(400).json({ 
-                    success: false, 
-                    message: `Insufficient stock for ${product.name}` 
+
+            if (!variant || !variant.isActive) {
+
+                return res.status(400).json({
+                    success: false,
+                    message: `${product.name} variant is unavailable`
                 });
+
+            }
+
+
+            // CHECK STOCK
+            if (variant.stock < item.qty) {
+
+                return res.status(400).json({
+                    success: false,
+                    message: `Insufficient stock for ${product.name}`
+                });
+
             }
 
             const price = product.discountPrice || product.basePrice;
             const total = price * item.qty;
-            const productImage = variant && variant.images && variant.images.length > 0 
-                                 ? variant.images[0].url : "";
+            const productImage = variant && variant.images && variant.images.length > 0
+                ? variant.images[0].url : "";
             const variantName = variant ? variant.color : "";
 
             orderItems.push({
@@ -179,11 +212,11 @@ export const placeOrder = async (req, res) => {
         const finalAmount = subtotal + deliveryCharge;
 
 
-    
 
 
-        const order = new Order({     
-            orderId: generateOrderId(),     
+
+        const order = new Order({
+            orderId: generateOrderId(),
             userId,
             items: orderItems,
             shippingAddress: {
@@ -241,16 +274,16 @@ export const loadOrderSuccess = async (req, res) => {
         if (!order) return res.redirect("/");
 
         const from = new Date(order.createdAt);
-        const to   = new Date(order.createdAt);
+        const to = new Date(order.createdAt);
         from.setDate(from.getDate() + 3);
         to.setDate(to.getDate() + 5);
         const fmt = d => d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 
         res.render("user/checkout/orderSuccess", {
             order: {
-                _id:           order._id,
-                orderId:       order.orderId || order._id,
-                totalAmount:   order.finalAmount,
+                _id: order._id,
+                orderId: order.orderId || order._id,
+                totalAmount: order.finalAmount,
                 deliveryRange: `${fmt(from)} – ${fmt(to)}`
             }
         });

@@ -1,4 +1,5 @@
 import Category from "../../model/categoriesSchema.js";
+import Products from "../../model/productSchema.js";
 
 export const loadCategories = async (req, res) => {
     try {
@@ -135,8 +136,13 @@ export const editCategory = async (req, res) => {
 
         const updated = await Category.findByIdAndUpdate(
             id,
-            { name: formattedName, description: description?.trim() },
-            { new: true }
+            {
+                name: formattedName,
+                description: description?.trim()
+            },
+            {
+                returnDocument: "after"
+            }
         );
 
         if (!updated) return res.status(404).json({ message: 'Category not found.' });
@@ -160,18 +166,49 @@ export const editCategory = async (req, res) => {
 
 export const toggleCategory = async (req, res) => {
     try {
-        if (!req.session.admin) return res.status(401).json({ message: 'Unauthorized' });
+        if (!req.session.admin) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
 
         const cat = await Category.findById(req.params.id);
-        if (!cat) return res.status(404).json({ message: 'Category not found.' });
+
+        if (!cat) {
+            return res.status(404).json({ message: 'Category not found.' });
+        }
+
 
         cat.isActive = !cat.isActive;
+
         await cat.save();
 
-        return res.json({ message: `Category ${cat.isActive ? 'listed' : 'unlisted'} successfully.`, isActive: cat.isActive });
+
+        // update all products inside this category
+        await Products.updateMany(
+            {
+                category: cat._id
+            },
+            {
+                $set: {
+                    isListed: cat.isActive
+                }
+            }
+        );
+
+
+        return res.json({
+            message: `Category ${cat.isActive ? 'listed' : 'unlisted'} successfully.`,
+            isActive: cat.isActive
+        });
+
+
     } catch (error) {
+
         console.error("TOGGLE CATEGORY ERROR:", error);
-        res.status(500).json({ message: 'Server error.' });
+
+        res.status(500).json({
+            message: "Server error."
+        });
     }
 };
 

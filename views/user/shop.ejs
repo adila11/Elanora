@@ -676,6 +676,11 @@
       color: var(--gold);
     }
 
+    .toast-icon.toast-icon-cart {
+      background: #e6f1eb;
+      color: #2e7d32;
+    }
+
     .toast-icon.toast-icon-remove {
       background: #fdf0f0;
       color: #c0392b;
@@ -923,7 +928,7 @@
                     <div class="card-price">₹<%= price.toLocaleString('en-IN') %>
                     </div>
                     <button class="add-to-cart"
-                      onclick="event.stopPropagation(); addToCart('<%= p._id %>', '<%= firstVariant ? firstVariant._id : '' %>', this)">
+                      onclick="event.stopPropagation(); addToCart('<%= p._id %>', '<%= firstVariant ? firstVariant._id : '' %>', this, '<%= p.name %>')">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <circle cx="9" cy="21" r="1" />
@@ -978,7 +983,7 @@
 
         /**
          * showToast({ type, title, subtitle, duration })
-         * type: 'wishlist-add' | 'wishlist-remove' | 'error'
+         * type: 'wishlist-add' | 'wishlist-remove' | 'cart-add' | 'error'
          */
         function showToast({ type = 'wishlist-add', title, subtitle = '', duration = 3500 }) {
           const toast = document.createElement('div');
@@ -999,6 +1004,12 @@
             iconHTML = `
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>`;
+          } else if (type === 'cart-add') {
+            iconClass = 'toast-icon toast-icon-cart';
+            iconHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
               </svg>`;
           } else if (type === 'error') {
             iconClass = 'toast-icon toast-icon-error';
@@ -1172,7 +1183,7 @@
         updateRangeFill();
 
         /* ══════════════════════════════════════
-           WISHLIST  ← updated with toast
+           WISHLIST
         ══════════════════════════════════════ */
         async function toggleWishlist(productId, productName) {
           const btn = document.getElementById('wish-' + productId);
@@ -1193,14 +1204,12 @@
               svg.setAttribute('fill', btn.classList.contains('liked') ? 'currentColor' : 'none');
 
               if (btn.classList.contains('liked')) {
-                /* ── Added to wishlist ── */
                 showToast({
                   type: 'wishlist-add',
                   title: 'Added to wishlist',
                   subtitle: productName || 'Item saved to your wishlist'
                 });
               } else {
-                /* ── Removed from wishlist ── */
                 showToast({
                   type: 'wishlist-remove',
                   title: 'Removed from wishlist',
@@ -1231,9 +1240,9 @@
         }
 
         /* ══════════════════════════════════════
-           ADD TO CART
+           ADD TO CART  ← updated with toast
         ══════════════════════════════════════ */
-        async function addToCart(productId, variantId, btnEl) {
+        async function addToCart(productId, variantId, btnEl, productName) {
           if (!variantId) {
             showModal('error', 'Variant Unavailable', 'This product has no available variant.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
             return;
@@ -1257,6 +1266,13 @@
               btnEl.style.background = '#2e7d32';
               setTimeout(() => { btnEl.innerHTML = origHTML; btnEl.style.background = ''; }, 2000);
 
+              /* ── Toast confirmation ── */
+              showToast({
+                type: 'cart-add',
+                title: 'Added to cart',
+                subtitle: productName || 'Item added to your cart'
+              });
+
               const wishBtn = document.getElementById('wish-' + productId);
               if (wishBtn && wishBtn.classList.contains('liked')) {
                 wishBtn.classList.remove('liked');
@@ -1267,12 +1283,22 @@
               if (data.message === 'Please login first') {
                 window.location.href = '/login';
               } else {
-                showModal('error', 'Could Not Add to Cart', data.message || 'Failed to add to cart', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+                showToast({
+                  type: 'error',
+                  title: 'Could not add to cart',
+                  subtitle: data.message || 'Failed to add to cart',
+                  duration: 4000
+                });
               }
             }
           } catch (err) {
             console.error(err);
-            showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+            showToast({
+              type: 'error',
+              title: 'Network error',
+              subtitle: 'Could not add item to cart. Please try again.',
+              duration: 4000
+            });
           }
         }
       </script>
