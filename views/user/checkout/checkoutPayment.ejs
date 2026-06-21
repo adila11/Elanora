@@ -466,9 +466,8 @@
       </div>
 
       <div class="divider"></div>
-
       <div class="bottom-row">
-        <button class="btn-back" onclick="history.back()">
+        <button class="btn-back" onclick="window.location.href='/checkout/address'">
           <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
           Back
         </button>
@@ -477,7 +476,6 @@
           <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </div>
-
     </div>
 
     <!-- RIGHT: Order Summary -->
@@ -645,13 +643,30 @@
   });
 
   document.getElementById('continueBtn').addEventListener('click', () => {
-    const params = new URLSearchParams(window.location.search);
-    const addressId = params.get('addressId');
+    const addressId = '<%= addressId %>';
     if (!addressId) {
       showToast('Address is missing. Please go back and select an address.', 'error');
       return;
     }
-    window.location.href = `/checkout/review?addressId=${addressId}&paymentMethod=${selectedMethod}`;
+    
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/checkout/review';
+    
+    const addrInput = document.createElement('input');
+    addrInput.type = 'hidden';
+    addrInput.name = 'addressId';
+    addrInput.value = addressId;
+    form.appendChild(addrInput);
+
+    const payInput = document.createElement('input');
+    payInput.type = 'hidden';
+    payInput.name = 'paymentMethod';
+    payInput.value = selectedMethod;
+    form.appendChild(payInput);
+
+    document.body.appendChild(form);
+    form.submit();
   });
 
   // ── Coupon modal open/close

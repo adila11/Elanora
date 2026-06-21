@@ -12,6 +12,7 @@ import { addToCart, loadCart, updateCartItem, removeCartItem } from '../controll
 import { loadWishlist, addToWishlist, removeFromWishlist } from '../controller/userController/wishlistController.js'
 import { loadCheckoutAddress,loadCheckoutPayment,loadCheckoutReview,placeOrder,loadOrderSuccess} from "../controller/userController/checkoutController.js";
 import {  cancelFullOrder, cancelSingleItem, getOrderDetail, getOrders, returnItem } from '../controller/userController/orderController.js'
+import { checkPincode } from "../utils/pincodeValidator.js";
 const router=express.Router()
 
 
@@ -96,9 +97,35 @@ router.post("/add-to-wishlist", isLoggedIn, isBlocked, addToWishlist)
 router.post("/remove-from-wishlist", isLoggedIn, isBlocked, removeFromWishlist)
 
 router.get("/checkout/address", isLoggedIn, isBlocked, loadCheckoutAddress);
-router.get("/checkout/payment", isLoggedIn, isBlocked, loadCheckoutPayment);
-router.get("/checkout/review", isLoggedIn, isBlocked, loadCheckoutReview);
+router.post("/checkout/payment", isLoggedIn, isBlocked, loadCheckoutPayment);
+router.get("/checkout/payment", isLoggedIn, isBlocked, (req, res) => res.redirect("/checkout/address"));
+router.post("/checkout/review", isLoggedIn, isBlocked, loadCheckoutReview);
+router.get("/checkout/review", isLoggedIn, isBlocked, (req, res) => res.redirect("/checkout/address"));
 router.post("/place-order", isLoggedIn, isBlocked, placeOrder);
+
+router.get("/check-pincode/:pincode", isLoggedIn, isBlocked, async (req, res) => {
+    try {
+        const { pincode } = req.params;
+        if (!/^[0-9]{6}$/.test(pincode)) {
+            return res.status(400).json({ success: false, message: "Invalid pincode" });
+        }
+        const result = await checkPincode(pincode);
+        if (result.success) {
+            return res.json({
+                success: true,
+                data: {
+                    district: result.district,
+                    state: result.state
+                }
+            });
+        } else {
+            return res.status(400).json({ success: false, message: result.message || "Invalid pincode" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
 
 router.get("/order-success/:id", isLoggedIn, isBlocked, loadOrderSuccess); 
 

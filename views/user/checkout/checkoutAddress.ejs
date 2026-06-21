@@ -1,965 +1,1731 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Secure Checkout – Elanora</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --cream: #f9f4ef;
-    --cream-dark: #f0e8de;
-    --gold: #b8922a;
-    --gold-light: #c9a020;
-    --text-dark: #2c2416;
-    --text-mid: #5a4a38;
-    --text-light: #9a8570;
-    --white: #ffffff;
-    --border: #e8ddd0;
-    --blue: #3b82f6;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secure Checkout – Elanora</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f9f4ef;
+      --cream-dark: #f0e8de;
+      --gold: #b8922a;
+      --gold-light: #c9a020;
+      --text-dark: #2c2416;
+      --text-mid: #5a4a38;
+      --text-light: #9a8570;
+      --white: #ffffff;
+      --border: #e8ddd0;
+      --blue: #3b82f6;
+    }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  body {
-    background: var(--cream);
-    color: var(--text-dark);
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+    body {
+      background: var(--cream);
+      color: var(--text-dark);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  /* ── NAV STYLES REMOVED TO USE PARTIAL STYLES ── */
+    /* ── NAV STYLES REMOVED TO USE PARTIAL STYLES ── */
 
-  /* ── MAIN ── */
-  main { flex: 1; padding: 110px 48px 64px; max-width: 1100px; margin: 0 auto; width: 100%; }
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      padding: 110px 48px 64px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-  .page-title {
-    font-family: 'Jost', sans-serif; font-size: 1.5rem; font-weight: 400;
-    text-align: center; color: var(--text-dark);
-    margin-bottom: 32px; letter-spacing: 0.02em;
-  }
+    .page-title {
+      font-family: 'Jost', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      text-align: center;
+      color: var(--text-dark);
+      margin-bottom: 32px;
+      letter-spacing: 0.02em;
+    }
 
-  /* ── STEPPER ── */
-  .stepper {
-    display: flex; align-items: center; justify-content: center;
-    gap: 0; margin-bottom: 40px;
-  }
-  .step {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 0.85rem; color: var(--text-light);
-  }
-  .step.active { color: var(--gold); }
-  .step.active .step-num { border-color: var(--gold); color: var(--gold); background: var(--white); }
-  .step-num {
-    width: 30px; height: 30px; border-radius: 50%;
-    border: 1.5px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; font-weight: 500; color: var(--text-light);
-    background: var(--white);
-    flex-shrink: 0;
-  }
-  .step-label { font-size: 0.85rem; letter-spacing: 0.03em; }
-  .step-line {
-    flex: 1; max-width: 180px;
-    height: 1px; background: var(--border);
-    margin: 0 16px;
-  }
+    /* ── STEPPER ── */
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 40px;
+    }
 
-  /* ── LAYOUT ── */
-  .checkout-layout {
-    display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: 24px;
-    align-items: start;
-  }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
 
-  /* ── CARD ── */
-  .card {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 32px;
-    box-shadow: 0 2px 16px rgba(44,36,22,0.06);
-  }
+    .step.active {
+      color: var(--gold);
+    }
 
-  /* ── SECTION HEADER ── */
-  .section-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 24px;
-  }
-  .section-title-row {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 1.05rem; font-weight: 500; color: var(--text-dark);
-  }
-  .section-title-row svg {
-    width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 1.5;
-  }
-  .add-new {
-    font-size: 0.8rem; color: var(--gold);
-    cursor: pointer; text-decoration: none;
-    transition: opacity 0.2s;
-  }
-  .add-new:hover { opacity: 0.75; }
+    .step.active .step-num {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--white);
+    }
 
-  /* ── ADDRESS CARD ── */
-  .address-card {
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 20px 20px 20px 20px;
-    display: flex; align-items: flex-start; gap: 14px;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .address-card:hover { border-color: var(--gold-light); }
-  .address-card.selected { border-color: var(--gold); }
-  .address-radio {
-    width: 18px; height: 18px; border-radius: 50%;
-    border: 2px solid var(--border); background: var(--white);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; margin-top: 2px;
-  }
-  .address-card.selected .address-radio {
-    border-color: var(--gold); background: var(--gold);
-  }
-  .address-radio::after {
-    content: ''; width: 7px; height: 7px;
-    border-radius: 50%; background: var(--white);
-    opacity: 0;
-  }
-  .address-card.selected .address-radio::after {
-    opacity: 1;
-  }
-  .address-info { flex: 1; }
-  .address-name { font-size: 0.9rem; font-weight: 500; color: var(--text-dark); margin-bottom: 6px; }
-  .address-detail { font-size: 0.83rem; color: var(--text-mid); line-height: 1.7; }
+    .step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-light);
+      background: var(--white);
+      flex-shrink: 0;
+    }
 
-  .divider { height: 1px; background: var(--border); margin: 28px 0; }
+    .step-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+    }
 
-  /* ── SHIPPING METHOD ── */
-  .method-card {
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 20px;
-    display: flex; align-items: center; gap: 14px;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .method-card.selected { border-color: var(--gold); }
-  .method-radio {
-    width: 18px; height: 18px; border-radius: 50%;
-    border: 2px solid var(--blue); background: var(--blue);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .method-radio::after {
-    content: ''; width: 7px; height: 7px;
-    border-radius: 50%; background: var(--white);
-  }
-  .method-info { flex: 1; }
-  .method-name { font-size: 0.88rem; font-weight: 500; color: var(--text-dark); }
-  .method-days { font-size: 0.78rem; color: var(--text-light); margin-top: 2px; }
-  .method-price { font-size: 0.88rem; font-weight: 400; color: var(--text-dark); }
+    .step-line {
+      flex: 1;
+      max-width: 180px;
+      height: 1px;
+      background: var(--border);
+      margin: 0 16px;
+    }
 
-  /* ── CONTINUE BTN ── */
-  .continue-row {
-    display: flex; justify-content: flex-end;
-    margin-top: 40px;
-  }
-  .btn-continue {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--gold);
-    color: var(--white);
-    font-family: 'Jost', sans-serif;
-    font-size: 0.9rem; font-weight: 400;
-    letter-spacing: 0.04em;
-    padding: 14px 36px;
-    border: none; cursor: pointer;
-    border-radius: 50px;
-    text-decoration: none;
-    transition: background 0.25s, transform 0.2s;
-  }
-  .btn-continue:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-continue svg { width: 18px; height: 18px; stroke: var(--white); fill: none; stroke-width: 2; }
+    /* ── LAYOUT ── */
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 24px;
+      align-items: start;
+    }
 
-  /* ── ORDER SUMMARY ── */
-  .summary-title {
-    font-size: 1rem; font-weight: 500; color: var(--text-dark);
-    margin-bottom: 20px;
-  }
-  .cart-item {
-    display: flex; align-items: center; gap: 14px;
-    padding-bottom: 20px; border-bottom: 1px solid var(--border);
-    margin-bottom: 20px;
-  }
-  .cart-thumb {
-    width: 60px; height: 60px;
-    background: var(--cream-dark); border-radius: 6px;
-    flex-shrink: 0; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .cart-thumb svg { width: 28px; height: 28px; stroke: var(--text-light); fill: none; }
-  .cart-item-info { flex: 1; }
-  .cart-item-name { font-size: 0.88rem; font-weight: 500; color: var(--text-dark); margin-bottom: 4px; }
-  .cart-item-qty { font-size: 0.78rem; color: var(--text-light); }
-  .cart-item-price { font-size: 0.88rem; font-weight: 500; color: var(--gold); }
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 2px 16px rgba(44, 36, 22, 0.06);
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .section-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .section-title-row svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .add-new {
+      font-size: 0.8rem;
+      color: var(--gold);
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .add-new:hover {
+      opacity: 0.75;
+    }
+
+    /* ── ADDRESS CARD ── */
+    .address-card {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 20px 20px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .address-card:hover {
+      border-color: var(--gold-light);
+    }
+
+    .address-card.selected {
+      border-color: var(--gold);
+    }
+
+    .address-radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .address-card.selected .address-radio {
+      border-color: var(--gold);
+      background: var(--gold);
+    }
+
+    .address-radio::after {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--white);
+      opacity: 0;
+    }
+
+    .address-card.selected .address-radio::after {
+      opacity: 1;
+    }
+
+    .address-info {
+      flex: 1;
+    }
+
+    .address-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .address-detail {
+      font-size: 0.83rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    /* ── SHIPPING METHOD ── */
+    .method-card {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .method-card.selected {
+      border-color: var(--gold);
+    }
+
+    .method-radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--blue);
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .method-radio::after {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--white);
+    }
+
+    .method-info {
+      flex: 1;
+    }
+
+    .method-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .method-days {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+
+    .method-price {
+      font-size: 0.88rem;
+      font-weight: 400;
+      color: var(--text-dark);
+    }
+
+    /* ── CONTINUE BTN ── */
+    .continue-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 40px;
+    }
+
+    .btn-continue {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      padding: 14px 36px;
+      border: none;
+      cursor: pointer;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: background 0.25s, transform 0.2s;
+    }
+
+    .btn-continue:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-continue svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* ── ORDER SUMMARY ── */
+    .summary-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .cart-thumb {
+      width: 60px;
+      height: 60px;
+      background: var(--cream-dark);
+      border-radius: 6px;
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-thumb svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--text-light);
+      fill: none;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .cart-item-qty {
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    .cart-item-price {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--gold);
+    }
 
 
 
-  /* totals */
-  .totals { margin-top: 20px; }
-  .total-row {
-    display: flex; justify-content: space-between;
-    align-items: center; margin-bottom: 12px;
-  }
-  .total-row .label { font-size: 0.83rem; color: var(--text-mid); }
-  .total-row .value { font-size: 0.83rem; color: var(--text-dark); font-weight: 400; }
-  .total-row .value.free { color: var(--text-dark); }
-  .total-final {
-    display: flex; justify-content: space-between;
-    align-items: center;
-    margin-top: 18px; padding-top: 18px;
-    border-top: 1px solid var(--border);
-  }
-  .total-final .label { font-size: 0.9rem; font-weight: 500; color: var(--text-dark); }
-  .total-final .amount {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem; font-weight: 500; color: var(--gold);
-  }
+    /* totals */
+    .totals {
+      margin-top: 20px;
+    }
 
-  /* ── FOOTER ── */
-  footer { background: var(--white); border-top: 1px solid var(--border); margin-top: auto; }
-  .footer-top {
-    max-width: 1100px; margin: 0 auto;
-    padding: 56px 48px 40px;
-    display: grid; grid-template-columns: 2fr 1fr 1fr 1.6fr; gap: 48px;
-  }
-  .footer-logo {
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem; font-weight: 500; color: var(--gold);
-    margin-bottom: 14px;
-  }
-  .footer-logo svg { width: 20px; height: 20px; fill: var(--gold); }
-  .footer-brand p { font-size: 0.82rem; line-height: 1.8; color: var(--text-light); max-width: 240px; }
-  .social-links { display: flex; gap: 10px; margin-top: 20px; }
-  .social-links a {
-    width: 36px; height: 36px; border-radius: 50%;
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    transition: border-color 0.2s, background 0.2s;
-    text-decoration: none;
-  }
-  .social-links a:hover { border-color: var(--gold); background: #fdf8f3; }
-  .social-links svg { width: 14px; height: 14px; fill: var(--text-mid); }
-  .footer-col h4 {
-    font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--text-dark); margin-bottom: 18px;
-  }
-  .footer-col ul { list-style: none; }
-  .footer-col ul li { margin-bottom: 10px; }
-  .footer-col ul li a { font-size: 0.83rem; color: var(--text-light); text-decoration: none; transition: color 0.2s; }
-  .footer-col ul li a:hover { color: var(--gold); }
-  .footer-newsletter p { font-size: 0.82rem; color: var(--text-light); line-height: 1.7; margin-bottom: 14px; }
-  .newsletter-input {
-    width: 100%; border: 1px solid var(--border); border-radius: 6px;
-    padding: 11px 14px; font-family: 'Jost', sans-serif; font-size: 0.82rem;
-    color: var(--text-dark); background: var(--white); outline: none;
-    margin-bottom: 10px; transition: border-color 0.2s;
-  }
-  .newsletter-input:focus { border-color: var(--gold); }
-  .newsletter-input::placeholder { color: var(--text-light); }
-  .btn-subscribe {
-    width: 100%; background: var(--gold); border: none; border-radius: 6px;
-    padding: 12px; color: var(--white);
-    font-family: 'Jost', sans-serif; font-size: 0.8rem;
-    letter-spacing: 0.08em; cursor: pointer; transition: background 0.2s;
-  }
-  .btn-subscribe:hover { background: var(--gold-light); }
-  .footer-bottom {
-    border-top: 1px solid var(--border);
-    padding: 20px 48px;
-    max-width: 1100px; margin: 0 auto;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .footer-bottom p { font-size: 0.76rem; color: var(--text-light); }
-  .footer-bottom a { font-size: 0.76rem; color: var(--text-light); text-decoration: none; margin-left: 20px; }
-  .footer-bottom a:hover { color: var(--gold); }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .total-row .label {
+      font-size: 0.83rem;
+      color: var(--text-mid);
+    }
+
+    .total-row .value {
+      font-size: 0.83rem;
+      color: var(--text-dark);
+      font-weight: 400;
+    }
+
+    .total-row .value.free {
+      color: var(--text-dark);
+    }
+
+    .total-final {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .total-final .label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .total-final .amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--gold);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .footer-top {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 56px 48px 40px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.6fr;
+      gap: 48px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .footer-logo svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--gold);
+    }
+
+    .footer-brand p {
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: var(--text-light);
+      max-width: 240px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .social-links a {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none;
+    }
+
+    .social-links a:hover {
+      border-color: var(--gold);
+      background: #fdf8f3;
+    }
+
+    .social-links svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--text-mid);
+    }
+
+    .footer-col h4 {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dark);
+      margin-bottom: 18px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col ul li a {
+      font-size: 0.83rem;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--gold);
+    }
+
+    .footer-newsletter p {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .newsletter-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 11px 14px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-dark);
+      background: var(--white);
+      outline: none;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--gold);
+    }
+
+    .newsletter-input::placeholder {
+      color: var(--text-light);
+    }
+
+    .btn-subscribe {
+      width: 100%;
+      background: var(--gold);
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-subscribe:hover {
+      background: var(--gold-light);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding: 20px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p {
+      font-size: 0.76rem;
+      color: var(--text-light);
+    }
+
+    .footer-bottom a {
+      font-size: 0.76rem;
+      color: var(--text-light);
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .footer-bottom a:hover {
+      color: var(--gold);
+    }
 
 
-  /* ── ADDRESS TYPE BADGE ── */
-  .addr-type-badge {
-    display: inline-block;
-    font-size: 0.65rem; font-weight: 500;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    background: #fdf4e3; color: var(--gold);
-    border: 1px solid var(--gold-pale);
-    padding: 2px 8px; border-radius: 20px;
-    margin-left: 6px; vertical-align: middle;
-  }
-  /* ── EDIT BUTTON ── */
-  .edit-addr-btn {
-    flex-shrink: 0; width: 34px; height: 34px;
-    border: 1.5px solid var(--border); border-radius: 8px;
-    background: var(--white); cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: border-color 0.2s, background 0.2s;
-    margin-left: 8px; align-self: center;
-  }
-  .edit-addr-btn svg { width: 15px; height: 15px; stroke: var(--text-mid); fill: none; stroke-width: 1.8; transition: stroke 0.2s; }
-  .edit-addr-btn:hover { border-color: var(--gold); background: #fdf8f0; }
-  .edit-addr-btn:hover svg { stroke: var(--gold); }
+    /* ── ADDRESS TYPE BADGE ── */
+    .addr-type-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: #fdf4e3;
+      color: var(--gold);
+      border: 1px solid var(--gold-pale);
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
 
-  /* ── MODAL OVERLAY ── */
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0; z-index: 999;
-    background: rgba(44,36,22,0.45);
-    backdrop-filter: blur(3px);
-    align-items: center; justify-content: center;
-    padding: 20px;
-  }
-  .modal-overlay.open { display: flex; }
+    /* ── EDIT BUTTON ── */
+    .edit-addr-btn {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, background 0.2s;
+      margin-left: 8px;
+      align-self: center;
+    }
 
-  .modal {
-    background: var(--white);
-    border-radius: 16px;
-    width: 100%; max-width: 560px;
-    max-height: 90vh; overflow-y: auto;
-    box-shadow: 0 24px 80px rgba(44,36,22,0.2);
-    animation: slideUp 0.28s ease;
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    .edit-addr-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--text-mid);
+      fill: none;
+      stroke-width: 1.8;
+      transition: stroke 0.2s;
+    }
 
-  .modal-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 24px 28px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .modal-title {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 1rem; font-weight: 500; color: var(--text-dark);
-  }
-  .modal-title svg { width: 18px; height: 18px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
-  .modal-close {
-    width: 32px; height: 32px; border-radius: 50%;
-    border: 1px solid var(--border); background: none;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: background 0.2s, border-color 0.2s;
-  }
-  .modal-close:hover { background: var(--cream); border-color: var(--text-light); }
-  .modal-close svg { width: 14px; height: 14px; stroke: var(--text-mid); fill: none; stroke-width: 2; }
+    .edit-addr-btn:hover {
+      border-color: var(--gold);
+      background: #fdf8f0;
+    }
 
-  .modal-body { padding: 24px 28px; }
+    .edit-addr-btn:hover svg {
+      stroke: var(--gold);
+    }
 
-  /* Address type tabs */
-  .type-tabs {
-    display: flex; gap: 10px; margin-bottom: 22px;
-  }
-  .type-tab {
-    flex: 1; padding: 9px 0;
-    border: 1.5px solid var(--border); border-radius: 8px;
-    background: none; cursor: pointer;
-    font-family: 'Jost', sans-serif; font-size: 0.82rem;
-    font-weight: 400; color: var(--text-mid);
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    transition: border-color 0.2s, color 0.2s, background 0.2s;
-  }
-  .type-tab svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.5; }
-  .type-tab.active {
-    border-color: var(--gold); color: var(--gold);
-    background: #fdf8f0;
-  }
-  .type-tab:hover:not(.active) { border-color: var(--text-light); color: var(--text-dark); }
+    /* ── MODAL OVERLAY ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(44, 36, 22, 0.45);
+      backdrop-filter: blur(3px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
-  /* Form grid */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-grid .full { grid-column: 1 / -1; }
+    .modal-overlay.open {
+      display: flex;
+    }
 
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-label {
-    font-size: 0.76rem; font-weight: 500;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--text-mid);
-  }
-  .form-label span { color: #e05; margin-left: 2px; }
-  .form-input, .form-select {
-    width: 100%; border: 1.5px solid var(--border); border-radius: 8px;
-    padding: 11px 14px;
-    font-family: 'Jost', sans-serif; font-size: 0.88rem; font-weight: 300;
-    color: var(--text-dark); background: var(--white);
-    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
-    appearance: none; -webkit-appearance: none;
-  }
-  .form-input:focus, .form-select:focus {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(184,146,42,0.1);
-  }
-  .form-input.error { border-color: #e05; }
-  .form-input::placeholder { color: var(--text-light); }
-  .form-error { font-size: 0.73rem; color: #e05; margin-top: 2px; display: none; }
-  .form-error.show { display: block; }
+    .modal {
+      background: var(--white);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(44, 36, 22, 0.2);
+      animation: slideUp 0.28s ease;
+    }
 
-  /* Select wrapper */
-  .select-wrap { position: relative; }
-  .select-wrap::after {
-    content: '';
-    position: absolute; right: 14px; top: 50%;
-    transform: translateY(-50%);
-    border: 5px solid transparent;
-    border-top-color: var(--text-light);
-    pointer-events: none;
-  }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
 
-  /* Default checkbox */
-  .default-row {
-    display: flex; align-items: center; gap: 10px;
-    margin-top: 18px; cursor: pointer;
-  }
-  .custom-checkbox {
-    width: 18px; height: 18px; border-radius: 4px;
-    border: 1.5px solid var(--border); background: var(--white);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: background 0.2s, border-color 0.2s;
-  }
-  .custom-checkbox.checked { background: var(--gold); border-color: var(--gold); }
-  .custom-checkbox svg { width: 11px; height: 11px; stroke: var(--white); fill: none; stroke-width: 2.5; display: none; }
-  .custom-checkbox.checked svg { display: block; }
-  .default-label { font-size: 0.84rem; color: var(--text-mid); user-select: none; }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  /* Modal footer */
-  .modal-footer {
-    padding: 20px 28px 24px;
-    border-top: 1px solid var(--border);
-    display: flex; gap: 12px; justify-content: flex-end;
-  }
-  .btn-cancel {
-    padding: 11px 28px; border-radius: 50px;
-    border: 1.5px solid var(--border); background: none;
-    font-family: 'Jost', sans-serif; font-size: 0.82rem;
-    color: var(--text-mid); cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .btn-cancel:hover { border-color: var(--text-mid); color: var(--text-dark); }
-  .btn-save {
-    padding: 11px 32px; border-radius: 50px;
-    border: none; background: var(--gold);
-    font-family: 'Jost', sans-serif; font-size: 0.82rem;
-    color: var(--white); cursor: pointer;
-    display: flex; align-items: center; gap: 8px;
-    transition: background 0.2s, transform 0.15s;
-  }
-  .btn-save:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-save:disabled { background: var(--border); cursor: not-allowed; transform: none; }
-  .btn-save svg { width: 15px; height: 15px; stroke: var(--white); fill: none; stroke-width: 2; }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid var(--border);
+    }
 
-  /* Toast */
-  .toast {
-    position: fixed; bottom: 28px; right: 28px; z-index: 9999;
-    background: var(--text-dark); color: var(--white);
-    padding: 14px 22px; border-radius: 10px;
-    font-size: 0.84rem; display: flex; align-items: center; gap: 10px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    transform: translateY(80px); opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    pointer-events: none;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast.success .toast-icon { color: #4ade80; }
-  .toast.error .toast-icon { color: #f87171; }
-  .toast-icon { font-size: 1rem; }
-  main { padding-top: 80px; }
-</style>
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .modal-title svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .modal-close:hover {
+      background: var(--cream);
+      border-color: var(--text-light);
+    }
+
+    .modal-close svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--text-mid);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .modal-body {
+      padding: 24px 28px;
+    }
+
+    /* Address type tabs */
+    .type-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .type-tab {
+      flex: 1;
+      padding: 9px 0;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: none;
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: var(--text-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+
+    .type-tab svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .type-tab.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: #fdf8f0;
+    }
+
+    .type-tab:hover:not(.active) {
+      border-color: var(--text-light);
+      color: var(--text-dark);
+    }
+
+    /* Form grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+    }
+
+    .form-label span {
+      color: #e05;
+      margin-left: 2px;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--text-dark);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184, 146, 42, 0.1);
+    }
+
+    .form-input.error {
+      border-color: #e05;
+    }
+
+    .form-input::placeholder {
+      color: var(--text-light);
+    }
+
+    .form-error {
+      font-size: 0.73rem;
+      color: #e05;
+      margin-top: 2px;
+      display: none;
+    }
+
+    .form-error.show {
+      display: block;
+    }
+
+    /* Select wrapper */
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--text-light);
+      pointer-events: none;
+    }
+
+    /* Default checkbox */
+    .default-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      cursor: pointer;
+    }
+
+    .custom-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .custom-checkbox.checked {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .custom-checkbox svg {
+      width: 11px;
+      height: 11px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 2.5;
+      display: none;
+    }
+
+    .custom-checkbox.checked svg {
+      display: block;
+    }
+
+    .default-label {
+      font-size: 0.84rem;
+      color: var(--text-mid);
+      user-select: none;
+    }
+
+    /* Modal footer */
+    .modal-footer {
+      padding: 20px 28px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .btn-cancel {
+      padding: 11px 28px;
+      border-radius: 50px;
+      border: 1.5px solid var(--border);
+      background: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-cancel:hover {
+      border-color: var(--text-mid);
+      color: var(--text-dark);
+    }
+
+    .btn-save {
+      padding: 11px 32px;
+      border-radius: 50px;
+      border: none;
+      background: var(--gold);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      color: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-save:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-save:disabled {
+      background: var(--border);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-save svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9999;
+      background: var(--text-dark);
+      color: var(--white);
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success .toast-icon {
+      color: #4ade80;
+    }
+
+    .toast.error .toast-icon {
+      color: #f87171;
+    }
+
+    .toast-icon {
+      font-size: 1rem;
+    }
+
+    main {
+      padding-top: 80px;
+    }
+
+    .readonly-field {
+      background-color: #f3f3f3 !important;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
+
 <body>
 
-<%- include('../../partials/user/header') %>
+  <%- include('../../partials/user/header') %>
 
-<!-- MAIN -->
-<main>
-  <h1 class="page-title">Secure Checkout</h1>
+    <!-- MAIN -->
+    <main>
+      <h1 class="page-title">Secure Checkout</h1>
 
-  <!-- STEPPER -->
-  <div class="stepper">
-    <div class="step active">
-      <div class="step-num">1</div>
-      <span class="step-label">Shipping</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <span class="step-label">Payment</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <span class="step-label">Review</span>
-    </div>
-  </div>
-
-  <!-- LAYOUT -->
-  <div class="checkout-layout">
-
-    <!-- LEFT: Shipping Form -->
-    <div class="card">
-
-      <!-- Shipping Address -->
-      <div class="section-header">
-        <div class="section-title-row">
-          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Shipping Address
+      <!-- STEPPER -->
+      <div class="stepper">
+        <div class="step active">
+          <div class="step-num">1</div>
+          <span class="step-label">Shipping</span>
         </div>
-        <a href="#" class="add-new" id="openModalBtn">+ Add New</a>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <span class="step-label">Payment</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <span class="step-label">Review</span>
+        </div>
       </div>
 
-      <% if (addresses && addresses.length > 0) { %>
-        <% addresses.forEach((addr, index) => { %>
-          <div class="address-card <%= index === 0 ? 'selected' : '' %>" style="<%= index > 0 ? 'margin-top: 16px;' : '' %>"
-            data-id="<%= addr._id %>"
-            data-type="<%= addr.type %>"
-            data-fullname="<%= addr.fullName %>"
-            data-phone="<%= addr.phone %>"
-            data-addressline="<%= addr.addressLine %>"
-            data-city="<%= addr.city %>"
-            data-state="<%= addr.state %>"
-            data-pincode="<%= addr.pincode %>"
-            data-isdefault="<%= addr.isDefault %>"
-          >
-            <div class="address-radio"></div>
-            <div class="address-info">
-              <div class="address-name"><%= addr.fullName %> <span class="addr-type-badge"><%= addr.type %></span></div>
-              <div class="address-detail">
-                <%= addr.addressLine %><br/>
-                <%= addr.city %>, <%= addr.state %>, <%= addr.pincode %><br/>
-                India<br/>
-                +91 <%= addr.phone %>
-              </div>
+      <!-- LAYOUT -->
+      <div class="checkout-layout">
+
+        <!-- LEFT: Shipping Form -->
+        <div class="card">
+
+          <!-- Shipping Address -->
+          <div class="section-header">
+            <div class="section-title-row">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              Shipping Address
             </div>
-            <button class="edit-addr-btn" title="Edit address" aria-label="Edit address">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2-2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </button>
+            <a href="#" class="add-new" id="openModalBtn">+ Add New</a>
           </div>
-        <% }) %>
-      <% } else { %>
-        <p style="font-size: 0.9rem; color: var(--text-mid);">No addresses found. Please add a new address.</p>
-      <% } %>
 
-      <div class="divider"></div>
+          <% if (addresses && addresses.length> 0) { %>
+            <% addresses.forEach((addr, index)=> { %>
+              <div class="address-card <%= index === 0 ? 'selected' : '' %>"
+                style="<%= index > 0 ? 'margin-top: 16px;' : '' %>" data-id="<%= addr._id %>"
+                data-type="<%= addr.type %>" data-fullname="<%= addr.fullName %>" data-phone="<%= addr.phone %>"
+                data-addressline="<%= addr.addressLine %>" data-city="<%= addr.city %>" data-state="<%= addr.state %>"
+                data-pincode="<%= addr.pincode %>" data-district="<%= addr.district %>" data-isdefault="<%= addr.isDefault %>" >
+                <div class="address-radio"></div>
+                <div class="address-info">
+                  <div class="address-name">
+                    <%= addr.fullName %> <span class="addr-type-badge">
+                        <%= addr.type %>
+                      </span>
+                  </div>
+                  <div class="address-detail">
+                    <%= addr.addressLine %><br />
+                      <%= addr.city %>, <%= addr.state %>, <%= addr.pincode %><br />
+                            India<br />
+                            +91 <%= addr.phone %>
+                  </div>
+                </div>
+                <button class="edit-addr-btn" title="Edit address" aria-label="Edit address">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                </button>
+              </div>
+              <% }) %>
+                <% } else { %>
+                  <p style="font-size: 0.9rem; color: var(--text-mid);">No addresses found. Please add a new address.
+                  </p>
+                  <% } %>
 
-      <!-- Shipping Method -->
-      <div class="section-header" style="margin-bottom:18px;">
-        <div class="section-title-row">
-          <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          Shipping Method
+                    <div class="divider"></div>
+
+                    <!-- Shipping Method -->
+                    <div class="section-header" style="margin-bottom:18px;">
+                      <div class="section-title-row">
+                        <svg viewBox="0 0 24 24">
+                          <rect x="1" y="3" width="15" height="13" />
+                          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                          <circle cx="5.5" cy="18.5" r="2.5" />
+                          <circle cx="18.5" cy="18.5" r="2.5" />
+                        </svg>
+                        Shipping Method
+                      </div>
+                    </div>
+
+                    <div class="method-card selected">
+                      <div class="method-radio"></div>
+                      <div class="method-info">
+                        <div class="method-name">Standard Shipping</div>
+                        <div class="method-days">3–5 Business Days</div>
+                      </div>
+                      <div class="method-price">Free</div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- Continue -->
+                    <div class="continue-row">
+                      <button id="continueBtn" class="btn-continue">
+                        Continue
+                        <svg viewBox="0 0 24 24">
+                          <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                      </button>
+                    </div>
         </div>
-      </div>
 
-      <div class="method-card selected">
-        <div class="method-radio"></div>
-        <div class="method-info">
-          <div class="method-name">Standard Shipping</div>
-          <div class="method-days">3–5 Business Days</div>
-        </div>
-        <div class="method-price">Free</div>
-      </div>
+        <!-- RIGHT: Order Summary -->
+        <div class="card">
+          <div class="summary-title">In Your Cart</div>
 
-      <div class="divider"></div>
-
-      <!-- Continue -->
-      <div class="continue-row">
-        <button id="continueBtn" class="btn-continue">
-          Continue
-          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- RIGHT: Order Summary -->
-    <div class="card">
-      <div class="summary-title">In Your Cart</div>
-
-      <% 
-        let subtotal = 0;
-        if (cart && cart.items && cart.items.length > 0) {
-          cart.items.forEach(item => {
+          <% let subtotal=0; if (cart && cart.items && cart.items.length> 0) {
+            cart.items.forEach(item => {
             const product = item.productId;
             if (!product) return;
             const price = product.discountPrice || product.basePrice;
             subtotal += price * item.qty;
-            const variant = product.variants ? product.variants.find(v => v._id.toString() === item.variantId.toString()) : null;
-            const imageUrl = variant && variant.images && variant.images.length > 0 ? variant.images[0].url : 'https://via.placeholder.com/60';
+            const variant = product.variants ? product.variants.find(v => v._id.toString() ===
+            item.variantId.toString()) : null;
+            const imageUrl = variant && variant.images && variant.images.length > 0 ? variant.images[0].url :
+            'https://via.placeholder.com/60';
             const variantName = variant ? variant.color : '';
-      %>
-      <div class="cart-item">
-        <div class="cart-thumb">
-          <img src="<%= imageUrl %>" alt="<%= product.name %>" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
+            %>
+            <div class="cart-item">
+              <div class="cart-thumb">
+                <img src="<%= imageUrl %>" alt="<%= product.name %>"
+                  style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
+              </div>
+              <div class="cart-item-info">
+                <div class="cart-item-name">
+                  <%= product.name %>
+                    <%= variantName ? `(${variantName})` : '' %>
+                </div>
+                <div class="cart-item-qty">Qty: <%= item.qty %>
+                </div>
+                <div class="cart-item-price" style="margin-top:4px;">₹<%= (price * item.qty).toLocaleString('en-IN') %>
+                </div>
+              </div>
+            </div>
+            <% }); } %>
+
+              <!-- Totals -->
+              <div class="totals">
+                <div class="total-row">
+                  <span class="label">Subtotal</span>
+                  <span class="value">₹<%= subtotal.toLocaleString('en-IN') %></span>
+                </div>
+                <div class="total-row">
+                  <span class="label">Shipping</span>
+                  <span class="value free">Free</span>
+                </div>
+                <div class="total-final">
+                  <span class="label">Total</span>
+                  <span class="amount">₹<%= subtotal.toLocaleString('en-IN') %></span>
+                </div>
+              </div>
         </div>
-        <div class="cart-item-info">
-          <div class="cart-item-name"><%= product.name %> <%= variantName ? `(${variantName})` : '' %></div>
-          <div class="cart-item-qty">Qty: <%= item.qty %></div>
-          <div class="cart-item-price" style="margin-top:4px;">₹<%= (price * item.qty).toLocaleString('en-IN') %></div>
+
+      </div><!-- end checkout-layout -->
+    </main>
+
+    <%- include('../../partials/user/footer') %>
+
+
+
+
+      <!-- MODAL -->
+      <div class="modal-overlay" id="addressModal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+
+          <div class="modal-header">
+            <div class="modal-title">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span id="modalTitle">Add New Address</span>
+            </div>
+            <button class="modal-close" id="closeModalBtn" aria-label="Close">
+              <svg viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="modal-body">
+
+            <!-- Address Type Tabs -->
+            <div class="type-tabs" id="typeTabs">
+              <button class="type-tab active" data-value="Home">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                Home
+              </button>
+              <button class="type-tab" data-value="Office">
+                <svg viewBox="0 0 24 24">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                </svg>
+                Office
+              </button>
+              <button class="type-tab" data-value="Other">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                Other
+              </button>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="form-grid">
+
+              <div class="form-group full">
+                <label class="form-label" for="fullName">Full Name <span>*</span></label>
+                <input class="form-input" type="text" id="fullName" placeholder="Enter your full name"
+                  autocomplete="name" />
+                <span class="form-error" id="fullNameErr">Please enter your full name (min 3 characters).</span>
+              </div>
+
+              <div class="form-group full">
+                <label class="form-label" for="phone">Phone Number <span>*</span></label>
+                <input class="form-input" type="tel" id="phone" placeholder="10-digit mobile number" maxlength="10"
+                  autocomplete="tel" />
+                <span class="form-error" id="phoneErr">Enter a valid 10-digit Indian mobile number.</span>
+              </div>
+
+              <div class="form-group full">
+                <label class="form-label" for="addressLine">Address Line <span>*</span></label>
+                <input class="form-input" type="text" id="addressLine" placeholder="House no., Street, Area"
+                  autocomplete="street-address" />
+                <span class="form-error" id="addressLineErr">Please enter a full address (min 10 characters).</span>
+              </div>
+
+              <!-- City & Pincode -->
+              <div class="form-group">
+                <label class="form-label" for="city">City <span>*</span></label>
+                <input class="form-input" type="text" id="city" placeholder="City">
+                <span class="form-error" id="cityErr">Please enter a valid city.</span>
+              </div>
+
+
+              <div class="form-group">
+                <label class="form-label" for="pincode">Pincode <span>*</span></label>
+                <input class="form-input" type="text" id="pincode" maxlength="6" placeholder="6-digit pincode">
+                <span class="form-error" id="pincodeErr">Enter a valid 6-digit pincode.</span>
+              </div>
+
+              <!-- District & State -->
+              <div class="form-grid">
+
+
+                <div class="form-group">
+
+                  <label class="form-label">
+                    District <span>*</span>
+                  </label>
+
+                  <input class="form-input readonly-field" type="text" id="district" placeholder="Auto filled" readonly>
+                  <span class="form-error" id="districtErr">Enter a valid pincode to auto-fill district.</span>
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                  <label class="form-label">
+                    State <span>*</span>
+                  </label>
+
+                  <input class="form-input readonly-field" type="text" id="state" placeholder="Auto filled" readonly>
+                  <span class="form-error" id="stateErr">Enter a valid pincode to auto-fill state.</span>
+
+                </div>
+
+
+              </div>
+
+            </div>
+
+            <!-- Set as Default -->
+            <label class="default-row" id="defaultRow">
+              <div class="custom-checkbox" id="defaultCheck">
+                <svg viewBox="0 0 12 12">
+                  <polyline points="2 6 5 9 10 3" />
+                </svg>
+              </div>
+              <span class="default-label">Set as default address</span>
+            </label>
+
+          </div><!-- /modal-body -->
+
+          <div class="modal-footer">
+            <button class="btn-cancel" id="cancelBtn">Cancel</button>
+            <button class="btn-save" id="saveBtn">
+              <svg viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Save Address
+            </button>
+          </div>
+
         </div>
       </div>
-      <% 
+
+      <!-- TOAST -->
+      <div class="toast" id="toast">
+        <span class="toast-icon" id="toastIcon">✓</span>
+        <span id="toastMsg">Address saved successfully!</span>
+      </div>
+
+      <script>
+        const overlay = document.getElementById('addressModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const defaultCheck = document.getElementById('defaultCheck');
+        const defaultRow = document.getElementById('defaultRow');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMsg');
+        const toastIcon = document.getElementById('toastIcon');
+        const modalTitle = document.getElementById('modalTitle');
+
+        let selectedType = 'Home';
+        let isDefault = false;
+        let editId = null;
+
+        function openModal() {
+          editId = null;
+          modalTitle.textContent = 'Add New Address';
+          saveBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Save Address';
+          overlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function openEditModal(card) {
+          editId = card.dataset.id;
+          modalTitle.textContent = 'Edit Address';
+          saveBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Update Address';
+
+          document.getElementById('fullName').value = card.dataset.fullname || '';
+          document.getElementById('phone').value = card.dataset.phone || '';
+          document.getElementById('addressLine').value = card.dataset.addressline || '';
+          document.getElementById('city').value = card.dataset.city || '';
+          document.getElementById('pincode').value = card.dataset.pincode || '';
+          document.getElementById('state').value = card.dataset.state || '';
+          document.getElementById('district').value = card.dataset.district || '';
+
+          // clear any leftover error states from a previous form attempt
+          Object.keys(rules).forEach(function (k) {
+            document.getElementById(rules[k].el).classList.remove('error');
+            document.getElementById(rules[k].err).classList.remove('show');
+          });
+
+          selectedType = card.dataset.type || 'Home';
+          document.querySelectorAll('.type-tab').forEach(t => {
+            t.classList.toggle('active', t.dataset.value === selectedType);
+          });
+
+          isDefault = card.dataset.isdefault === 'true';
+          defaultCheck.classList.toggle('checked', isDefault);
+
+          // keep the pincode-duplicate-check guard in sync so re-entering the
+          // same pincode while editing still re-validates if needed
+          lastCheckedPincode = card.dataset.pincode || '';
+
+          overlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+          overlay.classList.remove('open');
+          document.body.style.overflow = '';
+          resetForm();
+        }
+
+        openBtn.addEventListener('click', e => { e.preventDefault(); openModal(); });
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        document.addEventListener('click', e => {
+          const editBtn = e.target.closest('.edit-addr-btn');
+          if (editBtn) {
+            e.stopPropagation();
+            const card = editBtn.closest('.address-card');
+            if (card) openEditModal(card);
+            return;
+          }
+
+          // Address card selection
+          const card = e.target.closest('.address-card');
+          if (card) {
+            document.querySelectorAll('.address-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+          }
+        });
+
+        document.getElementById('continueBtn').addEventListener('click', () => {
+          const selectedCard = document.querySelector('.address-card.selected');
+          if (!selectedCard) {
+            showToast('Please select a shipping address.', 'error');
+            return;
+          }
+          const addressId = selectedCard.dataset.id;
+
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = '/checkout/payment';
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = 'addressId';
+          input.value = addressId;
+          form.appendChild(input);
+          document.body.appendChild(form);
+          form.submit();
+        });
+
+        document.getElementById('typeTabs').addEventListener('click', e => {
+          const tab = e.target.closest('.type-tab');
+          if (!tab) return;
+          document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          selectedType = tab.dataset.value;
+        });
+
+        defaultRow.addEventListener('click', () => {
+          isDefault = !isDefault;
+          defaultCheck.classList.toggle('checked', isDefault);
+        });
+
+        // NOTE: every key here must have a matching `err` <span id="..."> in the
+        // HTML above, otherwise validateAll() will throw and silently break the
+        // save button. Thresholds are kept in sync with the backend controller
+        // (addAddress / editAddress) so the form never accepts something the
+        // server will reject.
+        const rules = {
+          fullName: { el: 'fullName', err: 'fullNameErr', test: v => v.trim().length >= 3 },
+          phone: { el: 'phone', err: 'phoneErr', test: v => /^[6-9]\d{9}$/.test(v.trim()) },
+          addressLine: { el: 'addressLine', err: 'addressLineErr', test: v => v.trim().length >= 10 },
+          city: { el: 'city', err: 'cityErr', test: v => v.trim().length >= 2 },
+          pincode: { el: 'pincode', err: 'pincodeErr', test: v => /^\d{6}$/.test(v.trim()) },
+          district: { el: 'district', err: 'districtErr', test: v => v.trim().length >= 2 },
+          state: { el: 'state', err: 'stateErr', test: v => v.trim().length >= 2 },
+        };
+
+        function validateAll() {
+          let valid = true;
+          for (const key in rules) {
+            const r = rules[key];
+            const el = document.getElementById(r.el);
+            const err = document.getElementById(r.err);
+            const ok = r.test(el.value);
+            el.classList.toggle('error', !ok);
+            if (err) err.classList.toggle('show', !ok);
+            if (!ok) valid = false;
+          }
+          return valid;
+        }
+
+        for (const key in rules) {
+          const r = rules[key];
+          document.getElementById(r.el).addEventListener('input', () => {
+            const el = document.getElementById(r.el);
+            if (r.test(el.value)) {
+              el.classList.remove('error');
+              document.getElementById(r.err).classList.remove('show');
+            }
           });
         }
-      %>
 
-      <!-- Totals -->
-      <div class="totals">
-        <div class="total-row">
-          <span class="label">Subtotal</span>
-          <span class="value">₹<%= subtotal.toLocaleString('en-IN') %></span>
-        </div>
-        <div class="total-row">
-          <span class="label">Shipping</span>
-          <span class="value free">Free</span>
-        </div>
-        <div class="total-final">
-          <span class="label">Total</span>
-          <span class="amount">₹<%= subtotal.toLocaleString('en-IN') %></span>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- end checkout-layout -->
-</main>
-
-<%- include('../../partials/user/footer') %>
-
-
-
-
-<!-- MODAL -->
-<div class="modal-overlay" id="addressModal">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-
-    <div class="modal-header">
-      <div class="modal-title">
-        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <span id="modalTitle">Add New Address</span>
-      </div>
-      <button class="modal-close" id="closeModalBtn" aria-label="Close">
-        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-
-    <div class="modal-body">
-
-      <!-- Address Type Tabs -->
-      <div class="type-tabs" id="typeTabs">
-        <button class="type-tab active" data-value="Home">
-          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Home
-        </button>
-        <button class="type-tab" data-value="Office">
-          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-          Office
-        </button>
-        <button class="type-tab" data-value="Other">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          Other
-        </button>
-      </div>
-
-      <!-- Form Fields -->
-      <div class="form-grid">
-
-        <div class="form-group full">
-          <label class="form-label" for="fullName">Full Name <span>*</span></label>
-          <input class="form-input" type="text" id="fullName" placeholder="Enter your full name" autocomplete="name"/>
-          <span class="form-error" id="fullNameErr">Please enter your full name.</span>
-        </div>
-
-        <div class="form-group full">
-          <label class="form-label" for="phone">Phone Number <span>*</span></label>
-          <input class="form-input" type="tel" id="phone" placeholder="10-digit mobile number" maxlength="10" autocomplete="tel"/>
-          <span class="form-error" id="phoneErr">Enter a valid 10-digit Indian mobile number.</span>
-        </div>
-
-        <div class="form-group full">
-          <label class="form-label" for="addressLine">Address Line <span>*</span></label>
-          <input class="form-input" type="text" id="addressLine" placeholder="House no., Street, Area" autocomplete="street-address"/>
-          <span class="form-error" id="addressLineErr">Please enter your address.</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="city">City <span>*</span></label>
-          <input class="form-input" type="text" id="city" placeholder="City" autocomplete="address-level2"/>
-          <span class="form-error" id="cityErr">Please enter your city.</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="pincode">Pincode <span>*</span></label>
-          <input class="form-input" type="text" id="pincode" placeholder="6-digit pincode" maxlength="6" autocomplete="postal-code"/>
-          <span class="form-error" id="pincodeErr">Enter a valid 6-digit pincode.</span>
-        </div>
-
-        <div class="form-group full">
-          <label class="form-label" for="state">State <span>*</span></label>
-          <div class="select-wrap">
-            <select class="form-select form-input" id="state" autocomplete="address-level1">
-              <option value="">Select State</option>
-              <option>Andhra Pradesh</option><option>Arunachal Pradesh</option>
-              <option>Assam</option><option>Bihar</option><option>Chhattisgarh</option>
-              <option>Goa</option><option>Gujarat</option><option>Haryana</option>
-              <option>Himachal Pradesh</option><option>Jharkhand</option>
-              <option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option>
-              <option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option>
-              <option>Mizoram</option><option>Nagaland</option><option>Odisha</option>
-              <option>Punjab</option><option>Rajasthan</option><option>Sikkim</option>
-              <option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option>
-              <option>Uttar Pradesh</option><option>Uttarakhand</option>
-              <option>West Bengal</option>
-              <option>Delhi</option><option>Jammu & Kashmir</option>
-              <option>Ladakh</option><option>Puducherry</option>
-            </select>
-          </div>
-          <span class="form-error" id="stateErr">Please select your state.</span>
-        </div>
-
-      </div>
-
-      <!-- Set as Default -->
-      <label class="default-row" id="defaultRow">
-        <div class="custom-checkbox" id="defaultCheck">
-          <svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg>
-        </div>
-        <span class="default-label">Set as default address</span>
-      </label>
-
-    </div><!-- /modal-body -->
-
-    <div class="modal-footer">
-      <button class="btn-cancel" id="cancelBtn">Cancel</button>
-      <button class="btn-save" id="saveBtn">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        Save Address
-      </button>
-    </div>
-
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <span class="toast-icon" id="toastIcon">✓</span>
-  <span id="toastMsg">Address saved successfully!</span>
-</div>
-
-<script>
-  const overlay      = document.getElementById('addressModal');
-  const openBtn      = document.getElementById('openModalBtn');
-  const closeBtn     = document.getElementById('closeModalBtn');
-  const cancelBtn    = document.getElementById('cancelBtn');
-  const saveBtn      = document.getElementById('saveBtn');
-  const defaultCheck = document.getElementById('defaultCheck');
-  const defaultRow   = document.getElementById('defaultRow');
-  const toast        = document.getElementById('toast');
-  const toastMsg     = document.getElementById('toastMsg');
-  const toastIcon    = document.getElementById('toastIcon');
-  const modalTitle   = document.getElementById('modalTitle');
-
-  let selectedType = 'Home';
-  let isDefault    = false;
-  let editId       = null;
-
-  function openModal() {
-    editId = null;
-    modalTitle.textContent = 'Add New Address';
-    saveBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Save Address';
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function openEditModal(card) {
-    editId = card.dataset.id;
-    modalTitle.textContent = 'Edit Address';
-    saveBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Update Address';
-
-    document.getElementById('fullName').value    = card.dataset.fullname    || '';
-    document.getElementById('phone').value       = card.dataset.phone       || '';
-    document.getElementById('addressLine').value = card.dataset.addressline || '';
-    document.getElementById('city').value        = card.dataset.city        || '';
-    document.getElementById('pincode').value     = card.dataset.pincode     || '';
-    document.getElementById('state').value       = card.dataset.state       || '';
-
-    selectedType = card.dataset.type || 'Home';
-    document.querySelectorAll('.type-tab').forEach(t => {
-      t.classList.toggle('active', t.dataset.value === selectedType);
-    });
-
-    isDefault = card.dataset.isdefault === 'true';
-    defaultCheck.classList.toggle('checked', isDefault);
-
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
-    resetForm();
-  }
-
-  openBtn.addEventListener('click', e => { e.preventDefault(); openModal(); });
-  closeBtn.addEventListener('click', closeModal);
-  cancelBtn.addEventListener('click', closeModal);
-  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-  document.addEventListener('click', e => {
-    const editBtn = e.target.closest('.edit-addr-btn');
-    if (editBtn) {
-      e.stopPropagation();
-      const card = editBtn.closest('.address-card');
-      if (card) openEditModal(card);
-      return;
-    }
-    
-    // Address card selection
-    const card = e.target.closest('.address-card');
-    if (card) {
-      document.querySelectorAll('.address-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-    }
-  });
-
-  document.getElementById('continueBtn').addEventListener('click', () => {
-    const selectedCard = document.querySelector('.address-card.selected');
-    if (!selectedCard) {
-      showToast('Please select a shipping address.', 'error');
-      return;
-    }
-    const addressId = selectedCard.dataset.id;
-    window.location.href = '/checkout/payment?addressId=' + addressId;
-  });
-
-  document.getElementById('typeTabs').addEventListener('click', e => {
-    const tab = e.target.closest('.type-tab');
-    if (!tab) return;
-    document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    selectedType = tab.dataset.value;
-  });
-
-  defaultRow.addEventListener('click', () => {
-    isDefault = !isDefault;
-    defaultCheck.classList.toggle('checked', isDefault);
-  });
-
-  const rules = {
-    fullName:    { el: 'fullName',    err: 'fullNameErr',    test: v => v.trim().length >= 2 },
-    phone:       { el: 'phone',       err: 'phoneErr',       test: v => /^[6-9]\d{9}$/.test(v.trim()) },
-    addressLine: { el: 'addressLine', err: 'addressLineErr', test: v => v.trim().length >= 5 },
-    city:        { el: 'city',        err: 'cityErr',        test: v => v.trim().length >= 2 },
-    pincode:     { el: 'pincode',     err: 'pincodeErr',     test: v => /^\d{6}$/.test(v.trim()) },
-    state:       { el: 'state',       err: 'stateErr',       test: v => v !== '' },
-  };
-
-  function validateAll() {
-    let valid = true;
-    for (const key in rules) {
-      const r   = rules[key];
-      const el  = document.getElementById(r.el);
-      const err = document.getElementById(r.err);
-      const ok  = r.test(el.value);
-      el.classList.toggle('error', !ok);
-      err.classList.toggle('show', !ok);
-      if (!ok) valid = false;
-    }
-    return valid;
-  }
-
-  for (const key in rules) {
-    const r = rules[key];
-    document.getElementById(r.el).addEventListener('input', () => {
-      const el = document.getElementById(r.el);
-      if (r.test(el.value)) {
-        el.classList.remove('error');
-        document.getElementById(r.err).classList.remove('show');
-      }
-    });
-  }
-
-  function showToast(msg, type) {
-    type = type || 'success';
-    toastMsg.textContent = msg;
-    toastIcon.textContent = type === 'success' ? '\u2713' : '\u2715';
-    toast.className = 'toast ' + type;
-    requestAnimationFrame(() => toast.classList.add('show'));
-    setTimeout(() => toast.classList.remove('show'), 3500);
-  }
-
-  function resetForm() {
-    ['fullName','phone','addressLine','city','pincode'].forEach(function(id) {
-      document.getElementById(id).value = '';
-      document.getElementById(id).classList.remove('error');
-    });
-    document.getElementById('state').value = '';
-    document.getElementById('state').classList.remove('error');
-    Object.keys(rules).forEach(function(k) { document.getElementById(rules[k].err).classList.remove('show'); });
-    document.querySelectorAll('.type-tab').forEach(function(t, i) { t.classList.toggle('active', i === 0); });
-    selectedType = 'Home';
-    isDefault    = false;
-    editId       = null;
-    defaultCheck.classList.remove('checked');
-  }
-
-  saveBtn.addEventListener('click', async function() {
-    if (!validateAll()) return;
-
-    var payload = {
-      type:        selectedType,
-      fullName:    document.getElementById('fullName').value.trim(),
-      phone:       document.getElementById('phone').value.trim(),
-      addressLine: document.getElementById('addressLine').value.trim(),
-      city:        document.getElementById('city').value.trim(),
-      state:       document.getElementById('state').value,
-      pincode:     document.getElementById('pincode').value.trim(),
-      isDefault:   isDefault,
-    };
-
-    var isEdit  = editId !== null;
-    var url     = isEdit ? ('/addresses/edit/' + editId) : '/addresses/add';
-    var method  = isEdit ? 'PUT' : 'POST';
-
-    saveBtn.disabled = true;
-    saveBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> Saving\u2026';
-
-    try {
-      var res = await fetch(url, {
-        method: method,
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        var data = await res.json().catch(function() { return {}; });
-        var errorMsg = data.message || 'Something went wrong.';
-        if (data.errors && data.errors.length > 0) {
-          errorMsg = data.errors.join(', ');
+        function showToast(msg, type) {
+          type = type || 'success';
+          toastMsg.textContent = msg;
+          toastIcon.textContent = type === 'success' ? '\u2713' : '\u2715';
+          toast.className = 'toast ' + type;
+          requestAnimationFrame(() => toast.classList.add('show'));
+          setTimeout(() => toast.classList.remove('show'), 3500);
         }
-        throw new Error(errorMsg);
-      }
 
-      showToast(isEdit ? 'Address updated successfully!' : 'Address saved successfully!', 'success');
-      setTimeout(() => window.location.reload(), 1000);
+        function resetForm() {
+          ['fullName', 'phone', 'addressLine', 'city', 'pincode'].forEach(function (id) {
+            document.getElementById(id).value = '';
+            document.getElementById(id).classList.remove('error');
+          });
+          document.getElementById('state').value = '';
+          document.getElementById('state').classList.remove('error');
+          document.getElementById('district').value = '';
+          document.getElementById('district').classList.remove('error');
+          Object.keys(rules).forEach(function (k) { document.getElementById(rules[k].err).classList.remove('show'); });
+          document.querySelectorAll('.type-tab').forEach(function (t, i) { t.classList.toggle('active', i === 0); });
+          selectedType = 'Home';
+          isDefault = false;
+          editId = null;
+          defaultCheck.classList.remove('checked');
+          lastCheckedPincode = '';
+        }
 
-    } catch(err) {
-      showToast(err.message || 'Failed to save address.', 'error');
-    } finally {
-      saveBtn.disabled = false;
-      var lbl = isEdit ? 'Update Address' : 'Save Address';
-      saveBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ' + lbl;
-    }
-  });
-</script>
+        saveBtn.addEventListener('click', async function () {
+          if (!validateAll()) return;
+
+          var payload = {
+            type: selectedType,
+            fullName: document.getElementById('fullName').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            addressLine: document.getElementById('addressLine').value.trim(),
+            city: document.getElementById('city').value.trim(),
+            district: document.getElementById('district').value,
+            state: document.getElementById('state').value,
+            pincode: document.getElementById('pincode').value.trim(),
+            isDefault: isDefault,
+        };
+
+          var isEdit = editId !== null;
+          var url = isEdit ? ('/addresses/edit/' + editId) : '/addresses/add';
+          var method = isEdit ? 'PUT' : 'POST';
+
+          saveBtn.disabled = true;
+          saveBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> Saving\u2026';
+
+          try {
+            var res = await fetch(url, {
+              method: method,
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+              var data = await res.json().catch(function () { return {}; });
+              var errorMsg = data.message || 'Something went wrong.';
+              if (data.errors && data.errors.length > 0) {
+                errorMsg = data.errors.join(', ');
+              }
+              throw new Error(errorMsg);
+            }
+
+            showToast(isEdit ? 'Address updated successfully!' : 'Address saved successfully!', 'success');
+            setTimeout(() => window.location.reload(), 1000);
+
+          } catch (err) {
+            showToast(err.message || 'Failed to save address.', 'error');
+          } finally {
+            saveBtn.disabled = false;
+            var lbl = isEdit ? 'Update Address' : 'Save Address';
+            saveBtn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ' + lbl;
+          }
+        });
+
+
+        let lastCheckedPincode = "";
+
+
+        async function checkPincode() {
+
+          const pincode =
+            document.getElementById("pincode").value.trim();
+
+
+
+          if (
+            pincode.length !== 6 ||
+            !/^\d{6}$/.test(pincode)
+          ) {
+            return;
+          }
+
+
+
+          if (pincode === lastCheckedPincode) {
+            return;
+          }
+
+
+          lastCheckedPincode = pincode;
+
+
+
+          try {
+
+
+            const response = await fetch(
+              "/check-pincode/" + pincode
+            );
+
+
+
+            const data = await response.json();
+
+
+
+            if (data.success) {
+
+
+              document.getElementById("district").value =
+                data.data.district;
+              document.getElementById("district").classList.remove('error');
+              document.getElementById("districtErr").classList.remove('show');
+
+
+              document.getElementById("state").value =
+                data.data.state;
+              document.getElementById("state").classList.remove('error');
+              document.getElementById("stateErr").classList.remove('show');
+
+
+            }
+
+
+            else {
+
+
+              document.getElementById("district").value = "";
+              document.getElementById("state").value = "";
+
+
+              showToast(
+                "Invalid pincode",
+                "error"
+              );
+
+
+            }
+
+
+
+          } catch (error) {
+
+
+            console.log(error);
+
+
+            showToast(
+              "Pincode verification failed",
+              "error"
+            );
+
+
+          }
+
+
+
+        }
+
+
+
+        document
+          .getElementById("pincode")
+          .addEventListener(
+            "input",
+            () => {
+
+
+              checkPincode();
+
+
+            });
+      </script>
 
 </body>
-</html>a
+
+</html>

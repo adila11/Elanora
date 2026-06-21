@@ -1741,36 +1741,36 @@
         }
 
         async function submitFullCancel() {
-          const reason = document.getElementById('fullCancelReason').value.trim();
-          if (!reason) {
-            if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
-            return;
-          }
-          const btn = document.querySelector('#fullCancelModal .modal-btn-danger');
-          btn.disabled = true;
-          btn.textContent = 'Cancelling…';
-          try {
-            const res = await fetch('/cancel-full-order', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ orderId: ORDER_ID, reason })
-            });
-            const data = await res.json();
-            if (data.success) {
-              closeFullCancelModal();
-              if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
-              setTimeout(() => location.reload(), 1000);
-            } else {
-              if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
-              btn.disabled = false;
-              btn.textContent = 'Yes, Cancel Order';
-            }
-          } catch {
-            if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+        const reason = document.getElementById('fullCancelReason').value.trim();
+        if (!reason) {
+          if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
+          return;
+        }
+        const btn = document.querySelector('#fullCancelModal .modal-btn-danger');
+        btn.disabled = true;
+        btn.textContent = 'Cancelling…';
+        try {
+          const res = await fetch(`/orders/${ORDER_ID}/cancel`, {   // ← fixed URL, ID goes in the path
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reason })                        // ← orderId no longer needed in body
+          });
+          const data = await res.json();
+          if (data.success) {
+            closeFullCancelModal();
+            if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
+            setTimeout(() => location.reload(), 1000);
+          } else {
+            if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
             btn.disabled = false;
             btn.textContent = 'Yes, Cancel Order';
           }
+        } catch {
+          if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Yes, Cancel Order';
         }
+      }
 
         /* ── Partial item cancel modal ── */
         function openPartialCancelModal(btn) {

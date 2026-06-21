@@ -71,6 +71,10 @@
       color: #b91c1c; 
       border: 1px solid #fecaca; 
     }
+    .readonly-field {
+      background-color: #f3f3f3 !important;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
@@ -149,11 +153,18 @@
               </div>
             </div>
 
-            <!-- State -->
-            <div>
-              <label class="field-label">State</label>
-              <input type="text" id="state" value="Kerala" class="field-input" required>
-              <span id="stateError" class="error-text">State is required</span>
+            <!-- District & State -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="field-label">District</label>
+                <input type="text" id="district" class="field-input readonly-field" placeholder="District" readonly required tabindex="-1">
+                <span id="districtError" class="error-text">District is required</span>
+              </div>
+              <div>
+                <label class="field-label">State</label>
+                <input type="text" id="state" class="field-input readonly-field" placeholder="State" readonly required tabindex="-1">
+                <span id="stateError" class="error-text">State is required</span>
+              </div>
             </div>
 
           </div>
@@ -263,6 +274,13 @@
         isValid = false;
       }
 
+      // District
+      const district = document.getElementById('district').value.trim();
+      if (district.length < 2) {
+        markError('district', 'districtError', 'District is required');
+        isValid = false;
+      }
+
       // State
       const state = document.getElementById('state').value.trim();
       if (state.length < 2) {
@@ -285,6 +303,7 @@
         phone: document.getElementById('phone').value.trim(),
         addressLine: document.getElementById('addressLine').value.trim(),
         city: document.getElementById('city').value.trim(),
+        district: document.getElementById('district').value.trim(),
         pincode: document.getElementById('pincode').value.trim(),
         state: document.getElementById('state').value.trim()
       };
@@ -325,8 +344,57 @@
     // Optional: Real-time validation on blur
     document.querySelectorAll('.field-input').forEach(input => {
       input.addEventListener('blur', () => {
-        validateForm();
+        if (input.id !== 'pincode' && input.id !== 'district' && input.id !== 'state') {
+          validateForm();
+        }
       });
+    });
+
+    let lastCheckedPincode = "";
+    async function checkPincodeAutofill() {
+      const pincodeInput = document.getElementById('pincode');
+      const pincode = pincodeInput.value.trim();
+      if (pincode.length !== 6 || !/^\d{6}$/.test(pincode)) {
+        return;
+      }
+      if (pincode === lastCheckedPincode) {
+        return;
+      }
+      lastCheckedPincode = pincode;
+
+      try {
+        const res = await fetch('/check-pincode/' + pincode);
+        const data = await res.json();
+        if (res.ok && data.success) {
+          document.getElementById('district').value = data.data.district;
+          document.getElementById('state').value = data.data.state;
+          pincodeInput.classList.remove('error');
+          document.getElementById('pincodeError').style.display = 'none';
+          document.getElementById('district').classList.remove('error');
+          document.getElementById('districtError').style.display = 'none';
+          document.getElementById('state').classList.remove('error');
+          document.getElementById('stateError').style.display = 'none';
+        } else {
+          showPageError(data.message || "Invalid pincode");
+          document.getElementById('district').value = '';
+          document.getElementById('state').value = '';
+          markError('pincode', 'pincodeError', data.message || 'Invalid pincode');
+        }
+      } catch (err) {
+        showPageError("Failed to validate pincode");
+        document.getElementById('district').value = '';
+        document.getElementById('state').value = '';
+      }
+    }
+
+    document.getElementById('pincode').addEventListener('input', (e) => {
+      if (e.target.value.trim().length === 6) {
+        checkPincodeAutofill();
+      }
+    });
+
+    document.getElementById('pincode').addEventListener('blur', () => {
+      checkPincodeAutofill();
     });
   </script>
 

@@ -91,6 +91,7 @@ const orderSchema = new mongoose.Schema({
         addressLine: { type: String, required: true, trim: true },
         apartment: String,
         city: { type: String, required: true, trim: true },
+        district: { type: String, required: true, trim: true },
         state: { type: String, required: true },
         pincode: { type: String, required: true },
         country: { type: String, default: "India" }

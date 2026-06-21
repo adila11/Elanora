@@ -804,11 +804,7 @@
                     <span>Shipping (Standard)</span>
                     <span>₹<%= (order.deliveryCharge || 0).toLocaleString('en-IN') %></span>
                   </div>
-                  <div class="breakdown-row">
-                    <span>Tax (8%)</span>
-                    <% const tax=Math.round(order.orderTotal * 0.08); %>
-                      <span>₹<%= tax.toLocaleString('en-IN') %></span>
-                  </div>
+        
                   <% if(order.discount && order.discount> 0) { %>
                     <div class="breakdown-row">
                       <span>Discount<% if(order.couponCode) { %> (<%= order.couponCode %>)<% } %></span>

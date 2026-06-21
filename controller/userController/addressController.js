@@ -57,6 +57,7 @@ export const addAddress = async (req, res) => {
             phone, 
             addressLine, 
             city, 
+            district,
             state, 
             pincode,
             isDefault
@@ -82,6 +83,10 @@ export const addAddress = async (req, res) => {
 
         if (!city || city.trim().length < 2) {
             errors.push("City is required");
+        }
+
+        if (!district || district.trim().length < 2) {
+            errors.push("District is required");
         }
 
         if (!state || state.trim().length < 2) {
@@ -126,6 +131,7 @@ export const addAddress = async (req, res) => {
             phone: phone.trim(),
             addressLine: addressLine.trim(),
             city: city.trim(),
+            district: district.trim(),
             state: state.trim(),
             pincode: pincode.trim(),
             isDefault: setAsDefault,
@@ -190,6 +196,7 @@ export const editAddress = async (req, res) => {
             phone, 
             addressLine, 
             city, 
+            district,
             state, 
             pincode,
             isDefault
@@ -227,6 +234,10 @@ export const editAddress = async (req, res) => {
             errors.push("City is required");
         }
 
+        if (!district || district.trim().length < 2) {
+            errors.push("District is required");
+        }
+
         if (!state || state.trim().length < 2) {
             errors.push("State is required");
         }
@@ -247,6 +258,7 @@ export const editAddress = async (req, res) => {
         address.phone = phone.trim();
         address.addressLine = addressLine.trim();
         address.city = city.trim();
+        address.district = district.trim();
         address.state = state.trim();
         address.pincode = pincode.trim();
 

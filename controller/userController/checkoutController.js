@@ -61,7 +61,12 @@ export const loadCheckoutPayment = async (req, res) => {
             return res.redirect("/cart?error=unavailable");
         }
 
-        res.render("user/checkout/checkoutPayment", { cart, user });
+        const { addressId } = req.body;
+        if (!addressId) {
+            return res.redirect("/checkout/address");
+        }
+
+        res.render("user/checkout/checkoutPayment", { cart, user, addressId });
     } catch (error) {
         console.error(error);
         res.status(500).send("Server Error");
@@ -83,8 +88,10 @@ export const loadCheckoutReview = async (req, res) => {
             return res.redirect("/cart?error=unavailable");
         }
 
+        const { addressId, paymentMethod = "cod" } = req.body;
+
         const address = await Address.findOne({
-            _id: req.query.addressId,
+            _id: addressId,
             user: user._id
         });
 
@@ -96,7 +103,7 @@ export const loadCheckoutReview = async (req, res) => {
             cart,
             address,
             user,
-            paymentMethod: req.query.paymentMethod || "cod"
+            paymentMethod
         });
     } catch (error) {
         console.error(error);
@@ -225,6 +232,7 @@ export const placeOrder = async (req, res) => {
                 addressLine: address.addressLine,
                 apartment: address.apartment || "",
                 city: address.city,
+                district: address.district,
                 state: address.state,
                 pincode: address.pincode,
                 country: "India"
