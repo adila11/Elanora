@@ -96,9 +96,7 @@
       transition: border 0.18s;
     }
 
-    .search-returns input:focus {
-      border-color: var(--accent);
-    }
+    .search-returns input:focus { border-color: var(--accent); }
 
     .search-returns svg {
       position: absolute;
@@ -117,9 +115,7 @@
       overflow: hidden;
     }
 
-    .table-wrap {
-      overflow-x: auto;
-    }
+    .table-wrap { overflow-x: auto; }
 
     /* ── TABS ── */
     .tabs {
@@ -193,10 +189,7 @@
       margin-bottom: 2px;
     }
 
-    .customer-name {
-      font-size: 12.5px;
-      color: var(--text-muted);
-    }
+    .customer-name { font-size: 12.5px; color: var(--text-muted); }
 
     .product-name {
       font-weight: 500;
@@ -263,6 +256,74 @@
       font-size: 12.5px;
       color: var(--text-muted);
       font-style: italic;
+    }
+
+    /* ── PAGINATION ── */
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      background: var(--card-bg);
+    }
+
+    .pagination-info {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .page-btn {
+      min-width: 32px;
+      height: 32px;
+      padding: 0 10px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: none;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.18s;
+      text-decoration: none;
+    }
+
+    .page-btn:hover:not(:disabled):not(.active) {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .page-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      cursor: default;
+    }
+
+    .page-btn:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+    }
+
+    .page-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    .page-dots {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 0 4px;
+      user-select: none;
     }
 
     /* ── MODAL OVERLAY ── */
@@ -441,11 +502,7 @@
       margin-top: 1px;
     }
 
-    .warning-banner p {
-      font-size: 13px;
-      color: #7a2020;
-      line-height: 1.55;
-    }
+    .warning-banner p { font-size: 13px; color: #7a2020; line-height: 1.55; }
 
     .field-label {
       font-size: 12px;
@@ -508,13 +565,9 @@
       pointer-events: none;
     }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .toast.error   { background: var(--red);   }
-    .toast.success { background: var(--green);  }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.error   { background: var(--red);  }
+    .toast.success { background: var(--green); }
   </style>
 </head>
 
@@ -531,8 +584,8 @@
         <h2>Returns &amp; Refunds</h2>
         <div class="search-returns">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
           <input type="text" id="searchInp" placeholder="Search returns…" onkeyup="filterSearch(this.value)">
         </div>
@@ -541,10 +594,10 @@
       <div class="table-card">
         <!-- TABS -->
         <div class="tabs">
-          <div class="tab active"    onclick="filterTab(this,'all')">All</div>
-          <div class="tab"           onclick="filterTab(this,'pending')">Pending</div>
-          <div class="tab"           onclick="filterTab(this,'approved')">Approved</div>
-          <div class="tab"           onclick="filterTab(this,'rejected')">Rejected</div>
+          <div class="tab active" onclick="filterTab(this,'all')">All</div>
+          <div class="tab"        onclick="filterTab(this,'pending')">Pending</div>
+          <div class="tab"        onclick="filterTab(this,'approved')">Approved</div>
+          <div class="tab"        onclick="filterTab(this,'rejected')">Rejected</div>
         </div>
 
         <!-- TABLE -->
@@ -596,6 +649,81 @@
             </tbody>
           </table>
         </div>
+
+        <!-- PAGINATION -->
+        <% if (pagination.totalPages > 1) { %>
+        <div class="pagination-bar">
+          <span class="pagination-info">
+            Showing
+            <%= ((pagination.currentPage - 1) * pagination.limit) + 1 %>–<%= Math.min(pagination.currentPage * pagination.limit, pagination.totalCount) %>
+            of <%= pagination.totalCount %> returns
+          </span>
+          <div class="pagination-controls">
+
+            <!-- Prev -->
+            <% if (pagination.hasPrev) { %>
+            <a href="/admin/returns?page=<%= pagination.prevPage %>&limit=<%= pagination.limit %>" class="page-btn">
+              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </a>
+            <% } else { %>
+            <button class="page-btn" disabled>
+              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <% } %>
+
+            <!-- Page numbers -->
+            <%
+              const cur   = pagination.currentPage;
+              const total = pagination.totalPages;
+              let pages   = [];
+
+              if (total <= 7) {
+                for (let i = 1; i <= total; i++) pages.push(i);
+              } else {
+                pages.push(1);
+                if (cur > 3) pages.push('…');
+                const start = Math.max(2, cur - 1);
+                const end   = Math.min(total - 1, cur + 1);
+                for (let i = start; i <= end; i++) pages.push(i);
+                if (cur < total - 2) pages.push('…');
+                pages.push(total);
+              }
+            %>
+
+            <% pages.forEach(p => { %>
+              <% if (p === '…') { %>
+                <span class="page-dots">…</span>
+              <% } else if (p === cur) { %>
+                <button class="page-btn active"><%= p %></button>
+              <% } else { %>
+                <a href="/admin/returns?page=<%= p %>&limit=<%= pagination.limit %>" class="page-btn"><%= p %></a>
+              <% } %>
+            <% }) %>
+
+            <!-- Next -->
+            <% if (pagination.hasNext) { %>
+            <a href="/admin/returns?page=<%= pagination.nextPage %>&limit=<%= pagination.limit %>" class="page-btn">
+              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </a>
+            <% } else { %>
+            <button class="page-btn" disabled>
+              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+            <% } %>
+
+          </div>
+        </div>
+        <% } %>
+        <!-- END PAGINATION -->
+
       </div>
     </div>
   </div>
@@ -696,7 +824,7 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    let currentIdx = null;
+    let currentIdx    = null;
     let currentFilter = 'all';
 
     /* ── TABS & SEARCH ── */
@@ -720,14 +848,14 @@
     /* ── REVIEW MODAL ── */
     function openModal(idx) {
       currentIdx = idx;
-      const row  = getRow(idx);
+      const row   = getRow(idx);
       const cells = row.querySelectorAll('td');
 
-      const orderId   = cells[0].querySelector('.order-link').textContent.trim();
-      const customer  = cells[0].querySelector('.customer-name').textContent.trim();
-      const product   = cells[1].querySelector('.product-name').textContent.trim();
-      const reason    = cells[1].querySelector('.product-reason').textContent.replace('Reason:', '').trim();
-      const date      = cells[2].textContent.trim();
+      const orderId  = cells[0].querySelector('.order-link').textContent.trim();
+      const customer = cells[0].querySelector('.customer-name').textContent.trim();
+      const product  = cells[1].querySelector('.product-name').textContent.trim();
+      const reason   = cells[1].querySelector('.product-reason').textContent.replace('Reason:', '').trim();
+      const date     = cells[2].textContent.trim();
 
       document.getElementById('modal-order').textContent    = orderId + ' — ' + customer;
       document.getElementById('modal-product').textContent  = product;
@@ -765,9 +893,9 @@
     }
 
     async function submitRejection() {
-      const row        = getRow(currentIdx);
+      const row         = getRow(currentIdx);
       const adminRemark = document.getElementById('rejectRemark').value.trim();
-      const success    = await sendAction(row.dataset.returnId, 'rejected', adminRemark);
+      const success     = await sendAction(row.dataset.returnId, 'rejected', adminRemark);
       if (success) { closeRejectModal(); location.reload(); }
     }
 
@@ -786,9 +914,9 @@
         : `/admin/returns/${returnId}/reject`;
       try {
         const response = await fetch(url, {
-          method: 'PATCH',
+          method:  'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ adminRemark })
+          body:    JSON.stringify({ adminRemark })
         });
         const data = await response.json();
         if (data.success) return true;
@@ -807,13 +935,11 @@
     }
 
     function showToast(msg, type = 'error') {
-      const toast = document.getElementById('toast');
+      const toast    = document.getElementById('toast');
       toast.textContent = msg;
       toast.className   = 'toast ' + type;
       requestAnimationFrame(() => toast.classList.add('show'));
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3500);
+      setTimeout(() => toast.classList.remove('show'), 3500);
     }
   </script>
 </body>

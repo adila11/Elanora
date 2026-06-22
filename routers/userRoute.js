@@ -135,13 +135,6 @@ router.post('/orders/:id/cancel', cancelFullOrder);
 router.post('/cancel-item', cancelSingleItem);
 router.post('/return-item', returnItem);
 
-// router.get("/order/:orderId", isLoggedIn, isBlocked, getOrderDetails);
-
-// router.patch("/order/:orderId/cancel", isLoggedIn, isBlocked, cancelOrder);
-
-// router.patch("/order/:orderId/return", isLoggedIn, isBlocked, returnOrder);
-
-
 router.post("/resend-otp", resendOtp)
 
 router.get("/logout",logout)

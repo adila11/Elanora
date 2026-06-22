@@ -6,7 +6,6 @@ import Return from "../../model/returnSchema.js";
 import { User } from "../../model/userSchema.js";
 
 
-
 export const getOrders = async (req, res) => {
     try {
         if (!req.session.user) {
@@ -16,14 +15,34 @@ export const getOrders = async (req, res) => {
         const user = await User.findOne({ email: req.session.user });
         if (!user) return res.redirect('/login');
 
+        const page  = Math.max(1, parseInt(req.query.page)  || 1);
+        const limit = Math.max(1, parseInt(req.query.limit) || 5);
+        const skip  = (page - 1) * limit;
+
+        const totalCount = await Order.countDocuments({ userId: user._id });
+
         const orders = await Order.find({ userId: user._id })
             .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
             .populate('items.productId', 'name variants');
 
+        const totalPages = Math.ceil(totalCount / limit);
+
         res.render('user/order/orderList', {
-            user,          // pass the full user object, not just the email
+            user,
             orders,
-            title: 'My Orders'
+            title: 'My Orders',
+            pagination: {
+                currentPage:  page,
+                totalPages,
+                totalCount,
+                limit,
+                hasPrev: page > 1,
+                hasNext: page < totalPages,
+                prevPage: page - 1,
+                nextPage: page + 1,
+            },
         });
     } catch (err) {
         console.error(err);
@@ -33,29 +52,16 @@ export const getOrders = async (req, res) => {
 
 
 export const getOrderDetail = async (req, res) => {
-
     try {
-
         if (!req.session.user) {
             return res.redirect("/login");
         }
 
-        const user = await User.findOne({
-            email: req.session.user
-        });
+        const user = await User.findOne({ email: req.session.user });
+        if (!user) return res.redirect("/login");
 
-        if (!user) {
-            return res.redirect("/login");
-        }
-
-        const order = await Order.findOne({
-            _id: req.params.id,
-            userId: user._id
-        });
-
-        if (!order) {
-            return res.status(404).send("Order not found");
-        }
+        const order = await Order.findOne({ _id: req.params.id, userId: user._id });
+        if (!order) return res.status(404).send("Order not found");
 
         const returnRequests = await Return.find({ orderId: order._id });
 
@@ -65,88 +71,44 @@ export const getOrderDetail = async (req, res) => {
             item.returnRequest = rr || null;
         });
 
-        res.render("user/order/orderDetail", {
-            order: orderObj,
-            user
-        });
+        res.render("user/order/orderDetail", { order: orderObj, user });
 
     } catch (error) {
-
         console.log("Get order detail error:", error);
-
         res.status(500).send("Server Error");
-
     }
-
 };
 
 
 export const cancelFullOrder = async (req, res) => {
     try {
-
-        // Get order id from URL
         const orderId = req.params.id;
         const { reason } = req.body;
 
-        console.log("PARAMS:", req.params);
-        console.log("BODY:", req.body);
+        const user = await User.findOne({ email: req.session.user });
+        if (!user) return res.status(401).json({ success: false, message: "User not found" });
 
-        const user = await User.findOne({
-            email: req.session.user
-        });
+        const order = await Order.findOne({ _id: orderId, userId: user._id });
+        if (!order) return res.status(404).json({ success: false, message: "Order not found" });
 
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: "User not found"
-            });
-        }
-
-        const order = await Order.findOne({
-            _id: orderId,
-            userId: user._id
-        });
-
-        if (!order) {
-            return res.status(404).json({
-                success: false,
-                message: "Order not found"
-            });
-        }
-
-        // Prevent cancellation after shipping
-        const blockedStatuses = [
-            "shipped",
-            "out_for_delivery",
-            "delivered"
-        ];
-
+        const blockedStatuses = ["shipped", "out_for_delivery", "delivered"];
         if (blockedStatuses.includes(order.orderStatus)) {
-            return res.status(400).json({
-                success: false,
-                message: "Order cannot be cancelled after shipping"
-            });
+            return res.status(400).json({ success: false, message: "Order cannot be cancelled after shipping" });
         }
 
-        // Prevent duplicate cancellation
         if (order.orderStatus === "cancelled") {
-            return res.status(400).json({
-                success: false,
-                message: "Order already cancelled"
-            });
+            return res.status(400).json({ success: false, message: "Order already cancelled" });
         }
 
-        // Update order
         order.orderStatus = "cancelled";
         order.cancelReason = reason || "";
         order.cancelledAt = new Date();
 
-        // Update all items & restore stock
         for (let item of order.items) {
             if (item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
-                item.itemStatus = "cancelled";
+                item.itemStatus  = "cancelled";
                 item.cancelReason = reason || "";
-                item.cancelledAt = new Date();
+                item.cancelledAt  = new Date();
 
                 await Product.findOneAndUpdate(
                     { "_id": item.productId, "variants._id": item.variantId },
@@ -157,193 +119,95 @@ export const cancelFullOrder = async (req, res) => {
 
         await order.save();
 
-        return res.status(200).json({
-            success: true,
-            message: "Order cancelled successfully"
-        });
+        return res.status(200).json({ success: true, message: "Order cancelled successfully" });
 
     } catch (error) {
         console.log("Cancel full order error:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "Server Error"
-        });
+        return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
 
+
 export const cancelSingleItem = async (req, res) => {
-
     try {
-
         const { orderId, itemId, reason } = req.body;
 
-        const user = await User.findOne({
-            email: req.session.user
-        });
+        const user = await User.findOne({ email: req.session.user });
+        if (!user) return res.status(401).json({ success: false });
 
-        if (!user) {
-            return res.status(401).json({
-                success: false
-            });
-        }
+        const order = await Order.findOne({ _id: orderId, userId: user._id });
+        if (!order) return res.status(404).json({ success: false });
 
-        const order = await Order.findOne({
-            _id: orderId,
-            userId: user._id
-        });
-
-        if (!order) {
-            return res.status(404).json({
-                success: false
-            });
-        }
-
-        const blockedStatuses = [
-            'shipped',
-            'out_for_delivery',
-            'delivered'
-        ];
-
+        const blockedStatuses = ['shipped', 'out_for_delivery', 'delivered'];
         if (blockedStatuses.includes(order.orderStatus)) {
-            return res.status(400).json({
-                success: false,
-                message: "Cannot cancel after shipped"
-            });
+            return res.status(400).json({ success: false, message: "Cannot cancel after shipped" });
         }
 
         const item = order.items.id(itemId);
-
-        if (!item) {
-            return res.status(404).json({
-                success: false,
-                message: "Item not found"
-            });
-        }
+        if (!item) return res.status(404).json({ success: false, message: "Item not found" });
 
         if (item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
-            item.itemStatus = "cancelled";
+            item.itemStatus  = "cancelled";
             item.cancelReason = reason;
-            item.cancelledAt = new Date();
+            item.cancelledAt  = new Date();
 
             await Product.findOneAndUpdate(
                 { "_id": item.productId, "variants._id": item.variantId },
                 { $inc: { "variants.$.stock": item.qty } }
             );
 
-            // RECALCULATE TOTAL
-            order.orderTotal -= item.total;
+            order.orderTotal  -= item.total;
             order.finalAmount -= item.total;
         }
 
-        // CHECK ALL ITEMS CANCELLED
         const activeItems = order.items.filter(
-            item => item.itemStatus !== "cancelled" && item.itemStatus !== "returned"
+            i => i.itemStatus !== "cancelled" && i.itemStatus !== "returned"
         );
-
-        if (activeItems.length === 0) {
-            order.orderStatus = "cancelled";
-        }
+        if (activeItems.length === 0) order.orderStatus = "cancelled";
 
         await order.save();
 
-        res.json({
-            success: true,
-            message: "Item cancelled successfully"
-        });
+        res.json({ success: true, message: "Item cancelled successfully" });
 
     } catch (error) {
-
         console.log("Cancel item error:", error);
-
-        res.status(500).json({
-            success: false
-        });
-
+        res.status(500).json({ success: false });
     }
-
 };
+
 
 export const returnItem = async (req, res) => {
     try {
-
         const { orderId, itemId, reason } = req.body;
 
-        const user = await User.findOne({
-            email: req.session.user
-        });
+        const user = await User.findOne({ email: req.session.user });
+        if (!user) return res.status(401).json({ success: false, message: "User not found" });
 
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: "User not found"
-            });
-        }
-
-        const order = await Order.findOne({
-            _id: orderId,
-            userId: user._id
-        });
-
-        if (!order) {
-            return res.status(404).json({
-                success: false
-            });
-        }
+        const order = await Order.findOne({ _id: orderId, userId: user._id });
+        if (!order) return res.status(404).json({ success: false });
 
         if (order.orderStatus !== "delivered") {
-            return res.status(400).json({
-                success: false,
-                message: "Return allowed only after delivery"
-            });
+            return res.status(400).json({ success: false, message: "Return allowed only after delivery" });
         }
 
         const item = order.items.id(itemId);
+        if (!item) return res.status(404).json({ success: false, message: "Item not found" });
 
         if (item.itemStatus !== "active") {
-            return res.status(400).json({
-                success: false,
-                message: "This item cannot be returned"
-            });
+            return res.status(400).json({ success: false, message: "This item cannot be returned" });
         }
 
-        if (!item) {
-            return res.status(404).json({
-                success: false,
-                message: "Item not found"
-            });
-        }
-
-        const existingReturn = await Return.findOne({
-            orderId,
-            itemId
-        });
-
+        const existingReturn = await Return.findOne({ orderId, itemId });
         if (existingReturn) {
-            return res.status(400).json({
-                success: false,
-                message: "Return request already submitted"
-            });
+            return res.status(400).json({ success: false, message: "Return request already submitted" });
         }
 
-        await Return.create({
-            orderId,
-            itemId,
-            userId: user._id,
-            reason,
-            refundAmount: item.total
-        });
+        await Return.create({ orderId, itemId, userId: user._id, reason, refundAmount: item.total });
 
-        res.json({
-            success: true,
-            message: "Return request submitted"
-        });
+        res.json({ success: true, message: "Return request submitted" });
 
     } catch (error) {
         console.log(error);
-
-        res.status(500).json({
-            success: false
-        });
+        res.status(500).json({ success: false });
     }
 };

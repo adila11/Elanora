@@ -12,474 +12,203 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: #fdfaf5;
-      color: #2c2c2c;
-    }
+    body { font-family: 'DM Sans', sans-serif; background: #fdfaf5; color: #2c2c2c; }
 
     /* ── SEARCH BAR ── */
-    .search-wrap {
-      position: relative;
-      flex: 1;
-      max-width: 320px;
-    }
+    .search-wrap { position: relative; flex: 1; max-width: 320px; }
 
     .search-wrap svg {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 15px;
-      height: 15px;
-      color: #aaa;
-      pointer-events: none;
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 15px; height: 15px; color: #aaa; pointer-events: none;
     }
 
     #searchInput {
-      width: 100%;
-      padding: 9px 14px 9px 34px;
-      border: 1px solid #e8e0d0;
-      border-radius: 30px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.82rem;
-      color: #2c2c2c;
-      background: #fdfaf5;
-      outline: none;
+      width: 100%; padding: 9px 14px 9px 34px; border: 1px solid #e8e0d0;
+      border-radius: 30px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+      color: #2c2c2c; background: #fdfaf5; outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    #searchInput:focus {
-      border-color: #c49a2a;
-      box-shadow: 0 0 0 3px rgba(196, 154, 42, 0.1);
-    }
-
-    #searchInput::placeholder {
-      color: #bbb;
-    }
+    #searchInput:focus { border-color: #c49a2a; box-shadow: 0 0 0 3px rgba(196,154,42,0.1); }
+    #searchInput::placeholder { color: #bbb; }
 
     /* ── ORDER CARD ── */
     .order-card {
-      border: 1px solid #e8e0d0;
-      border-radius: 12px;
-      padding: 18px 20px;
-      margin-bottom: 14px;
-      transition: box-shadow 0.25s, transform 0.2s;
-      background: #fff;
+      border: 1px solid #e8e0d0; border-radius: 12px; padding: 18px 20px;
+      margin-bottom: 14px; transition: box-shadow 0.25s, transform 0.2s; background: #fff;
     }
 
-    .order-card:hover {
-      box-shadow: 0 6px 28px rgba(44, 31, 14, 0.10);
-      transform: translateY(-1px);
-    }
+    .order-card:hover { box-shadow: 0 6px 28px rgba(44,31,14,0.10); transform: translateY(-1px); }
 
-    .order-meta {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
+    .order-meta { display: flex; align-items: center; gap: 24px; margin-bottom: 14px; flex-wrap: wrap; }
 
     .meta-group label {
-      display: block;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #aaa;
-      margin-bottom: 3px;
+      display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #aaa; margin-bottom: 3px;
     }
 
-    .meta-group span {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #2c2c2c;
-    }
+    .meta-group span { font-size: 0.85rem; font-weight: 500; color: #2c2c2c; }
 
-    .order-actions {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-    }
+    .order-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 
     /* ── STATUS BADGES ── */
-    .status-badge {
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
+    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; }
+
+    .status-badge.pending, .status-badge.confirmed, .status-badge.packed,
+    .status-badge.shipped, .status-badge.out_for_delivery {
+      background: #EBF3FD; color: #5B9BD5; border: 1px solid #C5DCEF;
     }
 
-    .status-badge.pending,
-    .status-badge.confirmed,
-    .status-badge.packed,
-    .status-badge.shipped,
-    .status-badge.out_for_delivery {
-      background: #EBF3FD;
-      color: #5B9BD5;
-      border: 1px solid #C5DCEF;
-    }
+    .status-badge.delivered { background: #EBF8F2; color: #4CAF7D; border: 1px solid #B5E5CE; }
 
-    .status-badge.delivered {
-      background: #EBF8F2;
-      color: #4CAF7D;
-      border: 1px solid #B5E5CE;
-    }
-
-    .status-badge.cancelled,
-    .status-badge.returned {
-      background: #FDF0EE;
-      color: #C0392B;
-      border: 1px solid #E8B4B0;
+    .status-badge.cancelled, .status-badge.returned {
+      background: #FDF0EE; color: #C0392B; border: 1px solid #E8B4B0;
     }
 
     /* ── CANCEL BTN ── */
     .cancel-order-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 14px;
-      background: transparent;
-      color: #C0392B;
-      border: 1px solid #E8B4B0;
-      border-radius: 20px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px;
+      background: transparent; color: #C0392B; border: 1px solid #E8B4B0;
+      border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+      font-weight: 500; cursor: pointer; transition: all 0.2s;
     }
 
-    .cancel-order-btn:hover {
-      background: #FDF0EE;
-      border-color: #C0392B;
-    }
+    .cancel-order-btn:hover { background: #FDF0EE; border-color: #C0392B; }
 
     /* ── ORDER ITEM ROW ── */
-    .order-item-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
+    .order-item-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 
-    .item-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    .item-left { display: flex; align-items: center; gap: 14px; }
 
     .item-img {
-      width: 50px;
-      height: 50px;
-      border-radius: 10px;
-      background: #f7f3ec;
-      object-fit: cover;
-      flex-shrink: 0;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 50px; height: 50px; border-radius: 10px; background: #f7f3ec;
+      object-fit: cover; flex-shrink: 0; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .item-info p {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #2c2c2c;
-      margin-bottom: 2px;
-    }
-
-    .item-info small {
-      font-size: 0.78rem;
-      color: #aaa;
-    }
+    .item-info p { font-size: 0.85rem; font-weight: 600; color: #2c2c2c; margin-bottom: 2px; }
+    .item-info small { font-size: 0.78rem; color: #aaa; }
 
     /* ── VIEW DETAILS BTN ── */
     .view-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 9px 20px;
-      background: #c49a2a;
-      color: #fff;
-      border: none;
-      border-radius: 30px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.15s;
-      flex-shrink: 0;
-      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 20px;
+      background: #c49a2a; color: #fff; border: none; border-radius: 30px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s, transform 0.15s;
+      flex-shrink: 0; text-decoration: none;
     }
 
-    .view-btn:hover {
-      background: #a87820;
-      transform: scale(1.02);
-    }
+    .view-btn:hover { background: #a87820; transform: scale(1.02); }
 
     /* ── PAGINATION ── */
-    .pagination {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      margin-top: 28px;
-    }
+    .pagination { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 28px; }
 
     .page-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 1px solid #e8e0d0;
-      background: #fff;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.82rem;
-      color: #888;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
+      min-width: 34px; height: 34px; padding: 0 10px; border-radius: 50px;
+      border: 1px solid #e8e0d0; background: #fff; font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem; color: #888; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: all 0.2s; text-decoration: none; gap: 3px;
     }
 
-    .page-btn:hover {
-      border-color: #c49a2a;
-      color: #c49a2a;
-    }
+    .page-btn:hover { border-color: #c49a2a; color: #c49a2a; }
 
-    .page-btn.active {
-      background: #c49a2a;
-      border-color: #c49a2a;
-      color: #fff;
-      font-weight: 600;
-    }
+    .page-btn.active { background: #c49a2a; border-color: #c49a2a; color: #fff; font-weight: 600; cursor: default; }
+
+    .page-btn:disabled { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
+
+    .page-dots { font-size: 0.82rem; color: #bbb; padding: 0 2px; user-select: none; }
 
     /* ── CANCEL MODAL ── */
     .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(44, 31, 14, 0.4);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(2px);
+      display: none; position: fixed; inset: 0;
+      background: rgba(44,31,14,0.4); z-index: 1000;
+      align-items: center; justify-content: center; backdrop-filter: blur(2px);
     }
 
-    .modal-overlay.open {
-      display: flex;
-    }
+    .modal-overlay.open { display: flex; }
 
     .cancel-modal {
-      background: #fff;
-      border-radius: 18px;
-      padding: 36px;
-      width: 100%;
-      max-width: 480px;
-      box-shadow: 0 20px 60px rgba(44, 31, 14, 0.15);
-      animation: modalIn 0.22s ease both;
-      position: relative;
+      background: #fff; border-radius: 18px; padding: 36px; width: 100%; max-width: 480px;
+      box-shadow: 0 20px 60px rgba(44,31,14,0.15); animation: modalIn 0.22s ease both; position: relative;
     }
 
     @keyframes modalIn {
-      from {
-        opacity: 0;
-        transform: translateY(14px) scale(0.97);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);    }
     }
 
     .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 28px;
-      height: 28px;
-      border: none;
-      background: #f7f3ec;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #888;
-      transition: background 0.2s;
+      position: absolute; top: 16px; right: 16px; width: 28px; height: 28px;
+      border: none; background: #f7f3ec; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; color: #888; transition: background 0.2s;
     }
 
-    .modal-close:hover {
-      background: #e8e0d0;
-    }
+    .modal-close:hover { background: #e8e0d0; }
 
     .cancel-modal h3 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #2c2c2c;
-      margin-bottom: 6px;
+      font-family: 'Cormorant Garamond', serif; font-size: 1.4rem;
+      font-weight: 700; color: #2c2c2c; margin-bottom: 6px;
     }
 
-    .cancel-modal .modal-sub {
-      font-size: 0.82rem;
-      color: #aaa;
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
+    .cancel-modal .modal-sub { font-size: 0.82rem; color: #aaa; margin-bottom: 20px; line-height: 1.5; }
 
-    .cancel-items-list {
-      border: 1px solid #e8e0d0;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 18px;
-    }
+    .cancel-items-list { border: 1px solid #e8e0d0; border-radius: 10px; overflow: hidden; margin-bottom: 18px; }
 
     .cancel-item-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-bottom: 1px solid #e8e0d0;
-      transition: background 0.15s;
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      border-bottom: 1px solid #e8e0d0; transition: background 0.15s;
     }
 
-    .cancel-item-row:last-child {
-      border-bottom: none;
-    }
-
-    .cancel-item-row:hover {
-      background: #fdfaf5;
-    }
+    .cancel-item-row:last-child { border-bottom: none; }
+    .cancel-item-row:hover { background: #fdfaf5; }
 
     .cancel-item-row input[type="checkbox"] {
-      width: 15px;
-      height: 15px;
-      accent-color: #c49a2a;
-      cursor: pointer;
-      flex-shrink: 0;
+      width: 15px; height: 15px; accent-color: #c49a2a; cursor: pointer; flex-shrink: 0;
     }
 
-    .cancel-item-row label {
-      font-size: 0.85rem;
-      color: #2c2c2c;
-      cursor: pointer;
-      flex: 1;
-      font-weight: 500;
-    }
-
-    .cancel-item-row .item-price {
-      font-size: 0.78rem;
-      color: #aaa;
-    }
+    .cancel-item-row label { font-size: 0.85rem; color: #2c2c2c; cursor: pointer; flex: 1; font-weight: 500; }
+    .cancel-item-row .item-price { font-size: 0.78rem; color: #aaa; }
 
     .reason-label {
-      display: block;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #2c2c2c;
-      margin-bottom: 7px;
+      display: block; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #2c2c2c; margin-bottom: 7px;
     }
 
     #cancelReason {
-      width: 100%;
-      height: 88px;
-      resize: none;
-      padding: 12px 14px;
-      border: 1px solid #e8e0d0;
-      border-radius: 9px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.875rem;
-      color: #2c2c2c;
-      background: #fdfaf5;
-      outline: none;
-      transition: border-color 0.15s;
-      margin-bottom: 22px;
+      width: 100%; height: 88px; resize: none; padding: 12px 14px;
+      border: 1px solid #e8e0d0; border-radius: 9px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem; color: #2c2c2c; background: #fdfaf5; outline: none;
+      transition: border-color 0.15s; margin-bottom: 22px;
     }
 
-    #cancelReason:focus {
-      border-color: #c49a2a;
-      background: #fff;
-    }
+    #cancelReason:focus { border-color: #c49a2a; background: #fff; }
 
-    .modal-actions {
-      display: flex;
-      gap: 12px;
-    }
+    .modal-actions { display: flex; gap: 12px; }
 
     .btn-keep {
-      flex: 1;
-      padding: 11px;
-      background: #f7f3ec;
-      border: 1px solid #e8e0d0;
-      border-radius: 30px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #888;
-      cursor: pointer;
-      transition: all 0.2s;
+      flex: 1; padding: 11px; background: #f7f3ec; border: 1px solid #e8e0d0;
+      border-radius: 30px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      font-weight: 500; color: #888; cursor: pointer; transition: all 0.2s;
     }
 
-    .btn-keep:hover {
-      background: #e8e0d0;
-    }
+    .btn-keep:hover { background: #e8e0d0; }
 
     .btn-confirm-cancel {
-      flex: 1;
-      padding: 11px;
-      background: #C0392B;
-      border: none;
-      border-radius: 30px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.2s;
+      flex: 1; padding: 11px; background: #C0392B; border: none; border-radius: 30px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+      color: #fff; cursor: pointer; transition: background 0.2s;
     }
 
-    .btn-confirm-cancel:hover {
-      background: #a93226;
-    }
-
-    .btn-confirm-cancel:disabled {
-      background: #e0a09a;
-      cursor: not-allowed;
-    }
+    .btn-confirm-cancel:hover { background: #a93226; }
+    .btn-confirm-cancel:disabled { background: #e0a09a; cursor: not-allowed; }
 
     /* ── NO RESULTS ── */
-    .no-results {
-      display: none;
-      text-align: center;
-      padding: 48px 0;
-      color: #bbb;
-      font-size: 0.85rem;
-    }
+    .no-results { display: none; text-align: center; padding: 48px 0; color: #bbb; font-size: 0.85rem; }
 
-    .no-results svg {
-      width: 38px;
-      height: 38px;
-      margin: 0 auto 12px;
-      display: block;
-      opacity: 0.35;
-    }
+    .no-results svg { width: 38px; height: 38px; margin: 0 auto 12px; display: block; opacity: 0.35; }
   </style>
 </head>
 
@@ -487,302 +216,305 @@
 
   <%- include('partials/user/header') %>
 
-    <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
+  <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
 
-      <%- include('partials/user/profileBanner', { user }) %>
+    <%- include('partials/user/profileBanner', { user }) %>
 
-        <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
+    <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
 
-          <%- include('partials/user/profileSidebar', { activePage: 'orders' }) %>
+      <%- include('partials/user/profileSidebar', { activePage: 'orders' }) %>
 
-            <main
-              style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+      <main style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
 
-              <div
-                style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #f0ece4; padding-bottom:18px; margin-bottom:28px; gap:16px; flex-wrap:wrap;">
-                <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#2c2c2c;">
-                  Order History
-                </h3>
-                <div class="search-wrap">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                  <input type="text" id="searchInput" placeholder="Search by order # or item…" oninput="filterOrders()">
+        <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #f0ece4; padding-bottom:18px; margin-bottom:28px; gap:16px; flex-wrap:wrap;">
+          <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#2c2c2c;">
+            Order History
+          </h3>
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Search by order # or item…" oninput="filterOrders()">
+          </div>
+        </div>
+
+        <div id="orderList">
+          <% if (orders && orders.length > 0) { %>
+            <% orders.forEach(order => { %>
+            <div class="order-card"
+              data-search-string="<%= String(order.orderId || order._id || '').toLowerCase() %> <%= order.items ? order.items.map(i => String(i.productName || i.name || '').toLowerCase()).join(' ') : '' %>">
+
+              <div class="order-meta">
+                <div class="meta-group">
+                  <label>Order Placed</label>
+                  <span>
+                    <%= order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : 'N/A' %>
+                  </span>
+                </div>
+
+                <div class="meta-group">
+                  <label>Total</label>
+                  <span>₹<%= (order.grandTotal ?? order.totalPrice ?? order.finalAmount ?? 0).toLocaleString('en-IN') %></span>
+                </div>
+
+                <div class="meta-group">
+                  <label>Order #</label>
+                  <span>#<%= order.orderId || order._id %></span>
+                </div>
+
+                <div class="order-actions">
+                  <span class="status-badge <%= order.orderStatus || 'pending' %>">
+                    <%= String(order.orderStatus || 'pending').replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %>
+                  </span>
+
+                  <% if (order.orderStatus === 'pending' || order.orderStatus === 'processing') { %>
+                  <button class="cancel-order-btn"
+                    onclick='openCancelModal("<%= order._id %>", <%- JSON.stringify(order.items) %>)'>
+                    Cancel
+                  </button>
+                  <% } %>
                 </div>
               </div>
 
-              <div id="orderList">
-                <% if (orders && orders.length> 0) { %>
-                  <% orders.forEach(order=> { %>
-                    <div class="order-card"
-                      data-search-string="<%= String(order.orderId || order._id || '').toLowerCase() %> <%= order.items ? order.items.map(i => String(i.productName || i.name || '').toLowerCase()).join(' ') : '' %>">
+              <div class="order-item-row">
+                <div class="item-left">
+                  <div class="item-img">
+                    <% if (order.items?.[0]?.productImage) { %>
+                      <img src="<%= order.items[0].productImage %>" alt="product" style="width:100%;height:100%;object-fit:cover;">
+                    <% } else { %>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c49a2a" stroke-width="1.5">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                      </svg>
+                    <% } %>
+                  </div>
+                  <div class="item-info">
+                    <p><%= order.items ? order.items.length : 0 %> Item<%= (order.items && order.items.length > 1) ? 's' : '' %> in this order</p>
+                    <small>Includes <%= order.items?.[0]?.productName || 'Product' %></small>
+                  </div>
+                </div>
 
-                      <div class="order-meta">
-                        <div class="meta-group">
-                          <label>Order Placed</label>
-                          <span>
-                            <%= order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day:'numeric',
-                              month:'short', year:'numeric' }) : 'N/A' %>
-                          </span>
-                        </div>
-
-                        <div class="meta-group">
-                          <label>Total</label>
-                          <span>₹<%= (order.grandTotal ?? order.totalPrice ?? order.finalAmount ??
-                              0).toLocaleString('en-IN') %></span>
-                        </div>
-
-                        <div class="meta-group">
-                          <label>Order #</label>
-                          <span>#<%= order.orderId || order._id %></span>
-                        </div>
-
-                        <div class="order-actions">
-
-    <span class="status-badge <%= order.orderStatus || 'pending' %>">
-        <%= String(order.orderStatus || 'pending')
-            .replaceAll('_',' ')
-            .replace(/\b\w/g, c => c.toUpperCase()) %>
-    </span>
-
-    <% if (
-        order.orderStatus === 'pending' ||
-        order.orderStatus === 'processing'
-    ) { %>
-
-        <button class="cancel-order-btn"
-            onclick='openCancelModal(
-                "<%= order._id %>",
-                <%- JSON.stringify(order.items) %>
-            )'>
-            Cancel
-        </button>
-
-    <% } %>
-
-</div>
-                      </div>
-
-                      <div class="order-item-row">
-                        <div class="item-left">
-                          <div class="item-img">
-                            <% if (order.items?.[0]?.productImage) { %>
-                              <img src="<%= order.items[0].productImage %>" alt="product"
-                                style="width:100%;height:100%;object-fit:cover;">
-                              <% } else { %>
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c49a2a"
-                                  stroke-width="1.5">
-                                  <rect x="2" y="3" width="20" height="14" rx="2" />
-                                  <line x1="8" y1="21" x2="16" y2="21" />
-                                  <line x1="12" y1="17" x2="12" y2="21" />
-                                </svg>
-                                <% } %>
-                          </div>
-                          <div class="item-info">
-                            <p>
-                              <%= order.items ? order.items.length : 0 %> Item<%= (order.items && order.items.length> 1)
-                                  ? 's' : '' %> in this order
-                            </p>
-                            <small>Includes <%= order.items?.[0]?.productName || 'Product' %></small>
-                          </div>
-                        </div>
-
-                        <a href="/orders/<%= order._id %>" class="view-btn">
-                          View Details
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5">
-                            <polyline points="9 18 15 12 9 6" />
-                          </svg>
-                        </a>
-                      </div>
-
-                    </div>
-                    <% }) %>
-                      <% } else { %>
-                        <div style="text-align:center; padding:60px 0; color:#bbb;">
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.2" style="margin:0 auto 16px; display:block; opacity:0.35;">
-                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                            <line x1="3" y1="6" x2="21" y2="6" />
-                            <path d="M16 10a4 4 0 01-8 0" />
-                          </svg>
-                          <p
-                            style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:#888; margin-bottom:6px;">
-                            No orders yet</p>
-                          <p style="font-size:0.82rem;">Your order history will appear here once you've made a purchase.
-                          </p>
-                        </div>
-                        <% } %>
-              </div>
-
-              <div class="no-results" id="noResults">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-                No orders match your search.
-              </div>
-
-              <div class="pagination">
-                <button class="page-btn">
+                <a href="/orders/<%= order._id %>" class="view-btn">
+                  View Details
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="15 18 9 12 15 6" />
+                    <polyline points="9 18 15 12 9 6"/>
                   </svg>
-                </button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </button>
+                </a>
               </div>
-
-            </main>
+            </div>
+            <% }) %>
+          <% } else { %>
+          <div style="text-align:center; padding:60px 0; color:#bbb;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"
+              style="margin:0 auto 16px; display:block; opacity:0.35;">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            <p style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:#888; margin-bottom:6px;">No orders yet</p>
+            <p style="font-size:0.82rem;">Your order history will appear here once you've made a purchase.</p>
+          </div>
+          <% } %>
         </div>
+
+        <div class="no-results" id="noResults">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          No orders match your search.
+        </div>
+
+        <!-- ── PAGINATION ── -->
+        <% if (pagination.totalPages > 1) { %>
+        <div class="pagination">
+
+          <%/* Prev arrow */%>
+          <% if (pagination.hasPrev) { %>
+          <a href="/orders?page=<%= pagination.prevPage %>&limit=<%= pagination.limit %>" class="page-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </a>
+          <% } else { %>
+          <button class="page-btn" disabled>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <% } %>
+
+          <%/* Page numbers with smart ellipsis */%>
+          <%
+            const cur   = pagination.currentPage;
+            const total = pagination.totalPages;
+            let pages   = [];
+            if (total <= 7) {
+              for (let i = 1; i <= total; i++) pages.push(i);
+            } else {
+              pages.push(1);
+              if (cur > 3) pages.push('…');
+              const start = Math.max(2, cur - 1);
+              const end   = Math.min(total - 1, cur + 1);
+              for (let i = start; i <= end; i++) pages.push(i);
+              if (cur < total - 2) pages.push('…');
+              pages.push(total);
+            }
+          %>
+
+          <% pages.forEach(p => { %>
+            <% if (p === '…') { %>
+              <span class="page-dots">…</span>
+            <% } else if (p === cur) { %>
+              <button class="page-btn active"><%= p %></button>
+            <% } else { %>
+              <a href="/orders?page=<%= p %>&limit=<%= pagination.limit %>" class="page-btn"><%= p %></a>
+            <% } %>
+          <% }) %>
+
+          <%/* Next arrow */%>
+          <% if (pagination.hasNext) { %>
+          <a href="/orders?page=<%= pagination.nextPage %>&limit=<%= pagination.limit %>" class="page-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+          <% } else { %>
+          <button class="page-btn" disabled>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+          <% } %>
+
+        </div>
+        <% } %>
+        <!-- END PAGINATION -->
+
+      </main>
     </div>
+  </div>
 
-    <!-- Cancel Modal -->
-    <div id="cancelModal" class="modal-overlay" onclick="outsideCancelClose(event)">
-      <div class="cancel-modal">
-        <button class="modal-close" onclick="closeCancelModal()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
-        <div
-          style="width:48px;height:48px;border-radius:12px;background:#FDF0EE;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="15" y1="9" x2="9" y2="15" />
-            <line x1="9" y1="9" x2="15" y2="15" />
-          </svg>
-        </div>
-        <h3>Cancel Order</h3>
-        <p class="modal-sub">Are you sure you want to cancel this order? This action cannot be undone.</p>
+  <!-- Cancel Modal -->
+  <div id="cancelModal" class="modal-overlay" onclick="outsideCancelClose(event)">
+    <div class="cancel-modal">
+      <button class="modal-close" onclick="closeCancelModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div style="width:48px;height:48px;border-radius:12px;background:#FDF0EE;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+      </div>
+      <h3>Cancel Order</h3>
+      <p class="modal-sub">Are you sure you want to cancel this order? This action cannot be undone.</p>
 
-        <div class="cancel-items-list" id="cancelItemsList"></div>
+      <div class="cancel-items-list" id="cancelItemsList"></div>
 
-        <label class="reason-label">
-          Reason <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;">(optional)</span>
-        </label>
-        <textarea id="cancelReason" placeholder="Tell us why you're cancelling…"></textarea>
+      <label class="reason-label">
+        Reason <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;">(optional)</span>
+      </label>
+      <textarea id="cancelReason" placeholder="Tell us why you're cancelling…"></textarea>
 
-        <div class="modal-actions">
-          <button class="btn-keep" onclick="closeCancelModal()">Keep Order</button>
-          <button class="btn-confirm-cancel" id="confirmCancelBtn" onclick="submitCancel()">Yes, Cancel</button>
-        </div>
+      <div class="modal-actions">
+        <button class="btn-keep" onclick="closeCancelModal()">Keep Order</button>
+        <button class="btn-confirm-cancel" id="confirmCancelBtn" onclick="submitCancel()">Yes, Cancel</button>
       </div>
     </div>
+  </div>
 
-    <%- include('partials/user/footer') %>
+  <%- include('partials/user/footer') %>
 
-      <script>
-        // ── Search ──────────────────────────────────────────────
-        function filterOrders() {
-          const q = document.getElementById('searchInput').value.trim().toLowerCase();
-          const cards = document.querySelectorAll('#orderList .order-card');
-          let visible = 0;
+  <script>
+    // ── Search ──────────────────────────────────────────────
+    function filterOrders() {
+      const q     = document.getElementById('searchInput').value.trim().toLowerCase();
+      const cards = document.querySelectorAll('#orderList .order-card');
+      let visible = 0;
 
-          cards.forEach(card => {
-            const haystack = card.dataset.searchString || '';
-            const show = !q || haystack.includes(q);
-            card.style.display = show ? '' : 'none';
-            if (show) visible++;
-          });
+      cards.forEach(card => {
+        const haystack = card.dataset.searchString || '';
+        const show     = !q || haystack.includes(q);
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
 
-          document.getElementById('noResults').style.display = (q && visible === 0) ? 'block' : 'none';
-        }
+      document.getElementById('noResults').style.display = (q && visible === 0) ? 'block' : 'none';
+    }
 
-        // ── Cancel Modal ─────────────────────────────────────────
-        let currentOrderId = null;
+    // ── Cancel Modal ─────────────────────────────────────────
+    let currentOrderId = null;
 
-        function openCancelModal(orderId, items) {
+    function openCancelModal(orderId, items) {
+      currentOrderId = orderId;
+      document.getElementById('cancelReason').value = '';
 
-          currentOrderId = orderId;
-
-          document.getElementById('cancelReason').value = '';
-
-          const list = document.getElementById('cancelItemsList');
-
-          list.innerHTML = items.map(item => `
+      const list = document.getElementById('cancelItemsList');
+      list.innerHTML = items.map(item => `
         <div class="cancel-item-row">
-            <div style="display:flex;align-items:center;gap:12px;width:100%;">
-                
-                <img
-                    src="${item.productImage || '/images/no-image.png'}"
-                    alt="${item.productName}"
-                    style="
-                        width:50px;
-                        height:50px;
-                        object-fit:cover;
-                        border-radius:8px;
-                        border:1px solid #eee;
-                    "
-                >
-
-                <div style="flex:1;">
-                    <div style="font-weight:600;">
-                        ${item.productName}
-                    </div>
-
-                    <div style="font-size:12px;color:#888;">
-                        Qty: ${item.qty}
-                    </div>
-                </div>
-
-                <div style="font-weight:600;">
-                    ₹${item.total}
-                </div>
-
+          <div style="display:flex;align-items:center;gap:12px;width:100%;">
+            <img
+              src="${item.productImage || '/images/no-image.png'}"
+              alt="${item.productName}"
+              style="width:50px;height:50px;object-fit:cover;border-radius:8px;border:1px solid #eee;"
+            >
+            <div style="flex:1;">
+              <div style="font-weight:600;">${item.productName}</div>
+              <div style="font-size:12px;color:#888;">Qty: ${item.qty}</div>
             </div>
+            <div style="font-weight:600;">₹${item.total}</div>
+          </div>
         </div>
-    `).join('');
+      `).join('');
 
-          document.getElementById('cancelModal').classList.add('open');
+      document.getElementById('cancelModal').classList.add('open');
+    }
+
+    function closeCancelModal() {
+      document.getElementById('cancelModal').classList.remove('open');
+      currentOrderId = null;
+    }
+
+    function outsideCancelClose(e) {
+      if (e.target === document.getElementById('cancelModal')) closeCancelModal();
+    }
+
+    async function submitCancel() {
+      if (!currentOrderId) return;
+      const reason = document.getElementById('cancelReason').value.trim();
+      const btn    = document.getElementById('confirmCancelBtn');
+      btn.disabled    = true;
+      btn.textContent = 'Cancelling…';
+
+      try {
+        const res  = await fetch(`/orders/${currentOrderId}/cancel`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ reason })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
+          closeCancelModal();
+          setTimeout(() => window.location.reload(), 1000);
+        } else {
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
         }
-
-        function closeCancelModal() {
-          document.getElementById('cancelModal').classList.remove('open');
-          currentOrderId = null;
-        }
-
-        function outsideCancelClose(e) {
-          if (e.target === document.getElementById('cancelModal')) closeCancelModal();
-        }
-
-        async function submitCancel() {
-          if (!currentOrderId) return;
-          const reason = document.getElementById('cancelReason').value.trim();
-          const btn = document.getElementById('confirmCancelBtn');
-          btn.disabled = true;
-          btn.textContent = 'Cancelling…';
-
-          try {
-            const res = await fetch(`/orders/${currentOrderId}/cancel`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ reason })
-            });
-            const data = await res.json();
-
-            if (res.ok && data.success) {
-              if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
-              closeCancelModal();
-              setTimeout(() => window.location.reload(), 1000);
-            } else {
-              if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
-            }
-          } catch (err) {
-            if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
-          } finally {
-            btn.disabled = false;
-            btn.textContent = 'Yes, Cancel';
-          }
-        }
-      </script>
+      } catch (err) {
+        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+      } finally {
+        btn.disabled    = false;
+        btn.textContent = 'Yes, Cancel';
+      }
+    }
+  </script>
 </body>
 
 </html>
