@@ -68,13 +68,7 @@ export const editProfile = async (req, res) => {
         }
 
         if (req.file) {
-            // if (user.profileIcon && user.profileIcon !== "default.png" && user.cloudinaryId) {
-            //     try {
-            //         await cloudinary.uploader.destroy(user.cloudinaryId);
-            //     } catch (err) {
-            //         console.log("Failed to delete old image:", err);
-            //     }
-            // }
+            
 
             console.log(req.file)
             user.profileIcon = req.file.path;           

@@ -13,6 +13,8 @@ import { loadWishlist, addToWishlist, removeFromWishlist } from '../controller/u
 import { loadCheckoutAddress,loadCheckoutPayment,loadCheckoutReview,placeOrder,loadOrderSuccess} from "../controller/userController/checkoutController.js";
 import {  cancelFullOrder, cancelSingleItem, getOrderDetail, getOrders, returnItem } from '../controller/userController/orderController.js'
 import { checkPincode } from "../utils/pincodeValidator.js";
+import { loadAbout } from '../controller/userController/aboutController.js'
+import { loadContact } from '../controller/userController/contactController.js'
 const router=express.Router()
 
 
@@ -20,6 +22,10 @@ router.get("/",loadHome)
 
 router.get("/login",loadLogin)
 router.post("/login",login)
+
+router.get("/about", loadAbout);
+
+router.get("/contact", loadContact);
 
 router.get("/auth/google",passport.authenticate("google", { scope: ["profile", "email"] }));
 
@@ -138,6 +144,7 @@ router.post('/return-item', returnItem);
 router.post("/resend-otp", resendOtp)
 
 router.get("/logout",logout)
+
 
 router.use(loadPagenotFound);
 export default router

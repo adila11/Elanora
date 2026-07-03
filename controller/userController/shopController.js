@@ -41,7 +41,7 @@ export const loadShop = async (req, res) => {
         else if (sort === 'name-asc') sortOption = { name: 1 };
         else if (sort === 'name-desc') sortOption = { name: -1 };
 
-        // Get total count for pagination
+        
         const totalProducts = await Products.find(query)
             .populate({
                 path: "category",
@@ -71,7 +71,7 @@ export const loadShop = async (req, res) => {
 
         const categories = await Category.find({ isActive: true });
 
-        // Get user's wishlist if logged in
+        
         let wishlistProductIds = [];
         if (req.session.user) {
             const user = await User.findOne({ email: req.session.user });
@@ -83,7 +83,7 @@ export const loadShop = async (req, res) => {
             }
         }
 
-        // Helper to build query string for pagination links
+        
         const buildQuery = (pageNum) => {
             const params = new URLSearchParams();
             if (search) params.set('search', search);
@@ -137,7 +137,7 @@ export const loadProductDetail = async (req, res) => {
             isListed: true
         }).limit(4);
 
-        // Check if product is in user's wishlist
+        
         let inWishlist = false;
         if (req.session.user) {
             const user = await User.findOne({ email: req.session.user });

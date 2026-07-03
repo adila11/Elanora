@@ -100,9 +100,7 @@ export const getOrdersPage = async (req, res) => {
     }
 };
 
-// ─────────────────────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────────────────────
+
 function capitalize(text) {
     if (!text) return "";
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -129,7 +127,7 @@ const STATUS_MAP = {
     'Delivered':        'delivered',
     'Cancelled':        'cancelled',
     'Returned':         'returned',
-    // also accept raw DB values
+
     pending:          'pending',
     processing:       'processing',
     shipped:          'shipped',
@@ -149,9 +147,7 @@ const ALLOWED_TRANSITIONS = {
     returned:         []
 };
 
-// ─────────────────────────────────────────────────────────────
-// PATCH /admin/orders/:orderId/status  — order-level update
-// ─────────────────────────────────────────────────────────────
+
 export const updateOrderStatus = async (req, res) => {
     try {
         const { orderId } = req.params;
@@ -199,6 +195,10 @@ export const updateOrderStatus = async (req, res) => {
                     );
                 }
             }
+            // Restore original totals when the order is completely cancelled, avoiding ₹0 total displays
+            const originalSubtotal = existingOrder.items.reduce((sum, item) => sum + item.total, 0);
+            existingOrder.orderTotal = originalSubtotal;
+            existingOrder.finalAmount = originalSubtotal + (existingOrder.deliveryCharge || 0) - (existingOrder.discount || 0);
         } else if (dbStatus === 'returned') {
             for (let item of existingOrder.items) {
                 if (item.itemStatus !== 'cancelled' && item.itemStatus !== 'returned') {
@@ -210,6 +210,10 @@ export const updateOrderStatus = async (req, res) => {
                     );
                 }
             }
+            // Restore original totals when the order is completely returned, avoiding ₹0 total displays
+            const originalSubtotal = existingOrder.items.reduce((sum, item) => sum + item.total, 0);
+            existingOrder.orderTotal = originalSubtotal;
+            existingOrder.finalAmount = originalSubtotal + (existingOrder.deliveryCharge || 0) - (existingOrder.discount || 0);
         }
 
         await existingOrder.save();
@@ -221,9 +225,7 @@ export const updateOrderStatus = async (req, res) => {
     }
 };
 
-// ─────────────────────────────────────────────────────────────
-// PATCH /admin/orders/:orderId/item-status  — per-item update
-// ─────────────────────────────────────────────────────────────
+
 export const updateItemStatus = async (req, res) => {
     try {
         const { orderId }        = req.params;
@@ -234,7 +236,6 @@ export const updateItemStatus = async (req, res) => {
             return res.status(404).json({ success: false, message: "Order not found." });
         }
 
-        // Find the target item
         const item = existingOrder.items.find(
             i => String(i._id) === String(itemId) || String(i.productId) === String(itemId)
         );
@@ -243,7 +244,6 @@ export const updateItemStatus = async (req, res) => {
             return res.status(404).json({ success: false, message: "Item not found in this order." });
         }
 
-        // Resolve item's individual status or fallback to overall order status if 'active'
         const currentItemStatus = (item.itemStatus && item.itemStatus !== 'active')
             ? item.itemStatus
             : (existingOrder.orderStatus || 'pending');
@@ -281,6 +281,21 @@ export const updateItemStatus = async (req, res) => {
                 { "_id": item.productId, "variants._id": item.variantId },
                 { $inc: { "variants.$.stock": item.qty } }
             );
+
+            // Deduct the item's total from the order totals
+            existingOrder.orderTotal -= item.total;
+            existingOrder.finalAmount -= item.total;
+        }
+
+        const activeItems = existingOrder.items.filter(
+            i => i.itemStatus !== "cancelled" && i.itemStatus !== "returned"
+        );
+        if (activeItems.length === 0) {
+            existingOrder.orderStatus = dbStatus; // Set overall order status to cancelled or returned
+            // Restore original totals when the order is completely cancelled/returned, avoiding ₹0 total displays
+            const originalSubtotal = existingOrder.items.reduce((sum, item) => sum + item.total, 0);
+            existingOrder.orderTotal = originalSubtotal;
+            existingOrder.finalAmount = originalSubtotal + (existingOrder.deliveryCharge || 0) - (existingOrder.discount || 0);
         }
 
         await existingOrder.save();
@@ -293,9 +308,7 @@ export const updateItemStatus = async (req, res) => {
     }
 };
 
-// ─────────────────────────────────────────────────────────────
-// GET /admin/orders/:orderId  — order detail page
-// ─────────────────────────────────────────────────────────────
+
 export const getOrderDetail = async (req, res) => {
     try {
         const { orderId } = req.params;

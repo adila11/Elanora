@@ -17,6 +17,17 @@
             --border-color: #E0E0E0;
             --error-color: #d8000c;
             --success-color: #155724;
+            /* Home-page footer variables */
+            --cream: #f9f5ef;
+            --warm-white: #fdfaf5;
+            --gold: #c8972a;
+            --gold-light: #e4b84a;
+            --gold-pale: #f0ddb0;
+            --dark: #1a1612;
+            --text: #3a3228;
+            --muted: #8c7f70;
+            --border: #e8ddd0;
+            --radius: 12px;
         }
 
         * {
@@ -258,7 +269,7 @@
     <div class="content-wrapper">
         <div class="otp-card">
             <div class="logo-box">
-                <span>💎</span> Elanora2
+               Elanora
             </div>
             <h1>Reset Password</h1>
             <p class="instructions">Enter the 6-digit code sent to<br><span class="user-email">as***@gmail.com</span>
@@ -296,48 +307,7 @@
         </div>
     </div>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <div class="logo-box" style="justify-content: flex-start; margin-bottom: 15px;">💎 Elanora</div>
-                <p>Crafting timeless elegance and radiant refinement for those who appreciate the finer things in life.</p>
-                <div class="social-icons">
-                    <div class="social-icon">f</div>
-                    <div class="social-icon">𝕏</div>
-                    <div class="social-icon">📸</div>
-                    <div class="social-icon">▶</div>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li>Shop Collection</li>
-                    <li>About Us</li>
-                    <li>Our Story</li>
-                    <li>Contact Us</li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Customer Service</h4>
-                <ul>
-                    <li>FAQ</li>
-                    <li>Shipping & Returns</li>
-                    <li>Jewelry Care</li>
-                    <li>Terms & Conditions</li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Newsletter</h4>
-                <p>Subscribe to receive updates, access to exclusive deals, and more.</p>
-                <input type="email" class="newsletter-input" placeholder="Enter your email">
-                <button class="btn-subscribe">Subscribe</button>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div>© 2026 Elanora Jewelry. All rights reserved.</div>
-            <div>Privacy Policy &nbsp;&nbsp; Terms of Service</div>
-        </div>
-    </footer>
+    <%- include('../../../partials/user/footer') %>
 
     <script>
         const form = document.getElementById('otpForm');

@@ -463,110 +463,105 @@
 
     <% if (cart && cart.items.length > 0) { %>
 
-    <div class="cart-layout">
+<div class="cart-layout">
 
-      <!-- Cart Items -->
-      <div class="cart-card">
-        <div class="cart-table-header">
-          <span>Product</span>
-          <span>Price</span>
-          <span>Quantity</span>
-          <span>Total</span>
-        </div>
-
-        <% let canCheckout = true; %>
-        <% cart.items.forEach(item => { %>
-          <% const product = item.productId; %>
-          <% if (product) { %>
-            <% 
-               const variant = product.variants.find(v => v._id.toString() === item.variantId.toString()); 
-               const image = variant?.images[0]?.url || 'https://via.placeholder.com/150'; 
-               const completelyUnavailable = !product.isListed || !variant || !variant.isActive || variant.stock === 0;
-               const isOutOfStock = !completelyUnavailable && variant && variant.stock < item.qty;
-               const isAvailable = product.isListed && variant && variant.isActive && variant.stock >= item.qty;
-               
-               if (completelyUnavailable || isOutOfStock) {
-                   canCheckout = false;
-               }
-            %>
-
-            <div class="cart-item <%= completelyUnavailable ? 'unavailable' : '' %>" data-product-id="<%= product._id %>" data-variant-id="<%= item.variantId %>">
-              <div class="item-info">
-                <a href="/product/<%= product._id %>" class="item-img" style="display: block;">
-                  <img src="<%= image %>" alt="<%= product.name %>" style="<%= completelyUnavailable ? 'filter: grayscale(100%); opacity: 0.7;' : '' %>"/>
-                </a>
-
-                <div class="item-details">
-                  <a href="/product/<%= product._id %>" style="text-decoration: none; color: inherit;">
-                    <h3><%= product.name %></h3>
-                  </a>
-                  <p class="item-color">Color: <%= variant?.color || 'N/A' %></p>
-                  
-                  <% if (completelyUnavailable) { %>
-                    <p style="color: var(--red); font-size: 0.8rem; font-weight: 500; margin-bottom: 6px;">This product is out of stock.</p>
-                  <% } else if (isOutOfStock) { %>
-                    <p style="color: #d35400; font-size: 0.8rem; font-weight: 500; margin-bottom: 6px;">Only <%= variant.stock %> quantity available.</p>
-                  <% } %>
-
-                  <button class="remove-btn" onclick="removeItem(this, '<%= product._id %>', '<%= item.variantId %>')">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="3 6 5 6 21 6" />
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                    </svg>
-                    Remove
-                  </button>
-                </div>
-              </div>
-
-              <div class="item-price">₹<%= item.price.toLocaleString('en-IN') %></div>
-
-              <div class="qty-control" style="<%= completelyUnavailable ? 'opacity: 0.5; pointer-events: none;' : '' %>">
-                <button class="qty-btn" onclick="changeQty(this, -1, '<%= product._id %>', '<%= item.variantId %>')" <%= item.qty <= 1 || completelyUnavailable ? 'disabled' : '' %>>−</button>
-                <input class="qty-value" value="<%= item.qty %>" readonly />
-                <button class="qty-btn" onclick="changeQty(this, 1, '<%= product._id %>', '<%= item.variantId %>')" <%= item.qty >= 10 || completelyUnavailable || (variant && item.qty >= variant.stock) ? 'disabled' : '' %>>+</button>
-              </div>
-
-              <div class="item-total">₹<%= item.total.toLocaleString('en-IN') %></div>
-            </div>
-          <% } %>
-        <% }) %>
-      </div>
-
-      <!-- Order Summary -->
-      <div class="order-card">
-        <h2>Order Summary</h2>
-
-        <div class="summary-row">
-          <span>Subtotal</span>
-          <span id="subtotal">₹<%= subtotal.toLocaleString('en-IN') %></span>
-        </div>
-        <div class="summary-row">
-          <span>Shipping</span>
-          <span class="free-label">Free</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total</span>
-          <span class="total-amount" id="total">₹<%= subtotal.toLocaleString('en-IN') %></span>
-        </div>
-
-        <button class="checkout-btn" 
-          onclick="<% if (!canCheckout) { %> showModal('error', 'Update Required', 'Please update your cart before proceeding.', [{ label: 'Close', primary: true, action: 'closeModal()' }]); <% } else { %> location.href='/checkout/address' <% } %>">
-          Proceed to Checkout
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
-        </button>
-
-        <div class="secure-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-          <p>Secure checkout. All transactions are encrypted and authenticated.</p>
-        </div>
-      </div>
-
+  <!-- Cart Items -->
+  <div class="cart-card">
+    <div class="cart-table-header">
+      <span>Product</span>
+      <span>Price</span>
+      <span>Quantity</span>
+      <span>Total</span>
     </div>
+
+    <% cart.items.forEach(item => { %>
+      <% const product = item.productId; %>
+      <% if (product) { %>
+        <% 
+           const variant = product.variants.find(v => v._id.toString() === item.variantId.toString()); 
+           const image = variant?.images[0]?.url || 'https://via.placeholder.com/150'; 
+           const completelyUnavailable = !product.isListed || !variant || !variant.isActive || variant.stock === 0;
+           const isOutOfStock = !completelyUnavailable && variant && variant.stock < item.qty;
+           const isAvailable = product.isListed && variant && variant.isActive && variant.stock >= item.qty;
+           // NOTE: canCheckout removed entirely — validation now lives server-side in the checkout controller
+        %>
+
+        <div class="cart-item <%= completelyUnavailable ? 'unavailable' : '' %>" data-product-id="<%= product._id %>" data-variant-id="<%= item.variantId %>">
+          <div class="item-info">
+            <a href="/product/<%= product._id %>" class="item-img" style="display: block;">
+              <img src="<%= image %>" alt="<%= product.name %>" style="<%= completelyUnavailable ? 'filter: grayscale(100%); opacity: 0.7;' : '' %>"/>
+            </a>
+
+            <div class="item-details">
+              <a href="/product/<%= product._id %>" style="text-decoration: none; color: inherit;">
+                <h3><%= product.name %></h3>
+              </a>
+              <p class="item-color">Color: <%= variant?.color || 'N/A' %></p>
+              
+              <% if (completelyUnavailable) { %>
+                <p style="color: var(--red); font-size: 0.8rem; font-weight: 500; margin-bottom: 6px;">This product is out of stock.</p>
+              <% } else if (isOutOfStock) { %>
+                <p style="color: #d35400; font-size: 0.8rem; font-weight: 500; margin-bottom: 6px;">Only <%= variant.stock %> quantity available.</p>
+              <% } %>
+
+              <button class="remove-btn" onclick="removeItem(this, '<%= product._id %>', '<%= item.variantId %>')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                Remove
+              </button>
+            </div>
+          </div>
+
+          <div class="item-price">₹<%= item.price.toLocaleString('en-IN') %></div>
+
+          <div class="qty-control" style="<%= completelyUnavailable ? 'opacity: 0.5; pointer-events: none;' : '' %>">
+            <button class="qty-btn" onclick="changeQty(this, -1, '<%= product._id %>', '<%= item.variantId %>')" <%= item.qty <= 1 || completelyUnavailable ? 'disabled' : '' %>>−</button>
+            <input class="qty-value" value="<%= item.qty %>" readonly />
+            <button class="qty-btn" onclick="changeQty(this, 1, '<%= product._id %>', '<%= item.variantId %>')" <%= item.qty >= 10 || completelyUnavailable || (variant && item.qty >= variant.stock) ? 'disabled' : '' %>>+</button>
+          </div>
+
+          <div class="item-total">₹<%= item.total.toLocaleString('en-IN') %></div>
+        </div>
+      <% } %>
+    <% }) %>
+  </div>
+
+  <!-- Order Summary -->
+  <div class="order-card">
+    <h2>Order Summary</h2>
+
+    <div class="summary-row">
+      <span>Subtotal</span>
+      <span id="subtotal">₹<%= subtotal.toLocaleString('en-IN') %></span>
+    </div>
+    <div class="summary-row">
+      <span>Shipping</span>
+      <span class="free-label">Free</span>
+    </div>
+    <div class="summary-row total">
+      <span>Total</span>
+      <span class="total-amount" id="total">₹<%= subtotal.toLocaleString('en-IN') %></span>
+    </div>
+
+    <button class="checkout-btn" onclick="location.href='/checkout/address'">
+      Proceed to Checkout
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="5" y1="12" x2="19" y2="12" />
+        <polyline points="12 5 19 12 12 19" />
+      </svg>
+    </button>
+
+    <div class="secure-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+      <p>Secure checkout. All transactions are encrypted and authenticated.</p>
+    </div>
+  </div>
+
+</div>
 
     <% } else { %>
 

@@ -15,9 +15,9 @@ export const getOrders = async (req, res) => {
         const user = await User.findOne({ email: req.session.user });
         if (!user) return res.redirect('/login');
 
-        const page  = Math.max(1, parseInt(req.query.page)  || 1);
+        const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 5);
-        const skip  = (page - 1) * limit;
+        const skip = (page - 1) * limit;
 
         const totalCount = await Order.countDocuments({ userId: user._id });
 
@@ -34,7 +34,7 @@ export const getOrders = async (req, res) => {
             orders,
             title: 'My Orders',
             pagination: {
-                currentPage:  page,
+                currentPage: page,
                 totalPages,
                 totalCount,
                 limit,
@@ -106,9 +106,9 @@ export const cancelFullOrder = async (req, res) => {
 
         for (let item of order.items) {
             if (item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
-                item.itemStatus  = "cancelled";
+                item.itemStatus = "cancelled";
                 item.cancelReason = reason || "";
-                item.cancelledAt  = new Date();
+                item.cancelledAt = new Date();
 
                 await Product.findOneAndUpdate(
                     { "_id": item.productId, "variants._id": item.variantId },
@@ -147,23 +147,29 @@ export const cancelSingleItem = async (req, res) => {
         if (!item) return res.status(404).json({ success: false, message: "Item not found" });
 
         if (item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
-            item.itemStatus  = "cancelled";
+            item.itemStatus = "cancelled";
             item.cancelReason = reason;
-            item.cancelledAt  = new Date();
+            item.cancelledAt = new Date();
 
             await Product.findOneAndUpdate(
                 { "_id": item.productId, "variants._id": item.variantId },
                 { $inc: { "variants.$.stock": item.qty } }
             );
 
-            order.orderTotal  -= item.total;
+            order.orderTotal -= item.total;
             order.finalAmount -= item.total;
         }
 
         const activeItems = order.items.filter(
             i => i.itemStatus !== "cancelled" && i.itemStatus !== "returned"
         );
-        if (activeItems.length === 0) order.orderStatus = "cancelled";
+        if (activeItems.length === 0) {
+            order.orderStatus = "cancelled";
+            // Restore original totals when the order is completely cancelled, avoiding ₹0 total displays
+            const originalSubtotal = order.items.reduce((sum, item) => sum + item.total, 0);
+            order.orderTotal = originalSubtotal;
+            order.finalAmount = originalSubtotal + (order.deliveryCharge || 0) - (order.discount || 0);
+        }
 
         await order.save();
 

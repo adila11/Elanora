@@ -161,7 +161,7 @@ export const placeOrder = async (req, res) => {
             }
 
 
-            // CHECK PRODUCT AVAILABILITY
+           
             if (!product.isListed) {
 
                 return res.status(400).json({
@@ -185,7 +185,7 @@ export const placeOrder = async (req, res) => {
             }
 
 
-            // CHECK STOCK
+            
             if (variant.stock < item.qty) {
 
                 return res.status(400).json({
@@ -248,7 +248,7 @@ export const placeOrder = async (req, res) => {
 
         await order.save();
 
-        // Reduce Stock
+        
         for (let item of cart.items) {
             await Product.findOneAndUpdate(
                 { "_id": item.productId, "variants._id": item.variantId },
@@ -256,7 +256,7 @@ export const placeOrder = async (req, res) => {
             );
         }
 
-        // Clear Cart
+        
         await Cart.findOneAndDelete({ userId: userId });
 
         res.json({

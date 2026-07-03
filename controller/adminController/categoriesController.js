@@ -170,20 +170,15 @@ export const toggleCategory = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-
         const cat = await Category.findById(req.params.id);
 
         if (!cat) {
             return res.status(404).json({ message: 'Category not found.' });
         }
-
-
         cat.isActive = !cat.isActive;
 
         await cat.save();
 
-
-        // update all products inside this category
         await Products.updateMany(
             {
                 category: cat._id
@@ -195,7 +190,6 @@ export const toggleCategory = async (req, res) => {
             }
         );
 
-
         return res.json({
             message: `Category ${cat.isActive ? 'listed' : 'unlisted'} successfully.`,
             isActive: cat.isActive
@@ -203,9 +197,7 @@ export const toggleCategory = async (req, res) => {
 
 
     } catch (error) {
-
         console.error("TOGGLE CATEGORY ERROR:", error);
-
         res.status(500).json({
             message: "Server error."
         });
@@ -217,6 +209,7 @@ export const deleteCategory = async (req, res) => {
         if (!req.session.admin) return res.status(401).json({ message: 'Unauthorized' });
 
         const deleted = await Category.findByIdAndDelete(req.params.id);
+        
         if (!deleted) return res.status(404).json({ message: 'Category not found.' });
 
         return res.json({ message: 'Category deleted successfully.' });

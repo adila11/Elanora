@@ -267,8 +267,6 @@ export const editAddress = async (req, res) => {
             await Address.updateMany({ user: user._id, _id: { $ne: address._id } }, { $set: { isDefault: false } });
             address.isDefault = true;
         } else {
-            // If they are unsetting the default, check if there are no other defaults
-            // Just let it be false.
             address.isDefault = false;
         }
 

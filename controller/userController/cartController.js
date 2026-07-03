@@ -179,7 +179,6 @@ export const updateCartItem = async (req, res) => {
             return res.json({ success: false, message: "Maximum quantity per product is 10." });
         }
 
-        // Check stock
         const product = await Products.findById(productId);
         if (!product || !product.isListed) {
             return res.json({ success: false, message: "Product is not available" });
@@ -200,7 +199,6 @@ export const updateCartItem = async (req, res) => {
 
         await cart.save();
 
-        // Calculate new subtotal
         let subtotal = 0;
         cart.items.forEach(item => {
             subtotal += item.total;
@@ -252,7 +250,6 @@ export const removeCartItem = async (req, res) => {
             (total, item) => total + item.qty,
             0
         );
-        // Calculate new subtotal
         let subtotal = 0;
         cart.items.forEach(item => {
             subtotal += item.total;

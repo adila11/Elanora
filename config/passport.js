@@ -20,14 +20,12 @@ passport.use(
                     if (user.isBlocked) {
                         return done(null, false, { message: "Your account has been blocked by the admin" });
                     }
-                    // Existing user
                     if (!user.googleId) {
                         user.googleId = profile.id;
                         user.isGoogleUser = true;
                         await user.save();
                     }
                 } else {
-                    // Create new user
                     user = await User.create({
                         fullName: profile.displayName, 
                         email: email,
@@ -40,14 +38,13 @@ passport.use(
                 return done(null, user);
 
             } catch (err) {
-                console.log(" GOOGLE ERROR:", err); // IMPORTANT LOG
+                console.log(" GOOGLE ERROR:", err); 
                 return done(err, null);
             }
         }
     )
 );
 
-// session store
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });

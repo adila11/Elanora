@@ -2,12 +2,11 @@ import Return from "../../model/returnSchema.js";
 import Order from "../../model/orderSchema.js";
 import Product from "../../model/productSchema.js";
 
-// ── GET /admin/returns ──────────────────────────────────────────────────────
 export const getReturnsPage = async (req, res) => {
     try {
-        const page  = Math.max(1, parseInt(req.query.page)  || 1);
+        const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 10);
-        const skip  = (page - 1) * limit;
+        const skip = (page - 1) * limit;
 
         const totalCount = await Return.countDocuments();
 
@@ -20,26 +19,26 @@ export const getReturnsPage = async (req, res) => {
 
         const returns = rawReturns.map(r => {
             const order = r.orderId;
-            const user  = r.userId;
+            const user = r.userId;
 
             const orderItem = order?.items?.id
                 ? order.items.id(r.itemId)
                 : order?.items?.find(i => String(i._id) === String(r.itemId));
 
             return {
-                _id:           r._id,
-                orderId:       order?.orderId                    ?? "N/A",
-                customerName:  order?.shippingAddress?.fullName  ?? user?.name  ?? "N/A",
-                customerPhone: order?.shippingAddress?.phone     ?? user?.phone ?? "—",
-                product:       orderItem?.productName            ?? "N/A",
-                variant:       orderItem?.variantName            ?? "",
-                price:         orderItem?.price                  ?? r.refundAmount ?? 0,
-                quantity:      orderItem?.qty                    ?? 1,
-                image:         orderItem?.productImage           ?? "",
-                reason:        r.reason,
-                status:        r.status,
-                refundAmount:  r.refundAmount,
-                date:          r.requestedAt,
+                _id: r._id,
+                orderId: order?.orderId ?? "N/A",
+                customerName: order?.shippingAddress?.fullName ?? user?.name ?? "N/A",
+                customerPhone: order?.shippingAddress?.phone ?? user?.phone ?? "—",
+                product: orderItem?.productName ?? "N/A",
+                variant: orderItem?.variantName ?? "",
+                price: orderItem?.price ?? r.refundAmount ?? 0,
+                quantity: orderItem?.qty ?? 1,
+                image: orderItem?.productImage ?? "",
+                reason: r.reason,
+                status: r.status,
+                refundAmount: r.refundAmount,
+                date: r.requestedAt,
             };
         });
 
@@ -49,7 +48,7 @@ export const getReturnsPage = async (req, res) => {
             returns,
             title: "Returns",
             pagination: {
-                currentPage:  page,
+                currentPage: page,
                 totalPages,
                 totalCount,
                 limit,
@@ -67,7 +66,6 @@ export const getReturnsPage = async (req, res) => {
 };
 
 
-// ── PATCH /admin/returns/:id/approve ──────────────────────────────────────
 export const approveReturn = async (req, res) => {
     try {
         const { id } = req.params;
@@ -80,7 +78,7 @@ export const approveReturn = async (req, res) => {
             return res.status(400).json({ success: false, message: "Return already processed" });
         }
 
-        returnRequest.status      = "approved";
+        returnRequest.status = "approved";
         returnRequest.processedAt = new Date();
         await returnRequest.save();
 
@@ -88,9 +86,9 @@ export const approveReturn = async (req, res) => {
         if (order) {
             const item = order.items.id(returnRequest.itemId);
             if (item) {
-                const oldStatus   = item.itemStatus;
-                item.itemStatus   = "returned";
-                item.returnedAt   = new Date();
+                const oldStatus = item.itemStatus;
+                item.itemStatus = "returned";
+                item.returnedAt = new Date();
                 item.returnReason = returnRequest.reason;
 
                 if (oldStatus !== "returned" && oldStatus !== "cancelled") {
@@ -112,10 +110,9 @@ export const approveReturn = async (req, res) => {
 };
 
 
-// ── PATCH /admin/returns/:id/reject ───────────────────────────────────────
 export const rejectReturn = async (req, res) => {
     try {
-        const { id }          = req.params;
+        const { id } = req.params;
         const { adminRemark } = req.body;
 
         const returnRequest = await Return.findById(id);
@@ -126,7 +123,7 @@ export const rejectReturn = async (req, res) => {
             return res.status(400).json({ success: false, message: "Return already processed" });
         }
 
-        returnRequest.status      = "rejected";
+        returnRequest.status = "rejected";
         returnRequest.processedAt = new Date();
         if (adminRemark) returnRequest.adminRemark = adminRemark;
         await returnRequest.save();

@@ -14,6 +14,17 @@
             --text-light: #777777;
             --border-color: #E0E0E0;
             --error-color: #e74c3c;
+            /* Home-page footer variables */
+            --cream: #f9f5ef;
+            --warm-white: #fdfaf5;
+            --gold: #c8972a;
+            --gold-light: #e4b84a;
+            --gold-pale: #f0ddb0;
+            --dark: #1a1612;
+            --text: #3a3228;
+            --muted: #8c7f70;
+            --border: #e8ddd0;
+            --radius: 12px;
         }
         * {
             box-sizing: border-box;
@@ -93,18 +104,20 @@
         }
         .toggle-password {
             position: absolute;
-            right: 14px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
+            background: none;
+            border: none;
+            padding: 0;
             cursor: pointer;
-            color: #999;
-            font-size: 1.2rem;
-            user-select: none;
+            display: flex;
+            align-items: center;
+            color: #bbb;
             transition: color 0.2s;
         }
-        .toggle-password:hover {
-            color: #666;
-        }
+        .toggle-password:hover { color: var(--primary-gold); }
+        .toggle-password svg { width: 18px; height: 18px; display: block; }
         input.error {
             border-color: var(--error-color);
         }
@@ -200,79 +213,14 @@
             text-decoration: none;
             font-weight: 600;
         }
-        /* Footer Styles */
-        footer {
-            background-color: var(--footer-bg);
-            padding: 60px 8% 30px;
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        .footer-col h4 {
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            color: var(--text-dark);
-        }
-        .footer-col p, .footer-col li {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            list-style: none;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-        .social-icons {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        .social-icon {
-            width: 32px;
-            height: 32px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--border-color);
-            font-size: 0.8rem;
-        }
-        .newsletter-input {
-            width: 100%;
-            padding: 10px 15px;
-            border-radius: 25px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 10px;
-        }
-        .btn-subscribe {
-            background: var(--primary-gold);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 10px;
-            border-radius: 25px;
-            cursor: pointer;
-        }
-        .footer-bottom {
-            border-top: 1px solid rgba(0,0,0,0.05);
-            padding-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            color: var(--text-light);
-        }
-        @media (max-width: 850px) {
-            .footer-grid { grid-template-columns: 1fr 1fr; }
-        }
+
     </style>
 </head>
 <body>
     <div class="content-wrapper">
         <div class="signup-card">
             <div class="logo-box">
-                <span>💎</span> Elanora
+                 Elanora
             </div>
             <h1>Create Account</h1>
             <p class="subtitle">Join us to explore our jewelry world</p>
@@ -294,7 +242,12 @@
                     <label>Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="password" placeholder="Create a password">
-                        <span class="toggle-password" id="togglePassword">👁️</span>
+                        <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
+                            <svg id="eyePassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
                     </div>
                     <div class="error-message" id="passwordError"></div>
                 </div>
@@ -302,7 +255,12 @@
                     <label>Confirm Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="confirmPassword" placeholder="Confirm your password">
-                        <span class="toggle-password" id="toggleConfirmPassword">👁️</span>
+                        <button type="button" class="toggle-password" id="toggleConfirmPassword" aria-label="Toggle confirm password visibility">
+                            <svg id="eyeConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
                     </div>
                     <div class="error-message" id="confirmPasswordError"></div>
                 </div>
@@ -343,40 +301,7 @@
         </div>
     </div>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <div class="logo-box" style="justify-content: flex-start; margin-bottom: 15px;">💎 Elanora</div>
-                <p>Crafting timeless elegance and radiant refinement for those who appreciate the finer things in life.</p>
-                <div class="social-icons">
-                    <div class="social-icon">f</div>
-                    <div class="social-icon">𝕏</div>
-                    <div class="social-icon">📸</div>
-                    <div class="social-icon">▶</div>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul><li>Shop Collection</li><li>About Us</li><li>Our Story</li><li>Contact Us</li></ul>
-            </div>
-            <div class="footer-col">
-                <h4>Customer Service</h4>
-                <ul><li>FAQ</li><li>Shipping & Returns</li><li>Jewelry Care</li><li>Terms & Conditions</li></ul>
-            </div>
-            <div class="footer-col">
-                <h4>Newsletter</h4>
-                <p>Subscribe to receive updates, access to exclusive deals, and more.</p>
-                <form action="/subscribe" method="POST">
-                    <input type="email" name="subscriberEmail" class="newsletter-input" placeholder="Enter your email" required>
-                    <button type="submit" class="btn-subscribe">Subscribe</button>
-                </form>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div>© 2026 Elanora Jewelry. All rights reserved.</div>
-            <div>Privacy Policy &nbsp;&nbsp; Terms of Service</div>
-        </div>
-    </footer>
+    <%- include('../../../partials/user/footer') %>
 
     <script>
         // Show referral field
@@ -385,19 +310,20 @@
             document.getElementById('referral-field').style.display = 'block';
         }
 
-        // Password toggle
-        function togglePasswordVisibility(inputId, toggleId) {
-            const passwordInput = document.getElementById(inputId);
-            const toggleIcon = document.getElementById(toggleId);
+        // Password SVG eye toggle
+        const EYE_OPEN  = `<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>`;
+        const EYE_SLASH = `<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88L6.59 6.59m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>`;
 
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleIcon.textContent = "🙈";
-            } else {
-                passwordInput.type = "password";
-                toggleIcon.textContent = "👁️";
-            }
+        function setupEyeToggle(btnId, inputId, iconId) {
+            let visible = false;
+            document.getElementById(btnId).addEventListener('click', () => {
+                visible = !visible;
+                document.getElementById(inputId).type = visible ? 'text' : 'password';
+                document.getElementById(iconId).innerHTML = visible ? EYE_SLASH : EYE_OPEN;
+            });
         }
+        setupEyeToggle('togglePassword',        'password',        'eyePassword');
+        setupEyeToggle('toggleConfirmPassword', 'confirmPassword', 'eyeConfirmPassword');
 
         // Error handling functions
         function showError(inputId, message) {

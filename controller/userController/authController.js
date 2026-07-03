@@ -97,8 +97,7 @@ export const forgotpassword = async (req, res) => {
         sentOtp(email,"forgotpassword")
 
         req.session.tempUser = email
-        return res.redirect('/forgotpassword-otpverify');   // or redirect to verify-otp page
-
+        return res.redirect('/forgotpassword-otpverify');   
     } catch (error) {
         console.error(error);
         req.flash('error', 'Something went wrong. Please try again.');
@@ -278,7 +277,7 @@ export const signup = async (req, res) => {
         };
 
 
-        await sentOtp(email, "signup");
+        await sentOtp(email,"signup");
 
 
         return res.status(200).json({

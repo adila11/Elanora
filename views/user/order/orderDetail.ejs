@@ -821,7 +821,8 @@
       position: absolute;
       left: -9999px;
       top: -9999px;
-      width: 190mm; /* width adjusted for proper fitting without overflow */
+      width: 190mm;
+      /* width adjusted for proper fitting without overflow */
       background: #fff;
     }
 
@@ -1018,13 +1019,13 @@
                 delivered: 'Delivered' , cancelled: 'Cancelled' , partially_cancelled: 'Partially Cancelled' ,
                 returned: 'Returned' , partially_returned: 'Partially Returned' , }; const itemStatusLabel={
                 active: 'Active' , cancelled: 'Cancelled' , returned: 'Returned' , }; const returnStatusLabel={
-                pending: 'Return Requested' , approved: 'Returned' , rejected: 'Return Rejected' , };
-                /* ═══════════════════════════════════════════════════ DERIVE EFFECTIVE ORDER STATUS FROM ITEMS
+                pending: 'Return Requested' , approved: 'Returned' , rejected: 'Return Rejected' , }; /*
+                ═══════════════════════════════════════════════════ DERIVE EFFECTIVE ORDER STATUS FROM ITEMS
                 ═══════════════════════════════════════════════════ The DB `orderStatus` drives the forward-progress
                 steps. We compute an overlay status for cancel / return badges and tracker extra steps.
-                ═══════════════════════════════════════════════════ */ const os=order.orderStatus;
-                /* ── Cancellation analysis (only valid before shipping) ── */ const preShipStatuses=['pending', 'processing'
-                , 'shipped' ]; const isPreShip=preShipStatuses.includes(os); const cancelledItems=order.items.filter(i=>
+                ═══════════════════════════════════════════════════ */ const os=order.orderStatus; /* ── Cancellation
+                analysis (only valid before shipping) ── */ const preShipStatuses=['pending', 'processing' , 'shipped'
+                ]; const isPreShip=preShipStatuses.includes(os); const cancelledItems=order.items.filter(i=>
                 i.itemStatus === 'cancelled');
                 const hasCancelledItems = cancelledItems.length > 0 && isPreShip;
 
@@ -1061,63 +1062,38 @@
 
                 /* CSS class for the order-level badge */
                 const badgeCssMap = {
-                  pending: 'pending',
-                  processing: 'processing',
-                  shipped: 'shipped',
-                  out_for_delivery: 'out_for_delivery',
-                  delivered: 'delivered',
-                  cancelled: 'cancelled',
-                  partially_cancelled: 'partially_cancelled',
-                  returned: 'returned',
-                  partially_returned: 'partially_returned',
+                pending: 'pending',
+                processing: 'processing',
+                shipped: 'shipped',
+                out_for_delivery: 'out_for_delivery',
+                delivered: 'delivered',
+                cancelled: 'cancelled',
+                partially_cancelled: 'partially_cancelled',
+                returned: 'returned',
+                partially_returned: 'partially_returned',
                 };
                 const orderBadgeClass = badgeCssMap[displayStatus] || displayStatus;
 
                 /* ── Tracker fill calculation ──
-                   Base 5 steps use the raw DB orderStatus.
-                   Cancel/return extras are appended after. */
+                Base 5 steps use the raw DB orderStatus.
+                Cancel/return extras are appended after. */
                 const baseSteps = ['pending', 'processing', 'shipped', 'out_for_delivery', 'delivered'];
                 let currentStep = baseSteps.indexOf(os);
-                if (currentStep < 0) currentStep = 0;
-                // Fill covers the base pipeline up to the current DB step.
-                // If all items are cancelled we show 0% on the base line (the extra cancelled dot is red, so the gold line stays at 0).
-                let fillPct = 0;
-                if (!allCancelled) {
-                    fillPct = (currentStep / (baseSteps.length - 1)) * 100;
-                }
-                /* ── Should we show extra terminal step in tracker? ── */
-                const showCancelledStep = allCancelled;
-                const showPartiallyCancelledStep = someCancelled;
-                const showReturnedStep = allReturned;
-                const showPartiallyReturnedStep = someReturned;
-                const trackerSteps = [
-                  {
-                    key: 'pending' ,
-                    label: 'Order Placed' ,
-                    icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
-                  },
-                  {
-                    key: 'processing' ,
-                    label: 'Processing' ,
-                    icon: 'M20 6L9 17l-5-5'
-                  },
-                  {
-                    key: 'shipped' ,
-                    label: 'Shipped' ,
-                    icon: 'M1 3h15v13H1zM16 8l4 0 3 3 0 5-7 0'
-                  },
-                  {
-                    key: 'out_for_delivery' ,
-                    label: 'Out for Delivery' ,
-                    icon: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0zM12 10m-3 0a3 3 0 106 0 3 3 0 10-6 0'
-                  },
-                  {
-                    key: 'delivered' ,
-                    label: 'Delivered' ,
-                    icon: 'M20 6L9 17l-5-5'
-                  }
-                ];
-                %>
+                if (currentStep < 0) currentStep=0;
+                  /* Fill covers the base pipeline up to the current DB step. If
+                  all items are cancelled we show 0% on the base line (the extra cancelled dot is red, so the gold line
+                  stays at 0). */
+                  let fillPct=0; if (!allCancelled) { fillPct=(currentStep / (baseSteps.length - 1)) * 100;
+                  } /* ── Should we show extra terminal step in tracker? ── */ const showCancelledStep=allCancelled;
+                  const showPartiallyCancelledStep=someCancelled; const showReturnedStep=allReturned; const
+                  showPartiallyReturnedStep=someReturned; const trackerSteps=[ { key: 'pending' , label: 'Order Placed'
+                  ,
+                  icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+                  }, { key: 'processing' , label: 'Processing' , icon: 'M20 6L9 17l-5-5' }, { key: 'shipped' ,
+                  label: 'Shipped' , icon: 'M1 3h15v13H1zM16 8l4 0 3 3 0 5-7 0' }, { key: 'out_for_delivery' ,
+                  label: 'Out for Delivery' ,
+                  icon: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0zM12 10m-3 0a3 3 0 106 0 3 3 0 10-6 0' }, {
+                  key: 'delivered' , label: 'Delivered' , icon: 'M20 6L9 17l-5-5' } ]; %>
 
                   <!-- ── Header row ── -->
                   <div class="order-header">
@@ -1127,11 +1103,13 @@
                         <polyline points="15 18 9 12 15 6" />
                       </svg>
                     </a>
-                    <h3>Order #<%= order.orderId %></h3>
-                    
+                    <h3>Order #<%= order.orderId %>
+                    </h3>
+
                     <div class="flex items-center gap-3 ml-auto">
                       <button class="btn-gold" id="downloadInvoiceBtn" onclick="downloadInvoice()">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="inline mr-1">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2.5" class="inline mr-1">
                           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                           <polyline points="7 10 12 15 17 10" />
                           <line x1="12" y1="15" x2="12" y2="3" />
@@ -1141,14 +1119,15 @@
 
                       <% if (['pending', 'processing' ].includes(os) && !allCancelled) { %>
                         <button class="btn-outline-red" onclick="openFullCancelModal()">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="inline mr-1">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" class="inline mr-1">
                             <circle cx="12" cy="12" r="10" />
                             <line x1="15" y1="9" x2="9" y2="15" />
                             <line x1="9" y1="9" x2="15" y2="15" />
                           </svg>
                           Cancel Order
                         </button>
-                      <% } %>
+                        <% } %>
                     </div>
                   </div>
 
@@ -1537,7 +1516,7 @@
                           <div class="order-summary">
                             <div class="summary-row"><span>Subtotal</span><span>₹<%= order.orderTotal %></span></div>
                             <div class="summary-row"><span>Delivery Charge</span><span>₹<%= order.deliveryCharge %>
-                                  </span></div>
+                              </span></div>
                             <div class="summary-row"><span>Discount</span><span>– ₹<%= order.discount %></span></div>
                             <div class="summary-row total"><span>Total</span><span>₹<%= order.finalAmount %></span>
                             </div>
@@ -1741,36 +1720,36 @@
         }
 
         async function submitFullCancel() {
-        const reason = document.getElementById('fullCancelReason').value.trim();
-        if (!reason) {
-          if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
-          return;
-        }
-        const btn = document.querySelector('#fullCancelModal .modal-btn-danger');
-        btn.disabled = true;
-        btn.textContent = 'Cancelling…';
-        try {
-          const res = await fetch(`/orders/${ORDER_ID}/cancel`, {   // ← fixed URL, ID goes in the path
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reason })                        // ← orderId no longer needed in body
-          });
-          const data = await res.json();
-          if (data.success) {
-            closeFullCancelModal();
-            if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
-            setTimeout(() => location.reload(), 1000);
-          } else {
-            if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
+          const reason = document.getElementById('fullCancelReason').value.trim();
+          if (!reason) {
+            if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
+            return;
+          }
+          const btn = document.querySelector('#fullCancelModal .modal-btn-danger');
+          btn.disabled = true;
+          btn.textContent = 'Cancelling…';
+          try {
+            const res = await fetch(`/orders/${ORDER_ID}/cancel`, {   // ← fixed URL, ID goes in the path
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ reason })                        // ← orderId no longer needed in body
+            });
+            const data = await res.json();
+            if (data.success) {
+              closeFullCancelModal();
+              if (typeof window.showToast === 'function') window.showToast('Order cancelled successfully.', 'success');
+              setTimeout(() => location.reload(), 1000);
+            } else {
+              if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel order.', 'error');
+              btn.disabled = false;
+              btn.textContent = 'Yes, Cancel Order';
+            }
+          } catch {
+            if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
             btn.disabled = false;
             btn.textContent = 'Yes, Cancel Order';
           }
-        } catch {
-          if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
-          btn.disabled = false;
-          btn.textContent = 'Yes, Cancel Order';
         }
-      }
 
         /* ── Partial item cancel modal ── */
         function openPartialCancelModal(btn) {
@@ -1828,7 +1807,7 @@
           btn.innerHTML = `Generating…`;
 
           const opt = {
-            margin: [10,10,10,10],
+            margin: [10, 10, 10, 10],
             filename: `Invoice_${ORDER_ID}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true, logging: false },
@@ -1851,123 +1830,145 @@
         }
       </script>
 
-  <!-- PREMIUM INVOICE TEMPLATE (OFFSCREEN) -->
-  <div class="invoice-container-wrap">
-    <div class="invoice-card" id="printableInvoice">
-      
-      <!-- Invoice Header -->
-      <div class="invoice-header-grid">
-        <div>
-          <div class="invoice-company-logo">ELANORA</div>
-          <div class="invoice-company-details">
-            <strong>Elanora Boutique Ltd.</strong><br>
-            123 Luxury Lane, Fashion District<br>
-            Mumbai, MH - 400001, India<br>
-            Email: support@elanora.com | Phone: +91 98765 43210
-          </div>
-        </div>
-        <div class="invoice-meta-info">
-          <div class="invoice-title">Tax Invoice</div>
-          <div class="invoice-meta-row"><strong>Invoice No:</strong> #<%= order.orderId %></div>
-          <div class="invoice-meta-row">
-            <strong>Date:</strong> 
-            <%= new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) %>
-          </div>
-          <div class="invoice-meta-row"><strong>Payment Method:</strong> <%= order.paymentMethod.toUpperCase() %></div>
-          <div class="invoice-meta-row" style="text-transform: capitalize;"><strong>Status:</strong> <%= order.paymentStatus %></div>
-        </div>
-      </div>
+      <!-- PREMIUM INVOICE TEMPLATE (OFFSCREEN) -->
+      <div class="invoice-container-wrap">
+        <div class="invoice-card" id="printableInvoice">
 
-      <!-- Address Info -->
-      <div class="invoice-address-grid">
-        <div class="invoice-address-col">
-          <h3>Bill/Ship To</h3>
-          <div class="invoice-address-details">
-            <strong><%= order.shippingAddress.fullName %></strong><br>
-            <% if (user && user.email) { %>
-              Email: <%= user.email %><br>
-            <% } %>
-            Phone: <%= order.shippingAddress.phone %>
+          <!-- Invoice Header -->
+          <div class="invoice-header-grid">
+            <div>
+              <div class="invoice-company-logo">ELANORA</div>
+              <div class="invoice-company-details">
+                <strong>Elanora Boutique Ltd.</strong><br>
+                123 Luxury Lane, Fashion District<br>
+                Mumbai, MH - 400001, India<br>
+                Email: support@elanora.com | Phone: +91 98765 43210
+              </div>
+            </div>
+            <div class="invoice-meta-info">
+              <div class="invoice-title">Tax Invoice</div>
+              <div class="invoice-meta-row"><strong>Invoice No:</strong> #<%= order.orderId %>
+              </div>
+              <div class="invoice-meta-row">
+                <strong>Date:</strong>
+                <%= new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric' , month: 'long' ,
+                  year: 'numeric' }) %>
+              </div>
+              <div class="invoice-meta-row"><strong>Payment Method:</strong>
+                <%= order.paymentMethod.toUpperCase() %>
+              </div>
+              <div class="invoice-meta-row" style="text-transform: capitalize;"><strong>Status:</strong>
+                <%= order.paymentStatus %>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="invoice-address-col">
-          <h3>Shipping Address</h3>
-          <div class="invoice-address-details">
-            <%= order.shippingAddress.addressLine %><br>
-            <% if (order.shippingAddress.apartment) { %>
-              <%= order.shippingAddress.apartment %><br>
-            <% } %>
-            <%= order.shippingAddress.city %>, <%= order.shippingAddress.state %> - <%= order.shippingAddress.pincode %><br>
-            <%= order.shippingAddress.country || 'India' %>
+
+          <!-- Address Info -->
+          <div class="invoice-address-grid">
+            <div class="invoice-address-col">
+              <h3>Bill/Ship To</h3>
+              <div class="invoice-address-details">
+                <strong>
+                  <%= order.shippingAddress.fullName %>
+                </strong><br>
+                <% if (user && user.email) { %>
+                  Email: <%= user.email %><br>
+                    <% } %>
+                      Phone: <%= order.shippingAddress.phone %>
+              </div>
+            </div>
+            <div class="invoice-address-col">
+              <h3>Shipping Address</h3>
+              <div class="invoice-address-details">
+                <%= order.shippingAddress.addressLine %><br>
+                  <% if (order.shippingAddress.apartment) { %>
+                    <%= order.shippingAddress.apartment %><br>
+                      <% } %>
+                        <%= order.shippingAddress.city %>, <%= order.shippingAddress.state %> - <%=
+                              order.shippingAddress.pincode %><br>
+                              <%= order.shippingAddress.country || 'India' %>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Products Table -->
-      <table class="invoice-table">
-        <thead>
-          <tr>
-            <th>Product Description</th>
-            <th style="text-align: right;">Price</th>
-            <th style="text-align: center;">Qty</th>
-            <th style="text-align: right;">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% order.items.forEach(item => { %>
-            <tr>
-              <td>
-                <div class="invoice-item-name"><%= item.productName %></div>
-                <% if (item.variantName) { %>
-                  <div class="invoice-item-variant">Color: <%= item.variantName %></div>
-                <% } %>
-              </td>
-              <td style="text-align: right;">₹<%= item.price.toLocaleString('en-IN') %></td>
-              <td style="text-align: center;"><%= item.qty %></td>
-              <td style="text-align: right;">₹<%= item.total.toLocaleString('en-IN') %></td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-
-      <!-- Summary Section -->
-      <div class="invoice-total-section">
-        <div class="invoice-notes">
-          <h4>Terms & Instructions:</h4>
-          <p>This is a computer-generated tax invoice and does not require a physical signature. Returns/exchanges are accepted within 7 days in their original packaging and unused condition.</p>
-        </div>
-        <div>
-          <table class="invoice-summary-table">
-            <tr>
-              <td>Subtotal:</td>
-              <td style="text-align: right;">₹<%= order.orderTotal.toLocaleString('en-IN') %></td>
-            </tr>
-            <tr>
-              <td>Shipping:</td>
-              <td style="text-align: right;">₹<%= (order.deliveryCharge || 0).toLocaleString('en-IN') %></td>
-            </tr>
-            <% if (order.discount && order.discount > 0) { %>
+          <!-- Products Table -->
+          <table class="invoice-table">
+            <thead>
               <tr>
-                <td>Discount:</td>
-                <td style="text-align: right; color: #2d7a4f;">-₹<%= order.discount.toLocaleString('en-IN') %></td>
+                <th>Product Description</th>
+                <th style="text-align: right;">Price</th>
+                <th style="text-align: center;">Qty</th>
+                <th style="text-align: right;">Total</th>
               </tr>
-            <% } %>
-            <tr class="grand-total">
-              <td>Total Amount:</td>
-              <td style="text-align: right;">₹<%= order.finalAmount.toLocaleString('en-IN') %></td>
-            </tr>
+            </thead>
+            <tbody>
+              <% order.items.forEach(item=> { %>
+                <tr>
+                  <td>
+                    <div class="invoice-item-name">
+                      <%= item.productName %>
+                    </div>
+                    <% if (item.variantName) { %>
+                      <div class="invoice-item-variant">Color: <%= item.variantName %>
+                      </div>
+                      <% } %>
+                  </td>
+                  <td style="text-align: right;">₹<%= item.price.toLocaleString('en-IN') %>
+                  </td>
+                  <td style="text-align: center;">
+                    <%= item.qty %>
+                  </td>
+                  <td style="text-align: right;">₹<%= item.total.toLocaleString('en-IN') %>
+                  </td>
+                </tr>
+                <% }) %>
+            </tbody>
           </table>
+
+          <!-- Summary Section -->
+          <div class="invoice-total-section">
+            <div class="invoice-notes">
+              <h4>Terms & Instructions:</h4>
+              <p>This is a computer-generated tax invoice and does not require a physical signature. Returns/exchanges
+                are accepted within 7 days in their original packaging and unused condition.</p>
+            </div>
+            <div>
+              <table class="invoice-summary-table">
+                <tr>
+                  <td>Subtotal:</td>
+                  <td style="text-align: right;">₹<%= order.orderTotal.toLocaleString('en-IN') %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Shipping:</td>
+                  <td style="text-align: right;">₹<%= (order.deliveryCharge || 0).toLocaleString('en-IN') %>
+                  </td>
+                </tr>
+                <% if (order.discount && order.discount> 0) { %>
+                  <tr>
+                    <td>Discount:</td>
+                    <td style="text-align: right; color: #2d7a4f;">-₹<%= order.discount.toLocaleString('en-IN') %>
+                    </td>
+                  </tr>
+                  <% } %>
+                    <tr class="grand-total">
+                      <td>Total Amount:</td>
+                      <td style="text-align: right;">₹<%= order.finalAmount.toLocaleString('en-IN') %>
+                      </td>
+                    </tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="invoice-footer">
+            Thank you for shopping with Elanora! We appreciate your business.<br>
+            For inquiries, contact support@elanora.com or call +91 98765 43210
+          </div>
+
         </div>
       </div>
-
-      <!-- Footer -->
-      <div class="invoice-footer">
-        Thank you for shopping with Elanora! We appreciate your business.<br>
-        For inquiries, contact support@elanora.com or call +91 98765 43210
-      </div>
-
-    </div>
-  </div>
 
 </body>
+
 </html>
