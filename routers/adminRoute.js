@@ -9,7 +9,7 @@ import { approveReturn, getReturnsPage, rejectReturn } from "../controller/admin
 import { createCoupon, deleteCoupon, loadCoupons, updateCoupon } from "../controller/adminController/couponController.js"
 
 import upload from "../config/multerCloudinary.js"
-import { loadSales } from "../controller/adminController/salesController.js"
+import { getSalesReportPage, exportSalesReportExcel, exportSalesReportPDF } from "../controller/adminController/salesController.js"
 const router=express.Router()
 
 router.get("/",loadLogin)
@@ -47,9 +47,11 @@ router.post("/coupons", createCoupon);
 router.put("/coupons/:id", updateCoupon);
 router.delete("/coupons/:id", deleteCoupon);
 
-router.get("/sales", loadSales);
-
-
+router.get("/sales-reports", getSalesReportPage);
+router.get("/sales", getSalesReportPage);
+router.get("/sales-reports/export", exportSalesReportExcel); 
+router.get("/sales-reports/export/pdf", exportSalesReportPDF);
+ 
 router.get('/logout',logout) ;
 
 router.use((req, res) => {

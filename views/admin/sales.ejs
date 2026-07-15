@@ -59,8 +59,7 @@
       padding: 28px;
     }
 
-    /* ── Page Header ── */
-    .page-header {
+    .reports-toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -69,34 +68,11 @@
       gap: 12px;
     }
 
-    .page-title {
-      font-size: 20px;
+    .section-title {
+      font-size: 22px;
       font-weight: 600;
-      color: var(--text);
     }
 
-    .btn-download {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: none;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px 18px;
-      font-size: 13.5px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-
-    .btn-download:hover {
-      background: var(--card);
-      border-color: var(--accent);
-    }
-
-    /* ── Range Tabs ── */
     .range-tabs {
       display: flex;
       align-items: center;
@@ -129,18 +105,100 @@
       color: var(--accent-hover);
     }
 
-    .reports-toolbar {
-      display: flex;
+    .custom-range-bar {
+      display: none;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 22px;
-      flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      margin-bottom: 18px;
     }
 
-    .section-title {
-      font-size: 22px;
-      font-weight: 600;
+    .custom-range-bar.visible {
+      display: flex;
+    }
+
+    .custom-range-bar input[type="date"] {
+      font-family: inherit;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      color: var(--text);
+    }
+
+    .custom-range-bar button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .custom-range-bar button:hover {
+      background: var(--accent-hover);
+    }
+
+    /* ── Download dropdown ── */
+    .download-wrap {
+      position: relative;
+    }
+
+    .btn-download {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 18px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-download:hover {
+      background: var(--card);
+      border-color: var(--accent);
+    }
+
+    .download-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      min-width: 160px;
+      z-index: 20;
+      overflow: hidden;
+    }
+
+    .download-menu.open {
+      display: block;
+    }
+
+    .download-menu a {
+      display: block;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .download-menu a:hover {
+      background: var(--accent-light);
     }
 
     /* ── Stat Cards ── */
@@ -165,7 +223,7 @@
     }
 
     .stat-value {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 600;
       letter-spacing: -0.3px;
       margin-bottom: 10px;
@@ -189,6 +247,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 18px;
+      margin-bottom: 22px;
     }
 
     .chart-card {
@@ -207,6 +266,105 @@
     .chart-wrap {
       position: relative;
       height: 280px;
+    }
+
+    /* ── Transactions Table ── */
+    .table-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .table-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .table-card-title {
+      font-size: 15.5px;
+      font-weight: 600;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    table.tx-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    table.tx-table thead th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--card);
+    }
+
+    table.tx-table tbody td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    table.tx-table tbody tr:hover {
+      background: #fafaf8;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+
+    .badge.delivered,
+    .badge.paid,
+    .badge.approved {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .badge.pending,
+    .badge.processing,
+    .badge.shipped,
+    .badge.out_for_delivery {
+      background: var(--accent-light);
+      color: var(--accent-hover);
+    }
+
+    .badge.cancelled,
+    .badge.failed,
+    .badge.return_rejected {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .badge.returned,
+    .badge.return_requested,
+    .badge.refunded {
+      background: #eef0fd;
+      color: var(--indigo);
+    }
+
+    .empty-row td {
+      text-align: center;
+      color: var(--muted);
+      padding: 30px 12px;
     }
 
     @media (max-width: 1100px) {
@@ -241,50 +399,65 @@
             <div style="display:flex; align-items:center; gap:14px;">
               <div class="range-tabs" id="rangeTabs">
                 <button class="range-tab" data-range="7d">7D</button>
-                <button class="range-tab active" data-range="30d">30D</button>
+                <button class="range-tab" data-range="30d">30D</button>
                 <button class="range-tab" data-range="90d">90D</button>
                 <button class="range-tab" data-range="1y">1Y</button>
                 <button class="range-tab" data-range="custom">Custom</button>
               </div>
-              <button class="btn-download" id="btnDownload" onclick="downloadReport()">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 3v12" />
-                  <path d="M7 10l5 5 5-5" />
-                  <path d="M5 21h14" />
-                </svg>
-                Download
-              </button>
+              <div class="download-wrap">
+                <button class="btn-download" id="btnDownloadToggle">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3v12" />
+                    <path d="M7 10l5 5 5-5" />
+                    <path d="M5 21h14" />
+                  </svg>
+                  Download
+                </button>
+                <div class="download-menu" id="downloadMenu">
+                  <a href="#" id="downloadExcel">Download Excel</a>
+                  <a href="#" id="downloadPdf">Download PDF</a>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Custom range picker (shown when "Custom" tab is active) -->
+          <div class="custom-range-bar <%= currentRange === 'custom' ? 'visible' : '' %>" id="customRangeBar">
+            <label style="font-size:13px; color:var(--muted);">From</label>
+            <input type="date" id="customStart" value="<%= startDate %>" />
+            <label style="font-size:13px; color:var(--muted);">To</label>
+            <input type="date" id="customEnd" value="<%= endDate %>" />
+            <button id="applyCustomRange">Apply</button>
           </div>
 
           <!-- Stat Cards -->
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Total Revenue</div>
-              <div class="stat-value">₹<%= totalRevenue %></div>
+              <div class="stat-value">₹<%= totalRevenue.toLocaleString('en-IN') %></div>
               <div class="stat-delta <%= revenueDelta >= 0 ? 'up' : 'down' %>">
                 <%= revenueDelta >= 0 ? '+' : '' %><%= revenueDelta %>% from last period
               </div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Total Orders</div>
-              <div class="stat-value"><%= totalOrders %></div>
+              <div class="stat-value"><%= totalOrders.toLocaleString('en-IN') %></div>
               <div class="stat-delta <%= ordersDelta >= 0 ? 'up' : 'down' %>">
                 <%= ordersDelta >= 0 ? '+' : '' %><%= ordersDelta %>% from last period
               </div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Average Order Value</div>
-              <div class="stat-value">₹<%= avgOrderValue %></div>
+              <div class="stat-value">₹<%= avgOrderValue.toLocaleString('en-IN') %></div>
               <div class="stat-delta <%= aovDelta >= 0 ? 'up' : 'down' %>">
                 <%= aovDelta >= 0 ? '+' : '' %><%= aovDelta %>% from last period
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-label">Conversion Rate</div>
-              <div class="stat-value"><%= conversionRate %>%</div>
-              <div class="stat-delta <%= conversionDelta >= 0 ? 'up' : 'down' %>">
-                <%= conversionDelta >= 0 ? '+' : '' %><%= conversionDelta %>% from last period
+              <div class="stat-label">Discount / Coupon Deductions</div>
+              <div class="stat-value">₹<%= totalDiscount.toLocaleString('en-IN') %></div>
+              <div class="stat-delta <%= discountDelta >= 0 ? 'up' : 'down' %>">
+                <%= discountDelta >= 0 ? '+' : '' %><%= discountDelta %>% from last period · ₹<%= couponDiscount.toLocaleString('en-IN') %> via coupons
               </div>
             </div>
           </div>
@@ -305,14 +478,66 @@
             </div>
           </div>
 
+          <!-- Transactions Table -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <div class="table-card-title">Transactions</div>
+              <div style="font-size:12.5px; color:var(--muted);"><%= transactions.length %> orders in range</div>
+            </div>
+            <div class="table-scroll">
+              <table class="tx-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Order Total</th>
+                    <th>Discount</th>
+                    <th>Coupon</th>
+                    <th>Delivery</th>
+                    <th>Final Amount</th>
+                    <th>Payment</th>
+                    <th>Payment Status</th>
+                    <th>Order Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (transactions.length === 0) { %>
+                    <tr class="empty-row">
+                      <td colspan="12">No transactions found for this date range.</td>
+                    </tr>
+                  <% } else { %>
+                    <% transactions.forEach(function(tx) { %>
+                      <tr>
+                        <td><%= tx.orderId %></td>
+                        <td><%= new Date(tx.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %></td>
+                        <td><%= tx.customer %></td>
+                        <td><%= tx.itemsCount %></td>
+                        <td>₹<%= tx.orderTotal.toLocaleString('en-IN') %></td>
+                        <td>₹<%= tx.discount.toLocaleString('en-IN') %></td>
+                        <td><%= tx.coupon %></td>
+                        <td>₹<%= tx.deliveryCharge.toLocaleString('en-IN') %></td>
+                        <td>₹<%= tx.finalAmount.toLocaleString('en-IN') %></td>
+                        <td style="text-transform:uppercase; font-size:12px;"><%= tx.paymentMethod %></td>
+                        <td><span class="badge <%= tx.paymentStatus %>"><%= tx.paymentStatus %></span></td>
+                        <td><span class="badge <%= tx.orderStatus %>"><%= tx.orderStatus.replace(/_/g, ' ') %></span></td>
+                      </tr>
+                    <% }) %>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
     </div>
 
     <script>
-      // Data injected from the server. Falls back to sample data if not provided.
-      const chartLabels = <%- JSON.stringify(chartLabels || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']) %>;
-      const revenueSeries = <%- JSON.stringify(revenueSeries || [32000, 37500, 29000, 43000, 41500, 48229.5]) %>;
-      const ordersSeries = <%- JSON.stringify(ordersSeries || [95, 172, 140, 218, 168, 262]) %>;
+      const chartLabels = <%- JSON.stringify(chartLabels) %>;
+      const revenueSeries = <%- JSON.stringify(revenueSeries) %>;
+      const ordersSeries = <%- JSON.stringify(ordersSeries) %>;
+      const currentRange = <%- JSON.stringify(currentRange) %>;
 
       // ── Revenue Trend (area / line) ─────────────────────────────────────────
       const revenueCtx = document.getElementById('revenueChart').getContext('2d');
@@ -415,24 +640,59 @@
       });
 
       // ── Range Tabs ───────────────────────────────────────────────────────────
-      document.getElementById('rangeTabs').addEventListener('click', function (e) {
+      const rangeTabs = document.getElementById('rangeTabs');
+      const customRangeBar = document.getElementById('customRangeBar');
+
+      // mark the active tab based on server-provided currentRange
+      document.querySelectorAll('.range-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.range === currentRange);
+      });
+
+      rangeTabs.addEventListener('click', function (e) {
         const btn = e.target.closest('.range-tab');
         if (!btn) return;
         document.querySelectorAll('.range-tab').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
         const range = btn.dataset.range;
+
         if (range === 'custom') {
-          // Hook up a date-range picker here if needed
+          customRangeBar.classList.add('visible');
           return;
         }
+        customRangeBar.classList.remove('visible');
         location.href = `?range=${range}`;
       });
 
-      // ── Download ─────────────────────────────────────────────────────────────
-      function downloadReport() {
-        const params = new URLSearchParams(location.search);
-        window.location.href = `/admin/sales-reports/export?${params.toString()}`;
+      document.getElementById('applyCustomRange').addEventListener('click', function () {
+        const startDate = document.getElementById('customStart').value;
+        const endDate = document.getElementById('customEnd').value;
+        if (!startDate || !endDate) return;
+        location.href = `?range=custom&startDate=${startDate}&endDate=${endDate}`;
+      });
+
+      // ── Download dropdown ───────────────────────────────────────────────────
+      const btnDownloadToggle = document.getElementById('btnDownloadToggle');
+      const downloadMenu = document.getElementById('downloadMenu');
+
+      btnDownloadToggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        downloadMenu.classList.toggle('open');
+      });
+      document.addEventListener('click', () => downloadMenu.classList.remove('open'));
+
+      function currentQueryString() {
+        return new URLSearchParams(location.search).toString();
       }
+
+      document.getElementById('downloadExcel').addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = `/admin/sales-reports/export?${currentQueryString()}`;
+      });
+
+      document.getElementById('downloadPdf').addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = `/admin/sales-reports/export/pdf?${currentQueryString()}`;
+      });
     </script>
 </body>
 
