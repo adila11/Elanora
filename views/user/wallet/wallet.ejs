@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallet - Elanora</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #fdfaf5;
+      color: #2c2c2c;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #2c2c2c;
+      margin-bottom: 7px;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #e8e0d0;
+      border-radius: 9px;
+      font-size: 0.875rem;
+      font-family: 'DM Sans', sans-serif;
+      color: #2c2c2c;
+      background: #fdfaf5;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .field-input:focus {
+      outline: none;
+      border-color: #c49a2a;
+      background: #fff;
+    }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #c49a2a;
+      color: #fff;
+      border: none;
+      padding: 11px 24px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-gold:hover {
+      background: #a87820;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: transparent;
+      color: #2c2c2c;
+      border: 1px solid #e8e0d0;
+      padding: 11px 24px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-outline:hover {
+      border-color: #c49a2a;
+      color: #c49a2a;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 36px;
+      width: 100%;
+      max-width: 420px;
+      transform: translateY(12px) scale(0.97);
+      transition: transform 0.22s;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    }
+
+    .modal-backdrop.open .modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Wallet-specific */
+    .balance-card {
+      background: linear-gradient(135deg, #d4b05e 0%, #b8912e 100%);
+      border-radius: 16px;
+      padding: 28px 32px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      top: -120px;
+      right: -60px;
+    }
+
+    .txn-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+      border-bottom: 1px solid #f0ece4;
+    }
+
+    .txn-row:last-child {
+      border-bottom: none;
+    }
+
+    .txn-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .txn-icon.credit {
+      background: #e4f4e8;
+      color: #1f9d4b;
+    }
+
+    .txn-icon.debit {
+      background: #fbe8e6;
+      color: #d0483f;
+    }
+
+    .txn-source-badge {
+      display: inline-block;
+      background: #fdf8ee;
+      color: #c49a2a;
+      border: 1px solid #f0e2bd;
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .quick-amount {
+      border: 1px solid #e8e0d0;
+      border-radius: 9px;
+      padding: 10px 0;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: #2c2c2c;
+    }
+
+    .quick-amount:hover,
+    .quick-amount.active {
+      border-color: #c49a2a;
+      color: #c49a2a;
+      background: #fdf8ee;
+    }
+
+    /* Notification modal */
+    .notify-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <%- include('partials/user/header') %>
+
+    <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
+
+      <%- include('partials/user/profileBanner', { user }) %>
+
+        <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
+
+          <%- include('partials/user/profileSidebar', { activePage: 'wallet' }) %>
+
+            <main
+              style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+
+              <div style="border-bottom:1px solid #f0ece4; padding-bottom:18px; margin-bottom:28px;">
+                <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#2c2c2c;">
+                  My Wallet
+                </h3>
+              </div>
+
+              <!-- Available Balance -->
+              <div class="balance-card" style="margin-bottom:32px;">
+                <div
+                  style="position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px;">
+                  <div>
+                    <div
+                      style="display:flex; align-items:center; gap:8px; font-size:0.8rem; opacity:0.9; margin-bottom:10px;">
+                      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <path stroke-linecap="round" d="M2 10h20" />
+                      </svg>
+                      Available Balance
+                    </div>
+                    <div style="font-family:'Cormorant Garamond',serif; font-size:2.4rem; font-weight:700;">
+                      ₹<%= Number(wallet.balance).toLocaleString('en-IN') %>
+                    </div>
+                  </div>
+                  <button id="addFundsBtn" onclick="openAddFundsModal()" class="btn-gold"
+                    style="background:#fff; color:#a87820;">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" d="M12 5v14M5 12h14" />
+                    </svg>
+                    Add Funds
+                  </button>
+                </div>
+              </div>
+
+              <!-- Transaction History -->
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                <h4 style="font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:700; color:#2c2c2c;">
+                  Transaction History
+                </h4>
+                <a href="/wallet/transactions"
+                  style="font-size:0.82rem; font-weight:600; color:#c49a2a; text-decoration:none;">
+                  View Full Transaction
+                </a>
+              </div>
+
+              <%
+                function getSourceLabel(source) {
+                  switch (source) {
+                    case 'wallet_topup':   return 'Wallet Top-up';
+                    case 'order_payment':  return 'Order Payment';
+                    case 'order_cancel':   return 'Order Cancelled';
+                    case 'order_return':   return 'Order Refund';
+                    default:               return 'Transaction';
+                  }
+                }
+
+                function formatDateTime(date) {
+                  if (!date) return 'N/A';
+
+                  const d = new Date(date);
+                  if (isNaN(d.getTime())) return 'N/A'; // fallback if not a valid date
+
+                  const datePart = d.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: '2-digit',
+                    year: 'numeric'
+                  });
+
+                  const timePart = d.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                  });
+
+                  return datePart + ', ' + timePart;
+                }
+              %>
+
+              <div>
+                <% transactions.slice(0, 3).forEach(function(txn) { %>
+                  <div class="txn-row">
+                    <div style="display:flex; align-items:center; gap:14px;">
+                      <div class="txn-icon <%= txn.type === 'credit' ? 'credit' : 'debit' %>">
+                        <% if (txn.type==='credit' ) { %>
+                          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 7l10 10M7 17V7h10" />
+                          </svg>
+                          <% } else { %>
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                              viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M17 7L7 17M7 7h10v10" />
+                            </svg>
+                            <% } %>
+                      </div>
+                      <div>
+                        <div style="font-size:0.9rem; font-weight:600; color:#2c2c2c;">
+                          <%= txn.description || getSourceLabel(txn.source) %>
+                        </div>
+                        <div
+                          style="font-size:0.78rem; color:#999; margin-top:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                          <span class="txn-source-badge"><%= getSourceLabel(txn.source) %></span>
+                          <span><%= formatDateTime(txn.createdAt || txn.date) %> &nbsp;•&nbsp; <%= txn.transactionId || txn.txnId %></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      style="font-size:0.95rem; font-weight:700; color:<%= txn.type === 'credit' ? '#1f9d4b' : '#2c2c2c' %>;">
+                      <%= txn.type==='credit' ? '+' : '-' %>₹<%= Number(txn.amount).toLocaleString('en-IN') %>
+                    </div>
+                  </div>
+                  <% }); %>
+              </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Add Funds Modal -->
+    <div id="addFundsModal" class="modal-backdrop" onclick="outsideCloseAddFunds(event)">
+      <div class="modal-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+          <h4 style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:700; color:#2c2c2c;">
+            Add Funds to Wallet
+          </h4>
+          <button onclick="closeAddFundsModal()" style="background:none; border:none; cursor:pointer; color:#999;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <p style="font-size:0.82rem; color:#999; margin-bottom:22px;">
+          Enter the amount you would like to add to your wallet.
+        </p>
+
+        <input id="amountInput" type="number" min="1" step="1" class="field-input" placeholder="0.00"
+          style="font-size:1.3rem; margin-bottom:16px;">
+
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-bottom:20px;">
+          <button type="button" class="quick-amount" onclick="setQuickAmount(100, this)">₹100</button>
+          <button type="button" class="quick-amount" onclick="setQuickAmount(200, this)">₹200</button>
+          <button type="button" class="quick-amount" onclick="setQuickAmount(500, this)">₹300</button>
+          <button type="button" class="quick-amount" onclick="setQuickAmount(1000, this)">₹1000</button>
+        </div>
+
+        <div
+          style="display:flex; align-items:center; justify-content:space-between; background:#fdfaf5; border:1px solid #e8e0d0; border-radius:9px; padding:12px 16px; margin-bottom:22px;">
+          <span style="font-size:0.82rem; color:#666;">Current Balance:</span>
+          <span style="font-size:0.9rem; font-weight:700; color:#2c2c2c;">₹<%=
+              Number(wallet.balance).toLocaleString('en-IN') %></span>
+        </div>
+
+        <div style="display:flex; gap:12px;">
+          <button type="button" onclick="closeAddFundsModal()" class="btn-outline"
+            style="flex:1; justify-content:center;">Cancel</button>
+          <button type="button" id="confirmAddFundsBtn" onclick="submitAddFunds()" class="btn-gold"
+            style="flex:1; justify-content:center;">Add Funds</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Modal (replaces browser alert()) -->
+    <div id="notifyModal" class="modal-backdrop" onclick="outsideCloseNotify(event)">
+      <div class="modal-card" style="max-width:360px; text-align:center;">
+
+        <div id="notifyIconWrap" class="notify-icon-wrap">
+          <svg id="notifyIconSuccess" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4"
+            viewBox="0 0 24 24" style="display:none;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <svg id="notifyIconError" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4"
+            viewBox="0 0 24 24" style="display:none;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </div>
+
+        <p id="notifyMessage" style="font-size:0.95rem; font-weight:600; color:#2c2c2c; margin-bottom:24px;"></p>
+
+        <button type="button" onclick="closeNotifyModal()" class="btn-gold" style="width:100%; justify-content:center;">
+          OK
+        </button>
+      </div>
+    </div>
+
+    <%- include('partials/user/footer') %>
+
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+      <script>
+        function openAddFundsModal() {
+          document.getElementById('amountInput').value = '';
+          document.querySelectorAll('.quick-amount').forEach(btn => btn.classList.remove('active'));
+          document.getElementById('addFundsModal').classList.add('open');
+        }
+
+        function closeAddFundsModal() {
+          document.getElementById('addFundsModal').classList.remove('open');
+        }
+
+        function outsideCloseAddFunds(e) {
+          if (e.target === document.getElementById('addFundsModal')) closeAddFundsModal();
+        }
+
+        function setQuickAmount(amount, btn) {
+          document.getElementById('amountInput').value = amount;
+          document.querySelectorAll('.quick-amount').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+
+        // ---- Notification modal (replaces alert()) ----
+        let notifyCallback = null;
+
+        function showNotification(message, type, callback) {
+          document.getElementById('notifyMessage').textContent = message;
+
+          const successIcon = document.getElementById('notifyIconSuccess');
+          const errorIcon = document.getElementById('notifyIconError');
+          const wrap = document.getElementById('notifyIconWrap');
+
+          if (type === 'success') {
+            successIcon.style.display = 'block';
+            errorIcon.style.display = 'none';
+            wrap.style.background = '#e4f4e8';
+            wrap.style.color = '#1f9d4b';
+          } else {
+            successIcon.style.display = 'none';
+            errorIcon.style.display = 'block';
+            wrap.style.background = '#fbe8e6';
+            wrap.style.color = '#d0483f';
+          }
+
+          notifyCallback = typeof callback === 'function' ? callback : null;
+          document.getElementById('notifyModal').classList.add('open');
+        }
+
+        function closeNotifyModal() {
+          document.getElementById('notifyModal').classList.remove('open');
+          if (notifyCallback) {
+            const cb = notifyCallback;
+            notifyCallback = null;
+            cb();
+          }
+        }
+
+        function outsideCloseNotify(e) {
+          if (e.target === document.getElementById('notifyModal')) closeNotifyModal();
+        }
+
+        async function submitAddFunds() {
+
+          try {
+
+            const amount = parseFloat(document.getElementById("amountInput").value);
+
+            if (!amount || amount < 100) {
+              showNotification("Minimum wallet top-up is ₹100", "error");
+              return;
+            }
+
+            const response = await fetch("/wallet/topup/create-order", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ amount })
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+              showNotification(data.message, "error");
+              return;
+            }
+
+            const options = {
+              key: data.key,
+              amount: data.order.amount,
+              currency: data.order.currency,
+              name: "Elanora",
+              description: "Wallet Top-up",
+              order_id: data.order.id,
+
+              handler: async function (payment) {
+
+                const verify = await fetch("/wallet/topup/verify", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    razorpay_order_id: payment.razorpay_order_id,
+                    razorpay_payment_id: payment.razorpay_payment_id,
+                    razorpay_signature: payment.razorpay_signature,
+                    amount
+                  })
+                });
+
+                const result = await verify.json();
+
+                if (result.success) {
+                  closeAddFundsModal();
+                  showNotification("Wallet credited successfully", "success", function () {
+                    location.reload();
+                  });
+                } else {
+                  showNotification(result.message, "error");
+                }
+              },
+
+              theme: {
+                color: "#c49a2a"
+              }
+            };
+
+            const rzp = new Razorpay(options);
+
+            rzp.on("payment.failed", function (response) {
+              showNotification("Payment failed", "error");
+              console.log(response.error);
+            });
+
+            rzp.open();
+
+          } catch (error) {
+
+            console.error(error);
+            showNotification("Something went wrong. Please try again.", "error");
+
+          }
+
+        }
+      </script>
+</body>
+
+</html>

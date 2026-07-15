@@ -1317,7 +1317,7 @@
                         badgeClass = 'item-returned';
                         badgeText = 'Returned';
 
-                        } else if (rrStatus === 'rejected') {
+                        } else if (item.itemStatus === 'return_rejected' || rrStatus === 'rejected') {
                         badgeClass = 'item-return-rejected';
                         badgeText = 'Return Rejected';
 

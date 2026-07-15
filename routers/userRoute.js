@@ -10,12 +10,16 @@ import passport from 'passport'
 import { loadShop , loadProductDetail } from '../controller/userController/shopController.js'
 import { addToCart, loadCart, updateCartItem, removeCartItem } from '../controller/userController/cartController.js'
 import { loadWishlist, addToWishlist, removeFromWishlist } from '../controller/userController/wishlistController.js'
-import { loadCheckoutAddress,loadCheckoutPayment,loadCheckoutReview,placeOrder,loadOrderSuccess} from "../controller/userController/checkoutController.js";
-import {  cancelFullOrder, cancelSingleItem, getOrderDetail, getOrders, returnItem } from '../controller/userController/orderController.js'
+import { loadCheckoutAddress,loadCheckoutPayment,loadCheckoutReview,placeOrder,loadOrderSuccess, createRazorpayOrder, verifyPayment, loadOrderFailed} from "../controller/userController/checkoutController.js";
+import { cancelFullOrder, cancelSingleItem, getOrderDetail, getOrders, returnItem } from '../controller/userController/orderController.js'
 import { checkPincode } from "../utils/pincodeValidator.js";
 import { loadAbout } from '../controller/userController/aboutController.js'
 import { loadContact } from '../controller/userController/contactController.js'
+import { createWalletTopupOrder, loadWallet, loadWalletTransactions, verifyWalletPayment } from '../controller/userController/walletController.js'
+import { loadReferralPage } from '../controller/userController/referralController.js'
+import { applyCoupon } from '../controller/userController/couponController.js'
 const router=express.Router()
+
 
 
 router.get("/",loadHome)
@@ -75,19 +79,21 @@ router.get("/addresses",isLoggedIn,isBlocked,loadAddress)
 
 router.get("/addresses/add",isLoggedIn,isBlocked,loadAddAddress)
 router.post("/addresses/add",isLoggedIn,isBlocked,addAddress)
-
 router.get("/addresses/edit/:id",isLoggedIn,isBlocked,loadEditAddress)
 router.put("/addresses/edit/:id",isLoggedIn,isBlocked,editAddress)
-
 router.patch("/addresses/:id/default",isLoggedIn,isBlocked,setDefault) ;
 router.patch("/addresses/:id/delete",isLoggedIn,isBlocked,deleteAddress) ;
 
-router.get("/wallet",isLoggedIn,isBlocked,loadPagenotFound)
+router.get("/wallet",isLoggedIn,isBlocked,loadWallet)
+router.get("/wallet/transactions", loadWalletTransactions);
+router.post("/wallet/topup/create-order",isLoggedIn,isBlocked,createWalletTopupOrder);
+router.post("/wallet/topup/verify",isLoggedIn,isBlocked,verifyWalletPayment);
+
 
 router.get("/resetPassword",isLoggedIn,isBlocked,loadresetpassword)
 router.post("/resetPassword",isLoggedIn,isBlocked,resetpassword)
 
-router.get("/referral",isLoggedIn,isBlocked,loadPagenotFound)
+router.get("/referral",isLoggedIn,isBlocked,loadReferralPage)
 
 router.get("/shop",loadShop)
 
@@ -108,6 +114,9 @@ router.get("/checkout/payment", isLoggedIn, isBlocked, (req, res) => res.redirec
 router.post("/checkout/review", isLoggedIn, isBlocked, loadCheckoutReview);
 router.get("/checkout/review", isLoggedIn, isBlocked, (req, res) => res.redirect("/checkout/address"));
 router.post("/place-order", isLoggedIn, isBlocked, placeOrder);
+router.post("/apply-coupon", isLoggedIn, isBlocked, applyCoupon);
+router.post("/create-razorpay-order", createRazorpayOrder);
+router.post("/verify-razorpay-payment", verifyPayment);
 
 router.get("/check-pincode/:pincode", isLoggedIn, isBlocked, async (req, res) => {
     try {
@@ -133,7 +142,10 @@ router.get("/check-pincode/:pincode", isLoggedIn, isBlocked, async (req, res) =>
     }
 });
 
+
+
 router.get("/order-success/:id", isLoggedIn, isBlocked, loadOrderSuccess); 
+router.get("/order-failed",isLoggedIn, isBlocked,loadOrderFailed)
 
 router.get("/orders", isLoggedIn, isBlocked, getOrders);
 router.get("/orders/:id",isLoggedIn, isBlocked, getOrderDetail );

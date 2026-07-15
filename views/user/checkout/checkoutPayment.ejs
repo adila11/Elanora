@@ -1,793 +1,1594 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Payment – Elanora</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --cream: #f9f4ef;
-    --cream-dark: #f0e8de;
-    --gold: #b8922a;
-    --gold-light: #c9a020;
-    --gold-pale: #e8d5a3;
-    --text-dark: #2c2416;
-    --text-mid: #5a4a38;
-    --text-light: #9a8570;
-    --white: #ffffff;
-    --border: #e8ddd0;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--cream);
-    color: var(--text-dark);
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment – Elanora</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f9f4ef;
+      --cream-dark: #f0e8de;
+      --gold: #b8922a;
+      --gold-light: #c9a020;
+      --gold-pale: #e8d5a3;
+      --text-dark: #2c2416;
+      --text-mid: #5a4a38;
+      --text-light: #9a8570;
+      --white: #ffffff;
+      --border: #e8ddd0;
+    }
 
-  /* ── NAV STYLES REMOVED TO USE PARTIAL STYLES ── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* ── MAIN ── */
-  main { flex: 1; padding: 110px 48px 64px; max-width: 1100px; margin: 0 auto; width: 100%; }
+    body {
+      background: var(--cream);
+      color: var(--text-dark);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  .page-title {
-    font-family: 'Jost', sans-serif; font-size: 1.5rem; font-weight: 400;
-    text-align: center; color: var(--text-dark);
-    margin-bottom: 32px; letter-spacing: 0.02em;
-  }
+    /* ── NAV STYLES REMOVED TO USE PARTIAL STYLES ── */
 
-  /* ── STEPPER ── */
-  .stepper {
-    display: flex; align-items: center; justify-content: center;
-    gap: 0; margin-bottom: 40px;
-  }
-  .step { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--text-light); }
-  .step.done .step-num { border-color: var(--gold); background: var(--gold); color: var(--white); }
-  .step.done { color: var(--text-mid); }
-  .step.active { color: var(--gold); }
-  .step.active .step-num { border-color: var(--gold); color: var(--gold); background: var(--white); }
-  .step-num {
-    width: 30px; height: 30px; border-radius: 50%;
-    border: 1.5px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; font-weight: 500; color: var(--text-light);
-    background: var(--white); flex-shrink: 0;
-  }
-  .step.done .step-num svg { width: 13px; height: 13px; stroke: var(--white); fill: none; stroke-width: 2.5; }
-  .step-label { font-size: 0.85rem; letter-spacing: 0.03em; }
-  .step-line { flex: 1; max-width: 180px; height: 1px; background: var(--border); margin: 0 16px; }
-  .step-line.done { background: var(--gold); }
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      padding: 110px 48px 64px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-  /* ── LAYOUT ── */
-  .checkout-layout {
-    display: grid; grid-template-columns: 1fr 360px;
-    gap: 24px; align-items: start;
-  }
+    .page-title {
+      font-family: 'Jost', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      text-align: center;
+      color: var(--text-dark);
+      margin-bottom: 32px;
+      letter-spacing: 0.02em;
+    }
 
-  /* ── CARD ── */
-  .card {
-    background: var(--white); border-radius: 16px;
-    padding: 32px; box-shadow: 0 2px 16px rgba(44,36,22,0.06);
-  }
+    /* ── STEPPER ── */
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 40px;
+    }
 
-  /* ── SECTION HEADER ── */
-  .section-title-row {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 1.05rem; font-weight: 500; color: var(--text-dark);
-    margin-bottom: 28px;
-  }
-  .section-title-row svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
 
-  /* ── PAYMENT METHOD CARDS ── */
-  .payment-methods {
-    display: flex; gap: 16px; flex-wrap: wrap;
-    margin-bottom: 32px;
-  }
-  .pay-card {
-    position: relative;
-    width: 140px; min-height: 110px;
-    border: 1.5px solid var(--border); border-radius: 12px;
-    background: var(--white); cursor: pointer;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 10px;
-    padding: 18px 12px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .pay-card:hover { border-color: var(--gold); }
-  .pay-card.selected {
-    border-color: var(--text-dark);
-    box-shadow: 0 0 0 1px var(--text-dark);
-  }
-  .pay-card svg.pay-icon { width: 28px; height: 28px; stroke: var(--text-mid); fill: none; stroke-width: 1.5; transition: stroke 0.2s; }
-  .pay-card.selected svg.pay-icon { stroke: var(--gold); }
-  .pay-label { font-size: 0.8rem; color: var(--text-mid); font-weight: 400; transition: color 0.2s; }
-  .pay-card.selected .pay-label { color: var(--gold); font-weight: 500; }
-  .pay-check {
-    position: absolute; top: 8px; right: 8px;
-    width: 20px; height: 20px; border-radius: 50%;
-    background: var(--gold); border: none;
-    display: none; align-items: center; justify-content: center;
-  }
-  .pay-card.selected .pay-check { display: flex; }
-  .pay-check svg { width: 11px; height: 11px; stroke: var(--white); fill: none; stroke-width: 2.5; }
+    .step.done .step-num {
+      border-color: var(--gold);
+      background: var(--gold);
+      color: var(--white);
+    }
 
-  /* ── RAZORPAY FORM (shown when razorpay selected) ── */
-  .razorpay-note {
-    background: var(--cream); border-radius: 10px;
-    padding: 16px 20px; font-size: 0.84rem; color: var(--text-mid);
-    line-height: 1.7; display: none;
-    border: 1px solid var(--border);
-    margin-bottom: 8px;
-  }
-  .razorpay-note.show { display: block; }
+    .step.done {
+      color: var(--text-mid);
+    }
 
-  .wallet-note {
-    background: var(--cream); border-radius: 10px;
-    padding: 16px 20px; font-size: 0.84rem; color: var(--text-mid);
-    line-height: 1.7; display: none;
-    border: 1px solid var(--border);
-    margin-bottom: 8px;
-  }
-  .wallet-note.show { display: block; }
+    .step.active {
+      color: var(--gold);
+    }
 
-  /* ── DIVIDER ── */
-  .divider { height: 1px; background: var(--border); margin: 28px 0; }
+    .step.active .step-num {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--white);
+    }
 
-  /* ── BOTTOM ROW ── */
-  .bottom-row {
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .btn-back {
-    font-size: 0.85rem; color: var(--text-mid);
-    background: none; border: none; cursor: pointer;
-    display: flex; align-items: center; gap: 6px;
-    transition: color 0.2s;
-  }
-  .btn-back:hover { color: var(--gold); }
-  .btn-back svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
-  .btn-continue {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--gold); color: var(--white);
-    font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 400;
-    letter-spacing: 0.04em; padding: 14px 36px;
-    border: none; cursor: pointer; border-radius: 50px;
-    text-decoration: none; transition: background 0.25s, transform 0.2s;
-  }
-  .btn-continue:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-continue svg { width: 18px; height: 18px; stroke: var(--white); fill: none; stroke-width: 2; }
+    .step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-light);
+      background: var(--white);
+      flex-shrink: 0;
+    }
 
-  /* ── ORDER SUMMARY ── */
-  .summary-title { font-size: 1rem; font-weight: 500; color: var(--text-dark); margin-bottom: 20px; }
-  .cart-item {
-    display: flex; align-items: center; gap: 14px;
-    padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
-  }
-  .cart-thumb {
-    width: 60px; height: 60px; background: var(--cream-dark); border-radius: 6px;
-    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  }
-  .cart-thumb svg { width: 26px; height: 26px; stroke: var(--text-light); fill: none; }
-  .cart-item-name { font-size: 0.88rem; font-weight: 500; color: var(--text-dark); margin-bottom: 3px; }
-  .cart-item-qty { font-size: 0.78rem; color: var(--text-light); }
-  .cart-item-price { font-size: 0.88rem; font-weight: 500; color: var(--gold); margin-top: 3px; }
+    .step.done .step-num svg {
+      width: 13px;
+      height: 13px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 2.5;
+    }
 
-  /* Promo row */
-  .promo-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 13px 0; border-bottom: 1px solid var(--border);
-    cursor: pointer; transition: opacity 0.2s;
-  }
-  .promo-row:hover { opacity: 0.75; }
-  .promo-left { display: flex; align-items: center; gap: 8px; }
-  .promo-label { font-size: 0.83rem; color: var(--gold); }
-  .promo-row svg { width: 16px; height: 16px; stroke: var(--gold); fill: none; stroke-width: 2; }
-  /* Applied coupon state */
-  .promo-applied {
-    display: none;
-    align-items: center; justify-content: space-between;
-    padding: 10px 14px;
-    background: #f0faf0; border: 1px solid #a3d9a5; border-radius: 8px;
-    margin-bottom: 4px;
-  }
-  .promo-applied.show { display: flex; }
-  .promo-applied-code { font-size: 0.82rem; font-weight: 500; color: #2a7a2a; display: flex; align-items: center; gap: 6px; }
-  .promo-applied-code svg { width: 14px; height: 14px; stroke: #2a7a2a; fill: none; stroke-width: 2.5; }
-  .promo-applied-desc { font-size: 0.76rem; color: #4a9a4a; }
-  .promo-remove {
-    font-size: 0.74rem; color: #e05; cursor: pointer;
-    background: none; border: none; padding: 2px 6px;
-    border-radius: 4px; transition: background 0.2s;
-  }
-  .promo-remove:hover { background: #fee2e2; }
+    .step-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+    }
 
-  /* Totals */
-  .totals { margin-top: 16px; }
-  .total-row {
-    display: flex; justify-content: space-between;
-    align-items: center; margin-bottom: 10px;
-  }
-  .total-row .label { font-size: 0.83rem; color: var(--text-mid); }
-  .total-row .value { font-size: 0.83rem; color: var(--text-dark); }
-  .total-row .value.discount { color: #2a7a2a; }
-  .discount-row { display: none; }
-  .discount-row.show { display: flex; }
-  .total-final {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);
-  }
-  .total-final .label { font-size: 0.9rem; font-weight: 500; color: var(--text-dark); }
-  .total-final .amount {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem; font-weight: 500; color: var(--gold);
-  }
+    .step-line {
+      flex: 1;
+      max-width: 180px;
+      height: 1px;
+      background: var(--border);
+      margin: 0 16px;
+    }
 
-  /* ── COUPON MODAL OVERLAY ── */
-  .coupon-overlay {
-    display: none; position: fixed; inset: 0; z-index: 999;
-    background: rgba(44,36,22,0.4); backdrop-filter: blur(3px);
-    align-items: center; justify-content: center; padding: 20px;
-  }
-  .coupon-overlay.open { display: flex; }
+    .step-line.done {
+      background: var(--gold);
+    }
 
-  /* Slide-up panel style (like the screenshot) */
-  .coupon-modal {
-    background: var(--white); border-radius: 20px;
-    width: 100%; max-width: 420px;
-    box-shadow: 0 24px 80px rgba(44,36,22,0.18);
-    overflow: hidden;
-    animation: slideUp 0.28s ease;
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    /* ── LAYOUT ── */
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 24px;
+      align-items: start;
+    }
 
-  /* Header */
-  .coupon-header {
-    display: flex; align-items: center; gap: 14px;
-    padding: 20px 24px 18px;
-    border-bottom: 1px solid var(--border);
-  }
-  .coupon-back {
-    width: 34px; height: 34px; border-radius: 50%;
-    border: 1px solid var(--border); background: var(--white);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: border-color 0.2s, background 0.2s; flex-shrink: 0;
-  }
-  .coupon-back:hover { border-color: var(--gold); background: #fdf8f0; }
-  .coupon-back svg { width: 15px; height: 15px; stroke: var(--text-mid); fill: none; stroke-width: 2; }
-  .coupon-title {
-    font-size: 1rem; font-weight: 500; color: var(--text-dark);
-  }
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 2px 16px rgba(44, 36, 22, 0.06);
+    }
 
-  /* Body */
-  .coupon-body { padding: 24px; }
+    /* ── SECTION HEADER ── */
+    .section-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 28px;
+    }
 
-  .coupon-input-label {
-    font-size: 0.74rem; font-weight: 500;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--text-mid); margin-bottom: 8px; display: block;
-  }
-  .coupon-input-wrap { position: relative; margin-bottom: 14px; }
-  .coupon-input {
-    width: 100%; border: 1.5px solid var(--border); border-radius: 10px;
-    padding: 13px 16px; font-family: 'Jost', sans-serif;
-    font-size: 0.9rem; font-weight: 400; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--text-dark);
-    background: var(--white); outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .coupon-input::placeholder { text-transform: uppercase; color: var(--text-light); letter-spacing: 0.1em; font-size: 0.82rem; }
-  .coupon-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,146,42,0.1); }
-  .coupon-input.error { border-color: #e05; }
-  .coupon-input-err { font-size: 0.76rem; color: #e05; margin-top: 6px; display: none; }
-  .coupon-input-err.show { display: block; }
+    .section-title-row svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
 
-  .btn-apply {
-    width: 100%; background: var(--gold); border: none; border-radius: 50px;
-    padding: 14px; color: var(--white);
-    font-family: 'Jost', sans-serif; font-size: 0.88rem;
-    font-weight: 400; letter-spacing: 0.06em; cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-  }
-  .btn-apply:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-apply:disabled { background: var(--border); cursor: not-allowed; transform: none; }
+    /* ── PAYMENT METHOD CARDS ── */
+    .payment-methods {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
 
-  .coupon-divider { height: 1px; background: var(--border); margin: 22px 0; }
+    .pay-card {
+      position: relative;
+      width: 140px;
+      min-height: 110px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      background: var(--white);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 18px 12px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
 
-  .available-title {
-    font-size: 0.8rem; font-weight: 500;
-    letter-spacing: 0.06em; color: var(--text-dark);
-    margin-bottom: 14px;
-  }
+    .pay-card:hover {
+      border-color: var(--gold);
+    }
 
-  /* Offer cards */
-  .offer-list { display: flex; flex-direction: column; gap: 10px; }
-  .offer-card {
-    border: 1px solid var(--border); border-radius: 10px;
-    padding: 14px 16px;
-    display: flex; align-items: center; justify-content: space-between;
-    background: var(--white); transition: border-color 0.2s, background 0.2s;
-  }
-  .offer-card:hover { border-color: var(--gold-pale); background: #fdf8f0; }
-  .offer-info {}
-  .offer-code {
-    font-size: 0.88rem; font-weight: 500;
-    color: var(--text-dark); letter-spacing: 0.04em; margin-bottom: 3px;
-  }
-  .offer-desc { font-size: 0.76rem; color: var(--text-light); }
-  .btn-use {
-    font-size: 0.8rem; font-weight: 500; color: var(--gold);
-    background: none; border: none; cursor: pointer;
-    padding: 6px 14px; border-radius: 6px;
-    transition: background 0.2s, color 0.2s; flex-shrink: 0;
-  }
-  .btn-use:hover { background: #fdf4e3; }
+    .pay-card.selected {
+      border-color: var(--text-dark);
+      box-shadow: 0 0 0 1px var(--text-dark);
+    }
 
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 28px; right: 28px; z-index: 9999;
-    background: var(--text-dark); color: var(--white);
-    padding: 14px 22px; border-radius: 10px;
-    font-size: 0.84rem; display: flex; align-items: center; gap: 10px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    transform: translateY(80px); opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease; pointer-events: none;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast.success .t-icon { color: #4ade80; }
-  .toast.error   .t-icon { color: #f87171; }
+    .pay-card svg.pay-icon {
+      width: 28px;
+      height: 28px;
+      stroke: var(--text-mid);
+      fill: none;
+      stroke-width: 1.5;
+      transition: stroke 0.2s;
+    }
 
-  /* ── FOOTER ── */
-  footer { background: var(--white); border-top: 1px solid var(--border); margin-top: auto; }
-  .footer-top {
-    max-width: 1100px; margin: 0 auto;
-    padding: 56px 48px 40px;
-    display: grid; grid-template-columns: 2fr 1fr 1fr 1.6fr; gap: 48px;
-  }
-  .footer-logo {
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem; font-weight: 500; color: var(--gold); margin-bottom: 14px;
-  }
-  .footer-logo svg { width: 20px; height: 20px; fill: var(--gold); }
-  .footer-brand p { font-size: 0.82rem; line-height: 1.8; color: var(--text-light); max-width: 240px; }
-  .social-links { display: flex; gap: 10px; margin-top: 20px; }
-  .social-links a {
-    width: 36px; height: 36px; border-radius: 50%;
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    text-decoration: none; transition: border-color 0.2s, background 0.2s;
-  }
-  .social-links a:hover { border-color: var(--gold); background: #fdf8f3; }
-  .social-links svg { width: 14px; height: 14px; fill: var(--text-mid); }
-  .footer-col h4 {
-    font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--text-dark); margin-bottom: 18px;
-  }
-  .footer-col ul { list-style: none; }
-  .footer-col ul li { margin-bottom: 10px; }
-  .footer-col ul li a { font-size: 0.83rem; color: var(--text-light); text-decoration: none; transition: color 0.2s; }
-  .footer-col ul li a:hover { color: var(--gold); }
-  .footer-newsletter p { font-size: 0.82rem; color: var(--text-light); line-height: 1.7; margin-bottom: 14px; }
-  .newsletter-input {
-    width: 100%; border: 1px solid var(--border); border-radius: 6px;
-    padding: 11px 14px; font-family: 'Jost', sans-serif; font-size: 0.82rem;
-    color: var(--text-dark); background: var(--white); outline: none;
-    margin-bottom: 10px; transition: border-color 0.2s;
-  }
-  .newsletter-input:focus { border-color: var(--gold); }
-  .newsletter-input::placeholder { color: var(--text-light); }
-  .btn-subscribe {
-    width: 100%; background: var(--gold); border: none; border-radius: 6px;
-    padding: 12px; color: var(--white);
-    font-family: 'Jost', sans-serif; font-size: 0.8rem;
-    letter-spacing: 0.08em; cursor: pointer; transition: background 0.2s;
-  }
-  .btn-subscribe:hover { background: var(--gold-light); }
-  .footer-bottom {
-    border-top: 1px solid var(--border); padding: 20px 48px;
-    max-width: 1100px; margin: 0 auto;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .footer-bottom p { font-size: 0.76rem; color: var(--text-light); }
-  .footer-bottom a { font-size: 0.76rem; color: var(--text-light); text-decoration: none; margin-left: 20px; }
-  .footer-bottom a:hover { color: var(--gold); }
-</style>
+    .pay-card.selected svg.pay-icon {
+      stroke: var(--gold);
+    }
+
+    .pay-label {
+      font-size: 0.8rem;
+      color: var(--text-mid);
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+
+    .pay-card.selected .pay-label {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .pay-check {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: none;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pay-card.selected .pay-check {
+      display: flex;
+    }
+
+    .pay-check svg {
+      width: 11px;
+      height: 11px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    /* ── RAZORPAY FORM (shown when razorpay selected) ── */
+    .razorpay-note {
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 0.84rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+      display: none;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+
+    .razorpay-note.show {
+      display: block;
+    }
+
+    .wallet-note {
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 0.84rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+      display: none;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+
+    .wallet-note.show {
+      display: block;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    /* ── BOTTOM ROW ── */
+    .bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-back {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .btn-back:hover {
+      color: var(--gold);
+    }
+
+    .btn-back svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .btn-continue {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      padding: 14px 36px;
+      border: none;
+      cursor: pointer;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: background 0.25s, transform 0.2s;
+    }
+
+    .btn-continue:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-continue svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* ── ORDER SUMMARY ── */
+    .summary-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .cart-thumb {
+      width: 60px;
+      height: 60px;
+      background: var(--cream-dark);
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-thumb svg {
+      width: 26px;
+      height: 26px;
+      stroke: var(--text-light);
+      fill: none;
+    }
+
+    .cart-item-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 3px;
+    }
+
+    .cart-item-qty {
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    .cart-item-price {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--gold);
+      margin-top: 3px;
+    }
+
+    /* Promo row */
+    .promo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .promo-row:hover {
+      opacity: 0.75;
+    }
+
+    .promo-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .promo-label {
+      font-size: 0.83rem;
+      color: var(--gold);
+    }
+
+    .promo-row svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Applied coupon state */
+    .promo-applied {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #f0faf0;
+      border: 1px solid #a3d9a5;
+      border-radius: 8px;
+      margin-bottom: 4px;
+    }
+
+    .promo-applied.show {
+      display: flex;
+    }
+
+    .promo-applied-code {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #2a7a2a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .promo-applied-code svg {
+      width: 14px;
+      height: 14px;
+      stroke: #2a7a2a;
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    .promo-applied-desc {
+      font-size: 0.76rem;
+      color: #4a9a4a;
+    }
+
+    .promo-remove {
+      font-size: 0.74rem;
+      color: #e05;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .promo-remove:hover {
+      background: #fee2e2;
+    }
+
+    /* Totals */
+    .totals {
+      margin-top: 16px;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .total-row .label {
+      font-size: 0.83rem;
+      color: var(--text-mid);
+    }
+
+    .total-row .value {
+      font-size: 0.83rem;
+      color: var(--text-dark);
+    }
+
+    .total-row .value.discount {
+      color: #2a7a2a;
+    }
+
+    .discount-row {
+      display: none;
+    }
+
+    .discount-row.show {
+      display: flex;
+    }
+
+    .total-final {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .total-final .label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .total-final .amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--gold);
+    }
+
+    /* ── COUPON MODAL OVERLAY ── */
+    .coupon-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(44, 36, 22, 0.4);
+      backdrop-filter: blur(3px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .coupon-overlay.open {
+      display: flex;
+    }
+
+    /* Slide-up panel style (like the screenshot) */
+    .coupon-modal {
+      background: var(--white);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 24px 80px rgba(44, 36, 22, 0.18);
+      overflow: hidden;
+      animation: slideUp 0.28s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Header */
+    .coupon-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 24px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .coupon-back {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .coupon-back:hover {
+      border-color: var(--gold);
+      background: #fdf8f0;
+    }
+
+    .coupon-back svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--text-mid);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .coupon-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    /* Body */
+    .coupon-body {
+      padding: 24px;
+    }
+
+    .coupon-input-label {
+      font-size: 0.74rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .coupon-input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .coupon-input {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dark);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .coupon-input::placeholder {
+      text-transform: uppercase;
+      color: var(--text-light);
+      letter-spacing: 0.1em;
+      font-size: 0.82rem;
+    }
+
+    .coupon-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184, 146, 42, 0.1);
+    }
+
+    .coupon-input.error {
+      border-color: #e05;
+    }
+
+    .coupon-input-err {
+      font-size: 0.76rem;
+      color: #e05;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .coupon-input-err.show {
+      display: block;
+    }
+
+    .btn-apply {
+      width: 100%;
+      background: var(--gold);
+      border: none;
+      border-radius: 50px;
+      padding: 14px;
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-apply:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-apply:disabled {
+      background: var(--border);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .coupon-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 22px 0;
+    }
+
+    .available-title {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--text-dark);
+      margin-bottom: 14px;
+    }
+
+    /* Offer cards */
+    .offer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .offer-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--white);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .offer-card:hover {
+      border-color: var(--gold-pale);
+      background: #fdf8f0;
+    }
+
+    .offer-info {}
+
+    .offer-code {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      letter-spacing: 0.04em;
+      margin-bottom: 3px;
+    }
+
+    .offer-desc {
+      font-size: 0.76rem;
+      color: var(--text-light);
+    }
+
+    .btn-use {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--gold);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .btn-use:hover {
+      background: #fdf4e3;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9999;
+      background: var(--text-dark);
+      color: var(--white);
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success .t-icon {
+      color: #4ade80;
+    }
+
+    .toast.error .t-icon {
+      color: #f87171;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .footer-top {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 56px 48px 40px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.6fr;
+      gap: 48px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .footer-logo svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--gold);
+    }
+
+    .footer-brand p {
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: var(--text-light);
+      max-width: 240px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .social-links a {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .social-links a:hover {
+      border-color: var(--gold);
+      background: #fdf8f3;
+    }
+
+    .social-links svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--text-mid);
+    }
+
+    .footer-col h4 {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dark);
+      margin-bottom: 18px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col ul li a {
+      font-size: 0.83rem;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--gold);
+    }
+
+    .footer-newsletter p {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .newsletter-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 11px 14px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-dark);
+      background: var(--white);
+      outline: none;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--gold);
+    }
+
+    .newsletter-input::placeholder {
+      color: var(--text-light);
+    }
+
+    .btn-subscribe {
+      width: 100%;
+      background: var(--gold);
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-subscribe:hover {
+      background: var(--gold-light);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding: 20px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p {
+      font-size: 0.76rem;
+      color: var(--text-light);
+    }
+
+    .footer-bottom a {
+      font-size: 0.76rem;
+      color: var(--text-light);
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .footer-bottom a:hover {
+      color: var(--gold);
+    }
+
+
+    .pay-info{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+}
+
+.wallet-balance{
+    font-size:11px;
+    color:#777;
+}
+
+.wallet-balance.insufficient{
+    color:#d32f2f;
+    font-weight:600;
+}
+
+.pay-card.disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    pointer-events:none;
+}
+  </style>
 </head>
+
 <body>
 
-<%- include('../../partials/user/header') %>
+  <%- include('../../partials/user/header') %>
+<%
+let subtotal = 0;
 
-<!-- MAIN -->
-<main>
-  <h1 class="page-title">Secure Checkout</h1>
+if (cart && cart.items && cart.items.length > 0) {
+    cart.items.forEach(item => {
+        const product = item.productId;
+        if (!product) return;
 
-  <!-- STEPPER -->
-  <div class="stepper">
-    <div class="step done">
-      <div class="step-num"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <span class="step-label">Shipping</span>
-    </div>
-    <div class="step-line done"></div>
-    <div class="step active">
-      <div class="step-num">2</div>
-      <span class="step-label">Payment</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <span class="step-label">Review</span>
-    </div>
-  </div>
+        const price = product.discountPrice || product.basePrice;
+        subtotal += price * item.qty;
+    });
+}
+%>
+    <!-- MAIN -->
+    <main>
+      <h1 class="page-title">Secure Checkout</h1>
 
-  <div class="checkout-layout">
-
-    <!-- LEFT: Payment -->
-    <div class="card">
-
-      <div class="section-title-row">
-        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-        Payment Details
+      <!-- STEPPER -->
+      <div class="stepper">
+        <div class="step done">
+          <div class="step-num"><svg viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12" />
+            </svg></div>
+          <span class="step-label">Shipping</span>
+        </div>
+        <div class="step-line done"></div>
+        <div class="step active">
+          <div class="step-num">2</div>
+          <span class="step-label">Payment</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <span class="step-label">Review</span>
+        </div>
       </div>
 
-      <!-- Payment method options -->
-      <div class="payment-methods">
+      <div class="checkout-layout">
 
-        <div class="pay-card selected" data-method="cod">
-          <div class="pay-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <svg class="pay-icon" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          <span class="pay-label">Cash on Delivery</span>
+        <!-- LEFT: Payment -->
+        <div class="card">
+
+          <div class="section-title-row">
+            <svg viewBox="0 0 24 24">
+              <rect x="1" y="4" width="22" height="16" rx="2" />
+              <line x1="1" y1="10" x2="23" y2="10" />
+            </svg>
+            Payment Details
+          </div>
+
+          <!-- Payment method options -->
+          <div class="payment-methods">
+
+            <div class="pay-card selected" data-method="cod">
+              <div class="pay-check"><svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg></div>
+              <svg class="pay-icon" viewBox="0 0 24 24">
+                <rect x="1" y="3" width="15" height="13" />
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                <circle cx="5.5" cy="18.5" r="2.5" />
+                <circle cx="18.5" cy="18.5" r="2.5" />
+              </svg>
+              <span class="pay-label">Cash on Delivery</span>
+            </div>
+
+            <div class="pay-card" data-method="razorpay">
+              <div class="pay-check"><svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg></div>
+              <svg class="pay-icon" viewBox="0 0 24 24">
+                <rect x="1" y="4" width="22" height="16" rx="2" />
+                <line x1="1" y1="10" x2="23" y2="10" />
+              </svg>
+              <span class="pay-label">Razorpay</span>
+            </div>
+
+            <div class="pay-card <%= walletBalance < subtotal ? 'disabled' : '' %>" data-method="wallet"
+              <%=walletBalance < subtotal ? 'data-disabled="true"' : '' %>
+              >
+              <div class="pay-check">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+
+              <svg class="pay-icon" viewBox="0 0 24 24">
+                <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+                <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+                <path d="M18 12a2 2 0 0 0 0 4h4v-4z" />
+              </svg>
+
+              <div class="pay-info">
+                <span class="pay-label">Wallet</span>
+
+                <small class="wallet-balance">
+                  Balance: ₹<%= walletBalance.toFixed(2) %>
+                </small>
+
+                <% if (walletBalance < subtotal) { %>
+                  <small style="color:#d32f2f;">
+                    Insufficient Balance
+                  </small>
+                  <% } %>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Conditional notes -->
+          <div class="razorpay-note" id="razorpayNote">
+            You will be redirected to Razorpay's secure payment gateway to complete your payment using UPI, Net Banking,
+            or Card.
+          </div>
+          <div class="wallet-note" id="walletNote">
+            Your Elanora wallet balance will be used for this payment. Ensure sufficient balance before proceeding.
+          </div>
+
+          <div class="divider"></div>
+          <div class="bottom-row">
+            <button class="btn-back" onclick="window.location.href='/checkout/address'">
+              <svg viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              Back
+            </button>
+            <button class="btn-continue" id="continueBtn">
+              Continue
+              <svg viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <div class="pay-card" data-method="razorpay">
-          <div class="pay-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <svg class="pay-icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          <span class="pay-label">Razorpay</span>
-        </div>
+        <!-- RIGHT: Order Summary -->
+        <div class="card">
+          <div class="summary-title">In Your Cart</div>
 
-        <div class="pay-card" data-method="wallet">
-          <div class="pay-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <svg class="pay-icon" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>
-          <span class="pay-label">Wallet</span>
-        </div>
-
-      </div>
-
-      <!-- Conditional notes -->
-      <div class="razorpay-note" id="razorpayNote">
-        You will be redirected to Razorpay's secure payment gateway to complete your payment using UPI, Net Banking, or Card.
-      </div>
-      <div class="wallet-note" id="walletNote">
-        Your Elanora wallet balance will be used for this payment. Ensure sufficient balance before proceeding.
-      </div>
-
-      <div class="divider"></div>
-      <div class="bottom-row">
-        <button class="btn-back" onclick="window.location.href='/checkout/address'">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
-        <button class="btn-continue" id="continueBtn">
-          Continue
-          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- RIGHT: Order Summary -->
-    <div class="card">
-      <div class="summary-title">In Your Cart</div>
-
-      <% 
-        let subtotal = 0;
-        if (cart && cart.items && cart.items.length > 0) {
-          cart.items.forEach(item => {
+          <% if (cart && cart.items && cart.items.length > 0) {
+            cart.items.forEach(item => {
             const product = item.productId;
             if (!product) return;
             const price = product.discountPrice || product.basePrice;
             subtotal += price * item.qty;
-            const variant = product.variants ? product.variants.find(v => v._id.toString() === item.variantId.toString()) : null;
-            const imageUrl = variant && variant.images && variant.images.length > 0 ? variant.images[0].url : 'https://via.placeholder.com/60';
+            const variant = product.variants ? product.variants.find(v => v._id.toString() ===
+            item.variantId.toString()) : null;
+            const imageUrl = variant && variant.images && variant.images.length > 0 ? variant.images[0].url :
+            'https://via.placeholder.com/60';
             const variantName = variant ? variant.color : '';
-      %>
-      <div class="cart-item">
-        <div class="cart-thumb">
-          <img src="<%= imageUrl %>" alt="<%= product.name %>" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
+            %>
+            <div class="cart-item">
+              <div class="cart-thumb">
+                <img src="<%= imageUrl %>" alt="<%= product.name %>"
+                  style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
+              </div>
+              <div class="cart-item-info">
+                <div class="cart-item-name">
+                  <%= product.name %>
+                    <%= variantName ? `(${variantName})` : '' %>
+                </div>
+                <div class="cart-item-qty">Qty: <%= item.qty %>
+                </div>
+                <div class="cart-item-price">₹<%= (price * item.qty).toLocaleString('en-IN') %>
+                </div>
+              </div>
+            </div>
+            <% }); } %>
+
+              <!-- Applied coupon badge -->
+              <div class="promo-applied" id="promoApplied">
+                <div>
+                  <div class="promo-applied-code">
+                    <svg viewBox="0 0 24 24">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span id="appliedCodeText"></span>
+                  </div>
+                  <div class="promo-applied-desc" id="appliedDescText"></div>
+                </div>
+                <button class="promo-remove" id="removePromo">Remove</button>
+              </div>
+
+              <!-- Promo row (click to open modal) -->
+              <div class="promo-row" id="promoRow">
+                <div class="promo-left">
+                  <svg viewBox="0 0 24 24" width="15" height="15" stroke="var(--gold)" fill="none" stroke-width="1.8">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                    <line x1="7" y1="7" x2="7.01" y2="7" />
+                  </svg>
+                  <span class="promo-label">Add a promo code</span>
+                </div>
+                <svg viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </div>
+
+              <div class="totals">
+                <div class="total-row">
+                  <span class="label">Subtotal</span>
+                  <span class="value">₹<span id="subtotalValue">
+                      <%= subtotal %>
+                    </span></span>
+                </div>
+                <div class="total-row discount-row" id="discountRow">
+                  <span class="label">Discount</span>
+                  <span class="value discount" id="discountValue">-₹0</span>
+                </div>
+                <div class="total-row">
+                  <span class="label">Shipping</span>
+                  <span class="value">Free</span>
+                </div>
+                <div class="total-final">
+                  <span class="label">Total</span>
+                  <span class="amount" id="totalAmount">₹<%= subtotal.toLocaleString('en-IN') %></span>
+                </div>
+              </div>
         </div>
-        <div class="cart-item-info">
-          <div class="cart-item-name"><%= product.name %> <%= variantName ? `(${variantName})` : '' %></div>
-          <div class="cart-item-qty">Qty: <%= item.qty %></div>
-          <div class="cart-item-price">₹<%= (price * item.qty).toLocaleString('en-IN') %></div>
+
+      </div>
+    </main>
+
+    <!-- ── COUPON MODAL ── -->
+    <div class="coupon-overlay" id="couponOverlay">
+      <div class="coupon-modal" role="dialog" aria-modal="true" aria-label="Apply Promo Code">
+
+        <div class="coupon-header">
+          <button class="coupon-back" id="closeCoupon" aria-label="Close">
+            <svg viewBox="0 0 24 24">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <span class="coupon-title">Apply Promo Code</span>
+        </div>
+
+        <div class="coupon-body">
+
+          <label class="coupon-input-label" for="couponInput">Promo Code</label>
+          <div class="coupon-input-wrap">
+            <input class="coupon-input" type="text" id="couponInput" placeholder="ENTER CODE" maxlength="20"
+              autocomplete="off" />
+          </div>
+          <div class="coupon-input-err" id="couponErr">Invalid promo code. Please try again.</div>
+
+          <button class="btn-apply" id="applyBtn">Apply Code</button>
+
+          <div class="coupon-divider"></div>
+
+          <div class="available-title">Available Offers</div>
+
+          <div class="offer-list">
+            <% if (availableCoupons && availableCoupons.length> 0) { %>
+              <% availableCoupons.forEach(function(c) { %>
+                <% let offerDesc=c.description && c.description.trim() ? c.description : (c.discountType==='percentage'
+                  ? c.discountValue + '% off' + (c.maximumDiscount ? ' (up to ₹' + c.maximumDiscount + ')' : '' ) : '₹'
+                  + c.discountValue + ' off' ); if (c.minimumPurchase> 0) offerDesc += ' · Min. ₹' + c.minimumPurchase;
+                  %>
+                  <div class="offer-card" data-code="<%= c.couponCode %>">
+                    <div class="offer-info">
+                      <div class="offer-code">
+                        <%= c.couponCode %>
+                      </div>
+                      <div class="offer-desc">
+                        <%= offerDesc %>
+                      </div>
+                    </div>
+                    <button class="btn-use">Use</button>
+                  </div>
+                  <% }); %>
+                    <% } else { %>
+                      <div style="font-size:0.82rem; color:var(--text-light); text-align:center; padding:16px 0;">
+                        No offers available right now.
+                      </div>
+                      <% } %>
+          </div>
+
         </div>
       </div>
-      <% 
-          });
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+      <span class="t-icon" id="tIcon">✓</span>
+      <span id="tMsg">Coupon applied!</span>
+    </div>
+
+    <%- include('../../partials/user/footer') %>
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      <script>
+
+        // ── State (declared FIRST, before anything reads them, to avoid a
+        //    "Cannot access before initialization" ReferenceError that used
+        //    to kill the whole script and break every button on the page)
+        let appliedCoupon = null;
+        let selectedMethod = 'cod';
+
+        const BASE_PRICE = parseInt(document.getElementById('subtotalValue').textContent) || 0;
+
+        const COD_LIMIT = 1000;
+
+        const totalAmount = BASE_PRICE - (appliedCoupon ? appliedCoupon.discount : 0);
+
+        if (totalAmount > COD_LIMIT) {
+          const codCard = document.querySelector('[data-method="cod"]');
+
+          codCard.classList.remove("selected");
+          codCard.style.opacity = "0.5";
+          codCard.style.pointerEvents = "none";
+          codCard.title = "Cash on Delivery is available only for orders up to ₹1000.";
+
+          selectedMethod = "razorpay";
+
+          document
+            .querySelector('[data-method="razorpay"]')
+            .classList.add("selected");
+
+          document
+            .getElementById("razorpayNote")
+            .classList.add("show");
         }
-      %>
+        // format initial display
+        document.getElementById('subtotalValue').textContent = BASE_PRICE.toLocaleString('en-IN');
 
-      <!-- Applied coupon badge -->
-      <div class="promo-applied" id="promoApplied">
-        <div>
-          <div class="promo-applied-code">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            <span id="appliedCodeText"></span>
-          </div>
-          <div class="promo-applied-desc" id="appliedDescText"></div>
-        </div>
-        <button class="promo-remove" id="removePromo">Remove</button>
-      </div>
+        // ── Payment method selection
+        document.querySelectorAll('.pay-card').forEach(function (card) {
+          card.addEventListener('click', function () {
+            if (card.classList.contains('disabled')) return;
+            document.querySelectorAll('.pay-card').forEach(function (c) { c.classList.remove('selected'); });
+            card.classList.add('selected');
+            selectedMethod = card.dataset.method;
+            document.getElementById('razorpayNote').classList.toggle('show', selectedMethod === 'razorpay');
+            document.getElementById('walletNote').classList.toggle('show', selectedMethod === 'wallet');
+          });
+        });
 
-      <!-- Promo row (click to open modal) -->
-      <div class="promo-row" id="promoRow">
-        <div class="promo-left">
-          <svg viewBox="0 0 24 24" width="15" height="15" stroke="var(--gold)" fill="none" stroke-width="1.8">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-            <line x1="7" y1="7" x2="7.01" y2="7"/>
-          </svg>
-          <span class="promo-label">Add a promo code</span>
-        </div>
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
+        document.getElementById('continueBtn').addEventListener('click', () => {
+          const addressId = '<%= addressId %>';
+          if (!addressId) {
+            showToast('Address is missing. Please go back and select an address.', 'error');
+            return;
+          }
 
-      <div class="totals">
-        <div class="total-row">
-          <span class="label">Subtotal</span>
-          <span class="value">₹<span id="subtotalValue"><%= subtotal %></span></span>
-        </div>
-        <div class="total-row discount-row" id="discountRow">
-          <span class="label">Discount</span>
-          <span class="value discount" id="discountValue">-₹0</span>
-        </div>
-        <div class="total-row">
-          <span class="label">Shipping</span>
-          <span class="value">Free</span>
-        </div>
-        <div class="total-final">
-          <span class="label">Total</span>
-          <span class="amount" id="totalAmount">₹<%= subtotal.toLocaleString('en-IN') %></span>
-        </div>
-      </div>
-    </div>
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = '/checkout/review';
 
-  </div>
-</main>
+          const addrInput = document.createElement('input');
+          addrInput.type = 'hidden';
+          addrInput.name = 'addressId';
+          addrInput.value = addressId;
+          form.appendChild(addrInput);
 
-<!-- ── COUPON MODAL ── -->
-<div class="coupon-overlay" id="couponOverlay">
-  <div class="coupon-modal" role="dialog" aria-modal="true" aria-label="Apply Promo Code">
+          const payInput = document.createElement('input');
+          payInput.type = 'hidden';
+          payInput.name = 'paymentMethod';
+          payInput.value = selectedMethod;
+          form.appendChild(payInput);
 
-    <div class="coupon-header">
-      <button class="coupon-back" id="closeCoupon" aria-label="Close">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
-      <span class="coupon-title">Apply Promo Code</span>
-    </div>
+          // Pass coupon data to review page
+          if (appliedCoupon) {
+            const couponInput = document.createElement('input');
+            couponInput.type = 'hidden';
+            couponInput.name = 'couponCode';
+            couponInput.value = appliedCoupon.code;
+            form.appendChild(couponInput);
 
-    <div class="coupon-body">
+            const discountInput = document.createElement('input');
+            discountInput.type = 'hidden';
+            discountInput.name = 'discountAmount';
+            discountInput.value = appliedCoupon.discount;
+            form.appendChild(discountInput);
+          }
 
-      <label class="coupon-input-label" for="couponInput">Promo Code</label>
-      <div class="coupon-input-wrap">
-        <input class="coupon-input" type="text" id="couponInput" placeholder="ENTER CODE" maxlength="20" autocomplete="off"/>
-      </div>
-      <div class="coupon-input-err" id="couponErr">Invalid promo code. Please try again.</div>
+          document.body.appendChild(form);
+          form.submit();
+        });
 
-      <button class="btn-apply" id="applyBtn">Apply Code</button>
+        // ── Coupon modal open/close
+        var overlay = document.getElementById('couponOverlay');
+        var promoRow = document.getElementById('promoRow');
+        var closeBtn = document.getElementById('closeCoupon');
 
-      <div class="coupon-divider"></div>
+        function openCoupon() {
+          overlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+          document.getElementById('couponInput').focus();
+        }
+        function closeCoupon() {
+          overlay.classList.remove('open');
+          document.body.style.overflow = '';
+          document.getElementById('couponInput').value = '';
+          document.getElementById('couponErr').classList.remove('show');
+          document.getElementById('couponInput').classList.remove('error');
+        }
 
-      <div class="available-title">Available Offers</div>
+        promoRow.addEventListener('click', openCoupon);
+        closeBtn.addEventListener('click', closeCoupon);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeCoupon(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeCoupon(); });
 
-      <div class="offer-list">
-        <div class="offer-card" data-code="ELANORA20" data-discount="20" data-desc="20% off your first order">
-          <div class="offer-info">
-            <div class="offer-code">ELANORA20</div>
-            <div class="offer-desc">20% off your first order</div>
-          </div>
-          <button class="btn-use">Use</button>
-        </div>
-        <div class="offer-card" data-code="GOLD10" data-discount="10" data-desc="10% off on all jewelry">
-          <div class="offer-info">
-            <div class="offer-code">GOLD10</div>
-            <div class="offer-desc">10% off on all jewelry</div>
-          </div>
-          <button class="btn-use">Use</button>
-        </div>
-        <div class="offer-card" data-code="FREESHIP" data-discount="0" data-desc="Free express shipping">
-          <div class="offer-info">
-            <div class="offer-code">FREESHIP</div>
-            <div class="offer-desc">Free express shipping</div>
-          </div>
-          <button class="btn-use">Use</button>
-        </div>
-      </div>
+        // ── Apply coupon — calls real backend API
+        async function applyCoupon(code) {
+          code = code.trim().toUpperCase();
+          var errEl = document.getElementById('couponErr');
+          var inpEl = document.getElementById('couponInput');
 
-    </div>
-  </div>
-</div>
+          try {
+            const res = await fetch('/apply-coupon', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ couponCode: code })
+            });
+            const data = await res.json();
 
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <span class="t-icon" id="tIcon">✓</span>
-  <span id="tMsg">Coupon applied!</span>
-</div>
+            if (!data.success) {
+              inpEl.classList.add('error');
+              errEl.textContent = data.message || 'Invalid promo code. Please try again.';
+              errEl.classList.add('show');
+              return;
+            }
 
-<%- include('../../partials/user/footer') %>
+            inpEl.classList.remove('error');
+            errEl.classList.remove('show');
 
-<script>
-  // ── Valid coupons (match with your backend)
-  const COUPONS = {
-    'ELANORA20': { discount: 20, desc: '20% off your first order' },
-    'GOLD10':    { discount: 10, desc: '10% off on all jewelry' },
-    'FREESHIP':  { discount: 0,  desc: 'Free express shipping' },
-  };
+            appliedCoupon = {
+              code: data.couponCode,
+              discount: data.discount,
+              desc: data.description || (data.discountType === 'percentage'
+                ? data.discountValue + '% off'
+                : '₹' + data.discountValue + ' off')
+            };
+            updateSummary();
+            closeCoupon();
+            showToast(data.message || 'Coupon "' + code + '" applied!', 'success');
 
-  const BASE_PRICE = parseInt(document.getElementById('subtotalValue').textContent) || 0;
-  // format initial display
-  document.getElementById('subtotalValue').textContent = BASE_PRICE.toLocaleString('en-IN');
-  let appliedCoupon = null;
+          } catch (err) {
+            inpEl.classList.add('error');
+            errEl.textContent = 'Could not validate coupon. Please try again.';
+            errEl.classList.add('show');
+          }
+        }
 
-  // ── Payment method selection
-  let selectedMethod = 'cod';
-  document.querySelectorAll('.pay-card').forEach(function(card) {
-    card.addEventListener('click', function() {
-      document.querySelectorAll('.pay-card').forEach(function(c) { c.classList.remove('selected'); });
-      card.classList.add('selected');
-      selectedMethod = card.dataset.method;
-      document.getElementById('razorpayNote').classList.toggle('show', selectedMethod === 'razorpay');
-      document.getElementById('walletNote').classList.toggle('show', selectedMethod === 'wallet');
-    });
-  });
+        // ── Apply button
+        document.getElementById('applyBtn').addEventListener('click', function () {
+          var val = document.getElementById('couponInput').value;
+          if (!val.trim()) {
+            document.getElementById('couponInput').classList.add('error');
+            document.getElementById('couponErr').textContent = 'Please enter a promo code.';
+            document.getElementById('couponErr').classList.add('show');
+            return;
+          }
+          applyCoupon(val);
+        });
 
-  document.getElementById('continueBtn').addEventListener('click', () => {
-    const addressId = '<%= addressId %>';
-    if (!addressId) {
-      showToast('Address is missing. Please go back and select an address.', 'error');
-      return;
-    }
-    
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '/checkout/review';
-    
-    const addrInput = document.createElement('input');
-    addrInput.type = 'hidden';
-    addrInput.name = 'addressId';
-    addrInput.value = addressId;
-    form.appendChild(addrInput);
+        // Enter key on input
+        document.getElementById('couponInput').addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') document.getElementById('applyBtn').click();
+          // clear error on type
+          this.classList.remove('error');
+          document.getElementById('couponErr').classList.remove('show');
+        });
 
-    const payInput = document.createElement('input');
-    payInput.type = 'hidden';
-    payInput.name = 'paymentMethod';
-    payInput.value = selectedMethod;
-    form.appendChild(payInput);
+        // ── "Use" buttons on offer cards
+        document.querySelectorAll('.offer-card .btn-use').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var card = btn.closest('.offer-card');
+            applyCoupon(card.dataset.code);
+          });
+        });
 
-    document.body.appendChild(form);
-    form.submit();
-  });
+        // ── Remove coupon
+        document.getElementById('removePromo').addEventListener('click', function () {
+          appliedCoupon = null;
+          updateSummary();
+          showToast('Coupon removed.', 'success');
+        });
 
-  // ── Coupon modal open/close
-  var overlay    = document.getElementById('couponOverlay');
-  var promoRow   = document.getElementById('promoRow');
-  var closeBtn   = document.getElementById('closeCoupon');
+        // ── Update order summary totals
+        function updateSummary() {
+          var discount = 0;
+          if (appliedCoupon && appliedCoupon.discount > 0) {
+            discount = appliedCoupon.discount; // server already computed the exact rupee amount
+          }
+          var total = BASE_PRICE - discount;
 
-  function openCoupon() {
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    document.getElementById('couponInput').focus();
-  }
-  function closeCoupon() {
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
-    document.getElementById('couponInput').value = '';
-    document.getElementById('couponErr').classList.remove('show');
-    document.getElementById('couponInput').classList.remove('error');
-  }
+          const codCard = document.querySelector('[data-method="cod"]');
 
-  promoRow.addEventListener('click', openCoupon);
-  closeBtn.addEventListener('click', closeCoupon);
-  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeCoupon(); });
-  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeCoupon(); });
+          if (total > COD_LIMIT) {
 
-  // ── Apply coupon logic
-  function applyCoupon(code) {
-    code = code.trim().toUpperCase();
-    var coupon = COUPONS[code];
-    if (!coupon) {
-      document.getElementById('couponInput').classList.add('error');
-      document.getElementById('couponErr').classList.add('show');
-      return;
-    }
-    document.getElementById('couponInput').classList.remove('error');
-    document.getElementById('couponErr').classList.remove('show');
+            codCard.classList.remove("selected");
+            codCard.style.opacity = "0.5";
+            codCard.style.pointerEvents = "none";
+            codCard.title = "Cash on Delivery is available only for orders up to ₹1000.";
 
-    appliedCoupon = { code: code, ...coupon };
-    updateSummary();
-    closeCoupon();
-    showToast('Coupon "' + code + '" applied successfully!', 'success');
-  }
+            if (selectedMethod === "cod") {
 
-  // ── Apply button
-  document.getElementById('applyBtn').addEventListener('click', function() {
-    var val = document.getElementById('couponInput').value;
-    if (!val.trim()) {
-      document.getElementById('couponInput').classList.add('error');
-      document.getElementById('couponErr').textContent = 'Please enter a promo code.';
-      document.getElementById('couponErr').classList.add('show');
-      return;
-    }
-    applyCoupon(val);
-  });
+              selectedMethod = "razorpay";
 
-  // Enter key on input
-  document.getElementById('couponInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') document.getElementById('applyBtn').click();
-    // clear error on type
-    this.classList.remove('error');
-    document.getElementById('couponErr').classList.remove('show');
-  });
+              document
+                .querySelectorAll(".pay-card")
+                .forEach(c => c.classList.remove("selected"));
 
-  // ── "Use" buttons on offer cards
-  document.querySelectorAll('.offer-card .btn-use').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var card = btn.closest('.offer-card');
-      applyCoupon(card.dataset.code);
-    });
-  });
+              document
+                .querySelector('[data-method="razorpay"]')
+                .classList.add("selected");
 
-  // ── Remove coupon
-  document.getElementById('removePromo').addEventListener('click', function() {
-    appliedCoupon = null;
-    updateSummary();
-    showToast('Coupon removed.', 'success');
-  });
+              document
+                .getElementById("razorpayNote")
+                .classList.add("show");
 
-  // ── Update order summary totals
-  function updateSummary() {
-    var discount = 0;
-    if (appliedCoupon && appliedCoupon.discount > 0) {
-      discount = Math.round(BASE_PRICE * appliedCoupon.discount / 100);
-    }
-    var total = BASE_PRICE - discount;
+              document
+                .getElementById("walletNote")
+                .classList.remove("show");
+            }
 
-    // Applied badge
-    var applied = document.getElementById('promoApplied');
-    var row     = document.getElementById('promoRow');
-    if (appliedCoupon) {
-      document.getElementById('appliedCodeText').textContent = appliedCoupon.code;
-      document.getElementById('appliedDescText').textContent = appliedCoupon.desc;
-      applied.classList.add('show');
-      row.style.display = 'none';
-    } else {
-      applied.classList.remove('show');
-      row.style.display = '';
-    }
+          } else {
 
-    // Discount row
-    var discRow = document.getElementById('discountRow');
-    if (discount > 0) {
-      document.getElementById('discountValue').textContent = '-\u20B9' + discount.toLocaleString('en-IN');
-      discRow.classList.add('show');
-    } else {
-      discRow.classList.remove('show');
-    }
+            codCard.style.opacity = "";
+            codCard.style.pointerEvents = "";
+            codCard.title = "";
+          }
 
-    document.getElementById('totalAmount').textContent = '\u20B9' + total.toLocaleString('en-IN');
-  }
+          // Applied badge
+          var applied = document.getElementById('promoApplied');
+          var row = document.getElementById('promoRow');
+          if (appliedCoupon) {
+            document.getElementById('appliedCodeText').textContent = appliedCoupon.code;
+            document.getElementById('appliedDescText').textContent = appliedCoupon.desc;
+            applied.classList.add('show');
+            row.style.display = 'none';
+          } else {
+            applied.classList.remove('show');
+            row.style.display = '';
+          }
 
-  // ── Toast
-  function showToast(msg, type) {
-    var t = document.getElementById('toast');
-    document.getElementById('tMsg').textContent = msg;
-    document.getElementById('tIcon').textContent = type === 'success' ? '\u2713' : '\u2715';
-    t.className = 'toast ' + type;
-    requestAnimationFrame(function() { t.classList.add('show'); });
-    setTimeout(function() { t.classList.remove('show'); }, 3000);
-  }
-</script>
+          // Discount row
+          var discRow = document.getElementById('discountRow');
+          if (discount > 0) {
+            document.getElementById('discountValue').textContent = '-\u20B9' + discount.toLocaleString('en-IN');
+            discRow.classList.add('show');
+          } else {
+            discRow.classList.remove('show');
+          }
+
+          document.getElementById('totalAmount').textContent = '\u20B9' + total.toLocaleString('en-IN');
+        }
+
+        // ── Toast
+        function showToast(msg, type) {
+          var t = document.getElementById('toast');
+          document.getElementById('tMsg').textContent = msg;
+          document.getElementById('tIcon').textContent = type === 'success' ? '\u2713' : '\u2715';
+          t.className = 'toast ' + type;
+          requestAnimationFrame(function () { t.classList.add('show'); });
+          setTimeout(function () { t.classList.remove('show'); }, 3000);
+        }
+      </script>
 
 </body>
+
 </html>

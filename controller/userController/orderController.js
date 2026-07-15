@@ -4,6 +4,7 @@ import Cart from "../../model/cartSchema.js";
 import Product from "../../model/productSchema.js";
 import Return from "../../model/returnSchema.js";
 import { User } from "../../model/userSchema.js";
+import { creditWallet } from "../../utils/walletHelper.js";
 
 
 export const getOrders = async (req, res) => {
@@ -119,6 +120,20 @@ export const cancelFullOrder = async (req, res) => {
 
         await order.save();
 
+        if (order.paymentStatus === "paid") {
+
+            order.paymentStatus = "refunded";
+            await order.save();
+
+            await creditWallet({
+                userId: user._id,
+                amount: order.finalAmount,
+                source: "order_cancel",
+                orderId: order._id,
+                description: `Refund for cancelled order ${order.orderId}`
+            });
+        }
+
         return res.status(200).json({ success: true, message: "Order cancelled successfully" });
 
     } catch (error) {
@@ -138,14 +153,28 @@ export const cancelSingleItem = async (req, res) => {
         const order = await Order.findOne({ _id: orderId, userId: user._id });
         if (!order) return res.status(404).json({ success: false });
 
-        const blockedStatuses = ['shipped', 'out_for_delivery', 'delivered'];
-        if (blockedStatuses.includes(order.orderStatus)) {
-            return res.status(400).json({ success: false, message: "Cannot cancel after shipped" });
+        const item = order.items.id(itemId);
+
+        if (!item) {
+            return res.status(404).json({
+                success: false,
+                message: "Item not found"
+            });
         }
 
-        const item = order.items.id(itemId);
-        if (!item) return res.status(404).json({ success: false, message: "Item not found" });
 
+        const blockedStatuses = [
+            'shipped',
+            'out_for_delivery',
+            'delivered'
+        ];
+
+        if (blockedStatuses.includes(item.itemStatus)) {
+            return res.status(400).json({
+                success: false,
+                message: "Cannot cancel this item after shipping"
+            });
+        }
         if (item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
             item.itemStatus = "cancelled";
             item.cancelReason = reason;
@@ -156,22 +185,45 @@ export const cancelSingleItem = async (req, res) => {
                 { $inc: { "variants.$.stock": item.qty } }
             );
 
-            order.orderTotal -= item.total;
-            order.finalAmount -= item.total;
         }
 
-        const activeItems = order.items.filter(
-            i => i.itemStatus !== "cancelled" && i.itemStatus !== "returned"
+        const allCancelled = order.items.every(
+            item => item.itemStatus === "cancelled"
         );
-        if (activeItems.length === 0) {
+
+        if (allCancelled) {
             order.orderStatus = "cancelled";
-            // Restore original totals when the order is completely cancelled, avoiding ₹0 total displays
-            const originalSubtotal = order.items.reduce((sum, item) => sum + item.total, 0);
+            order.cancelledAt = new Date();
+
+            // Restore original totals when the entire order is cancelled
+            const originalSubtotal = order.items.reduce(
+                (sum, item) => sum + item.total,
+                0
+            );
+
             order.orderTotal = originalSubtotal;
-            order.finalAmount = originalSubtotal + (order.deliveryCharge || 0) - (order.discount || 0);
+            order.finalAmount =
+                originalSubtotal +
+                (order.deliveryCharge || 0) -
+                (order.discount || 0);
         }
 
         await order.save();
+
+        if (order.paymentStatus === "paid") {
+            await creditWallet({
+                userId: user._id,
+                amount: item.total,
+                source: "order_cancel",
+                orderId: order._id,
+                description: `Refund for cancelled item in order ${order.orderId}`
+            });
+
+            if (order.items.every(i => i.itemStatus === "cancelled")) {
+                order.paymentStatus = "refunded";
+                await order.save();
+            }
+        }
 
         res.json({ success: true, message: "Item cancelled successfully" });
 
@@ -184,36 +236,97 @@ export const cancelSingleItem = async (req, res) => {
 
 export const returnItem = async (req, res) => {
     try {
+
         const { orderId, itemId, reason } = req.body;
 
-        const user = await User.findOne({ email: req.session.user });
-        if (!user) return res.status(401).json({ success: false, message: "User not found" });
+        const user = await User.findOne({
+            email: req.session.user
+        });
 
-        const order = await Order.findOne({ _id: orderId, userId: user._id });
-        if (!order) return res.status(404).json({ success: false });
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        const order = await Order.findOne({
+            _id: orderId,
+            userId: user._id
+        });
+
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: "Order not found"
+            });
+        }
 
         if (order.orderStatus !== "delivered") {
-            return res.status(400).json({ success: false, message: "Return allowed only after delivery" });
+            return res.status(400).json({
+                success: false,
+                message: "Return is allowed only after delivery"
+            });
         }
 
         const item = order.items.id(itemId);
-        if (!item) return res.status(404).json({ success: false, message: "Item not found" });
 
-        if (item.itemStatus !== "active") {
-            return res.status(400).json({ success: false, message: "This item cannot be returned" });
+        if (!item) {
+            return res.status(404).json({
+                success: false,
+                message: "Item not found"
+            });
         }
 
-        const existingReturn = await Return.findOne({ orderId, itemId });
+        const ineligibleStatuses = ["cancelled", "returned", "return_requested", "return_rejected"];
+        if (ineligibleStatuses.includes(item.itemStatus)) {
+            return res.status(400).json({
+                success: false,
+                message: "This item cannot be returned"
+            });
+        }
+
+        const existingReturn = await Return.findOne({
+            orderId,
+            itemId
+        });
+
         if (existingReturn) {
-            return res.status(400).json({ success: false, message: "Return request already submitted" });
+            return res.status(400).json({
+                success: false,
+                message: "Return request already submitted"
+            });
         }
 
-        await Return.create({ orderId, itemId, userId: user._id, reason, refundAmount: item.total });
+        // Create Return Request
+        await Return.create({
+            orderId,
+            itemId,
+            userId: user._id,
+            reason,
+            refundAmount: item.total
+        });
 
-        res.json({ success: true, message: "Return request submitted" });
+        // Update Order Item
+        item.itemStatus = "return_requested";
+        item.returnReason = reason;
+        item.returnRequestedAt = new Date();
+
+        await order.save();
+
+        return res.json({
+            success: true,
+            message: "Return request submitted successfully"
+        });
 
     } catch (error) {
+
         console.log(error);
-        res.status(500).json({ success: false });
+
+        return res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
+
     }
 };

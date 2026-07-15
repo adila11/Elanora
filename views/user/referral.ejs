@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Referral Code - Elanora</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #fdfaf5;
+      color: #2c2c2c;
+    }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #c49a2a;
+      color: #fff;
+      border: none;
+      padding: 11px 24px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-gold:hover {
+      background: #a87820;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #fff;
+      color: #2c2c2c;
+      border: 1px solid #e8e0d0;
+      padding: 11px 24px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-outline:hover {
+      border-color: #c49a2a;
+      color: #c49a2a;
+    }
+
+    .referral-icon-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 9999px;
+      background: #f3e6c9;
+      color: #c49a2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .code-box {
+      background: #fdfaf5;
+      border: 1.5px dashed #d8c48a;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #c49a2a;
+    }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid #e8e0d0;
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.blue {
+      background: #eaf1fb;
+      color: #3b7dd8;
+    }
+
+    .stat-icon.green {
+      background: #e4f4e8;
+      color: #1f9d4b;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: #999;
+      margin-bottom: 3px;
+    }
+
+    .stat-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #2c2c2c;
+    }
+  </style>
+</head>
+
+<body>
+
+  <%- include('partials/user/header') %>
+
+  <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
+
+    <%- include('partials/user/profileBanner', { user }) %>
+
+    <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
+
+      <%- include('partials/user/profileSidebar', { activePage: 'referral' }) %>
+
+      <main style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+
+        <div style="border-bottom:1px solid #f0ece4; padding-bottom:18px; margin-bottom:36px;">
+          <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#2c2c2c;">
+            Refer &amp; Earn
+          </h3>
+        </div>
+
+        <div style="text-align:center; max-width:520px; margin:0 auto 36px;">
+          <div class="referral-icon-circle">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20 12v9H4v-9M2 7h20v5H2V7zm10 0v14M12 7c-1.5-3-5-4.5-6.5-2S8 8 12 7zm0 0c1.5-3 5-4.5 6.5-2S16 8 12 7z" />
+            </svg>
+          </div>
+
+          <h4 style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:700; color:#2c2c2c; margin-bottom:14px;">
+            Give ₹<%= referral.giveAmount %>, Get ₹<%= referral.getAmount %>
+          </h4>
+
+          <p style="font-size:0.9rem; color:#666; line-height:1.6;">
+            Share your unique code with friends. They get ₹<%= referral.giveAmount %> off their first order, and you get ₹<%= referral.getAmount %> in store credit when they make a purchase.
+          </p>
+        </div>
+
+        <div style="max-width:480px; margin:0 auto 32px; background:#fdfaf5; border:1px solid #e8e0d0; border-radius:16px; padding:28px;">
+          <p style="text-align:center; font-size:0.72rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:#999; margin-bottom:12px;">
+            Your Unique Code
+          </p>
+
+          <div class="code-box" id="referralCode" style="margin-bottom:20px;">
+            <%= referral.code %>
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:center;">
+            <button type="button" onclick="copyReferralCode()" id="copyCodeBtn" class="btn-gold">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="9" y="9" width="12" height="12" rx="2" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 15H4a1 1 0 01-1-1V4a1 1 0 011-1h10a1 1 0 011 1v1" />
+              </svg>
+              Copy Code
+            </button>
+            <button type="button" onclick="shareReferralLink()" class="btn-outline">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <path stroke-linecap="round" d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" />
+              </svg>
+              Share Link
+            </button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:480px; margin:0 auto;">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m5-4a4 4 0 100-8 4 4 0 000 8zm6 4a4 4 0 00-3-3.87" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-label">Friends Invited</div>
+              <div class="stat-value"><%= referral.friendsInvited %></div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12v9H4v-9M2 7h20v5H2V7zm10 0v14M12 7c-1.5-3-5-4.5-6.5-2S8 8 12 7zm0 0c1.5-3 5-4.5 6.5-2S16 8 12 7z" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-label">Credit Earned</div>
+              <div class="stat-value">₹<%= Number(referral.creditEarned).toLocaleString('en-IN') %></div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <%- include('partials/user/footer') %>
+
+  <script>
+    function copyReferralCode() {
+      const code = document.getElementById('referralCode').textContent.trim();
+      navigator.clipboard.writeText(code).then(() => {
+        if (typeof window.showToast === 'function') window.showToast('Referral code copied!', 'success');
+      }).catch(() => {
+        if (typeof window.showToast === 'function') window.showToast('Could not copy code. Please copy manually.', 'error');
+      });
+    }
+
+    function shareReferralLink() {
+      const code = document.getElementById('referralCode').textContent.trim();
+      const shareUrl = `${window.location.origin}/signup?ref=${code}`;
+
+      if (navigator.share) {
+        navigator.share({
+          title: 'Elanora',
+          text: `Use my code ${code} to get a discount on Elanora!`,
+          url: shareUrl
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          if (typeof window.showToast === 'function') window.showToast('Referral link copied to clipboard!', 'success');
+        }).catch(() => {
+          if (typeof window.showToast === 'function') window.showToast('Could not copy link. Please copy manually.', 'error');
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>

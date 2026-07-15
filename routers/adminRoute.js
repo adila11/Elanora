@@ -6,7 +6,10 @@ import { loadProduct, loadAddProduct, addProduct, loadEditProduct, editProduct, 
 import { loadCategories, addCategory, editCategory, toggleCategory, deleteCategory } from "../controller/adminController/categoriesController.js"
 import { getOrdersPage, updateOrderStatus, getOrderDetail } from "../controller/adminController/orderController.js"
 import { approveReturn, getReturnsPage, rejectReturn } from "../controller/adminController/returnController.js"
+import { createCoupon, deleteCoupon, loadCoupons, updateCoupon } from "../controller/adminController/couponController.js"
+
 import upload from "../config/multerCloudinary.js"
+import { loadSales } from "../controller/adminController/salesController.js"
 const router=express.Router()
 
 router.get("/",loadLogin)
@@ -38,6 +41,13 @@ router.patch("/orders/:orderId/status",updateOrderStatus);
 router.get("/returns",getReturnsPage);
 router.patch("/returns/:id/approve",approveReturn);
 router.patch("/returns/:id/reject",rejectReturn);
+
+router.get("/coupons",loadCoupons);
+router.post("/coupons", createCoupon);
+router.put("/coupons/:id", updateCoupon);
+router.delete("/coupons/:id", deleteCoupon);
+
+router.get("/sales", loadSales);
 
 
 router.get('/logout',logout) ;

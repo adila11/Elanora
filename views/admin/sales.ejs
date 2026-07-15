@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sales Reports – Elanora Admin</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f4f0;
+      --sidebar-bg: #fafaf8;
+      --card: #ffffff;
+      --border: #e8e6e0;
+      --text: #1a1a18;
+      --muted: #7a7870;
+      --accent: #c8a96e;
+      --accent-light: #f5edd8;
+      --accent-hover: #b38a4f;
+      --green: #2d7a4f;
+      --green-bg: #e8f5ee;
+      --red: #c0392b;
+      --red-bg: #fcecea;
+      --indigo: #5b52e8;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .page-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px;
+    }
+
+    /* ── Page Header ── */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .btn-download {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 18px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-download:hover {
+      background: var(--card);
+      border-color: var(--accent);
+    }
+
+    /* ── Range Tabs ── */
+    .range-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+    }
+
+    .range-tab {
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .range-tab:hover {
+      color: var(--text);
+    }
+
+    .range-tab.active {
+      background: var(--accent-light);
+      color: var(--accent-hover);
+    }
+
+    .reports-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    /* ── Stat Cards ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .stat-label {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      margin-bottom: 10px;
+    }
+
+    .stat-delta {
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+
+    .stat-delta.up {
+      color: var(--green);
+    }
+
+    .stat-delta.down {
+      color: var(--red);
+    }
+
+    /* ── Chart Cards ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .chart-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .chart-card-title {
+      font-size: 15.5px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 280px;
+    }
+
+    @media (max-width: 1100px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <%- include('partials/admin/sidebar') %>
+
+    <div class="main">
+      <%- include('partials/admin/header') %>
+
+        <div class="page-content">
+
+          <div class="reports-toolbar">
+            <div class="section-title">Sales Reports</div>
+            <div style="display:flex; align-items:center; gap:14px;">
+              <div class="range-tabs" id="rangeTabs">
+                <button class="range-tab" data-range="7d">7D</button>
+                <button class="range-tab active" data-range="30d">30D</button>
+                <button class="range-tab" data-range="90d">90D</button>
+                <button class="range-tab" data-range="1y">1Y</button>
+                <button class="range-tab" data-range="custom">Custom</button>
+              </div>
+              <button class="btn-download" id="btnDownload" onclick="downloadReport()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 3v12" />
+                  <path d="M7 10l5 5 5-5" />
+                  <path d="M5 21h14" />
+                </svg>
+                Download
+              </button>
+            </div>
+          </div>
+
+          <!-- Stat Cards -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Revenue</div>
+              <div class="stat-value">₹<%= totalRevenue %></div>
+              <div class="stat-delta <%= revenueDelta >= 0 ? 'up' : 'down' %>">
+                <%= revenueDelta >= 0 ? '+' : '' %><%= revenueDelta %>% from last period
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Total Orders</div>
+              <div class="stat-value"><%= totalOrders %></div>
+              <div class="stat-delta <%= ordersDelta >= 0 ? 'up' : 'down' %>">
+                <%= ordersDelta >= 0 ? '+' : '' %><%= ordersDelta %>% from last period
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Average Order Value</div>
+              <div class="stat-value">₹<%= avgOrderValue %></div>
+              <div class="stat-delta <%= aovDelta >= 0 ? 'up' : 'down' %>">
+                <%= aovDelta >= 0 ? '+' : '' %><%= aovDelta %>% from last period
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Conversion Rate</div>
+              <div class="stat-value"><%= conversionRate %>%</div>
+              <div class="stat-delta <%= conversionDelta >= 0 ? 'up' : 'down' %>">
+                <%= conversionDelta >= 0 ? '+' : '' %><%= conversionDelta %>% from last period
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-card-title">Revenue Trend</div>
+              <div class="chart-wrap">
+                <canvas id="revenueChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-card-title">Orders Volume</div>
+              <div class="chart-wrap">
+                <canvas id="ordersChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </div>
+    </div>
+
+    <script>
+      // Data injected from the server. Falls back to sample data if not provided.
+      const chartLabels = <%- JSON.stringify(chartLabels || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']) %>;
+      const revenueSeries = <%- JSON.stringify(revenueSeries || [32000, 37500, 29000, 43000, 41500, 48229.5]) %>;
+      const ordersSeries = <%- JSON.stringify(ordersSeries || [95, 172, 140, 218, 168, 262]) %>;
+
+      // ── Revenue Trend (area / line) ─────────────────────────────────────────
+      const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+      const revenueGradient = revenueCtx.createLinearGradient(0, 0, 0, 280);
+      revenueGradient.addColorStop(0, 'rgba(200, 169, 110, 0.35)');
+      revenueGradient.addColorStop(1, 'rgba(200, 169, 110, 0)');
+
+      new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+          labels: chartLabels,
+          datasets: [{
+            label: 'Revenue',
+            data: revenueSeries,
+            borderColor: '#c8a96e',
+            backgroundColor: revenueGradient,
+            borderWidth: 2.5,
+            fill: true,
+            tension: 0.45,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: '#c8a96e',
+            pointHoverBorderColor: '#fff',
+            pointHoverBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1a1a18',
+              padding: 10,
+              cornerRadius: 8,
+              displayColors: false,
+              callbacks: {
+                label: (ctx) => '₹' + ctx.parsed.y.toLocaleString('en-IN')
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: { color: '#7a7870', font: { family: 'DM Sans', size: 12 } }
+            },
+            y: {
+              grid: { color: '#e8e6e0', drawTicks: false },
+              border: { display: false },
+              ticks: {
+                color: '#7a7870',
+                font: { family: 'DM Sans', size: 12 },
+                callback: (v) => '₹' + (v >= 1000 ? (v / 1000) + 'k' : v)
+              }
+            }
+          }
+        }
+      });
+
+      // ── Orders Volume (bar) ─────────────────────────────────────────────────
+      const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+      new Chart(ordersCtx, {
+        type: 'bar',
+        data: {
+          labels: chartLabels,
+          datasets: [{
+            label: 'Orders',
+            data: ordersSeries,
+            backgroundColor: '#5b52e8',
+            borderRadius: 6,
+            maxBarThickness: 42
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1a1a18',
+              padding: 10,
+              cornerRadius: 8,
+              displayColors: false
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: { color: '#7a7870', font: { family: 'DM Sans', size: 12 } }
+            },
+            y: {
+              grid: { color: '#e8e6e0', drawTicks: false },
+              border: { display: false },
+              ticks: { color: '#7a7870', font: { family: 'DM Sans', size: 12 } }
+            }
+          }
+        }
+      });
+
+      // ── Range Tabs ───────────────────────────────────────────────────────────
+      document.getElementById('rangeTabs').addEventListener('click', function (e) {
+        const btn = e.target.closest('.range-tab');
+        if (!btn) return;
+        document.querySelectorAll('.range-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        const range = btn.dataset.range;
+        if (range === 'custom') {
+          // Hook up a date-range picker here if needed
+          return;
+        }
+        location.href = `?range=${range}`;
+      });
+
+      // ── Download ─────────────────────────────────────────────────────────────
+      function downloadReport() {
+        const params = new URLSearchParams(location.search);
+        window.location.href = `/admin/sales-reports/export?${params.toString()}`;
+      }
+    </script>
+</body>
+
+</html>

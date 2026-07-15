@@ -1,6 +1,7 @@
 import Return from "../../model/returnSchema.js";
 import Order from "../../model/orderSchema.js";
 import Product from "../../model/productSchema.js";
+import { creditWallet } from "../../utils/walletHelper.js";
 
 export const getReturnsPage = async (req, res) => {
     try {
@@ -88,8 +89,9 @@ export const approveReturn = async (req, res) => {
             if (item) {
                 const oldStatus = item.itemStatus;
                 item.itemStatus = "returned";
-                item.returnedAt = new Date();
                 item.returnReason = returnRequest.reason;
+                item.returnApprovedAt = new Date();
+                item.returnedAt = new Date();
 
                 if (oldStatus !== "returned" && oldStatus !== "cancelled") {
                     await Product.findOneAndUpdate(
@@ -98,10 +100,38 @@ export const approveReturn = async (req, res) => {
                     );
                 }
             }
+
+            if (order.paymentStatus === "paid") {
+
+                await creditWallet({
+                    userId: order.userId,
+                    amount: returnRequest.refundAmount,
+                    source: "order_return",
+                    orderId: order._id,
+                    description: `Refund for returned item in order ${order.orderId}`
+                });
+
+                const allReturned = order.items.every(item =>
+                    item.itemStatus === "returned" ||
+                    item.itemStatus === "cancelled"
+                );
+
+                if (allReturned) {
+                    order.paymentStatus = "refunded";
+                    order.orderStatus = "returned";
+
+                }
+
+            }
+
+
             await order.save();
         }
 
-        res.json({ success: true, message: "Return approved" });
+        res.json({
+            success: true,
+            message: `Return approved. ₹${returnRequest.refundAmount} refunded to user's wallet.`
+        });
 
     } catch (error) {
         console.log(error);
@@ -127,6 +157,17 @@ export const rejectReturn = async (req, res) => {
         returnRequest.processedAt = new Date();
         if (adminRemark) returnRequest.adminRemark = adminRemark;
         await returnRequest.save();
+
+        const order = await Order.findById(returnRequest.orderId);
+        if (order) {
+            const item = order.items.id(returnRequest.itemId);
+            if (item) {
+                item.itemStatus = "return_rejected";
+                item.returnRejectedAt = new Date();
+                item.returnRejectReason = adminRemark || "";
+            }
+            await order.save();
+        }
 
         res.json({ success: true, message: "Return rejected" });
 

@@ -48,14 +48,25 @@ const orderItemSchema = new mongoose.Schema({
             'out_for_delivery',
             'delivered',
             'cancelled',
-            'returned'
+
+            'return_requested',
+            'returned',
+            'return_rejected'
         ],
-        default: 'active'
+      default: 'pending'
     },
 
     cancelReason: String,
 
     returnReason: String,
+
+    returnRequestedAt: Date,
+
+    returnApprovedAt: Date,
+
+    returnRejectedAt: Date,
+
+    returnRejectReason: String,
 
     cancelledAt: Date,
 
@@ -146,15 +157,37 @@ const orderSchema = new mongoose.Schema({
             'out_for_delivery',
             'delivered',
             'cancelled',
-            'returned'
+
+            'return_requested',
+            'returned',
+            'return_rejected'
         ],
         default: 'pending'
     },
 
+    razorpayOrderId: {
+        type: String
+    },
+
+    razorpayPaymentId: {
+        type: String
+    },
+
+    razorpaySignature: {
+        type: String
+    },
+
     returnReason: String,
     cancelReason: String,
+
+    returnRequestedAt: Date,
+    returnApprovedAt: Date,
+    returnRejectedAt: Date,
+    returnRejectReason: String,
+
     cancelledAt: Date,
     deliveredAt: Date,
+    returnedAt: Date,
 
 }, {
     timestamps: true
