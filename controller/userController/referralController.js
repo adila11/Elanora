@@ -20,19 +20,12 @@ export const loadReferralPage = async (req, res) => {
         }, 0);
 
         const referral = {
-
             code: user.referralCode,
-
             giveAmount: 100,
-
             getAmount: 100,
-
             friendsInvited,
-
             creditEarned,
-
             history: referrals
-
         };
 
         res.render("user/referral", {

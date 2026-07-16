@@ -98,6 +98,9 @@ export const approveReturn = async (req, res) => {
                         { "_id": item.productId, "variants._id": item.variantId },
                         { $inc: { "variants.$.stock": item.qty } }
                     );
+
+                    order.orderTotal -= item.total;
+                    order.finalAmount -= item.total;
                 }
             }
 
@@ -120,10 +123,13 @@ export const approveReturn = async (req, res) => {
                     order.paymentStatus = "refunded";
                     order.orderStatus = "returned";
 
+                    // Restore original totals when the order is completely returned, avoiding ₹0 total displays
+                    const originalSubtotal = order.items.reduce((sum, item) => sum + item.total, 0);
+                    order.orderTotal = originalSubtotal;
+                    order.finalAmount = originalSubtotal + (order.deliveryCharge || 0) - (order.discount || 0);
                 }
 
             }
-
 
             await order.save();
         }

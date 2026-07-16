@@ -2,16 +2,10 @@ import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
 import Order from "../../model/orderSchema.js";       
 import Return from "../../model/returnSchema.js";     
-/**
- * Order statuses that count as "real" revenue.
- * Adjust this to match your business rules (e.g. you may want to exclude
- * 'return_requested' too, or only count 'delivered' for COD orders).
- */
+
 const REVENUE_EXCLUDED_STATUSES = ["cancelled", "return_rejected"];
 
-/* ────────────────────────────────────────────────────────────────────────
-   Date range resolution
-   ──────────────────────────────────────────────────────────────────────── */
+
 function getDateRange(query) {
   const now = new Date();
   const range = query.range || "30d";
@@ -48,7 +42,6 @@ function getDateRange(query) {
     start.setHours(0, 0, 0, 0);
   }
 
-  // Previous period of equal length, used for the "% from last period" deltas
   const durationMs = end.getTime() - start.getTime();
   const prevEnd = new Date(start.getTime() - 1);
   const prevStart = new Date(prevEnd.getTime() - durationMs);
@@ -56,9 +49,7 @@ function getDateRange(query) {
   return { start, end, prevStart, prevEnd, groupBy, range };
 }
 
-/* ────────────────────────────────────────────────────────────────────────
-   Core aggregation — reused by the page render, Excel export and PDF export
-   ──────────────────────────────────────────────────────────────────────── */
+
 async function buildReportData(query) {
   const { start, end, prevStart, prevEnd, groupBy } = getDateRange(query);
 
@@ -71,7 +62,6 @@ async function buildReportData(query) {
     orderStatus: { $nin: REVENUE_EXCLUDED_STATUSES },
   };
 
-  // ── Summary totals for current + previous period ──────────────────────
   const [currentSummary] = await Order.aggregate([
     { $match: baseMatch },
     {
@@ -123,13 +113,11 @@ async function buildReportData(query) {
     prev.totalOrders ? Math.round(prev.totalRevenue / prev.totalOrders) : 0
   );
 
-  // ── Returns count/amount in the same window (for context, optional) ────
   const [returnsSummary] = await Return.aggregate([
     { $match: { createdAt: { $gte: start, $lte: end }, status: "approved" } },
     { $group: { _id: null, totalReturns: { $sum: 1 }, totalRefunded: { $sum: "$refundAmount" } } },
   ]);
 
-  // ── Time-series for charts (grouped by day or month) ───────────────────
   const dateFormat = groupBy === "month" ? "%Y-%m" : "%Y-%m-%d";
 
   const series = await Order.aggregate([
@@ -148,11 +136,10 @@ async function buildReportData(query) {
   const revenueSeries = series.map((s) => Math.round(s.revenue));
   const ordersSeries = series.map((s) => s.orders);
 
-  // ── Transaction list (line-item level, latest first) ───────────────────
   const transactions = await Order.find(baseMatch)
     .populate("userId", "name email")
     .sort({ createdAt: -1 })
-    .limit(500) // safety cap; paginate in the UI if you expect more
+    .limit(500) 
     .select(
       "orderId createdAt userId orderTotal discount deliveryCharge finalAmount paymentMethod paymentStatus orderStatus couponCode isCouponApplied items"
     )
@@ -195,12 +182,20 @@ async function buildReportData(query) {
   };
 }
 
-/* ────────────────────────────────────────────────────────────────────────
-   1) Render the Sales Reports page
-   ──────────────────────────────────────────────────────────────────────── */
+
+
 export const getSalesReportPage = async (req, res, next) => {
   try {
     const data = await buildReportData(req.query);
+
+    const allTransactions = data.transactionRows;
+    const totalTransactions = allTransactions.length;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const totalPages = Math.ceil(totalTransactions / limit) || 1;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const transactions = allTransactions.slice(startIndex, endIndex);
 
     res.render("admin/sales", {
       totalRevenue: data.stats.totalRevenue,
@@ -215,20 +210,20 @@ export const getSalesReportPage = async (req, res, next) => {
       chartLabels: data.chartLabels,
       revenueSeries: data.revenueSeries,
       ordersSeries: data.ordersSeries,
-      transactions: data.transactionRows,
+      transactions,
       currentRange: req.query.range || "30d",
       startDate: req.query.startDate || "",
       endDate: req.query.endDate || "",
       title: "Sales Report",
+      currentPage: page,
+      totalPages,
     });
   } catch (err) {
     next(err);
   }
 };
 
-/* ────────────────────────────────────────────────────────────────────────
-   2) Export to Excel
-   ──────────────────────────────────────────────────────────────────────── */
+
 export const exportSalesReportExcel = async (req, res, next) => {
   try {
     const data = await buildReportData(req.query);
@@ -236,7 +231,7 @@ export const exportSalesReportExcel = async (req, res, next) => {
     workbook.creator = "Elanora Admin";
     workbook.created = new Date();
 
-    // ── Summary sheet ─────────────────────────────────────────────────
+
     const summarySheet = workbook.addWorksheet("Summary");
     summarySheet.columns = [
       { header: "Metric", key: "metric", width: 30 },
@@ -254,7 +249,6 @@ export const exportSalesReportExcel = async (req, res, next) => {
     ]);
     summarySheet.getRow(1).font = { bold: true };
 
-    // ── Transactions sheet ────────────────────────────────────────────
     const txSheet = workbook.addWorksheet("Transactions");
     txSheet.columns = [
       { header: "Order ID", key: "orderId", width: 18 },
@@ -292,9 +286,8 @@ export const exportSalesReportExcel = async (req, res, next) => {
   }
 };
 
-/* ────────────────────────────────────────────────────────────────────────
-   3) Export to PDF
-   ──────────────────────────────────────────────────────────────────────── */
+
+
 export const exportSalesReportPDF = async (req, res, next) => {
   try {
     const data = await buildReportData(req.query);

@@ -82,7 +82,6 @@ export const loadCheckoutPayment = async (req, res) => {
             return res.redirect("/checkout/address");
         }
 
-        // Fetch coupons that are active and not yet expired
         const now = new Date();
         const availableCoupons = await Coupon.find({
             isActive: true,

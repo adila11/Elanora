@@ -195,7 +195,6 @@ export const cancelSingleItem = async (req, res) => {
             order.orderStatus = "cancelled";
             order.cancelledAt = new Date();
 
-            // Restore original totals when the entire order is cancelled
             const originalSubtotal = order.items.reduce(
                 (sum, item) => sum + item.total,
                 0
@@ -298,7 +297,6 @@ export const returnItem = async (req, res) => {
             });
         }
 
-        // Create Return Request
         await Return.create({
             orderId,
             itemId,
@@ -307,7 +305,6 @@ export const returnItem = async (req, res) => {
             refundAmount: item.total
         });
 
-        // Update Order Item
         item.itemStatus = "return_requested";
         item.returnReason = reason;
         item.returnRequestedAt = new Date();

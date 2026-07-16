@@ -528,6 +528,42 @@
                 </tbody>
               </table>
             </div>
+            
+            <!-- Pagination Controls -->
+            <% if (totalPages > 1) { %>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border);">
+                <div style="font-size: 13.5px; color: var(--muted);">
+                  Showing page <strong><%= currentPage %></strong> of <strong><%= totalPages %></strong>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <% 
+                    const getPageUrl = (p) => {
+                      const params = new URLSearchParams();
+                      if (currentRange) params.set('range', currentRange);
+                      if (startDate) params.set('startDate', startDate);
+                      if (endDate) params.set('endDate', endDate);
+                      params.set('page', p);
+                      return '?' + params.toString();
+                    };
+                  %>
+                  <% if (currentPage > 1) { %>
+                    <a href="<%= getPageUrl(currentPage - 1) %>" class="range-tab" style="text-decoration: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; display: inline-block;">Previous</a>
+                  <% } %>
+                  
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                    <% if (i === currentPage) { %>
+                      <span class="range-tab active" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--accent); display: inline-block;"><%= i %></span>
+                    <% } else { %>
+                      <a href="<%= getPageUrl(i) %>" class="range-tab" style="text-decoration: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; display: inline-block;"><%= i %></a>
+                    <% } %>
+                  <% } %>
+
+                  <% if (currentPage < totalPages) { %>
+                    <a href="<%= getPageUrl(currentPage + 1) %>" class="range-tab" style="text-decoration: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; display: inline-block;">Next</a>
+                  <% } %>
+                </div>
+              </div>
+            <% } %>
           </div>
 
         </div>

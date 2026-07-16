@@ -1,6 +1,7 @@
 import express from "express"
 import { loadLogin, login, logout } from "../controller/adminController/loginController.js"
-import { loadDashboard } from "../controller/adminController/dashboardController.js"
+import { loadDashboard, getDashboardChartData } from "../controller/adminController/dashboardController.js"
+import { exportLedger } from "../controller/adminController/ledgerController.js"
 import { blockUser, loadUserManagement } from "../controller/adminController/customersController.js"
 import { loadProduct, loadAddProduct, addProduct, loadEditProduct, editProduct, toggleProductStatus, deleteProduct } from "../controller/adminController/productController.js"
 import { loadCategories, addCategory, editCategory, toggleCategory, deleteCategory } from "../controller/adminController/categoriesController.js"
@@ -15,7 +16,9 @@ const router=express.Router()
 router.get("/",loadLogin)
 router.post("/",login)
 
-router.get("/dashboard",loadDashboard)
+router.get("/dashboard", loadDashboard)
+router.get("/dashboard/chart-data", getDashboardChartData)
+router.get("/dashboard/ledger", exportLedger)
 
 router.get("/products",loadProduct)
 router.get("/products/add",loadAddProduct)

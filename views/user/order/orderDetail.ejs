@@ -1079,15 +1079,13 @@
                 Cancel/return extras are appended after. */
                 const baseSteps = ['pending', 'processing', 'shipped', 'out_for_delivery', 'delivered'];
                 let currentStep = baseSteps.indexOf(os);
-                if (currentStep < 0) currentStep=0;
-                  /* Fill covers the base pipeline up to the current DB step. If
-                  all items are cancelled we show 0% on the base line (the extra cancelled dot is red, so the gold line
-                  stays at 0). */
-                  let fillPct=0; if (!allCancelled) { fillPct=(currentStep / (baseSteps.length - 1)) * 100;
-                  } /* ── Should we show extra terminal step in tracker? ── */ const showCancelledStep=allCancelled;
-                  const showPartiallyCancelledStep=someCancelled; const showReturnedStep=allReturned; const
-                  showPartiallyReturnedStep=someReturned; const trackerSteps=[ { key: 'pending' , label: 'Order Placed'
-                  ,
+                if (currentStep < 0) currentStep=0; /* Fill covers the base pipeline up to the current DB step. If all
+                  items are cancelled we show 0% on the base line (the extra cancelled dot is red, so the gold line
+                  stays at 0). */ let fillPct=0; if (!allCancelled) { fillPct=(currentStep / (baseSteps.length - 1)) *
+                  100; } /* ── Should we show extra terminal step in tracker? ── */ const
+                  showCancelledStep=allCancelled; const showPartiallyCancelledStep=someCancelled; const
+                  showReturnedStep=allReturned; const showPartiallyReturnedStep=someReturned; const trackerSteps=[ {
+                  key: 'pending' , label: 'Order Placed' ,
                   icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
                   }, { key: 'processing' , label: 'Processing' , icon: 'M20 6L9 17l-5-5' }, { key: 'shipped' ,
                   label: 'Shipped' , icon: 'M1 3h15v13H1zM16 8l4 0 3 3 0 5-7 0' }, { key: 'out_for_delivery' ,
@@ -1514,12 +1512,45 @@
 
                           <!-- ── Summary ── -->
                           <div class="order-summary">
-                            <div class="summary-row"><span>Subtotal</span><span>₹<%= order.orderTotal %></span></div>
-                            <div class="summary-row"><span>Delivery Charge</span><span>₹<%= order.deliveryCharge %>
-                              </span></div>
-                            <div class="summary-row"><span>Discount</span><span>– ₹<%= order.discount %></span></div>
-                            <div class="summary-row total"><span>Total</span><span>₹<%= order.finalAmount %></span>
-                            </div>
+                            <% const originalSubtotal=order.items.reduce((sum, item)=> sum + item.total, 0);
+
+                              let refundedAmount = 0;
+                              order.items.forEach(item => {
+                              if (item.itemStatus === 'returned') {
+                              refundedAmount += item.total;
+                              } else if (item.itemStatus === 'cancelled') {
+                              if (order.paymentMethod !== 'cod' || order.paymentStatus === 'refunded') {
+                              refundedAmount += item.total;
+                              }
+                              }
+                              });
+
+                              const allInactive = order.items.every(item => item.itemStatus === 'cancelled' ||
+                              item.itemStatus === 'returned');
+                              if (allInactive && order.paymentStatus === 'refunded') {
+                              refundedAmount = originalSubtotal + (order.deliveryCharge || 0) - (order.discount || 0);
+                              }
+
+                              const originalTotal = originalSubtotal + (order.deliveryCharge || 0) - (order.discount ||
+                              0);
+                              const displayNetTotal = allInactive ? 0 : Math.max(0, originalTotal - refundedAmount);
+                              %>
+                              <div class="summary-row"><span>Subtotal</span><span>₹<%=
+                                    originalSubtotal.toLocaleString('en-IN') %></span></div>
+                              <div class="summary-row"><span>Delivery Charge</span><span>₹<%= (order.deliveryCharge ||
+                                    0).toLocaleString('en-IN') %></span></div>
+                              <div class="summary-row"><span>Discount</span><span>– ₹<%= (order.discount ||
+                                    0).toLocaleString('en-IN') %></span></div>
+                              <% if (refundedAmount> 0) { %>
+                                <div class="summary-row"><span>Original Total</span><span>₹<%=
+                                      originalTotal.toLocaleString('en-IN') %></span></div>
+                                <div class="summary-row" style="color: #c0392b; font-weight: 500;">
+                                  <span>Refunded Amount</span>
+                                  <span>– ₹<%= refundedAmount.toLocaleString('en-IN') %></span>
+                                </div>
+                                <% } %>
+                                  <div class="summary-row total"><span>Total</span><span>₹<%=
+                                        displayNetTotal.toLocaleString('en-IN') %></span></div>
                           </div>
 
             </main>
@@ -1899,63 +1930,93 @@
                 <th style="text-align: right;">Price</th>
                 <th style="text-align: center;">Qty</th>
                 <th style="text-align: right;">Total</th>
+                <th style="text-align: center;">Status</th>
               </tr>
             </thead>
             <tbody>
               <% order.items.forEach(item=> { %>
+                <%
+                  const _iStatus = item.itemStatus || 'active';
+                  const _iLabel  = _iStatus.replace(/_/g, ' ');
+                %>
                 <tr>
                   <td>
-                    <div class="invoice-item-name">
-                      <%= item.productName %>
-                    </div>
+                    <div class="invoice-item-name"><%= item.productName %></div>
                     <% if (item.variantName) { %>
-                      <div class="invoice-item-variant">Color: <%= item.variantName %>
-                      </div>
-                      <% } %>
+                      <div class="invoice-item-variant">Color: <%= item.variantName %></div>
+                    <% } %>
                   </td>
-                  <td style="text-align: right;">₹<%= item.price.toLocaleString('en-IN') %>
-                  </td>
+                  <td style="text-align: right;">₹<%= item.price.toLocaleString('en-IN') %></td>
+                  <td style="text-align: center;"><%= item.qty %></td>
+                  <td style="text-align: right;">₹<%= item.total.toLocaleString('en-IN') %></td>
                   <td style="text-align: center;">
-                    <%= item.qty %>
-                  </td>
-                  <td style="text-align: right;">₹<%= item.total.toLocaleString('en-IN') %>
+                    <span class="invoice-item-status <%= _iStatus %>"><%= _iLabel %></span>
                   </td>
                 </tr>
-                <% }) %>
+              <% }) %>
             </tbody>
           </table>
 
           <!-- Summary Section -->
           <div class="invoice-total-section">
             <div class="invoice-notes">
-              <h4>Terms & Instructions:</h4>
+              <h4>Terms &amp; Instructions:</h4>
               <p>This is a computer-generated tax invoice and does not require a physical signature. Returns/exchanges
                 are accepted within 7 days in their original packaging and unused condition.</p>
             </div>
             <div>
+              <%
+                /* ── Invoice refund calculation ── */
+                const _inv_subtotal = order.items.reduce((s, it) => s + it.total, 0);
+
+                let _inv_refunded = 0;
+                order.items.forEach(it => {
+                  if (it.itemStatus === 'returned') {
+                    _inv_refunded += it.total;
+                  } else if (it.itemStatus === 'cancelled') {
+                    if (order.paymentMethod !== 'cod' || order.paymentStatus === 'refunded') {
+                      _inv_refunded += it.total;
+                    }
+                  }
+                });
+
+                const _inv_allGone = order.items.every(it => it.itemStatus === 'cancelled' || it.itemStatus === 'returned');
+                if (_inv_allGone && order.paymentStatus === 'refunded') {
+                  _inv_refunded = _inv_subtotal + (order.deliveryCharge || 0) - (order.discount || 0);
+                }
+
+                const _inv_originalTotal = _inv_subtotal + (order.deliveryCharge || 0) - (order.discount || 0);
+                const _inv_netTotal = _inv_allGone ? 0 : Math.max(0, _inv_originalTotal - _inv_refunded);
+              %>
               <table class="invoice-summary-table">
                 <tr>
                   <td>Subtotal:</td>
-                  <td style="text-align: right;">₹<%= order.orderTotal.toLocaleString('en-IN') %>
-                  </td>
+                  <td style="text-align: right;">₹<%= _inv_subtotal.toLocaleString('en-IN') %></td>
                 </tr>
                 <tr>
                   <td>Shipping:</td>
-                  <td style="text-align: right;">₹<%= (order.deliveryCharge || 0).toLocaleString('en-IN') %>
-                  </td>
+                  <td style="text-align: right;">₹<%= (order.deliveryCharge || 0).toLocaleString('en-IN') %></td>
                 </tr>
-                <% if (order.discount && order.discount> 0) { %>
+                <% if (order.discount && order.discount > 0) { %>
                   <tr>
                     <td>Discount:</td>
-                    <td style="text-align: right; color: #2d7a4f;">-₹<%= order.discount.toLocaleString('en-IN') %>
-                    </td>
+                    <td style="text-align: right; color: #2d7a4f;">-₹<%= order.discount.toLocaleString('en-IN') %></td>
                   </tr>
-                  <% } %>
-                    <tr class="grand-total">
-                      <td>Total Amount:</td>
-                      <td style="text-align: right;">₹<%= order.finalAmount.toLocaleString('en-IN') %>
-                      </td>
-                    </tr>
+                <% } %>
+                <% if (_inv_refunded > 0) { %>
+                  <tr>
+                    <td>Original Total:</td>
+                    <td style="text-align: right;">₹<%= _inv_originalTotal.toLocaleString('en-IN') %></td>
+                  </tr>
+                  <tr>
+                    <td style="color: #c0392b; font-weight: 600;">Refunded Amount:</td>
+                    <td style="text-align: right; color: #c0392b; font-weight: 600;">-₹<%= _inv_refunded.toLocaleString('en-IN') %></td>
+                  </tr>
+                <% } %>
+                <tr class="grand-total">
+                  <td>Total Amount:</td>
+                  <td style="text-align: right;">₹<%= _inv_netTotal.toLocaleString('en-IN') %></td>
+                </tr>
               </table>
             </div>
           </div>

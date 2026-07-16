@@ -195,7 +195,6 @@ export const updateOrderStatus = async (req, res) => {
                     );
                 }
             }
-            // Restore original totals when the order is completely cancelled, avoiding ₹0 total displays
             const originalSubtotal = existingOrder.items.reduce((sum, item) => sum + item.total, 0);
             existingOrder.orderTotal = originalSubtotal;
             existingOrder.finalAmount = originalSubtotal + (existingOrder.deliveryCharge || 0) - (existingOrder.discount || 0);
@@ -210,7 +209,6 @@ export const updateOrderStatus = async (req, res) => {
                     );
                 }
             }
-            // Restore original totals when the order is completely returned, avoiding ₹0 total displays
             const originalSubtotal = existingOrder.items.reduce((sum, item) => sum + item.total, 0);
             existingOrder.orderTotal = originalSubtotal;
             existingOrder.finalAmount = originalSubtotal + (existingOrder.deliveryCharge || 0) - (existingOrder.discount || 0);
@@ -282,7 +280,6 @@ export const updateItemStatus = async (req, res) => {
                 { $inc: { "variants.$.stock": item.qty } }
             );
 
-            // Deduct the item's total from the order totals
             existingOrder.orderTotal -= item.total;
             existingOrder.finalAmount -= item.total;
         }
@@ -291,8 +288,7 @@ export const updateItemStatus = async (req, res) => {
             i => i.itemStatus !== "cancelled" && i.itemStatus !== "returned"
         );
         if (activeItems.length === 0) {
-            existingOrder.orderStatus = dbStatus; // Set overall order status to cancelled or returned
-            // Restore original totals when the order is completely cancelled/returned, avoiding ₹0 total displays
+            existingOrder.orderStatus = dbStatus; 
             const originalSubtotal = existingOrder.items.reduce((sum, item) => sum + item.total, 0);
             existingOrder.orderTotal = originalSubtotal;
             existingOrder.finalAmount = originalSubtotal + (existingOrder.deliveryCharge || 0) - (existingOrder.discount || 0);

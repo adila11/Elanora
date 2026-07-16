@@ -796,9 +796,31 @@
                   <div class="card-title">Price Breakdown</div>
                 </div>
                 <div class="card-body" style="padding-top:12px; padding-bottom:12px;">
+                  <% 
+                    const originalSubtotal = order.items.reduce((sum, item) => sum + item.total, 0);
+
+                    let refundedAmount = 0;
+                    order.items.forEach(item => {
+                      if (item.itemStatus === 'returned') {
+                        refundedAmount += item.total;
+                      } else if (item.itemStatus === 'cancelled') {
+                        if (order.paymentMethod !== 'cod' || order.paymentStatus === 'refunded') {
+                          refundedAmount += item.total;
+                        }
+                      }
+                    });
+
+                    const allInactive = order.items.every(item => item.itemStatus === 'cancelled' || item.itemStatus === 'returned');
+                    if (allInactive && order.paymentStatus === 'refunded') {
+                      refundedAmount = originalSubtotal + (order.deliveryCharge || 0) - (order.discount || 0);
+                    }
+
+                    const originalTotal = originalSubtotal + (order.deliveryCharge || 0) - (order.discount || 0);
+                    const displayNetTotal = allInactive ? 0 : Math.max(0, originalTotal - refundedAmount);
+                  %>
                   <div class="breakdown-row">
                     <span>Subtotal</span>
-                    <span>₹<%= order.orderTotal.toLocaleString('en-IN') %></span>
+                    <span>₹<%= originalSubtotal.toLocaleString('en-IN') %></span>
                   </div>
                   <div class="breakdown-row">
                     <span>Shipping (Standard)</span>
@@ -811,9 +833,19 @@
                       <span class="discount-val">−₹<%= order.discount.toLocaleString('en-IN') %></span>
                     </div>
                     <% } %>
+                    <% if (refundedAmount > 0) { %>
+                      <div class="breakdown-row">
+                        <span>Original Total</span>
+                        <span>₹<%= originalTotal.toLocaleString('en-IN') %></span>
+                      </div>
+                      <div class="breakdown-row" style="color: #c0392b; font-weight: 500;">
+                        <span>Refunded Amount</span>
+                        <span style="color: #c0392b;">– ₹<%= refundedAmount.toLocaleString('en-IN') %></span>
+                      </div>
+                    <% } %>
                       <div class="breakdown-row total">
                         <span>Total</span>
-                        <span class="total-amount">₹<%= order.finalAmount.toLocaleString('en-IN') %></span>
+                        <span class="total-amount">₹<%= displayNetTotal.toLocaleString('en-IN') %></span>
                       </div>
                 </div>
               </div>

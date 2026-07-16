@@ -68,15 +68,24 @@ export const loadWalletTransactions = async (req, res) => {
             return res.redirect("/wallet");
         }
 
-        const transactions = await WalletTransaction
+        const allTransactions = await WalletTransaction
             .find({ walletId: wallet._id })
             .sort({ createdAt: -1 });
 
-        const totalCredits = transactions
+        const totalTransactions = allTransactions.length;
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const totalPages = Math.ceil(totalTransactions / limit) || 1;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        
+        const transactions = allTransactions.slice(startIndex, endIndex);
+
+        const totalCredits = allTransactions
             .filter(txn => txn.type === "credit")
             .reduce((sum, txn) => sum + txn.amount, 0);
 
-        const totalDebits = transactions
+        const totalDebits = allTransactions
             .filter(txn => txn.type === "debit")
             .reduce((sum, txn) => sum + txn.amount, 0);
 
@@ -89,7 +98,9 @@ export const loadWalletTransactions = async (req, res) => {
             user,
             wallet,
             transactions,
-            summary
+            summary,
+            currentPage: page,
+            totalPages
         });
 
     } catch (error) {

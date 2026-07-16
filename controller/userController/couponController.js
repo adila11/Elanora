@@ -2,11 +2,7 @@ import Coupon from "../../model/couponSchema.js";
 import Cart from "../../model/cartSchema.js";
 import { User } from "../../model/userSchema.js";
 
-/**
- * POST /apply-coupon
- * Body: { couponCode: string }
- * Returns: { success, discount, couponCode, message }
- */
+
 export const applyCoupon = async (req, res) => {
     try {
         const userEmail = req.session.user;
