@@ -26,6 +26,17 @@ const categorySchema = new mongoose.Schema(
       default: true
     },
 
+    offer: {
+        name: String,
+        discountType: {
+            type: String,
+            enum: ["percentage", "flat"]
+        },
+        discountValue: Number,
+        startDate: Date,
+        endDate: Date
+    },
+
     discountPercentage: {
       type: Number,
       min: 0,

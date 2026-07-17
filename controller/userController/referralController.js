@@ -1,5 +1,6 @@
 import Referral from "../../model/referralSchema.js";
 import {User} from "../../model/userSchema.js";
+import generateReferralCode from "../../utils/generateReferralCode.js";
 
 export const loadReferralPage = async (req, res) => {
 
@@ -8,6 +9,26 @@ export const loadReferralPage = async (req, res) => {
         const email = req.session.user;
 
         const user = await User.findOne({email:email});
+        if (!user) {
+            return res.redirect("/login");
+        }
+
+        // Generate referral code on-the-fly if missing (for legacy users)
+        if (!user.referralCode) {
+            let code = generateReferralCode(user.fullName);
+            let isUnique = false;
+            while (!isUnique) {
+                const existing = await User.findOne({ referralCode: code });
+                if (!existing) {
+                    isUnique = true;
+                } else {
+                    code = generateReferralCode(user.fullName);
+                }
+            }
+            user.referralCode = code;
+            await user.save();
+        }
+
         const userId = user._id ;
 
         const referrals = await Referral.find({userId})

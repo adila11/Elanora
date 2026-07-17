@@ -1,6 +1,8 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { User } from "../model/userSchema.js";
+import { creditWallet } from "../utils/walletHelper.js";
+import Referral from "../model/referralSchema.js";
 
 
 passport.use(
@@ -9,8 +11,9 @@ passport.use(
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: "/auth/google/callback",
+            passReqToCallback: true,
         },
-        async (accessToken, refreshToken, profile, done) => {
+        async (req, accessToken, refreshToken, profile, done) => {
             try {
                 const email = profile.emails[0].value;
 
@@ -26,13 +29,46 @@ passport.use(
                         await user.save();
                     }
                 } else {
+                    const referredBy = req.session && req.session.referredBy || null;
                     user = await User.create({
                         fullName: profile.displayName, 
                         email: email,
                         googleId: profile.id,
                         isGoogleUser: true,
                         password: null, 
+                        referredBy: referredBy
                     });
+
+                    if (referredBy) {
+                        const referrer = await User.findOne({ referralCode: referredBy });
+                        if (referrer) {
+                            // Reward the referred user (new user) with 100rs
+                            await creditWallet({
+                                userId: user._id,
+                                amount: 100,
+                                source: "referral",
+                                description: `Referral bonus for signing up with Google and code ${referredBy}`
+                            });
+
+                            // Reward the referrer (user who referred) with 100rs
+                            await creditWallet({
+                                userId: referrer._id,
+                                amount: 100,
+                                source: "referral",
+                                description: `Referral reward for inviting ${user.fullName}`
+                            });
+
+                            // Create tracking document for the referrer to see who registered
+                            await Referral.create({
+                                userId: referrer._id,
+                                referredUserId: user._id,
+                                referralCode: referredBy,
+                                rewardAmount: 100,
+                                status: "Completed",
+                                rewardedAt: new Date()
+                            });
+                        }
+                    }
                 }
 
                 return done(null, user);

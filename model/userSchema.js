@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import generateReferralCode from "../utils/generateReferralCode.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -54,6 +55,22 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre("save", async function () {
+  if (this.isNew && !this.referralCode) {
+    let code = generateReferralCode(this.fullName);
+    let isUnique = false;
+    while (!isUnique) {
+      const existing = await this.constructor.findOne({ referralCode: code });
+      if (!existing) {
+        isUnique = true;
+      } else {
+        code = generateReferralCode(this.fullName);
+      }
+    }
+    this.referralCode = code;
+  }
+});
 
 const userOtpSchema = new mongoose.Schema({
   email: {

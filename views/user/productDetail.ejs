@@ -695,7 +695,17 @@
                     </button>
                 </div>
 
-                <div class="price">₹<%= (product.discountPrice || product.basePrice).toLocaleString('en-IN') %></div>
+                <div class="price-section" style="display:flex; align-items:baseline; gap:12px; margin-bottom:12px;">
+                    <span class="price" style="font-size:24px; font-weight:600;">₹<%= (product.discountPrice || product.basePrice).toLocaleString('en-IN') %></span>
+                    <% if (product.discountPrice && product.discountPrice < product.basePrice) { %>
+                        <span class="original-price" style="text-decoration:line-through; color:var(--muted); font-size:16px;">₹<%= product.basePrice.toLocaleString('en-IN') %></span>
+                        <% if (typeof offerActive !== 'undefined' && offerActive && typeof offerName !== 'undefined' && offerName) { %>
+                            <span class="offer-tag" style="background:var(--accent-light); color:#8a6a2f; font-size:12px; font-weight:600; padding:4px 8px; border-radius:12px; margin-left:4px;">
+                                <%= offerName %> (<%= offerDiscountValue %><%= offerDiscountType === 'flat' ? '₹' : '%' %> OFF)
+                            </span>
+                        <% } %>
+                    <% } %>
+                </div>
 
                 <p class="description"><%= product.description %></p>
 

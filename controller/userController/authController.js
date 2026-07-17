@@ -1,5 +1,7 @@
 import sentOtp from "../../utils/sendOtp.js";
 import { UserOtp, User } from "../../model/userSchema.js";
+import { creditWallet } from "../../utils/walletHelper.js";
+import Referral from "../../model/referralSchema.js";
 import bcrypt from "bcrypt";
 import { error } from "console";
 
@@ -128,6 +130,11 @@ export const forgotpassOTPVerification = async (req,res)=>{
         const {otp} =req.body;
         const email=req.session.tempUser
         const userOtp= await UserOtp.findOne({email:email})
+        
+        if (!userOtp) {
+            req.flash('error', 'Otp has expired. Please request a new one.');
+            return res.redirect('/forgotpassword-otpverify');
+        }
         
         if(otp!=userOtp.otp){
             req.flash('error', 'Otp Is Invalid');
@@ -267,13 +274,22 @@ export const signup = async (req, res) => {
                 field: "terms"
             });
         }
-
-
+        if (referralCode && referralCode.trim()) {
+            const referrer = await User.findOne({ referralCode: referralCode.trim() });
+            if (!referrer) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid referral code",
+                    field: "referralCode"
+                });
+            }
+        }
 
         req.session.tempUser = {
             name: fullName,
             email: email.toLowerCase(),
-            password: password
+            password: password,
+            referredBy: (referralCode && referralCode.trim()) || null
         };
 
 
@@ -311,6 +327,16 @@ export const SignupOTPVerification = async (req, res) => {
         const tempUser = req.session.tempUser;
         if (!tempUser) return res.redirect("/signup");
 
+        // Prevent E11000 duplicate key error from double-clicks/parallel submissions
+        const existingUser = await User.findOne({ email: tempUser.email });
+        if (existingUser) {
+            await UserOtp.deleteOne({ email: tempUser.email });
+            req.session.user = existingUser.email;
+            delete req.session.tempUser;
+            req.flash('success', "Account created successfully!");
+            return res.redirect('/');
+        }
+
         const otp = req.body.otp;
         if (!otp) {
             req.flash('error', "Please Enter the Otp");
@@ -318,6 +344,11 @@ export const SignupOTPVerification = async (req, res) => {
         }
 
         const userOtp = await UserOtp.findOne({ email: tempUser.email })
+
+        if (!userOtp) {
+            req.flash('error', "OTP has expired. Please request a new one.");
+            return res.redirect("/signup-verification");
+        }
 
         if (userOtp.otp != otp) {
             req.flash('error', "The Otp Is Incorrect");
@@ -329,10 +360,42 @@ export const SignupOTPVerification = async (req, res) => {
         const newUser = new User({
             fullName: tempUser.name,
             email: tempUser.email,
-            password: hashedPassword
+            password: hashedPassword,
+            referredBy: tempUser.referredBy || null
         })
 
         await newUser.save();
+
+        if (tempUser.referredBy) {
+            const referrer = await User.findOne({ referralCode: tempUser.referredBy });
+            if (referrer) {
+                // Reward the referred user (new user) with 100rs
+                await creditWallet({
+                    userId: newUser._id,
+                    amount: 100,
+                    source: "referral",
+                    description: `Referral bonus for signing up with code ${tempUser.referredBy}`
+                });
+
+                // Reward the referrer (user who referred) with 100rs
+                await creditWallet({
+                    userId: referrer._id,
+                    amount: 100,
+                    source: "referral",
+                    description: `Referral reward for inviting ${newUser.fullName}`
+                });
+
+                // Create tracking document for the referrer to see who registered
+                await Referral.create({
+                    userId: referrer._id,
+                    referredUserId: newUser._id,
+                    referralCode: tempUser.referredBy,
+                    rewardAmount: 100,
+                    status: "Completed",
+                    rewardedAt: new Date()
+                });
+            }
+        }
 
         await UserOtp.deleteOne({ email: tempUser.email });
 

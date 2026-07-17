@@ -191,6 +191,159 @@
   }
   .action-btn:hover { background: var(--accent-light); }
   .action-btn.danger:hover { background: var(--red-bg); border-color: #fca5a5; color: var(--red); }
+
+  /* ===== OFFER COLUMN ===== */
+  .offer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-light);
+    color: #8a6a2f;
+    padding: 5px 8px 5px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+  .offer-badge:hover { border-color: var(--accent); }
+
+  .offer-remove-btn {
+    width: 18px; height: 18px;
+    border: none;
+    background: rgba(0,0,0,0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #8a6a2f;
+    padding: 0;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .offer-remove-btn:hover { background: var(--red); color: white; }
+  .offer-remove-btn svg { width: 10px; height: 10px; display: block; }
+
+  .offer-add-btn {
+    width: 30px; height: 30px;
+    border: 1px dashed var(--border);
+    background: transparent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .offer-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+  /* ===== OFFER MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,26,24,0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-box {
+    background: var(--card);
+    width: 100%;
+    max-width: 480px;
+    border-radius: var(--radius);
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  }
+  .modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 22px 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-head h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .modal-head p { font-size: 13px; color: var(--muted); }
+  .modal-close-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 20px;
+    line-height: 1;
+    padding: 4px;
+  }
+  .modal-close-btn:hover { color: var(--text); }
+
+  .modal-body { padding: 22px 24px; }
+  .form-group { margin-bottom: 18px; }
+  .form-row { display: flex; gap: 16px; }
+  .form-row .form-group { flex: 1; }
+
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .form-input, .form-select {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13.5px;
+    font-family: inherit;
+    outline: none;
+    color: var(--text);
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+
+  .input-suffix-wrap { position: relative; }
+  .input-suffix-wrap .form-input { padding-right: 34px; }
+  .input-suffix {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 24px 22px;
+  }
+  .btn-cancel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn-cancel:hover { background: var(--bg); }
+  .btn-save {
+    background: var(--accent);
+    border: none;
+    color: white;
+    padding: 10px 22px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn-save:hover { background: #b38a4f; }
 </style>
 </head>
 <body>
@@ -249,6 +402,7 @@
               <th>Price</th>
               <th>Stock</th>
               <th>Status</th>
+              <th>Offer</th>
               <th style="text-align:right">Actions</th>
             </tr>
           </thead>
@@ -262,6 +416,9 @@
                                   : 'https://via.placeholder.com/100';
                   const price = p.discountPrice || p.basePrice;
                   const totalStock = p.variants ? p.variants.reduce((sum, v) => sum + (v.stock || 0), 0) : 0;
+                  const hasOffer = p.offer && p.offer.discountValue;
+                  const offerStartStr = hasOffer && p.offer.startDate ? new Date(p.offer.startDate).toISOString().split('T')[0] : '';
+                  const offerEndStr = hasOffer && p.offer.endDate ? new Date(p.offer.endDate).toISOString().split('T')[0] : '';
                 %>
                 <tr>
                   <td>
@@ -285,6 +442,90 @@
                       <%= p.isListed ? 'Listed' : 'Unlisted' %>
                     </span>
                   </td>
+                  <td>
+                    <% 
+                      const now = new Date();
+                      
+                      // Product Offer Active Check
+                      const hasProdOffer = p.offer && p.offer.discountValue;
+                      const prodStartOk = hasProdOffer && (!p.offer.startDate || new Date(p.offer.startDate) <= now);
+                      const prodEndOk = hasProdOffer && (!p.offer.endDate || new Date(p.offer.endDate) >= now);
+                      const isProdOfferActive = hasProdOffer && prodStartOk && prodEndOk;
+                      
+                      // Category Offer Active Check
+                      const hasCatOffer = p.category && p.category.offer && p.category.offer.discountValue;
+                      const catStartOk = hasCatOffer && (!p.category.offer.startDate || new Date(p.category.offer.startDate) <= now);
+                      const catEndOk = hasCatOffer && (!p.category.offer.endDate || new Date(p.category.offer.endDate) >= now);
+                      const isCatOfferActive = hasCatOffer && catStartOk && catEndOk;
+
+                      const basePriceToUse = p.merchantDiscountPrice || p.discountPrice || p.basePrice;
+                      
+                      let prodDiscount = 0;
+                      if (isProdOfferActive) {
+                        prodDiscount = p.offer.discountType === 'percentage' 
+                          ? (basePriceToUse * p.offer.discountValue / 100) 
+                          : p.offer.discountValue;
+                      }
+                      
+                      let catDiscount = 0;
+                      if (isCatOfferActive) {
+                        catDiscount = p.category.offer.discountType === 'percentage'
+                          ? (basePriceToUse * p.category.offer.discountValue / 100)
+                          : p.category.offer.discountValue;
+                      }
+
+                      // Determine active offer
+                      let activeOffer = null; // 'product', 'category'
+                      if (isProdOfferActive && isCatOfferActive) {
+                        activeOffer = prodDiscount >= catDiscount ? 'product' : 'category';
+                      } else if (isProdOfferActive) {
+                        activeOffer = 'product';
+                      } else if (isCatOfferActive) {
+                        activeOffer = 'category';
+                      }
+                    %>
+
+                    <% if (activeOffer === 'product') { %>
+                      <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
+                        <div class="offer-badge"
+                             data-id="<%= p._id %>"
+                             data-name="<%= p.offer.name || '' %>"
+                             data-type="<%= p.offer.discountType || 'percentage' %>"
+                             data-value="<%= p.offer.discountValue %>"
+                             data-start="<%= hasProdOffer && p.offer.startDate ? new Date(p.offer.startDate).toISOString().split('T')[0] : '' %>"
+                             data-end="<%= hasProdOffer && p.offer.endDate ? new Date(p.offer.endDate).toISOString().split('T')[0] : '' %>"
+                             title="Product Offer - Click to edit"
+                             onclick="editOfferFromBadge(this)">
+                          <span style="font-size:10px; text-transform:uppercase; opacity:0.75; font-weight:600; display:block; text-align:left;">Prod Offer</span>
+                          <span><%= p.offer.discountValue %><%= p.offer.discountType === 'flat' ? '₹' : '%' %> Off</span>
+                          <button type="button" class="offer-remove-btn" title="Remove Offer" onclick="event.stopPropagation(); removeOffer('<%= p._id %>')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                              <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                          </button>
+                        </div>
+                        <% if (isCatOfferActive) { %>
+                          <span style="font-size:11px; color:var(--muted)">Overrode Cat Offer (<%= p.category.offer.discountValue %><%= p.category.offer.discountType === 'flat' ? '₹' : '%' %>)</span>
+                        <% } %>
+                      </div>
+                    <% } else if (activeOffer === 'category') { %>
+                      <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
+                        <div class="offer-badge" style="background:#e8f4fd; color:#1d4ed8;" title="Category Offer - Manage in Categories page">
+                          <span style="font-size:10px; text-transform:uppercase; opacity:0.75; font-weight:600; display:block; text-align:left;">Cat Offer</span>
+                          <span><%= p.category.offer.discountValue %><%= p.category.offer.discountType === 'flat' ? '₹' : '%' %> Off</span>
+                        </div>
+                        <% if (isProdOfferActive) { %>
+                          <span style="font-size:11px; color:var(--muted)">Overrode Prod Offer (<%= p.offer.discountValue %><%= p.offer.discountType === 'flat' ? '₹' : '%' %>)</span>
+                        <% } %>
+                      </div>
+                    <% } else { %>
+                      <button type="button" class="offer-add-btn" title="Add Offer" onclick="openOfferModal('<%= p._id %>')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                      </button>
+                    <% } %>
+                  </td>
                   <td class="actions-cell">
                     <button class="action-btn" title="Edit" onclick="location.href='/admin/products/edit/<%= p._id %>'">✏️</button>
                     <button class="action-btn" title="<%= p.isListed ? 'Unlist' : 'List' %>" onclick="toggleStatus('<%= p._id %>', <%= p.isListed %>)">
@@ -295,7 +536,7 @@
                 </tr>
               <% }) %>
             <% } else { %>
-              <tr><td colspan="6" style="text-align:center; padding:40px; color:var(--muted);">No products found.</td></tr>
+              <tr><td colspan="7" style="text-align:center; padding:40px; color:var(--muted);">No products found.</td></tr>
             <% } %>
           </tbody>
         </table>
@@ -325,6 +566,59 @@
           </div>
         </div>
         <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ADD / EDIT OFFER MODAL ===== -->
+  <div class="modal-overlay" id="offerModalOverlay">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <h3 id="offerModalTitle">Add Offer</h3>
+          <p>Configure discount details for this product</p>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeOfferModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="offerName">Offer Name</label>
+          <input type="text" id="offerName" class="form-input" placeholder="e.g. Summer Sale">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="discountType">Discount Type</label>
+            <select id="discountType" class="form-select" onchange="updateDiscountSuffix()">
+              <option value="percentage">Percentage</option>
+              <option value="flat">Flat Amount</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="discountValue">Discount Value</label>
+            <div class="input-suffix-wrap">
+              <input type="number" id="discountValue" class="form-input" placeholder="0">
+              <span class="input-suffix" id="discountSuffix">%</span>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input type="date" id="endDate" class="form-input">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeOfferModal()">Cancel</button>
+        <button type="button" class="btn-save" onclick="saveOffer()">Save Offer</button>
       </div>
     </div>
   </div>
@@ -400,6 +694,121 @@
       }
     }
 
+    /* ===== OFFER MODAL LOGIC ===== */
+    let currentOfferProductId = null;
+
+    function openOfferModal(productId, offer) {
+      currentOfferProductId = productId;
+      document.getElementById('offerModalTitle').textContent = offer ? 'Edit Offer' : 'Add Offer';
+      document.getElementById('offerName').value = offer ? offer.name : '';
+      document.getElementById('discountType').value = offer ? offer.discountType : 'percentage';
+      document.getElementById('discountValue').value = offer ? offer.discountValue : '';
+      document.getElementById('startDate').value = offer ? offer.startDate : '';
+      document.getElementById('endDate').value = offer ? offer.endDate : '';
+      updateDiscountSuffix();
+      document.getElementById('offerModalOverlay').style.display = 'flex';
+    }
+
+    function editOfferFromBadge(el) {
+      openOfferModal(el.dataset.id, {
+        name: el.dataset.name,
+        discountType: el.dataset.type,
+        discountValue: el.dataset.value,
+        startDate: el.dataset.start,
+        endDate: el.dataset.end
+      });
+    }
+
+    function closeOfferModal() {
+      document.getElementById('offerModalOverlay').style.display = 'none';
+      currentOfferProductId = null;
+    }
+
+    function updateDiscountSuffix() {
+      const type = document.getElementById('discountType').value;
+      document.getElementById('discountSuffix').textContent = type === 'flat' ? '₹' : '%';
+    }
+
+    async function saveOffer() {
+      const name = document.getElementById('offerName').value.trim();
+      const discountType = document.getElementById('discountType').value;
+      const discountValue = document.getElementById('discountValue').value.trim();
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+
+      if (!name) {
+        Swal.fire('Validation Error', 'Offer name is required.', 'warning');
+        return;
+      }
+      if (name.length < 3 || name.length > 50) {
+        Swal.fire('Validation Error', 'Offer name must be between 3 and 50 characters.', 'warning');
+        return;
+      }
+
+      if (!discountValue) {
+        Swal.fire('Validation Error', 'Discount value is required.', 'warning');
+        return;
+      }
+
+      const discVal = parseFloat(discountValue);
+      if (isNaN(discVal) || discVal <= 0) {
+        Swal.fire('Validation Error', 'Discount value must be a valid number greater than 0.', 'warning');
+        return;
+      }
+
+      if (discountType === 'percentage' && (discVal < 1 || discVal > 99)) {
+        Swal.fire('Validation Error', 'Percentage discount must be between 1 and 99.', 'warning');
+        return;
+      }
+
+      if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        if (end < start) {
+          Swal.fire('Validation Error', 'End date must be after or equal to start date.', 'warning');
+          return;
+        }
+      }
+
+      try {
+        const res = await fetch(`/admin/products/${currentOfferProductId}/offer`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, discountType, discountValue, startDate, endDate })
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeOfferModal();
+          Swal.fire('Saved!', data.message || 'Offer saved successfully', 'success').then(() => location.reload());
+        } else {
+          Swal.fire('Error', data.message || 'Failed to save offer', 'error');
+        }
+      } catch (err) {
+        Swal.fire('Error', 'Failed to save offer', 'error');
+      }
+    }
+
+    async function removeOffer(id) {
+      const result = await Swal.fire({
+        title: 'Remove Offer?',
+        text: 'This will remove the active offer from this product.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: 'var(--red)',
+        confirmButtonText: 'Yes, remove it!'
+      });
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch(`/admin/products/${id}/offer`, { method: 'DELETE' });
+          const data = await res.json();
+          if (data.success) {
+            Swal.fire('Removed!', data.message || 'Offer removed', 'success').then(() => location.reload());
+          }
+        } catch (err) {
+          Swal.fire('Error', 'Failed to remove offer', 'error');
+        }
+      }
+    }
   </script>
 </body>
 </html>

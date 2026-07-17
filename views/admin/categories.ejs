@@ -255,6 +255,111 @@
       border-color: var(--red);
     }
 
+  /* ===== OFFER COLUMN ===== */
+  .offer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-light);
+    color: #8a6a2f;
+    padding: 5px 8px 5px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+  .offer-badge:hover { border-color: var(--accent); }
+
+  .offer-remove-btn {
+    width: 18px; height: 18px;
+    border: none;
+    background: rgba(0,0,0,0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #8a6a2f;
+    padding: 0;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .offer-remove-btn:hover { background: var(--red); color: white; }
+  .offer-remove-btn svg { width: 10px; height: 10px; display: block; }
+
+  .offer-add-btn {
+    width: 30px; height: 30px;
+    border: 1px dashed var(--border);
+    background: transparent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .offer-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+  /* ===== OFFER MODAL ===== */
+  .modal-box {
+    background: var(--card);
+    width: 100%;
+    max-width: 480px;
+    border-radius: var(--radius);
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  }
+  .modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 22px 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-head h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .modal-head p { font-size: 13px; color: var(--muted); }
+  .modal-close-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 20px;
+    line-height: 1;
+    padding: 4px;
+  }
+  .modal-close-btn:hover { color: var(--text); }
+
+  .modal-body { padding: 22px 24px; }
+  .form-group { margin-bottom: 18px; }
+
+  .form-input, .form-select {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13.5px;
+    font-family: inherit;
+    outline: none;
+    color: var(--text);
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+
+  .input-suffix-wrap { position: relative; }
+  .input-suffix-wrap .form-input { padding-right: 34px; }
+  .input-suffix {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
     /* ── Modal ── */
     .modal-overlay {
       position: fixed;
@@ -563,6 +668,7 @@
                   <th>Category Name</th>
                   <th>Description</th>
                   <th>Status</th>
+                  <th>Offer</th>
                   <th style="text-align:right">Actions</th>
                 </tr>
               </thead>
@@ -578,6 +684,35 @@
                         <span class="status-pill <%= c.isActive ? 'status-active' : 'status-inactive' %>">
                           <%= c.isActive ? 'Active' : 'Inactive' %>
                         </span>
+                      </td>
+                      <td>
+                        <% const hasOffer = c.offer && c.offer.discountValue; %>
+                        <% const offerStartStr = hasOffer && c.offer.startDate ? new Date(c.offer.startDate).toISOString().split('T')[0] : ''; %>
+                        <% const offerEndStr = hasOffer && c.offer.endDate ? new Date(c.offer.endDate).toISOString().split('T')[0] : ''; %>
+                        <% if (hasOffer) { %>
+                          <div class="offer-badge"
+                               data-id="<%= c._id %>"
+                               data-name="<%= c.offer.name || '' %>"
+                               data-type="<%= c.offer.discountType || 'percentage' %>"
+                               data-value="<%= c.offer.discountValue %>"
+                               data-start="<%= offerStartStr %>"
+                               data-end="<%= offerEndStr %>"
+                               title="Click to edit offer"
+                               onclick="editOfferFromBadge(this)">
+                            <span><%= c.offer.discountValue %><%= c.offer.discountType === 'flat' ? '₹' : '%' %> Off</span>
+                            <button type="button" class="offer-remove-btn" title="Remove Offer" onclick="event.stopPropagation(); removeOffer('<%= c._id %>')">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                              </svg>
+                            </button>
+                          </div>
+                        <% } else { %>
+                          <button type="button" class="offer-add-btn" title="Add Offer" onclick="openOfferModal('<%= c._id %>')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                          </button>
+                        <% } %>
                       </td>
                       <td>
                         <div class="actions-cell">
@@ -647,6 +782,57 @@
           <button class="btn-save" id="btnSave" onclick="saveCategory()">
             <span id="btnSaveText">Save Category</span>
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ADD / EDIT OFFER MODAL ===== -->
+    <div class="modal-overlay" id="offerModalOverlay">
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <h3 id="offerModalTitle">Add Category Offer</h3>
+            <p>Configure discount details for this category</p>
+          </div>
+          <button type="button" class="modal-close-btn" onclick="closeOfferModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row" style="display:flex; flex-direction:column;">
+            <label for="offerName" style="margin-bottom: 6px;">Offer Name</label>
+            <input type="text" id="offerName" placeholder="e.g. Summer Sale" class="form-input">
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+            <div class="form-row" style="display:flex; flex-direction:column; margin-bottom:0">
+              <label for="discountType" style="margin-bottom: 6px;">Discount Type</label>
+              <select id="discountType" class="form-select" onchange="updateDiscountSuffix()">
+                <option value="percentage">Percentage</option>
+                <option value="flat">Flat Amount</option>
+              </select>
+            </div>
+            <div class="form-row" style="display:flex; flex-direction:column; margin-bottom:0">
+              <label for="discountValue" style="margin-bottom: 6px;">Discount Value</label>
+              <div class="input-suffix-wrap">
+                <input type="number" id="discountValue" placeholder="0" class="form-input">
+                <span id="discountSuffix" class="input-suffix">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+            <div class="form-row" style="display:flex; flex-direction:column; margin-bottom:0">
+              <label for="startDate" style="margin-bottom: 6px;">Start Date</label>
+              <input type="date" id="startDate" class="form-input">
+            </div>
+            <div class="form-row" style="display:flex; flex-direction:column; margin-bottom:0">
+              <label for="endDate" style="margin-bottom: 6px;">End Date</label>
+              <input type="date" id="endDate" class="form-input">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeOfferModal()">Cancel</button>
+          <button type="button" class="btn-save" onclick="saveOffer()">Save Offer</button>
         </div>
       </div>
     </div>
@@ -858,6 +1044,133 @@
           toast.classList.add('toast-fade');
           toast.addEventListener('animationend', () => toast.remove());
         }, 3200);
+      }
+
+      // ── Category Offer ────────────────────────────────────────────────────────
+      let currentOfferCategoryId = null;
+
+      function openOfferModal(catId) {
+        currentOfferCategoryId = catId;
+        document.getElementById('offerModalTitle').textContent = 'Add Category Offer';
+        document.getElementById('offerName').value = '';
+        document.getElementById('discountType').value = 'percentage';
+        document.getElementById('discountValue').value = '';
+        document.getElementById('startDate').value = '';
+        document.getElementById('endDate').value = '';
+        updateDiscountSuffix();
+        document.getElementById('offerModalOverlay').style.display = 'flex';
+      }
+
+      function editOfferFromBadge(badgeEl) {
+        const catId = badgeEl.getAttribute('data-id');
+        currentOfferCategoryId = catId;
+        
+        const name = badgeEl.getAttribute('data-name');
+        const type = badgeEl.getAttribute('data-type');
+        const val = badgeEl.getAttribute('data-value');
+        const start = badgeEl.getAttribute('data-start');
+        const end = badgeEl.getAttribute('data-end');
+
+        document.getElementById('offerModalTitle').textContent = 'Edit Category Offer';
+        document.getElementById('offerName').value = name;
+        document.getElementById('discountType').value = type;
+        document.getElementById('discountValue').value = val;
+        document.getElementById('startDate').value = start;
+        document.getElementById('endDate').value = end;
+        
+        updateDiscountSuffix();
+        document.getElementById('offerModalOverlay').style.display = 'flex';
+      }
+
+      function closeOfferModal() {
+        document.getElementById('offerModalOverlay').style.display = 'none';
+        currentOfferCategoryId = null;
+      }
+
+      function updateDiscountSuffix() {
+        const type = document.getElementById('discountType').value;
+        document.getElementById('discountSuffix').textContent = type === 'flat' ? '₹' : '%';
+      }
+
+      async function saveOffer() {
+        const name = document.getElementById('offerName').value.trim();
+        const discountType = document.getElementById('discountType').value;
+        const discountValue = document.getElementById('discountValue').value.trim();
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        if (!name) {
+          Swal.fire('Validation Error', 'Offer name is required.', 'warning');
+          return;
+        }
+        if (name.length < 3 || name.length > 50) {
+          Swal.fire('Validation Error', 'Offer name must be between 3 and 50 characters.', 'warning');
+          return;
+        }
+
+        if (!discountValue) {
+          Swal.fire('Validation Error', 'Discount value is required.', 'warning');
+          return;
+        }
+
+        const discVal = parseFloat(discountValue);
+        if (isNaN(discVal) || discVal <= 0) {
+          Swal.fire('Validation Error', 'Discount value must be a valid number greater than 0.', 'warning');
+          return;
+        }
+
+        if (discountType === 'percentage' && (discVal < 1 || discVal > 99)) {
+          Swal.fire('Validation Error', 'Percentage discount must be between 1 and 99.', 'warning');
+          return;
+        }
+
+        if (startDate && endDate) {
+          const start = new Date(startDate);
+          const end = new Date(endDate);
+          if (end < start) {
+            Swal.fire('Validation Error', 'End date must be after or equal to start date.', 'warning');
+            return;
+          }
+        }
+
+        try {
+          const res = await fetch(`/admin/categories/${currentOfferCategoryId}/offer`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, discountType, discountValue, startDate, endDate })
+          });
+          const data = await res.json();
+          if (data.success) {
+            closeOfferModal();
+            Swal.fire('Saved!', data.message || 'Offer saved successfully', 'success').then(() => location.reload());
+          } else {
+            Swal.fire('Error', data.message || 'Failed to save offer', 'error');
+          }
+        } catch (err) {
+          Swal.fire('Error', 'Failed to save offer', 'error');
+        }
+      }
+
+      async function removeOffer(id) {
+        const result = await Swal.fire({
+          title: 'Remove Offer?',
+          text: 'This will remove the active offer from this category.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: 'var(--red)',
+          confirmButtonText: 'Yes, remove it!'
+        });
+        if (result.isConfirmed) {
+          try {
+            const res = await fetch(`/admin/categories/${id}/offer`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+              Swal.fire('Removed!', data.message || 'Offer removed', 'success').then(() => location.reload());
+            }
+          } catch (err) {
+            Swal.fire('Error', 'Failed to remove offer', 'error');
+          }
+        }
       }
 
       // ── Init ──────────────────────────────────────────────────────────────────

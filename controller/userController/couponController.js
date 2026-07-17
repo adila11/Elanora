@@ -22,18 +22,15 @@ export const applyCoupon = async (req, res) => {
 
         const code = couponCode.trim().toUpperCase();
 
-        // Find coupon in DB
         const coupon = await Coupon.findOne({ couponCode: code });
         if (!coupon) {
             return res.json({ success: false, message: "Invalid coupon code." });
         }
 
-        // Check active flag
         if (!coupon.isActive) {
             return res.json({ success: false, message: "This coupon is inactive." });
         }
 
-        // Check date window
         const now = new Date();
         if (now < new Date(coupon.startDate)) {
             return res.json({ success: false, message: "This coupon is not valid yet." });
@@ -42,19 +39,16 @@ export const applyCoupon = async (req, res) => {
             return res.json({ success: false, message: "This coupon has expired." });
         }
 
-        // Check usage limit
         if (coupon.usageLimit !== null && coupon.usageLimit !== undefined) {
             if (coupon.usageCount >= coupon.usageLimit) {
                 return res.json({ success: false, message: "This coupon has reached its usage limit." });
             }
         }
 
-        // Check if user already used this coupon
         if (coupon.usedBy && coupon.usedBy.some(id => id.toString() === user._id.toString())) {
             return res.json({ success: false, message: "You have already used this coupon." });
         }
 
-        // Get cart subtotal
         const cart = await Cart.findOne({ userId: user._id }).populate("items.productId");
         if (!cart || cart.items.length === 0) {
             return res.json({ success: false, message: "Your cart is empty." });
@@ -68,7 +62,6 @@ export const applyCoupon = async (req, res) => {
             subtotal += price * item.qty;
         }
 
-        // Check minimum purchase
         if (subtotal < coupon.minimumPurchase) {
             return res.json({
                 success: false,
@@ -76,20 +69,16 @@ export const applyCoupon = async (req, res) => {
             });
         }
 
-        // Calculate discount
         let discount = 0;
         if (coupon.discountType === "percentage") {
             discount = Math.round(subtotal * coupon.discountValue / 100);
-            // Apply maximumDiscount cap if set
             if (coupon.maximumDiscount && coupon.maximumDiscount > 0) {
                 discount = Math.min(discount, coupon.maximumDiscount);
             }
         } else {
-            // fixed
             discount = coupon.discountValue;
         }
 
-        // Discount can't exceed subtotal
         discount = Math.min(discount, subtotal);
 
         return res.json({

@@ -49,6 +49,10 @@ const productSchema = new mongoose.Schema({
         required: true
     },
 
+    merchantDiscountPrice: {
+        type: Number
+    },
+
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category"
@@ -56,6 +60,16 @@ const productSchema = new mongoose.Schema({
 
     variants: [variantSchema],
 
+    offer: {
+        name: String,
+        discountType: {
+            type: String,
+            enum: ["percentage", "flat"]
+        },
+        discountValue: Number,
+        startDate: Date,
+        endDate: Date
+    },
 
     isListed: {
         type: Boolean,

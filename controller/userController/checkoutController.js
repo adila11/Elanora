@@ -8,6 +8,7 @@ import razorpay from "../../config/razorpay.js";
 import Wallet from "../../model/walletSchema.js";
 import crypto from "crypto";
 import { debitWallet } from "../../utils/walletHelper.js";
+import { getEffectivePrice } from "../../utils/offerHelper.js";
 
 const checkCartAvailability = (cart) => {
     if (!cart || cart.items.length === 0) return false;
@@ -34,7 +35,22 @@ export const loadCheckoutAddress = async (req, res) => {
         }).sort({ isDefault: -1, createdAt: -1 });
 
         const cart = await Cart.findOne({ userId: user._id })
-            .populate("items.productId");
+            .populate({
+                path: "items.productId",
+                populate: {
+                    path: "category"
+                }
+            });
+
+        if (cart) {
+            cart.items.forEach(item => {
+                if (item.productId) {
+                    const pricing = getEffectivePrice(item.productId);
+                    item.price = pricing.price;
+                    item.total = item.price * item.qty;
+                }
+            });
+        }
 
         if (!checkCartAvailability(cart)) {
             return res.redirect("/cart?error=unavailable");
@@ -60,13 +76,21 @@ export const loadCheckoutPayment = async (req, res) => {
         if (!user) return res.redirect("/login");
 
         const cart = await Cart.findOne({ userId: user._id })
-            .populate("items.productId");
+            .populate({
+                path: "items.productId",
+                populate: {
+                    path: "category"
+                }
+            });
 
         let subtotal = 0;
 
         for (const item of cart.items) {
             const product = item.productId;
-            const price = product.discountPrice || product.basePrice;
+            const pricing = getEffectivePrice(product);
+            const price = pricing.price;
+            item.price = price;
+            item.total = price * item.qty;
             subtotal += price * item.qty;
         }
 
@@ -110,7 +134,22 @@ export const loadCheckoutReview = async (req, res) => {
         if (!user) return res.redirect("/login");
 
         const cart = await Cart.findOne({ userId: user._id })
-            .populate("items.productId");
+            .populate({
+                path: "items.productId",
+                populate: {
+                    path: "category"
+                }
+            });
+
+        if (cart) {
+            cart.items.forEach(item => {
+                if (item.productId) {
+                    const pricing = getEffectivePrice(item.productId);
+                    item.price = pricing.price;
+                    item.total = item.price * item.qty;
+                }
+            });
+        }
 
         if (!checkCartAvailability(cart)) {
             return res.redirect("/cart?error=unavailable");
@@ -196,7 +235,12 @@ export const createRazorpayOrder = async (req, res) => {
 
         const cart = await Cart.findOne({
             userId
-        }).populate("items.productId");
+        }).populate({
+            path: "items.productId",
+            populate: {
+                path: "category"
+            }
+        });
 
         if (!cart || cart.items.length === 0) {
             return res.status(400).json({
@@ -242,7 +286,8 @@ export const createRazorpayOrder = async (req, res) => {
                 });
             }
 
-            const price = product.discountPrice || product.basePrice;
+            const pricing = getEffectivePrice(product);
+            const price = pricing.price;
 
             subtotal += price * item.qty;
         }
@@ -394,7 +439,12 @@ export const placeOrder = async (req, res) => {
             return res.status(400).json({ success: false, message: "Address not found" });
         }
 
-        const cart = await Cart.findOne({ userId: userId }).populate("items.productId");
+        const cart = await Cart.findOne({ userId: userId }).populate({
+            path: "items.productId",
+            populate: {
+                path: "category"
+            }
+        });
         if (!cart || cart.items.length === 0) {
             return res.status(400).json({ success: false, message: "Cart is empty" });
         }
@@ -449,7 +499,8 @@ export const placeOrder = async (req, res) => {
 
             }
 
-            const price = product.discountPrice || product.basePrice;
+            const pricing = getEffectivePrice(product);
+            const price = pricing.price;
             const total = price * item.qty;
             const productImage = variant && variant.images && variant.images.length > 0
                 ? variant.images[0].url : "";
@@ -636,7 +687,12 @@ export const verifyPayment = async (req, res) => {
             return res.status(400).json({ success: false, message: "Address not found" });
         }
 
-        const cart = await Cart.findOne({ userId: userId }).populate("items.productId");
+        const cart = await Cart.findOne({ userId: userId }).populate({
+            path: "items.productId",
+            populate: {
+                path: "category"
+            }
+        });
         if (!cart || cart.items.length === 0) {
             return res.status(400).json({ success: false, message: "Cart is empty" });
         }
@@ -691,7 +747,8 @@ export const verifyPayment = async (req, res) => {
 
             }
 
-            const price = product.discountPrice || product.basePrice;
+            const pricing = getEffectivePrice(product);
+            const price = pricing.price;
             const total = price * item.qty;
             const productImage = variant && variant.images && variant.images.length > 0
                 ? variant.images[0].url : "";

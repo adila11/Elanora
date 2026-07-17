@@ -287,7 +287,7 @@
             <div class="divider">or signup with</div>
 
             <!-- FIXED Google Sign Up Button -->
-            <a href="/auth/google" style="text-decoration: none; display: block; width: 100%;">
+            <a id="googleAuthLink" href="/auth/google" style="text-decoration: none; display: block; width: 100%;">
                 <button type="button" class="btn-google">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" 
                          width="18" 
@@ -308,6 +308,35 @@
         function showReferral() {
             document.getElementById('toggle-referral').style.display = 'none';
             document.getElementById('referral-field').style.display = 'block';
+        }
+
+        // Auto-fill referral code from query string
+        const googleAuthLink = document.getElementById('googleAuthLink');
+        const referralInput = document.getElementById('referralCode');
+
+        function updateGoogleLink() {
+            if (googleAuthLink && referralInput) {
+                const code = referralInput.value.trim();
+                if (code) {
+                    googleAuthLink.href = `/auth/google?ref=${encodeURIComponent(code)}`;
+                } else {
+                    googleAuthLink.href = `/auth/google`;
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if (ref) {
+                showReferral();
+                if (referralInput) referralInput.value = ref;
+            }
+            updateGoogleLink();
+        });
+
+        if (referralInput) {
+            referralInput.addEventListener('input', updateGoogleLink);
         }
 
         // Password SVG eye toggle

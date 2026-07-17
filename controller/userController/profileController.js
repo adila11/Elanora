@@ -68,11 +68,9 @@ export const editProfile = async (req, res) => {
         }
 
         if (req.file) {
-            
-
             console.log(req.file)
-            user.profileIcon = req.file.path;           
-            user.cloudinaryId = req.file.filename;      
+            user.profileIcon = req.file.secure_url || req.file.url || req.file.path;           
+            user.cloudinaryId = req.file.public_id || req.file.filename;      
             updated = true;
         }
 

@@ -2,6 +2,7 @@ import Cart from "../../model/cartSchema.js";
 import Products from "../../model/productSchema.js";
 import { User } from "../../model/userSchema.js";
 import Wishlist from "../../model/wishlistSchema.js";
+import { getEffectivePrice } from "../../utils/offerHelper.js";
 
 export const addToCart = async (req, res) => {
     try {
@@ -23,7 +24,7 @@ export const addToCart = async (req, res) => {
             return res.json({ success: false, message: "Invalid quantity" });
         }
 
-        const product = await Products.findById(productId);
+        const product = await Products.findById(productId).populate('category');
         if (!product || !product.isListed) {
             return res.json({ success: false, message: "Product is not available" });
         }
@@ -68,7 +69,8 @@ export const addToCart = async (req, res) => {
             return res.json({ success: false, message: `Only ${variant.stock} quantity available.` });
         }
 
-        const price = product.discountPrice || product.basePrice;
+        const pricing = getEffectivePrice(product);
+        const price = pricing.price;
 
         if (!cart) {
             cart = new Cart({
@@ -284,12 +286,22 @@ export const loadCart = async (req, res) => {
         const userId = user._id;
 
         const cart = await Cart.findOne({ userId })
-            .populate("items.productId");
+            .populate({
+                path: "items.productId",
+                populate: {
+                    path: "category"
+                }
+            });
 
         let subtotal = 0;
 
         if (cart) {
             cart.items.forEach(item => {
+                if (item.productId) {
+                    const pricing = getEffectivePrice(item.productId);
+                    item.price = pricing.price;
+                    item.total = item.price * item.qty;
+                }
                 subtotal += item.total;
             });
         }

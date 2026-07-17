@@ -1,5 +1,6 @@
 import Category from "../../model/categoriesSchema.js";
 import Products from "../../model/productSchema.js";
+import { getEffectivePrice } from "../../utils/offerHelper.js";
 
 export const loadCategories = async (req, res) => {
     try {
@@ -48,6 +49,7 @@ export const loadCategories = async (req, res) => {
             isActive: cat.isActive,
             discountPercentage: cat.discountPercentage,
             productCount: cat.productIds.length,
+            offer: cat.offer,
             createdAt: cat.createdAt
         }));
 
@@ -216,5 +218,119 @@ export const deleteCategory = async (req, res) => {
     } catch (error) {
         console.error("DELETE CATEGORY ERROR:", error);
         res.status(500).json({ message: 'Server error.' });
+    }
+};
+
+export const saveCategoryOffer = async (req, res) => {
+    try {
+        if (!req.session.admin) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
+
+        const { id } = req.params;
+        const { name, discountType, discountValue, startDate, endDate } = req.body;
+
+        // Validation checks
+        if (!name || !name.trim()) {
+            return res.status(400).json({ success: false, message: "Offer name is required" });
+        }
+        if (name.trim().length < 3 || name.trim().length > 50) {
+            return res.status(400).json({ success: false, message: "Offer name must be between 3 and 50 characters" });
+        }
+
+        if (!discountType || !["percentage", "flat"].includes(discountType)) {
+            return res.status(400).json({ success: false, message: "Invalid discount type" });
+        }
+
+        const discVal = parseFloat(discountValue);
+        if (isNaN(discVal) || discVal <= 0) {
+            return res.status(400).json({ success: false, message: "Discount value must be a valid number greater than 0" });
+        }
+
+        const category = await Category.findById(id);
+        if (!category) {
+            return res.status(404).json({ success: false, message: "Category not found" });
+        }
+
+        if (discountType === "percentage" && (discVal < 1 || discVal > 99)) {
+            return res.status(400).json({ success: false, message: "Percentage discount must be between 1 and 99" });
+        }
+
+        let start = null;
+        let end = null;
+        if (startDate) {
+            start = new Date(startDate);
+            if (isNaN(start.getTime())) {
+                return res.status(400).json({ success: false, message: "Invalid start date" });
+            }
+        }
+        if (endDate) {
+            end = new Date(endDate);
+            if (isNaN(end.getTime())) {
+                return res.status(400).json({ success: false, message: "Invalid end date" });
+            }
+            if (start && end < start) {
+                return res.status(400).json({ success: false, message: "End date must be after or equal to start date" });
+            }
+        }
+
+        category.offer = {
+            name: name.trim(),
+            discountType,
+            discountValue: discVal,
+            startDate: start,
+            endDate: end
+        };
+
+        await category.save();
+
+        // Update all products in this category
+        const products = await Products.find({ category: id });
+        for (const product of products) {
+            if (!product.merchantDiscountPrice) {
+                product.merchantDiscountPrice = product.discountPrice || product.basePrice;
+            }
+            const pricing = getEffectivePrice(product, category);
+            product.discountPrice = pricing.price;
+            await product.save();
+        }
+
+        res.json({ success: true, message: "Category offer saved successfully and product prices updated" });
+    } catch (error) {
+        console.error("SAVE CATEGORY OFFER ERROR:", error);
+        res.status(500).json({ success: false, message: "Server error saving category offer" });
+    }
+};
+
+export const deleteCategoryOffer = async (req, res) => {
+    try {
+        if (!req.session.admin) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
+
+        const { id } = req.params;
+        const category = await Category.findById(id);
+        if (!category) {
+            return res.status(404).json({ success: false, message: "Category not found" });
+        }
+
+        category.offer = undefined;
+        await category.save();
+
+        // Update all products in this category
+        const products = await Products.find({ category: id });
+        for (const product of products) {
+            if (!product.merchantDiscountPrice) {
+                product.merchantDiscountPrice = product.discountPrice || product.basePrice;
+            }
+            const pricing = getEffectivePrice(product, category);
+            product.discountPrice = pricing.price;
+            await product.save();
+        }
+
+        res.json({ success: true, message: "Category offer removed successfully and product prices reverted" });
+    } catch (error) {
+        console.error("DELETE CATEGORY OFFER ERROR:", error);
+        res.status(500).json({ success: false, message: "Server error removing category offer" });
     }
 };

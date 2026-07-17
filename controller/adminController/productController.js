@@ -1,6 +1,7 @@
 import Products from "../../model/productSchema.js";
 import Category from "../../model/categoriesSchema.js";
 import mongoose from "mongoose";
+import { getEffectivePrice } from "../../utils/offerHelper.js";
 
 export const loadProduct = async (req, res) => {
     try {
@@ -81,8 +82,34 @@ export const addProduct = async (req, res) => {
         const { name, description, category, basePrice, discountPrice, variants: rawVariants } = req.body;
         const files = req.files || [];
 
-        if (!name || !description || !category || !basePrice) {
-            return res.status(400).json({ success: false, message: "All product fields are required" });
+        // Validation: required fields, non-empty, valid formats
+        if (!name || !name.trim()) {
+            return res.status(400).json({ success: false, message: "Product name is required" });
+        }
+        if (!description || !description.trim()) {
+            return res.status(400).json({ success: false, message: "Description is required" });
+        }
+        if (!category) {
+            return res.status(400).json({ success: false, message: "Category is required" });
+        }
+        if (!mongoose.Types.ObjectId.isValid(category)) {
+            return res.status(400).json({ success: false, message: "Invalid category ID" });
+        }
+
+        const bPrice = parseFloat(basePrice);
+        if (isNaN(bPrice) || bPrice <= 0) {
+            return res.status(400).json({ success: false, message: "Base price must be a valid number greater than 0" });
+        }
+
+        let dPrice = bPrice;
+        if (discountPrice !== undefined && discountPrice !== '') {
+            dPrice = parseFloat(discountPrice);
+            if (isNaN(dPrice) || dPrice <= 0) {
+                return res.status(400).json({ success: false, message: "Discount price must be a valid number greater than 0" });
+            }
+            if (dPrice > bPrice) {
+                return res.status(400).json({ success: false, message: "Discount price cannot be greater than base price" });
+            }
         }
 
         let variants = [];
@@ -96,34 +123,57 @@ export const addProduct = async (req, res) => {
             return res.status(400).json({ success: false, message: "At least one variant is required" });
         }
 
+        // Validate variants
+        const skus = variants.map(v => v.sku ? v.sku.trim() : '');
+        if (skus.some(s => !s)) {
+            return res.status(400).json({ success: false, message: "SKU is required for all variants" });
+        }
+        if (new Set(skus).size !== skus.length) {
+            return res.status(400).json({ success: false, message: "Duplicate SKUs are not allowed within variants" });
+        }
+
         const processedVariants = [];
         for (const [idx, v] of variants.entries()) {
-            if (!v.sku || !v.color || v.stock === undefined) {
-                return res.status(400).json({ success: false, message: `Variant ${idx + 1}: SKU, Color, and Stock are required` });
+            if (!v.color || !v.color.trim()) {
+                return res.status(400).json({ success: false, message: `Variant ${idx + 1}: Color is required` });
+            }
+            if (v.stock === undefined || v.stock === '') {
+                return res.status(400).json({ success: false, message: `Variant ${idx + 1}: Stock is required` });
+            }
+            const stockNum = parseInt(v.stock);
+            if (isNaN(stockNum) || stockNum < 0) {
+                return res.status(400).json({ success: false, message: `Variant ${idx + 1}: Stock must be a non-negative integer` });
             }
 
             const variantImages = files
                 .filter(f => f.fieldname === `images-${v.tempId}`)
-                .map(f => ({ url: f.path }));
+                .map(f => ({ url: f.secure_url || f.url || f.path }));
             
             if (variantImages.length !== 4) {
-                return res.status(400).json({ success: false, message: `Variant ${idx + 1}: Exactly 4 images are required` });
+                return res.status(400).json({ success: false, message: `Variant ${idx + 1}: Exactly 4 images are required (Currently: ${variantImages.length})` });
             }
 
             processedVariants.push({
                 sku: v.sku.trim(),
                 color: v.color.trim(),
-                stock: parseInt(v.stock) || 0,
+                stock: stockNum,
                 images: variantImages
             });
         }
+
+        const categoryDoc = await Category.findById(category);
+        const pricing = getEffectivePrice({
+            basePrice: bPrice,
+            merchantDiscountPrice: dPrice
+        }, categoryDoc);
 
         const product = await Products.create({
             name: name.trim(),
             description: description.trim(),
             category,
-            basePrice: parseFloat(basePrice),
-            discountPrice: parseFloat(discountPrice) || parseFloat(basePrice),
+            basePrice: bPrice,
+            discountPrice: pricing.price,
+            merchantDiscountPrice: dPrice,
             variants: processedVariants
         });
 
@@ -162,17 +212,49 @@ export const editProduct = async (req, res) => {
         const { name, description, category, basePrice, discountPrice, variants: rawVariants } = req.body;
         const files = req.files || [];
 
-        if (!name || !description || !category || !basePrice) {
-            return res.status(400).json({ success: false, message: "All product fields are required" });
+        // Validation: required fields, non-empty, valid formats
+        if (!name || !name.trim()) {
+            return res.status(400).json({ success: false, message: "Product name is required" });
         }
-
-        const bPrice = parseFloat(basePrice);
-        const dPrice = parseFloat(discountPrice) || bPrice;
+        if (!description || !description.trim()) {
+            return res.status(400).json({ success: false, message: "Description is required" });
+        }
+        if (!category) {
+            return res.status(400).json({ success: false, message: "Category is required" });
+        }
+        if (!mongoose.Types.ObjectId.isValid(category)) {
+            return res.status(400).json({ success: false, message: "Invalid category ID" });
+        }
 
         const product = await Products.findById(id);
         if (!product) {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
+
+        const bPrice = parseFloat(basePrice);
+        if (isNaN(bPrice) || bPrice <= 0) {
+            return res.status(400).json({ success: false, message: "Base price must be a valid number greater than 0" });
+        }
+
+        let merchantDPrice = bPrice;
+        if (discountPrice !== undefined && discountPrice !== '') {
+            merchantDPrice = parseFloat(discountPrice);
+            if (isNaN(merchantDPrice) || merchantDPrice <= 0) {
+                return res.status(400).json({ success: false, message: "Discount price must be a valid number greater than 0" });
+            }
+            if (merchantDPrice > bPrice) {
+                return res.status(400).json({ success: false, message: "Discount price cannot be greater than base price" });
+            }
+        }
+        merchantDPrice = Math.round(merchantDPrice * 100) / 100;
+
+        const categoryDoc = await Category.findById(category);
+        const pricing = getEffectivePrice({
+            merchantDiscountPrice: merchantDPrice,
+            basePrice: bPrice,
+            offer: product.offer
+        }, categoryDoc);
+        let dPrice = pricing.price;
 
         let variants = [];
         try {
@@ -185,10 +267,26 @@ export const editProduct = async (req, res) => {
             return res.status(400).json({ success: false, message: "At least one variant is required" });
         }
 
+        // Validate variants
+        const skus = variants.map(v => v.sku ? v.sku.trim() : '');
+        if (skus.some(s => !s)) {
+            return res.status(400).json({ success: false, message: "SKU is required for all variants" });
+        }
+        if (new Set(skus).size !== skus.length) {
+            return res.status(400).json({ success: false, message: "Duplicate SKUs are not allowed within variants" });
+        }
+
         const processedVariants = [];
         for (const [idx, v] of variants.entries()) {
-            if (!v.sku || !v.color || v.stock === undefined) {
-                return res.status(400).json({ success: false, message: `Variant ${idx + 1}: SKU, Color, and Stock are required` });
+            if (!v.color || !v.color.trim()) {
+                return res.status(400).json({ success: false, message: `Variant ${idx + 1}: Color is required` });
+            }
+            if (v.stock === undefined || v.stock === '') {
+                return res.status(400).json({ success: false, message: `Variant ${idx + 1}: Stock is required` });
+            }
+            const stockNum = parseInt(v.stock);
+            if (isNaN(stockNum) || stockNum < 0) {
+                return res.status(400).json({ success: false, message: `Variant ${idx + 1}: Stock must be a non-negative integer` });
             }
 
             let images = [];
@@ -200,7 +298,7 @@ export const editProduct = async (req, res) => {
 
             const newImages = files
                 .filter(f => f.fieldname === `images-${v.tempId}`)
-                .map(f => ({ url: f.path }));
+                .map(f => ({ url: f.secure_url || f.url || f.path }));
             
             images = [...images, ...newImages];
 
@@ -211,7 +309,7 @@ export const editProduct = async (req, res) => {
             const variantObj = {
                 sku: v.sku.trim(),
                 color: v.color.trim(),
-                stock: parseInt(v.stock) || 0,
+                stock: stockNum,
                 images: images
             };
 
@@ -233,6 +331,7 @@ export const editProduct = async (req, res) => {
                 category,
                 basePrice: bPrice,
                 discountPrice: dPrice,
+                merchantDiscountPrice: merchantDPrice,
                 variants: processedVariants
             },
             { new: true, runValidators: true }
@@ -277,5 +376,114 @@ export const deleteProduct = async (req, res) => {
     }
 };
 
+export const saveProductOffer = async (req, res) => {
+    try {
+        if (!req.session.admin) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
 
+        const { id } = req.params;
+        const { name, discountType, discountValue, startDate, endDate } = req.body;
 
+        // Validation checks
+        if (!name || !name.trim()) {
+            return res.status(400).json({ success: false, message: "Offer name is required" });
+        }
+        if (name.trim().length < 3 || name.trim().length > 50) {
+            return res.status(400).json({ success: false, message: "Offer name must be between 3 and 50 characters" });
+        }
+
+        if (!discountType || !["percentage", "flat"].includes(discountType)) {
+            return res.status(400).json({ success: false, message: "Invalid discount type" });
+        }
+
+        const discVal = parseFloat(discountValue);
+        if (isNaN(discVal) || discVal <= 0) {
+            return res.status(400).json({ success: false, message: "Discount value must be a valid number greater than 0" });
+        }
+
+        const product = await Products.findById(id);
+        if (!product) {
+            return res.status(404).json({ success: false, message: "Product not found" });
+        }
+
+        const basePriceToUse = product.merchantDiscountPrice || product.discountPrice || product.basePrice;
+        if (!product.merchantDiscountPrice) {
+            product.merchantDiscountPrice = basePriceToUse;
+        }
+
+        if (discountType === "percentage" && (discVal < 1 || discVal > 99)) {
+            return res.status(400).json({ success: false, message: "Percentage discount must be between 1 and 99" });
+        }
+
+        if (discountType === "flat" && discVal >= basePriceToUse) {
+            return res.status(400).json({ success: false, message: "Flat discount must be less than the product's price" });
+        }
+
+        let start = null;
+        let end = null;
+        if (startDate) {
+            start = new Date(startDate);
+            if (isNaN(start.getTime())) {
+                return res.status(400).json({ success: false, message: "Invalid start date" });
+            }
+        }
+        if (endDate) {
+            end = new Date(endDate);
+            if (isNaN(end.getTime())) {
+                return res.status(400).json({ success: false, message: "Invalid end date" });
+            }
+            if (start && end < start) {
+                return res.status(400).json({ success: false, message: "End date must be after or equal to start date" });
+            }
+        }
+
+        const categoryDoc = await Category.findById(product.category);
+
+        product.offer = {
+            name: name.trim(),
+            discountType,
+            discountValue: discVal,
+            startDate: start,
+            endDate: end
+        };
+
+        const pricing = getEffectivePrice(product, categoryDoc);
+        product.discountPrice = pricing.price;
+
+        await product.save();
+
+        res.json({ success: true, message: "Offer saved successfully and product price updated" });
+    } catch (error) {
+        console.error("SAVE OFFER ERROR:", error);
+        res.status(500).json({ success: false, message: "Server error saving offer" });
+    }
+};
+
+export const deleteProductOffer = async (req, res) => {
+    try {
+        if (!req.session.admin) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
+
+        const { id } = req.params;
+        const product = await Products.findById(id);
+        if (!product) {
+            return res.status(404).json({ success: false, message: "Product not found" });
+        }
+
+        // Remove the nested offer object
+        product.offer = undefined;
+        
+        const categoryDoc = await Category.findById(product.category);
+        const pricing = getEffectivePrice(product, categoryDoc);
+        product.discountPrice = pricing.price;
+        
+        await product.save();
+
+        res.json({ success: true, message: "Offer removed successfully and product price reverted" });
+    } catch (error) {
+        console.error("DELETE OFFER ERROR:", error);
+        res.status(500).json({ success: false, message: "Server error removing offer" });
+    }
+};

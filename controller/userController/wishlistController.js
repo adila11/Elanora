@@ -2,6 +2,7 @@ import Wishlist from "../../model/wishlistSchema.js";
 import Products from "../../model/productSchema.js";
 import { User } from "../../model/userSchema.js";
 import Cart from "../../model/cartSchema.js";
+import { getEffectivePrice } from "../../utils/offerHelper.js";
 
 export const loadWishlist = async (req, res) => {
     try {
@@ -13,13 +14,22 @@ export const loadWishlist = async (req, res) => {
         }
 
         const wishlist = await Wishlist.findOne({ userId: user._id })
-            .populate("products.productId");
+            .populate({
+                path: "products.productId",
+                populate: {
+                    path: "category"
+                }
+            });
 
         let wishlistItems = [];
         if (wishlist && wishlist.products.length > 0) {
             wishlistItems = wishlist.products.filter(
                 item => item.productId && item.productId.isListed
             );
+            wishlistItems.forEach(item => {
+                const pricing = getEffectivePrice(item.productId);
+                item.productId.discountPrice = pricing.price;
+            });
         }
 
         res.render("user/wishlist", {

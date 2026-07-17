@@ -2,6 +2,7 @@ import Products from "../../model/productSchema.js";
 import Category from "../../model/categoriesSchema.js";
 import Cart from '../../model/cartSchema.js';
 import { User } from '../../model/userSchema.js';
+import { getEffectivePrice } from "../../utils/offerHelper.js";
 
 const loadHome = async (req, res) => {
     try {
@@ -23,6 +24,11 @@ const loadHome = async (req, res) => {
         const activeProducts = products.filter(
             product => product.category
         );
+
+        activeProducts.forEach(p => {
+            const pricing = getEffectivePrice(p);
+            p.discountPrice = pricing.price;
+        });
 
 
         const categories = await Category.find({

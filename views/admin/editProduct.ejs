@@ -198,12 +198,12 @@
           <div class="two-col">
             <div class="form-group">
               <label for="base-price">Base Price (₹)</label>
-              <input type="number" id="base-price" name="basePrice" value="<%= product.basePrice %>" step="0.01" min="0" />
+              <input type="number" id="base-price" name="basePrice" value="<%= product.basePrice %>" step="0.01" />
               <div class="error-text">Valid base price required</div>
             </div>
             <div class="form-group">
               <label for="discount-price">Discount Price (₹)</label>
-              <input type="number" id="discount-price" name="discountPrice" value="<%= product.discountPrice %>" step="0.01" min="0" />
+              <input type="number" id="discount-price" name="discountPrice" value="<%= product.discountPrice %>" step="0.01" />
               <div class="error-text"></div>
             </div>
           </div>
@@ -276,7 +276,7 @@
           </div>
           <div class="form-group">
             <label>Stock</label>
-            <input type="number" class="v-stock" placeholder="0" min="0" value="${data ? data.stock : ''}">
+            <input type="number" class="v-stock" placeholder="0" value="${data ? data.stock : ''}">
             <div class="error-text">Valid stock required</div>
           </div>
           <button type="button" class="delete-btn" onclick="removeVariant('${id}')">
@@ -490,29 +490,64 @@
       const nameInput = document.getElementById('productName');
       const categorySelect = document.getElementById('category');
       const basePriceInput = document.getElementById('base-price');
+      const discountPriceInput = document.getElementById('discount-price');
       const descriptionText = document.getElementById('description');
 
       let hasError = false;
 
-      if (!nameInput.value.trim()) { showError(nameInput); hasError = true; }
-      if (!descriptionText.value.trim()) { showError(descriptionText); hasError = true; }
-      if (!categorySelect.value) { showError(categorySelect); hasError = true; }
-      if (!basePriceInput.value || isNaN(basePriceInput.value) || basePriceInput.value <= 0) {
-        showError(basePriceInput, "Enter a price > 0"); hasError = true;
+      if (!nameInput.value.trim()) { showError(nameInput, "Product name is required"); hasError = true; }
+      if (!descriptionText.value.trim()) { showError(descriptionText, "Description is required"); hasError = true; }
+      if (!categorySelect.value) { showError(categorySelect, "Please select a category"); hasError = true; }
+      
+      const bPrice = parseFloat(basePriceInput.value);
+      if (!basePriceInput.value || isNaN(bPrice) || bPrice <= 0) {
+        showError(basePriceInput, "Enter a valid base price greater than 0"); hasError = true;
+      }
+
+      if (discountPriceInput.value !== "") {
+        const dPrice = parseFloat(discountPriceInput.value);
+        if (isNaN(dPrice) || dPrice <= 0) {
+          showError(discountPriceInput, "Discount price must be greater than 0");
+          hasError = true;
+        } else if (!isNaN(bPrice) && dPrice > bPrice) {
+          showError(discountPriceInput, "Discount price cannot be greater than base price");
+          hasError = true;
+        }
       }
 
       const variants = [];
       const wrappers = document.querySelectorAll('.variant-wrapper');
       
+      // Collect and check duplicate SKUs
+      const skus = [];
+      wrappers.forEach(wrapper => {
+        const skuInput = wrapper.querySelector('.v-sku');
+        skus.push(skuInput.value.trim().toLowerCase());
+      });
+
+      const duplicates = skus.filter((item, index) => skus.indexOf(item) !== index && item !== '');
+
       wrappers.forEach((wrapper, idx) => {
         const id = wrapper.id.replace('wrapper-', '');
         const skuInput = wrapper.querySelector('.v-sku');
         const colorInput = wrapper.querySelector('.v-color');
         const stockInput = wrapper.querySelector('.v-stock');
         
-        if (!skuInput.value.trim()) { showError(skuInput); hasError = true; }
-        if (!colorInput.value.trim()) { showError(colorInput); hasError = true; }
-        if (!stockInput.value || stockInput.value < 0) { showError(stockInput); hasError = true; }
+        if (!skuInput.value.trim()) {
+          showError(skuInput, "SKU is required");
+          hasError = true;
+        } else if (duplicates.includes(skuInput.value.trim().toLowerCase())) {
+          showError(skuInput, "Duplicate SKU in variants");
+          hasError = true;
+        }
+
+        if (!colorInput.value.trim()) { showError(colorInput, "Color is required"); hasError = true; }
+        
+        const stockVal = parseFloat(stockInput.value);
+        if (stockInput.value === "" || isNaN(stockVal) || stockVal < 0 || !Number.isInteger(stockVal)) {
+          showError(stockInput, "Valid non-negative integer stock required");
+          hasError = true;
+        }
         
         const currentTotal = (variantExistingImages[id]?.length || 0) + (variantFiles[id]?.length || 0);
         if (currentTotal !== 4) {

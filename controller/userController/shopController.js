@@ -2,6 +2,7 @@ import Products from "../../model/productSchema.js";
 import Category from "../../model/categoriesSchema.js";
 import Wishlist from "../../model/wishlistSchema.js";
 import { User } from "../../model/userSchema.js";
+import { getEffectivePrice } from "../../utils/offerHelper.js";
 
 export const loadShop = async (req, res) => {
     try {
@@ -69,6 +70,11 @@ export const loadShop = async (req, res) => {
             product => product.category
         );
 
+        activeProducts.forEach(p => {
+            const pricing = getEffectivePrice(p);
+            p.discountPrice = pricing.price;
+        });
+
         const categories = await Category.find({ isActive: true });
 
         
@@ -131,11 +137,19 @@ export const loadProductDetail = async (req, res) => {
             return res.redirect('/shop');
         }
 
+        const pricing = getEffectivePrice(product);
+        product.discountPrice = pricing.price;
+
         const relatedProducts = await Products.find({
             category: product.category?._id,
             _id: { $ne: product._id },
             isListed: true
         }).limit(4);
+
+        relatedProducts.forEach(rp => {
+            const rpPricing = getEffectivePrice(rp);
+            rp.discountPrice = rpPricing.price;
+        });
 
         
         let inWishlist = false;
@@ -155,7 +169,11 @@ export const loadProductDetail = async (req, res) => {
             product,
             relatedProducts,
             title: product.name,
-            inWishlist
+            inWishlist,
+            offerActive: pricing.offerActive,
+            offerName: pricing.offerName,
+            offerDiscountValue: pricing.offerDiscountValue,
+            offerDiscountType: pricing.offerDiscountType
         });
     } catch (error) {
         console.error("LOAD PRODUCT DETAIL ERROR:", error);

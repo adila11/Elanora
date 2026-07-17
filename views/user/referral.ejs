@@ -222,6 +222,61 @@
           </div>
         </div>
 
+        <!-- REFERRED FRIENDS SECTION -->
+        <div style="margin-top: 48px;">
+          <h4 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#2c2c2c; border-bottom:1px solid #f0ece4; padding-bottom:10px; margin-bottom:20px;">
+            Referred Friends
+          </h4>
+
+          <% if (referral.history && referral.history.length > 0) { %>
+            <div style="background:#fff; border:1px solid #e8e0d0; border-radius:12px; overflow:hidden;">
+              <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+                <thead>
+                  <tr style="background:#fdfaf5; border-bottom:1px solid #e8e0d0; color:#8c7f70; font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">
+                    <th style="padding:14px 20px;">Friend's Name</th>
+                    <th style="padding:14px 20px;">Email</th>
+                    <th style="padding:14px 20px;">Reward Status</th>
+                    <th style="padding:14px 20px;">Joined Date</th>
+                  </tr>
+                </thead>
+                <tbody style="color:#4a4a4a;">
+                  <% referral.history.forEach(item => { %>
+                    <% if (item.referredUserId) { %>
+                      <tr style="border-bottom:1px solid #f0ece4; transition:background 0.15s;" onmouseover="this.style.background='#faf7f2'" onmouseout="this.style.background='transparent'">
+                        <td style="padding:16px 20px; display:flex; align-items:center; gap:10px; font-weight:500; color:#2c2c2c;">
+                          <div style="width:32px; height:32px; border-radius:9999px; background:#f3e6c9; color:#c49a2a; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem;">
+                            <%= item.referredUserId.fullName.charAt(0).toUpperCase() %>
+                          </div>
+                          <%= item.referredUserId.fullName %>
+                        </td>
+                        <td style="padding:16px 20px; color:#666;">
+                          <%= item.referredUserId.email %>
+                        </td>
+                        <td style="padding:16px 20px;">
+                          <span style="display:inline-flex; align-items:center; gap:5px; font-size:0.75rem; font-weight:600; color:#166534; background:#f0fdf4; padding:3px 10px; border-radius:20px; border:1px solid #bbf7d0;">
+                            Completed
+                          </span>
+                        </td>
+                        <td style="padding:16px 20px; color:#777;">
+                          <%= new Date(item.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                        </td>
+                      </tr>
+                    <% } %>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <div style="text-align:center; padding:40px 20px; border:1px dashed #e8e0d0; border-radius:12px; background:#fafafa;">
+              <svg style="margin:0 auto 12px; color:#aaa; display:block;" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+              </svg>
+              <p style="font-size:0.9rem; color:#888;">No friends have joined using your referral link yet.</p>
+              <p style="font-size:0.78rem; color:#aaa; margin-top:4px;">Share your referral link above to start earning store credit!</p>
+            </div>
+          <% } %>
+        </div>
+
       </main>
     </div>
   </div>
