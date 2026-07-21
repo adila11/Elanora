@@ -38,6 +38,16 @@ const orderItemSchema = new mongoose.Schema({
         required: true
     },
 
+    couponDiscount: {
+        type: Number,
+        default: 0
+    },
+
+    couponDiscountLine: {
+        type: Number,
+        default: 0
+    },
+
     itemStatus: {
         type: String,
         enum: [

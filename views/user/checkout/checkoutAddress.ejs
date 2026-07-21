@@ -1175,7 +1175,7 @@
             cart.items.forEach(item => {
             const product = item.productId;
             if (!product) return;
-            const price = product.discountPrice || product.basePrice;
+            const price = item.price || product.discountPrice || product.basePrice;
             subtotal += price * item.qty;
             const variant = product.variants ? product.variants.find(v => v._id.toString() ===
             item.variantId.toString()) : null;

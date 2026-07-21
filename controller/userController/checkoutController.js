@@ -9,6 +9,7 @@ import Wallet from "../../model/walletSchema.js";
 import crypto from "crypto";
 import { debitWallet } from "../../utils/walletHelper.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
+import { allocateCouponDiscount } from "../../utils/couponAllocator.js";
 
 const checkCartAvailability = (cart) => {
     if (!cart || cart.items.length === 0) return false;
@@ -554,6 +555,15 @@ export const placeOrder = async (req, res) => {
             }
         }
 
+        if (appliedCoupon && discount > 0) {
+            allocateCouponDiscount(orderItems, appliedCoupon, discount);
+        } else {
+            orderItems.forEach(i => {
+                i.couponDiscount = 0;
+                i.couponDiscountLine = 0;
+            });
+        }
+
         const finalAmount = subtotal + deliveryCharge - discount;
 
         if (paymentMethod === "cod" && finalAmount > 1000) {
@@ -801,6 +811,15 @@ export const verifyPayment = async (req, res) => {
                     appliedCoupon = coupon;
                 }
             }
+        }
+
+        if (appliedCoupon && discount > 0) {
+            allocateCouponDiscount(orderItems, appliedCoupon, discount);
+        } else {
+            orderItems.forEach(i => {
+                i.couponDiscount = 0;
+                i.couponDiscountLine = 0;
+            });
         }
 
         const finalAmount = subtotal + deliveryCharge - discount;

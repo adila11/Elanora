@@ -1030,19 +1030,6 @@
 <body>
 
   <%- include('../../partials/user/header') %>
-<%
-let subtotal = 0;
-
-if (cart && cart.items && cart.items.length > 0) {
-    cart.items.forEach(item => {
-        const product = item.productId;
-        if (!product) return;
-
-        const price = product.discountPrice || product.basePrice;
-        subtotal += price * item.qty;
-    });
-}
-%>
     <!-- MAIN -->
     <main>
       <h1 class="page-title">Secure Checkout</h1>
@@ -1170,11 +1157,12 @@ if (cart && cart.items && cart.items.length > 0) {
           <div class="summary-title">In Your Cart</div>
 
           <% if (cart && cart.items && cart.items.length > 0) {
+            let calcSubtotal = 0;
             cart.items.forEach(item => {
             const product = item.productId;
             if (!product) return;
-            const price = product.discountPrice || product.basePrice;
-            subtotal += price * item.qty;
+            const price = item.price || product.discountPrice || product.basePrice;
+            calcSubtotal += price * item.qty;
             const variant = product.variants ? product.variants.find(v => v._id.toString() ===
             item.variantId.toString()) : null;
             const imageUrl = variant && variant.images && variant.images.length > 0 ? variant.images[0].url :
@@ -1197,7 +1185,7 @@ if (cart && cart.items && cart.items.length > 0) {
                 </div>
               </div>
             </div>
-            <% }); } %>
+            <% }); subtotal = calcSubtotal; } %>
 
               <!-- Applied Coupon Badge -->
               <div class="promo-applied" id="promoApplied">
@@ -1323,7 +1311,8 @@ if (cart && cart.items && cart.items.length > 0) {
         let appliedCoupon = null;
         let selectedMethod = 'cod';
 
-        const BASE_PRICE = parseInt(document.getElementById('subtotalValue').textContent) || 0;
+        const rawSub = document.getElementById('subtotalValue').textContent.replace(/[^0-9.]/g, '');
+        const BASE_PRICE = parseFloat(rawSub) || 0;
 
         const COD_LIMIT = 1000;
 

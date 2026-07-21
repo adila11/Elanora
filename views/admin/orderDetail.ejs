@@ -801,11 +801,12 @@
 
                     let refundedAmount = 0;
                     order.items.forEach(item => {
+                      const netItemPaid = item.total - (item.couponDiscountLine || 0);
                       if (item.itemStatus === 'returned') {
-                        refundedAmount += item.total;
+                        refundedAmount += netItemPaid;
                       } else if (item.itemStatus === 'cancelled') {
                         if (order.paymentMethod !== 'cod' || order.paymentStatus === 'refunded') {
-                          refundedAmount += item.total;
+                          refundedAmount += netItemPaid;
                         }
                       }
                     });

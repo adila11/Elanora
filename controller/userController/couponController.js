@@ -1,7 +1,7 @@
 import Coupon from "../../model/couponSchema.js";
 import Cart from "../../model/cartSchema.js";
 import { User } from "../../model/userSchema.js";
-
+import { getEffectivePrice } from "../../utils/offerHelper.js";
 
 // Apply Coupon
 export const applyCoupon = async (req, res) => {
@@ -41,7 +41,7 @@ export const applyCoupon = async (req, res) => {
         }
 
         if (coupon.usageLimit !== null && coupon.usageLimit !== undefined) {
-            if (coupon.usageCount >= coupon.usageLimit) {
+            if ((coupon.usageCount || 0) >= coupon.usageLimit) {
                 return res.json({ success: false, message: "This coupon has reached its usage limit." });
             }
         }
@@ -50,7 +50,10 @@ export const applyCoupon = async (req, res) => {
             return res.json({ success: false, message: "You have already used this coupon." });
         }
 
-        const cart = await Cart.findOne({ userId: user._id }).populate("items.productId");
+        const cart = await Cart.findOne({ userId: user._id }).populate({
+            path: "items.productId",
+            populate: { path: "category" }
+        });
         if (!cart || cart.items.length === 0) {
             return res.json({ success: false, message: "Your cart is empty." });
         }
@@ -59,14 +62,16 @@ export const applyCoupon = async (req, res) => {
         for (const item of cart.items) {
             const product = item.productId;
             if (!product) continue;
-            const price = product.discountPrice || product.basePrice;
+            const pricing = getEffectivePrice(product);
+            const price = pricing.price;
             subtotal += price * item.qty;
         }
 
-        if (subtotal < coupon.minimumPurchase) {
+        const minPurchase = coupon.minimumPurchase || 0;
+        if (subtotal < minPurchase) {
             return res.json({
                 success: false,
-                message: `Minimum purchase of ₹${coupon.minimumPurchase.toLocaleString('en-IN')} required.`
+                message: `Minimum purchase of ₹${minPurchase.toLocaleString('en-IN')} required.`
             });
         }
 

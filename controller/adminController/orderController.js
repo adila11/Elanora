@@ -283,8 +283,9 @@ export const updateItemStatus = async (req, res) => {
                 { $inc: { "variants.$.stock": item.qty } }
             );
 
+            const itemNet = Math.max(0, item.total - (item.couponDiscountLine || 0));
             existingOrder.orderTotal -= item.total;
-            existingOrder.finalAmount -= item.total;
+            existingOrder.finalAmount -= itemNet;
         }
 
         const activeItems = existingOrder.items.filter(

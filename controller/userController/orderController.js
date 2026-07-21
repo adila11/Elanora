@@ -5,6 +5,7 @@ import Product from "../../model/productSchema.js";
 import Return from "../../model/returnSchema.js";
 import { User } from "../../model/userSchema.js";
 import { creditWallet } from "../../utils/walletHelper.js";
+import { revalidateCouponAgainstCart, cancelOrderDueToCouponBreach } from "../../utils/couponValidator.js";
 
 
 // Get Orders
@@ -179,6 +180,37 @@ export const cancelSingleItem = async (req, res) => {
                 message: "Cannot cancel this item after shipping"
             });
         }
+
+        if (order.isCouponApplied && order.couponCode && item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
+            const couponCheck = await revalidateCouponAgainstCart(order, [item._id]);
+            if (!couponCheck.isEligible) {
+                const { confirmFullCancel } = req.body;
+                if (!confirmFullCancel) {
+                    return res.json({
+                        success: false,
+                        requiresConfirmation: true,
+                        isCouponBreach: true,
+                        couponCode: couponCheck.couponCode,
+                        minCartValue: couponCheck.minCartValue,
+                        remainingSubtotal: couponCheck.remainingSubtotal,
+                        message: `Cancelling this item will reduce your subtotal to ₹${couponCheck.remainingSubtotal.toLocaleString('en-IN')}, which is below the ₹${couponCheck.minCartValue.toLocaleString('en-IN')} minimum purchase required for coupon "${couponCheck.couponCode}". Proceeding will cancel your ENTIRE order with a full refund to your wallet.`
+                    });
+                }
+
+                const breachResult = await cancelOrderDueToCouponBreach(
+                    order,
+                    couponCheck,
+                    `Item cancellation caused coupon minimum purchase breach (${couponCheck.couponCode})`,
+                    "user"
+                );
+                return res.json({
+                    success: true,
+                    message: `Full order cancelled and refunded to your wallet due to coupon minimum purchase requirement breach.`,
+                    autoCancelledOrder: true,
+                });
+            }
+        }
+
         if (item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
             item.itemStatus = "cancelled";
             item.cancelReason = reason;
@@ -188,11 +220,10 @@ export const cancelSingleItem = async (req, res) => {
                 { "_id": item.productId, "variants._id": item.variantId },
                 { $inc: { "variants.$.stock": item.qty } }
             );
-
         }
 
         const allCancelled = order.items.every(
-            item => item.itemStatus === "cancelled"
+            i => i.itemStatus === "cancelled"
         );
 
         if (allCancelled) {
@@ -200,7 +231,7 @@ export const cancelSingleItem = async (req, res) => {
             order.cancelledAt = new Date();
 
             const originalSubtotal = order.items.reduce(
-                (sum, item) => sum + item.total,
+                (sum, i) => sum + i.total,
                 0
             );
 
@@ -214,9 +245,10 @@ export const cancelSingleItem = async (req, res) => {
         await order.save();
 
         if (order.paymentStatus === "paid") {
+            const netRefund = Math.max(0, item.total - (item.couponDiscountLine || 0));
             await creditWallet({
                 userId: user._id,
-                amount: item.total,
+                amount: netRefund,
                 source: "order_cancel",
                 orderId: order._id,
                 description: `Refund for cancelled item in order ${order.orderId}`
@@ -302,12 +334,14 @@ export const returnItem = async (req, res) => {
             });
         }
 
+        const netRefund = Math.max(0, item.total - (item.couponDiscountLine || 0));
+
         await Return.create({
             orderId,
             itemId,
             userId: user._id,
             reason,
-            refundAmount: item.total
+            refundAmount: netRefund
         });
 
         item.itemStatus = "return_requested";
@@ -332,3 +366,5 @@ export const returnItem = async (req, res) => {
 
     }
 };
+
+

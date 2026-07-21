@@ -1512,11 +1512,12 @@
 
                               let refundedAmount = 0;
                               order.items.forEach(item => {
+                              const netItemPaid = item.total - (item.couponDiscountLine || 0);
                               if (item.itemStatus === 'returned') {
-                              refundedAmount += item.total;
+                              refundedAmount += netItemPaid;
                               } else if (item.itemStatus === 'cancelled') {
                               if (order.paymentMethod !== 'cod' || order.paymentStatus === 'refunded') {
-                              refundedAmount += item.total;
+                              refundedAmount += netItemPaid;
                               }
                               }
                               });
@@ -1620,7 +1621,7 @@
           </div>
           <p style="font-size:0.82rem;color:#aaa;margin-bottom:18px;">This will cancel all items in your order. This
             action cannot be undone.</p>
-          <label class="modal-label">Reason</label>
+          <label class="modal-label">Reason <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;">(optional)</span></label>
           <textarea class="modal-textarea" id="fullCancelReason"
             placeholder="Tell us why you're cancelling…"></textarea>
           <div class="modal-actions">
@@ -1655,6 +1656,33 @@
           <div class="modal-actions">
             <button class="modal-btn-cancel" onclick="closePartialCancelModal()">Keep Item</button>
             <button class="modal-btn-danger" onclick="submitPartialCancel()">Cancel Item</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COUPON BREACH CONFIRMATION MODAL -->
+      <div class="modal-overlay" id="couponBreachModal" onclick="if(event.target===this) closeCouponBreachModal()">
+        <div class="modal">
+          <div class="modal-header">
+            <div class="modal-title" style="color: #c0392b; display: flex; align-items: center; gap: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              Coupon Requirement Warning
+            </div>
+            <button class="modal-close" onclick="closeCouponBreachModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <p id="couponBreachMessage" style="font-size:0.85rem;color:#444;line-height:1.6;margin-bottom:20px;"></p>
+          <div class="modal-actions" style="display:flex;gap:12px;">
+            <button class="modal-btn-cancel" onclick="closeCouponBreachModal()">Cancel Request (Keep Item)</button>
+            <button class="modal-btn-danger" id="confirmBreachCancelBtn" onclick="proceedFullCancelAfterBreach()">Proceed with Full Order Cancel</button>
           </div>
         </div>
       </div>
@@ -1742,10 +1770,6 @@
 
         async function submitFullCancel() {
           const reason = document.getElementById('fullCancelReason').value.trim();
-          if (!reason) {
-            if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
-            return;
-          }
           const btn = document.querySelector('#fullCancelModal .modal-btn-danger');
           btn.disabled = true;
           btn.textContent = 'Cancelling…';
@@ -1788,36 +1812,73 @@
           document.body.style.overflow = '';
         }
 
-        async function submitPartialCancel() {
+        function closeCouponBreachModal() {
+          document.getElementById('couponBreachModal').classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
+        async function submitPartialCancel(confirmFullCancel = false) {
           const reason = document.getElementById('partialCancelReason').value.trim();
           if (!reason) {
             if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
             return;
           }
-          const btn = document.querySelector('#partialCancelModal .modal-btn-danger');
-          btn.disabled = true;
-          btn.textContent = 'Cancelling…';
+          const btn = confirmFullCancel
+            ? document.getElementById('confirmBreachCancelBtn')
+            : document.querySelector('#partialCancelModal .modal-btn-danger');
+
+          if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Processing…';
+          }
+
           try {
             const res = await fetch('/cancel-item', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ orderId: ORDER_ID, itemId: partialCancelItemId, reason })
+              body: JSON.stringify({
+                orderId: ORDER_ID,
+                itemId: partialCancelItemId,
+                reason,
+                confirmFullCancel
+              })
             });
             const data = await res.json();
+
+            if (data.requiresConfirmation && data.isCouponBreach) {
+              closePartialCancelModal();
+              document.getElementById('couponBreachMessage').textContent = data.message;
+              document.getElementById('couponBreachModal').classList.add('active');
+              document.body.style.overflow = 'hidden';
+              return;
+            }
+
             if (data.success) {
               closePartialCancelModal();
-              if (typeof window.showToast === 'function') window.showToast('Item cancelled successfully.', 'success');
+              closeCouponBreachModal();
+              if (typeof window.showToast === 'function') {
+                window.showToast(data.message || 'Item cancelled successfully.', 'success');
+              }
               setTimeout(() => location.reload(), 1000);
             } else {
-              if (typeof window.showToast === 'function') window.showToast(data.message || 'Failed to cancel item.', 'error');
-              btn.disabled = false;
-              btn.textContent = 'Cancel Item';
+              if (typeof window.showToast === 'function') {
+                window.showToast(data.message || 'Failed to cancel item.', 'error');
+              }
             }
           } catch {
-            if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
-            btn.disabled = false;
-            btn.textContent = 'Cancel Item';
+            if (typeof window.showToast === 'function') {
+              window.showToast('Network error. Please try again.', 'error');
+            }
+          } finally {
+            if (btn) {
+              btn.disabled = false;
+              btn.textContent = confirmFullCancel ? 'Proceed with Full Order Cancel' : 'Cancel Item';
+            }
           }
+        }
+
+        function proceedFullCancelAfterBreach() {
+          submitPartialCancel(true);
         }
 
         /* Download Invoice */
@@ -1961,11 +2022,12 @@
 
                 let _inv_refunded = 0;
                 order.items.forEach(it => {
+                  const netItPaid = it.total - (it.couponDiscountLine || 0);
                   if (it.itemStatus === 'returned') {
-                    _inv_refunded += it.total;
+                    _inv_refunded += netItPaid;
                   } else if (it.itemStatus === 'cancelled') {
                     if (order.paymentMethod !== 'cod' || order.paymentStatus === 'refunded') {
-                      _inv_refunded += it.total;
+                      _inv_refunded += netItPaid;
                     }
                   }
                 });
