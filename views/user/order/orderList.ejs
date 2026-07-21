@@ -26,7 +26,7 @@
       color: #2c2c2c;
     }
 
-    /* ── SEARCH BAR ── */
+    /* SEARCH BAR */
     .search-wrap {
       position: relative;
       flex: 1;
@@ -66,7 +66,7 @@
       color: #bbb;
     }
 
-    /* ── ORDER CARD ── */
+    /* ORDER CARD */
     .order-card {
       border: 1px solid #e8e0d0;
       border-radius: 12px;
@@ -113,7 +113,7 @@
       flex-shrink: 0;
     }
 
-    /* ── STATUS BADGES ── */
+    /* STATUS BADGES */
     .status-badge {
       padding: 4px 12px;
       border-radius: 20px;
@@ -145,7 +145,7 @@
       border: 1px solid #E8B4B0;
     }
 
-    /* ── CANCEL BTN ── */
+    /* CANCEL BTN */
     .cancel-order-btn {
       display: inline-flex;
       align-items: center;
@@ -167,7 +167,7 @@
       border-color: #C0392B;
     }
 
-    /* ── ORDER ITEM ROW ── */
+    /* ORDER ITEM ROW */
     .order-item-row {
       display: flex;
       align-items: center;
@@ -206,7 +206,7 @@
       color: #aaa;
     }
 
-    /* ── VIEW DETAILS BTN ── */
+    /* VIEW DETAILS BTN */
     .view-btn {
       display: inline-flex;
       align-items: center;
@@ -230,7 +230,7 @@
       transform: scale(1.02);
     }
 
-    /* ── PAGINATION ── */
+    /* PAGINATION */
     .pagination {
       display: flex;
       justify-content: center;
@@ -284,7 +284,7 @@
       user-select: none;
     }
 
-    /* ── CANCEL MODAL ── */
+    /* CANCEL MODAL */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -481,7 +481,7 @@
       cursor: not-allowed;
     }
 
-    /* ── NO RESULTS ── */
+    /* NO RESULTS */
     .no-results {
       display: none;
       text-align: center;
@@ -646,7 +646,7 @@
                 No orders match your search.
               </div>
 
-              <!-- ── PAGINATION ── -->
+              <!-- PAGINATION -->
               <% if (pagination.totalPages> 1) { %>
                 <div class="pagination">
 
@@ -753,7 +753,7 @@
     <%- include('partials/user/footer') %>
 
       <script>
-        // ── Search ──────────────────────────────────────────────
+        // Search
         function filterOrders() {
           const q = document.getElementById('searchInput').value.trim().toLowerCase();
           const cards = document.querySelectorAll('#orderList .order-card');
@@ -769,7 +769,7 @@
           document.getElementById('noResults').style.display = (q && visible === 0) ? 'block' : 'none';
         }
 
-        // ── Cancel Modal ─────────────────────────────────────────
+        // Cancel Modal
         let currentOrderId = null;
 
         function openCancelModal(orderId, items) {

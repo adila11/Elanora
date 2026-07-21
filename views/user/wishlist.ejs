@@ -40,7 +40,7 @@
       min-height: 100vh;
     }
 
-    /* ── HERO ── */
+    /* HERO */
     .wishlist-hero {
       text-align: center;
       padding: 110px 24px 48px;
@@ -82,7 +82,7 @@
       letter-spacing: 0.03em;
     }
 
-    /* ── PRODUCTS ── */
+    /* PRODUCTS */
     .products-section {
       padding: 56px 48px 72px;
       max-width: 1200px;
@@ -239,7 +239,7 @@
       background: var(--gold-pale);
     }
 
-    /* ── EMPTY STATE ── */
+    /* EMPTY STATE */
     .empty-wishlist {
       text-align: center;
       padding: 80px 20px;
@@ -300,7 +300,7 @@
       background: var(--gold-light);
     }
 
-    /* ── RESPONSIVE ── */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       .products-section {
         padding: 40px 20px 56px;
@@ -323,7 +323,7 @@
 
   <%- include('partials/user/header') %>
 
-    <!-- ── WISHLIST HERO ── -->
+    <!-- WISHLIST HERO -->
     <section class="wishlist-hero">
       <div class="hero-icon-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -335,7 +335,7 @@
       <p>Your curated collection of brilliant pieces waiting to be yours.</p>
     </section>
 
-    <!-- ── PRODUCTS ── -->
+    <!-- PRODUCTS -->
     <section class="products-section">
       <% if (wishlistItems && wishlistItems.length> 0) { %>
         <div class="products-grid" id="wishlistGrid">
@@ -454,7 +454,7 @@
                 card.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                   card.remove();
-                  // Check if grid is empty
+                  // Check If Grid Is Empty
                   const grid = document.getElementById('wishlistGrid');
                   if (grid && grid.children.length === 0) {
                     location.reload();
@@ -503,7 +503,7 @@
                     : "none";
 
               }
-              // Change button to show success
+              // Change Button To Show Success
               const card = document.getElementById('wishlist-card-' + productId);
               if (card) {
                 const btn = card.querySelector('.add-to-cart-btn');
@@ -515,7 +515,7 @@
                   card.style.transform = 'scale(0.95)';
                   setTimeout(() => {
                     card.remove();
-                    // Check if grid is empty
+                    // Check If Grid Is Empty
                     const grid = document.getElementById('wishlistGrid');
                     if (grid && grid.children.length === 0) {
                       location.reload();

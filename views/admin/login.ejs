@@ -120,7 +120,7 @@
             box-shadow: 0 0 0 3px rgba(188, 152, 77, 0.1);
         }
 
-        /* Password wrapper */
+        /* Password Wrapper */
         .password-wrapper {
             position: relative;
         }
@@ -244,7 +244,7 @@
         const eyeBtn = document.getElementById('eyeBtn');
         const eyeIcon = document.getElementById('eyeIcon');
 
-        // Toggle password visibility
+        // Toggle Password Visibility
         eyeBtn.addEventListener('click', function () {
             const isPassword = passwordInput.type === 'password';
             passwordInput.type = isPassword ? 'text' : 'password';
@@ -277,7 +277,7 @@
                 return;
             }
 
-            // Basic email format validation
+            // Basic Email Format Validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 e.preventDefault();
@@ -301,7 +301,7 @@
                 return;
             }
 
-            // If validation passes → Show loading state
+            // If Validation Passes → Show Loading State
             submitBtn.disabled = true;
             submitBtn.innerHTML = `
                 <span style="display:inline-block; animation: spin 1s linear infinite; margin-right: 8px;">↻</span>
@@ -309,7 +309,7 @@
             `;
         });
 
-        // Clear error message when user starts typing
+        // Clear Error Message When User Starts Typing
         emailInput.addEventListener('input', clearMessage);
         passwordInput.addEventListener('input', clearMessage);
     </script>

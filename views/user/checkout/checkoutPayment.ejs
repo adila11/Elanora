@@ -40,9 +40,9 @@
       flex-direction: column;
     }
 
-    /* ── NAV STYLES REMOVED TO USE PARTIAL STYLES ── */
+    /* NAV STYLES REMOVED TO USE PARTIAL STYLES */
 
-    /* ── MAIN ── */
+    /* MAIN */
     main {
       flex: 1;
       padding: 110px 48px 64px;
@@ -61,7 +61,7 @@
       letter-spacing: 0.02em;
     }
 
-    /* ── STEPPER ── */
+    /* STEPPER */
     .stepper {
       display: flex;
       align-items: center;
@@ -138,7 +138,7 @@
       background: var(--gold);
     }
 
-    /* ── LAYOUT ── */
+    /* LAYOUT */
     .checkout-layout {
       display: grid;
       grid-template-columns: 1fr 360px;
@@ -146,7 +146,7 @@
       align-items: start;
     }
 
-    /* ── CARD ── */
+    /* CARD */
     .card {
       background: var(--white);
       border-radius: 16px;
@@ -154,7 +154,7 @@
       box-shadow: 0 2px 16px rgba(44, 36, 22, 0.06);
     }
 
-    /* ── SECTION HEADER ── */
+    /* SECTION HEADER */
     .section-title-row {
       display: flex;
       align-items: center;
@@ -173,7 +173,7 @@
       stroke-width: 1.5;
     }
 
-    /* ── PAYMENT METHOD CARDS ── */
+    /* PAYMENT METHOD CARDS */
     .payment-methods {
       display: flex;
       gap: 16px;
@@ -258,7 +258,7 @@
       stroke-width: 2.5;
     }
 
-    /* ── RAZORPAY FORM (shown when razorpay selected) ── */
+    /* RAZORPAY FORM (shown When Razorpay Selected) */
     .razorpay-note {
       background: var(--cream);
       border-radius: 10px;
@@ -291,14 +291,14 @@
       display: block;
     }
 
-    /* ── DIVIDER ── */
+    /* DIVIDER */
     .divider {
       height: 1px;
       background: var(--border);
       margin: 28px 0;
     }
 
-    /* ── BOTTOM ROW ── */
+    /* BOTTOM ROW */
     .bottom-row {
       display: flex;
       align-items: center;
@@ -360,7 +360,7 @@
       stroke-width: 2;
     }
 
-    /* ── ORDER SUMMARY ── */
+    /* ORDER SUMMARY */
     .summary-title {
       font-size: 1rem;
       font-weight: 500;
@@ -414,7 +414,7 @@
       margin-top: 3px;
     }
 
-    /* Promo row */
+    /* Promo Row */
     .promo-row {
       display: flex;
       align-items: center;
@@ -448,7 +448,7 @@
       stroke-width: 2;
     }
 
-    /* Applied coupon state */
+    /* Applied Coupon State */
     .promo-applied {
       display: none;
       align-items: center;
@@ -557,7 +557,7 @@
       color: var(--gold);
     }
 
-    /* ── COUPON MODAL OVERLAY ── */
+    /* COUPON MODAL OVERLAY */
     .coupon-overlay {
       display: none;
       position: fixed;
@@ -574,7 +574,7 @@
       display: flex;
     }
 
-    /* Slide-up panel style (like the screenshot) */
+    /* Slide-up Panel Style (like The Screenshot) */
     .coupon-modal {
       background: var(--white);
       border-radius: 20px;
@@ -742,7 +742,7 @@
       margin-bottom: 14px;
     }
 
-    /* Offer cards */
+    /* Offer Cards */
     .offer-list {
       display: flex;
       flex-direction: column;
@@ -797,7 +797,7 @@
       background: #fdf4e3;
     }
 
-    /* ── TOAST ── */
+    /* TOAST */
     .toast {
       position: fixed;
       bottom: 28px;
@@ -831,7 +831,7 @@
       color: #f87171;
     }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer {
       background: var(--white);
       border-top: 1px solid var(--border);
@@ -1080,7 +1080,7 @@ if (cart && cart.items && cart.items.length > 0) {
             Payment Details
           </div>
 
-          <!-- Payment method options -->
+          <!-- Payment Method Options -->
           <div class="payment-methods">
 
             <div class="pay-card selected" data-method="cod">
@@ -1139,7 +1139,7 @@ if (cart && cart.items && cart.items.length > 0) {
 
           </div>
 
-          <!-- Conditional notes -->
+          <!-- Conditional Notes -->
           <div class="razorpay-note" id="razorpayNote">
             You will be redirected to Razorpay's secure payment gateway to complete your payment using UPI, Net Banking,
             or Card.
@@ -1199,7 +1199,7 @@ if (cart && cart.items && cart.items.length > 0) {
             </div>
             <% }); } %>
 
-              <!-- Applied coupon badge -->
+              <!-- Applied Coupon Badge -->
               <div class="promo-applied" id="promoApplied">
                 <div>
                   <div class="promo-applied-code">
@@ -1213,7 +1213,7 @@ if (cart && cart.items && cart.items.length > 0) {
                 <button class="promo-remove" id="removePromo">Remove</button>
               </div>
 
-              <!-- Promo row (click to open modal) -->
+              <!-- Promo Row (click To Open Modal) -->
               <div class="promo-row" id="promoRow">
                 <div class="promo-left">
                   <svg viewBox="0 0 24 24" width="15" height="15" stroke="var(--gold)" fill="none" stroke-width="1.8">
@@ -1252,7 +1252,7 @@ if (cart && cart.items && cart.items.length > 0) {
       </div>
     </main>
 
-    <!-- ── COUPON MODAL ── -->
+    <!-- COUPON MODAL -->
     <div class="coupon-overlay" id="couponOverlay">
       <div class="coupon-modal" role="dialog" aria-modal="true" aria-label="Apply Promo Code">
 
@@ -1320,9 +1320,6 @@ if (cart && cart.items && cart.items.length > 0) {
       <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       <script>
 
-        // ── State (declared FIRST, before anything reads them, to avoid a
-        //    "Cannot access before initialization" ReferenceError that used
-        //    to kill the whole script and break every button on the page)
         let appliedCoupon = null;
         let selectedMethod = 'cod';
 
@@ -1350,10 +1347,10 @@ if (cart && cart.items && cart.items.length > 0) {
             .getElementById("razorpayNote")
             .classList.add("show");
         }
-        // format initial display
+        // Format Initial Display
         document.getElementById('subtotalValue').textContent = BASE_PRICE.toLocaleString('en-IN');
 
-        // ── Payment method selection
+        // Payment Method Selection
         document.querySelectorAll('.pay-card').forEach(function (card) {
           card.addEventListener('click', function () {
             if (card.classList.contains('disabled')) return;
@@ -1388,7 +1385,7 @@ if (cart && cart.items && cart.items.length > 0) {
           payInput.value = selectedMethod;
           form.appendChild(payInput);
 
-          // Pass coupon data to review page
+          // Pass Coupon Data To Review Page
           if (appliedCoupon) {
             const couponInput = document.createElement('input');
             couponInput.type = 'hidden';
@@ -1407,7 +1404,7 @@ if (cart && cart.items && cart.items.length > 0) {
           form.submit();
         });
 
-        // ── Coupon modal open/close
+        // Coupon Modal Open/close
         var overlay = document.getElementById('couponOverlay');
         var promoRow = document.getElementById('promoRow');
         var closeBtn = document.getElementById('closeCoupon');
@@ -1430,7 +1427,7 @@ if (cart && cart.items && cart.items.length > 0) {
         overlay.addEventListener('click', function (e) { if (e.target === overlay) closeCoupon(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeCoupon(); });
 
-        // ── Apply coupon — calls real backend API
+        // Apply Coupon — Calls Real Backend API
         async function applyCoupon(code) {
           code = code.trim().toUpperCase();
           var errEl = document.getElementById('couponErr');
@@ -1473,7 +1470,7 @@ if (cart && cart.items && cart.items.length > 0) {
           }
         }
 
-        // ── Apply button
+        // Apply Button
         document.getElementById('applyBtn').addEventListener('click', function () {
           var val = document.getElementById('couponInput').value;
           if (!val.trim()) {
@@ -1485,15 +1482,15 @@ if (cart && cart.items && cart.items.length > 0) {
           applyCoupon(val);
         });
 
-        // Enter key on input
+        // Enter Key On Input
         document.getElementById('couponInput').addEventListener('keydown', function (e) {
           if (e.key === 'Enter') document.getElementById('applyBtn').click();
-          // clear error on type
+          // Clear Error On Type
           this.classList.remove('error');
           document.getElementById('couponErr').classList.remove('show');
         });
 
-        // ── "Use" buttons on offer cards
+        // "use" Buttons On Offer Cards
         document.querySelectorAll('.offer-card .btn-use').forEach(function (btn) {
           btn.addEventListener('click', function () {
             var card = btn.closest('.offer-card');
@@ -1501,14 +1498,14 @@ if (cart && cart.items && cart.items.length > 0) {
           });
         });
 
-        // ── Remove coupon
+        // Remove Coupon
         document.getElementById('removePromo').addEventListener('click', function () {
           appliedCoupon = null;
           updateSummary();
           showToast('Coupon removed.', 'success');
         });
 
-        // ── Update order summary totals
+        // Update Order Summary Totals
         function updateSummary() {
           var discount = 0;
           if (appliedCoupon && appliedCoupon.discount > 0) {
@@ -1553,7 +1550,7 @@ if (cart && cart.items && cart.items.length > 0) {
             codCard.title = "";
           }
 
-          // Applied badge
+          // Applied Badge
           var applied = document.getElementById('promoApplied');
           var row = document.getElementById('promoRow');
           if (appliedCoupon) {
@@ -1566,7 +1563,7 @@ if (cart && cart.items && cart.items.length > 0) {
             row.style.display = '';
           }
 
-          // Discount row
+          // Discount Row
           var discRow = document.getElementById('discountRow');
           if (discount > 0) {
             document.getElementById('discountValue').textContent = '-\u20B9' + discount.toLocaleString('en-IN');
@@ -1578,7 +1575,7 @@ if (cart && cart.items && cart.items.length > 0) {
           document.getElementById('totalAmount').textContent = '\u20B9' + total.toLocaleString('en-IN');
         }
 
-        // ── Toast
+        // Toast
         function showToast(msg, type) {
           var t = document.getElementById('toast');
           document.getElementById('tMsg').textContent = msg;

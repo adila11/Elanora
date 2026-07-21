@@ -1,6 +1,7 @@
 import { User, UserOtp } from "../../model/userSchema.js"
 import sentOtp from "../../utils/sendOtp.js";
 
+// Load Profile
 export const loadProfile = async (req, res) => {
     try {
         const email = req.session.user;
@@ -15,6 +16,7 @@ export const loadProfile = async (req, res) => {
 
 
 
+// Edit Profile
 export const editProfile = async (req, res) => {
     try {
         if (!req.session.user) {
@@ -107,6 +109,7 @@ export const editProfile = async (req, res) => {
 
 
 
+// Edit Email
 export const editEmail = async (req, res) => {
     try {
         const { newEmail } = req.body;
@@ -161,6 +164,7 @@ export const editEmail = async (req, res) => {
     }
 }
 
+// Verify Email
 export const verifyEmail = async (req, res) => {
     try {
         console.log("Flag")
@@ -243,6 +247,7 @@ export const verifyEmail = async (req, res) => {
 
 
 
+// Load Pagenot Found
 export const loadPagenotFound = async (req, res) => {
     try {
         const email = req.session.user;

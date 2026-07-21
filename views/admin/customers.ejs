@@ -750,7 +750,7 @@
     currentCheckbox = null;
   }
 
-  // Toggle Block Function (same as before)
+  // Toggle Block Function (same As Before)
   async function toggleBlock(checkbox, userId) {
     const isBlocked = checkbox.checked;
     const originalChecked = !isBlocked;
@@ -773,7 +773,7 @@
 
       if (typeof window.showToast === 'function') window.showToast(data.message || `User ${isBlocked ? 'blocked' : 'unblocked'} successfully`, 'success');
 
-      // Update status text in table
+      // Update Status Text In Table
       const row = checkbox.closest('tr');
       if (row) {
         const statusCell = row.cells[3];
@@ -819,14 +819,14 @@
     }
   }
 
-  // Initialize toggle labels
+  // Initialize Toggle Labels
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.toggle input').forEach(cb => {
       updateToggleLabel(cb, cb.checked);
     });
   });
 
-  // Filter & Search with debounce
+  // Filter & Search With Debounce
   let debounceTimer;
   document.getElementById('custSearch').addEventListener('input', function() {
     clearTimeout(debounceTimer);
@@ -848,7 +848,7 @@
     window.location.href = '?page=1&limit=10';
   }
 
-  // Close modal when clicking outside
+  // Close Modal When Clicking Outside
   document.getElementById('confirmModal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });

@@ -14,7 +14,7 @@
             --text-dark: #333333;
             --text-light: #777777;
             --border-color: #E0E0E0;
-            /* Home-page footer variables */
+            /* Home-page Footer Variables */
             --cream: #f9f5ef;
             --warm-white: #fdfaf5;
             --gold: #c8972a;
@@ -168,7 +168,7 @@
 
         <form method="POST" action="/signup-verification">
 
-            <!-- hidden otp -->
+            <!-- Hidden Otp -->
             <input type="hidden" name="otp" id="otp">
 
             <div class="otp-inputs">
@@ -202,9 +202,9 @@
     let timerInterval = null;
     let timeLeft = 25;
 
-    // OTP input handling
+    // OTP Input Handling
     inputs.forEach((input, index) => {
-        // only numbers
+        // Only Numbers
         input.addEventListener("input", (e) => {
             input.value = input.value.replace(/[^0-9]/g, "");
 
@@ -213,7 +213,7 @@
             }
         });
 
-        // backspace move
+        // Backspace Move
         input.addEventListener("keydown", (e) => {
             if (e.key === "Backspace" && !input.value && inputs[index - 1]) {
                 inputs[index - 1].focus();
@@ -221,7 +221,7 @@
         });
     });
 
-    // Form submit - combine OTP
+    // Form Submit - Combine OTP
     form.addEventListener("submit", (e) => {
         let otp = "";
 
@@ -242,7 +242,7 @@
         hiddenOtp.value = otp;
     });
 
-    // ==================== TIMER + RESEND FUNCTIONALITY ====================
+    // TIMER + RESEND FUNCTIONALITY
     function updateResendUI() {
         if (timeLeft > 0) {
             resendText.innerHTML = `Didn't receive the code? Resend in <span class="timer">${timeLeft}s</span>`;
@@ -257,7 +257,7 @@
     }
 
     function startTimer() {
-        // Clear any existing interval
+        // Clear Any Existing Interval
         if (timerInterval) {
             clearInterval(timerInterval);
         }
@@ -279,10 +279,10 @@
     function handleResend(e) {
         if (e) e.preventDefault();
 
-        // Show loading state
+        // Show Loading State
         resendText.innerHTML = `Sending new OTP...`;
         
-        // Call backend to resend OTP
+        // Call Backend To Resend OTP
         fetch('/resend-otp', {
             method: 'POST',
             headers: {
@@ -305,7 +305,7 @@
                     alert("New OTP has been sent to your email!");
                 }
                 
-                // Restart the 25-second cooldown
+                // Restart The 25-second Cooldown
                 startTimer();
             } else {
                 const errorMsg = data.message || "Failed to resend OTP. Please try again.";
@@ -325,17 +325,17 @@
             } else {
                 alert("Something went wrong. Please try again later.");
             }
-            // Restore the resend button
+            // Restore The Resend Button
             updateResendUI();
         });
     }
 
-    // Start the countdown timer immediately when page loads
+    // Start The Countdown Timer Immediately When Page Loads
     window.addEventListener("load", () => {
         startTimer();
     });
 
-    // Bonus: Allow pressing Enter in OTP fields to submit
+    // Bonus: Allow Pressing Enter In OTP Fields To Submit
     inputs.forEach((input, index) => {
         input.addEventListener("keypress", (e) => {
             if (e.key === "Enter") {

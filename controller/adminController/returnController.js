@@ -3,6 +3,7 @@ import Order from "../../model/orderSchema.js";
 import Product from "../../model/productSchema.js";
 import { creditWallet } from "../../utils/walletHelper.js";
 
+// Get Returns Page
 export const getReturnsPage = async (req, res) => {
     try {
         const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -67,6 +68,7 @@ export const getReturnsPage = async (req, res) => {
 };
 
 
+// Approve Return
 export const approveReturn = async (req, res) => {
     try {
         const { id } = req.params;
@@ -123,7 +125,7 @@ export const approveReturn = async (req, res) => {
                     order.paymentStatus = "refunded";
                     order.orderStatus = "returned";
 
-                    // Restore original totals when the order is completely returned, avoiding ₹0 total displays
+                    // Restore Original Totals When The Order Is Completely Returned, Avoiding ₹0 Total Displays
                     const originalSubtotal = order.items.reduce((sum, item) => sum + item.total, 0);
                     order.orderTotal = originalSubtotal;
                     order.finalAmount = originalSubtotal + (order.deliveryCharge || 0) - (order.discount || 0);
@@ -146,6 +148,7 @@ export const approveReturn = async (req, res) => {
 };
 
 
+// Reject Return
 export const rejectReturn = async (req, res) => {
     try {
         const { id } = req.params;

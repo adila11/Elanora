@@ -196,7 +196,7 @@
   <%- include('partials/user/footer') %>
 
   <script>
-    // Show success message
+    // Show Success Message
     function showPageSuccess(message) {
       if (typeof window.showToast === 'function') {
         window.showToast(message, 'success');
@@ -205,7 +205,7 @@
       }
     }
 
-    // Show error message
+    // Show Error Message
     function showPageError(message) {
       if (typeof window.showToast === 'function') {
         window.showToast(message, 'error');
@@ -215,10 +215,10 @@
     }
 
     function clearMessages() {
-      // Handled by SweetAlert2
+      // Handled By Sweetalert2
     }
 
-    // Clear all field errors
+    // Clear All Field Errors
     function clearFieldErrors() {
       const errors = document.querySelectorAll('.error-text');
       errors.forEach(err => err.style.display = 'none');
@@ -227,7 +227,7 @@
       inputs.forEach(input => input.classList.remove('error'));
     }
 
-    // Mark field as error
+    // Mark Field As Error
     function markError(fieldId, errorId, message) {
       const input = document.getElementById(fieldId);
       const errorEl = document.getElementById(errorId);
@@ -256,7 +256,7 @@
         isValid = false;
       }
 
-      // Phone Number (Indian)
+      // Phone Number (indian)
       const phone = document.getElementById('phone').value.trim();
       if (!/^[6-9]\d{9}$/.test(phone)) {
         markError('phone', 'phoneError', 'Please enter a valid 10-digit Indian mobile number (starting with 6-9)');
@@ -347,7 +347,7 @@
             window.location.href = '/addresses';
           }, 1500);
         } else {
-          // Handle backend validation errors
+          // Handle Backend Validation Errors
           if (result.errors && Array.isArray(result.errors)) {
             showPageError(result.errors.join(" • "));
           } else {
@@ -362,7 +362,7 @@
       }
     }
 
-    // Optional: Real-time validation on blur
+    // Optional: Real-time Validation On Blur
     document.addEventListener('DOMContentLoaded', function() {
       const inputs = document.querySelectorAll('.field-input');
       inputs.forEach(input => {

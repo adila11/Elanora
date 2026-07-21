@@ -9,6 +9,7 @@ function calcPercentChange(current, previous) {
   return Number((((current - previous) / previous) * 100).toFixed(1));
 }
 
+// Load Dashboard
 export const loadDashboard = async (req, res) => {
   try {
     const now = new Date();
@@ -33,9 +34,9 @@ export const loadDashboard = async (req, res) => {
       Order.aggregate([{ $match: { ...revenueMatch, createdAt: { $gte: startOfThisMonth } } }, { $group: { _id: null, total: { $sum: "$finalAmount" } } }]),
       Order.aggregate([{ $match: { ...revenueMatch, createdAt: { $gte: startOfLastMonth, $lte: endOfLastMonth } } }, { $group: { _id: null, total: { $sum: "$finalAmount" } } }]),
 
-      User.countDocuments({ isAdmin: false }),
-      User.countDocuments({ isAdmin: false, createdAt: { $gte: startOfThisMonth } }),
-      User.countDocuments({ isAdmin: false, createdAt: { $gte: startOfLastMonth, $lte: endOfLastMonth } }),
+      User.countDocuments(),
+      User.countDocuments({ createdAt: { $gte: startOfThisMonth } }),
+      User.countDocuments({ createdAt: { $gte: startOfLastMonth, $lte: endOfLastMonth } }),
 
       Product.countDocuments({ isListed: true }),
       Product.countDocuments({ isListed: true, createdAt: { $gte: startOfThisMonth } }),
@@ -120,6 +121,7 @@ export const loadDashboard = async (req, res) => {
   }
 };
 
+// Get Dashboard Chart Data
 export const getDashboardChartData = async (req, res) => {
   try {
     const period = req.query.period || "6m";

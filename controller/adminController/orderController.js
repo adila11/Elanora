@@ -2,6 +2,7 @@ import Order from "../../model/orderSchema.js";
 import { User } from "../../model/userSchema.js";
 import Product from "../../model/productSchema.js";
 
+// Get Orders Page
 export const getOrdersPage = async (req, res) => {
     try {
         const {
@@ -148,6 +149,7 @@ const ALLOWED_TRANSITIONS = {
 };
 
 
+// Update Order Status
 export const updateOrderStatus = async (req, res) => {
     try {
         const { orderId } = req.params;
@@ -224,6 +226,7 @@ export const updateOrderStatus = async (req, res) => {
 };
 
 
+// Update Item Status
 export const updateItemStatus = async (req, res) => {
     try {
         const { orderId }        = req.params;
@@ -305,6 +308,7 @@ export const updateItemStatus = async (req, res) => {
 };
 
 
+// Get Order Detail
 export const getOrderDetail = async (req, res) => {
     try {
         const { orderId } = req.params;

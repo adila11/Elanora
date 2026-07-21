@@ -1,3 +1,4 @@
+// Get Effective Price
 export const getEffectivePrice = (product, category = null) => {
     const basePriceToUse = product.merchantDiscountPrice || product.discountPrice || product.basePrice;
     const now = new Date();

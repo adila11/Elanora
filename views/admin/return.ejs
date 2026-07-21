@@ -57,7 +57,7 @@
       overflow: hidden;
     }
 
-    /* ── CONTENT ── */
+    /* CONTENT */
     .content {
       padding: 28px 32px;
       flex: 1;
@@ -77,7 +77,7 @@
       font-weight: 600;
     }
 
-    /* ── SEARCH ── */
+    /* SEARCH */
     .search-returns {
       position: relative;
       width: 260px;
@@ -106,7 +106,7 @@
       color: var(--text-muted);
     }
 
-    /* ── TABLE CARD ── */
+    /* TABLE CARD */
     .table-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -117,7 +117,7 @@
 
     .table-wrap { overflow-x: auto; }
 
-    /* ── TABS ── */
+    /* TABS */
     .tabs {
       display: flex;
       gap: 0;
@@ -144,7 +144,7 @@
       font-weight: 500;
     }
 
-    /* ── TABLE ── */
+    /* TABLE */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -202,7 +202,7 @@
     .product-reason span { color: var(--text-secondary); margin-right: 4px; }
     .date-cell { color: var(--text-muted); font-size: 13px; }
 
-    /* ── BADGES ── */
+    /* BADGES */
     .badge {
       display: inline-flex;
       align-items: center;
@@ -226,7 +226,7 @@
     .badge-approved { background: var(--green-bg);  color: var(--green);  }
     .badge-rejected { background: var(--red-bg);    color: var(--red);    }
 
-    /* ── ACTIONS ── */
+    /* ACTIONS */
     .action-btn {
       background: none;
       border: 1.5px solid var(--border);
@@ -258,7 +258,7 @@
       font-style: italic;
     }
 
-    /* ── PAGINATION ── */
+    /* PAGINATION */
     .pagination-bar {
       display: flex;
       align-items: center;
@@ -326,7 +326,7 @@
       user-select: none;
     }
 
-    /* ── MODAL OVERLAY ── */
+    /* MODAL OVERLAY */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -340,7 +340,7 @@
 
     .modal-overlay.open { display: flex; }
 
-    /* ── MODAL ── */
+    /* MODAL */
     .modal {
       background: var(--card-bg);
       border-radius: 16px;
@@ -483,7 +483,7 @@
     }
     .btn-cancel:hover { background: #ebe9e3; opacity: 1 !important; }
 
-    /* ── REJECTION MODAL SPECIFICS ── */
+    /* REJECTION MODAL SPECIFICS */
     .warning-banner {
       display: flex;
       align-items: flex-start;
@@ -546,7 +546,7 @@
       margin-top: 5px;
     }
 
-    /* ── TOAST ── */
+    /* TOAST */
     .toast {
       position: fixed;
       bottom: 24px;
@@ -675,7 +675,7 @@
             </button>
             <% } %>
 
-            <!-- Page numbers -->
+            <!-- Page Numbers -->
             <%
               const cur   = pagination.currentPage;
               const total = pagination.totalPages;
@@ -728,7 +728,7 @@
     </div>
   </div>
 
-  <!-- ── REVIEW MODAL ── -->
+  <!-- REVIEW MODAL -->
   <div class="modal-overlay" id="returnModal" onclick="if(event.target===this) closeModal()">
     <div class="modal">
       <div class="modal-header">
@@ -777,7 +777,7 @@
     </div>
   </div>
 
-  <!-- ── REJECTION MODAL ── -->
+  <!-- REJECTION MODAL -->
   <div class="modal-overlay" id="rejectModal" onclick="if(event.target===this) closeRejectModal()">
     <div class="modal">
       <div class="modal-header">
@@ -820,14 +820,14 @@
     </div>
   </div>
 
-  <!-- ── TOAST ── -->
+  <!-- TOAST -->
   <div class="toast" id="toast"></div>
 
   <script>
     let currentIdx    = null;
     let currentFilter = 'all';
 
-    /* ── TABS & SEARCH ── */
+    /* TABS & SEARCH */
     function filterTab(el, filter) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       el.classList.add('active');
@@ -845,7 +845,7 @@
       });
     }
 
-    /* ── REVIEW MODAL ── */
+    /* REVIEW MODAL */
     function openModal(idx) {
       currentIdx = idx;
       const row   = getRow(idx);
@@ -872,7 +872,7 @@
       currentIdx = null;
     }
 
-    /* ── REJECTION MODAL ── */
+    /* REJECTION MODAL */
     function openRejectModal() {
       const row   = getRow(currentIdx);
       const cells = row.querySelectorAll('td');
@@ -899,7 +899,7 @@
       if (success) { closeRejectModal(); location.reload(); }
     }
 
-    /* ── APPROVE ── */
+    /* APPROVE */
     async function handleApprove() {
       if (currentIdx === null) return;
       const row     = getRow(currentIdx);
@@ -907,7 +907,7 @@
       if (success) { closeModal(); location.reload(); }
     }
 
-    /* ── API CALL ── */
+    /* API CALL */
     async function sendAction(returnId, action, adminRemark) {
       const url = action === 'approved'
         ? `/admin/returns/${returnId}/approve`
@@ -929,7 +929,7 @@
       }
     }
 
-    /* ── HELPERS ── */
+    /* HELPERS */
     function getRow(idx) {
       return [...document.querySelectorAll('#table-body tr')].find(r => +r.dataset.idx === idx);
     }

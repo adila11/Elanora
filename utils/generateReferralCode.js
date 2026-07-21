@@ -8,4 +8,5 @@ const generateReferralCode = (name) => {
     return `ELA${random}`;
 }
 
+// Generate Referral Code
 export default generateReferralCode;

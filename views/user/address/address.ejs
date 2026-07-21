@@ -283,7 +283,7 @@
       );
     }
 
-    // Main function to handle confirmed actions
+    // Main Function To Handle Confirmed Actions
     async function executeAction() {
       if (!currentAction || !currentId) return;
 
@@ -312,7 +312,7 @@
             (currentAction === 'delete' ? "Address deleted successfully" : "Default address updated successfully"));
 
           if (currentAction === 'delete') {
-            // Smoothly remove the card from DOM
+            // Smoothly Remove The Card From DOM
             const card = document.getElementById(`address-card-${currentId}`);
             if (card) {
               card.classList.add('deleting');
@@ -320,14 +320,14 @@
               setTimeout(() => {
                 card.remove();
 
-                // Update address count
+                // Update Address Count
                 const countEl = document.getElementById('addressCount');
                 if (countEl) {
                   let currentCount = parseInt(countEl.textContent.match(/\d+/)?.[0] || 0);
                   countEl.textContent = `Saved Addresses (${currentCount - 1})`;
                 }
 
-                // Show empty state if no addresses left
+                // Show Empty State If No Addresses Left
                 if (document.querySelectorAll('.address-card').length === 0) {
                   document.getElementById('addressesContainer').innerHTML = `
                     <div class="col-span-2 text-center py-16 text-gray-500">
@@ -338,7 +338,7 @@
               }, 300);
             }
           } else {
-            // For set default, reload to reflect changes
+            // For Set Default, Reload To Reflect Changes
             setTimeout(() => window.location.reload(), 1000);
           }
         } else {
@@ -353,7 +353,7 @@
       currentId = null;
     }
 
-    // Attach event listener to confirm button
+    // Attach Event Listener To Confirm Button
     document.getElementById('confirmBtn').addEventListener('click', executeAction);
   </script>
 

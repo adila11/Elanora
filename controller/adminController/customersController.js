@@ -1,5 +1,6 @@
 import { User } from "../../model/userSchema.js";
 
+// Load User Management
 export const loadUserManagement = async (req, res) => {
     try {
         const email = req.session.admin;
@@ -65,6 +66,7 @@ export const loadUserManagement = async (req, res) => {
     }
 };
 
+// Block User
 export const blockUser = async (req, res) => {
     try {
         if (!req.session.admin) {

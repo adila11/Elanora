@@ -58,7 +58,7 @@
       padding: 28px;
     }
 
-    /* ── Page Header ── */
+    /* Page Header */
     .page-header {
       display: flex;
       align-items: center;
@@ -95,7 +95,7 @@
       transform: translateY(-1px);
     }
 
-    /* ── Search Toolbar ── */
+    /* Search Toolbar */
     .toolbar-row {
       display: flex;
       align-items: center;
@@ -170,7 +170,7 @@
       flex-shrink: 0;
     }
 
-    /* ── Table ── */
+    /* Table */
     .table-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -255,7 +255,7 @@
       border-color: var(--red);
     }
 
-  /* ===== OFFER COLUMN ===== */
+  /* OFFER COLUMN */
   .offer-badge {
     display: inline-flex;
     align-items: center;
@@ -303,7 +303,7 @@
   }
   .offer-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
 
-  /* ===== OFFER MODAL ===== */
+  /* OFFER MODAL */
   .modal-box {
     background: var(--card);
     width: 100%;
@@ -360,7 +360,7 @@
     color: var(--muted);
   }
 
-    /* ── Modal ── */
+    /* Modal */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -477,7 +477,7 @@
       display: block;
     }
 
-    /* table colour dot */
+    /* Table Colour Dot */
     .cat-color-dot {
       width: 18px; height: 18px; border-radius: 50%;
       border: 1px solid rgba(0,0,0,0.1); display: inline-block;
@@ -532,7 +532,7 @@
       cursor: not-allowed;
     }
 
-    /* ── Toast Notifications ── */
+    /* Toast Notifications */
     .toast-container {
       position: fixed;
       bottom: 28px;
@@ -596,7 +596,7 @@
       flex-shrink: 0;
     }
 
-    /* ── Empty State ── */
+    /* Empty State */
     .empty-state {
       text-align: center;
       padding: 60px 20px;
@@ -786,7 +786,7 @@
       </div>
     </div>
 
-    <!-- ===== ADD / EDIT OFFER MODAL ===== -->
+    <!-- ADD / EDIT OFFER MODAL -->
     <div class="modal-overlay" id="offerModalOverlay">
       <div class="modal-box">
         <div class="modal-head">
@@ -867,7 +867,7 @@
         applyFilters();
       }
 
-      // ── Modal ─────────────────────────────────────────────────────────────────
+      // Modal
       function openModal(id = null) {
         editingId = id;
         clearFieldError('f_name', 'nameError');
@@ -895,12 +895,12 @@
         editingId = null;
       }
 
-      // Close on overlay click
+      // Close On Overlay Click
       document.getElementById('modalOverlay').addEventListener('click', function (e) {
         if (e.target === this) closeModal();
       });
 
-      // ── Validation ────────────────────────────────────────────────────────────
+      // Validation
       function setFieldError(inputId, errorId, msg) {
         document.getElementById(inputId).classList.add('is-error');
         const el = document.getElementById(errorId);
@@ -928,7 +928,7 @@
         return true;
       }
 
-      // ── Save (Add / Edit) ─────────────────────────────────────────────────────
+      // Save (add / Edit)
       async function saveCategory() {
         const name = document.getElementById('f_name').value.trim();
         const description = document.getElementById('f_description').value.trim();
@@ -953,11 +953,11 @@
           const data = await res.json();
 
           if (res.ok) {
-            // Update local data without page reload
+            // Update Local Data Without Page Reload
             location.reload();
             showToast(data.message, 'success');
           } else {
-            // Show server validation error inside the modal
+            // Show Server Validation Error Inside The Modal
             setFieldError('f_name', 'nameError', data.message || 'Failed to save category.');
           }
         } catch (err) {
@@ -971,12 +971,12 @@
 
       function editCategory(id) { openModal(id); }
 
-      // ── Toggle Active (List / Unlist) ─────────────────────────────────────────
+      // Toggle Active (list / Unlist)
       async function toggleCategory(id, isCurrentlyActive) {
         const cat = categories.find(c => c._id === id);
         if (!cat) return;
 
-        // Show SweetAlert2 warning only when unlisting an active category
+        // Show Sweetalert2 Warning Only When Unlisting An Active Category
         if (isCurrentlyActive) {
           const result = await Swal.fire({
             title: 'Unlist Category?',
@@ -1007,7 +1007,7 @@
         }
       }
 
-      // ── Delete ────────────────────────────────────────────────────────────────
+      // Delete
       async function deleteCategory(id) {
         const cat = categories.find(c => c._id === id);
         if (!cat) return;
@@ -1028,7 +1028,7 @@
         }
       }
 
-      // ── Toast ─────────────────────────────────────────────────────────────────
+      // Toast
       function showToast(msg, type = 'success') {
         const container = document.getElementById('toastContainer');
         const icon = type === 'success'
@@ -1046,7 +1046,7 @@
         }, 3200);
       }
 
-      // ── Category Offer ────────────────────────────────────────────────────────
+      // Category Offer
       let currentOfferCategoryId = null;
 
       function openOfferModal(catId) {
@@ -1173,8 +1173,7 @@
         }
       }
 
-      // ── Init ──────────────────────────────────────────────────────────────────
-      // No init needed for server-side
+      // Init ────────────────────────────────────────────────────────────────── No Init Needed For Server-side
     </script>
 </body>
 

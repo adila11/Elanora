@@ -15,7 +15,7 @@
             --text-light: #777777;
             --border-color: #E0E0E0;
             --error-color: #d8000c;
-            /* Home-page footer variables */
+            /* Home-page Footer Variables */
             --cream: #f9f5ef;
             --warm-white: #fdfaf5;
             --gold: #c8972a;
@@ -123,7 +123,7 @@
             border-color: var(--primary-gold);
         }
 
-        /* Password wrapper + eye toggle */
+        /* Password Wrapper + Eye Toggle */
         .pw-wrap {
             position: relative;
         }
@@ -275,7 +275,7 @@
         const passwordError = document.getElementById('passwordError');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Real-time validation
+        // Real-time Validation
         emailInput.addEventListener('input', () => validateEmail());
         passwordInput.addEventListener('input', () => validatePassword());
 
@@ -320,7 +320,7 @@
             }
         }
 
-        // Eye toggle
+        // Eye Toggle
         const togglePassword = document.getElementById('togglePassword');
         const eyeIcon = document.getElementById('eyeIcon');
         const eyeOpen  = `<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>`;
@@ -332,7 +332,7 @@
             eyeIcon.innerHTML = passVisible ? eyeSlash : eyeOpen;
         });
 
-        // Form submission validation
+        // Form Submission Validation
         form.addEventListener('submit', function (e) {
             const isEmailValid = validateEmail();
             const isPasswordValid = validatePassword();
@@ -341,7 +341,7 @@
                 e.preventDefault(); // Stop form submission
                 submitBtn.disabled = false;
             } else {
-                // Optional: Disable button to prevent multiple submissions
+                // Optional: Disable Button To Prevent Multiple Submissions
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Signing In...';
             }

@@ -21,6 +21,7 @@ const checkCartAvailability = (cart) => {
     return true;
 };
 
+// Load Checkout Address
 export const loadCheckoutAddress = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -67,6 +68,7 @@ export const loadCheckoutAddress = async (req, res) => {
     }
 };
 
+// Load Checkout Payment
 export const loadCheckoutPayment = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -125,6 +127,7 @@ export const loadCheckoutPayment = async (req, res) => {
 };
 
 
+// Load Checkout Review
 export const loadCheckoutReview = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -190,6 +193,7 @@ const generateOrderId = () => {
 
 
 
+// Create Razorpay Order
 export const createRazorpayOrder = async (req, res) => {
     try {
 
@@ -418,6 +422,7 @@ export const createRazorpayOrder = async (req, res) => {
 
 
 
+// Place Order
 export const placeOrder = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -650,6 +655,7 @@ export const placeOrder = async (req, res) => {
 };
 
 
+// Verify Payment
 export const verifyPayment = async (req, res) => {
 
     try {
@@ -865,6 +871,7 @@ export const verifyPayment = async (req, res) => {
 
 };
 
+// Load Order Success
 export const loadOrderSuccess = async (req, res) => {
     try {
         const order = await Order.findById(req.params.id);
@@ -890,6 +897,7 @@ export const loadOrderSuccess = async (req, res) => {
     }
 };
 
+// Load Order Failed
 export const loadOrderFailed = async (req, res) => {
 
     try {

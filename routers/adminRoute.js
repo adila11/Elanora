@@ -55,7 +55,6 @@ router.put("/coupons/:id", updateCoupon);
 router.delete("/coupons/:id", deleteCoupon);
 
 router.get("/sales-reports", getSalesReportPage);
-router.get("/sales", getSalesReportPage);
 router.get("/sales-reports/export", exportSalesReportExcel);
 router.get("/sales-reports/export/pdf", exportSalesReportPDF);
 

@@ -10,7 +10,7 @@
     rel="stylesheet" />
   <style>
     :root {
-      /* Updated variables to match categories aesthetic perfectly */
+      /* Updated Variables To Match Categories Aesthetic Perfectly */
       --bg: #f5f4f0;
       --sidebar-bg: #fafaf8;
       --card: #ffffff;
@@ -28,7 +28,7 @@
       --shadow: 0 2px 16px rgba(26, 23, 20, 0.07);
       --shadow-lg: 0 8px 40px rgba(26, 23, 20, 0.13);
 
-      /* Order Page Status Colors kept for badges & indicators */
+      /* Order Page Status Colors Kept For Badges & Indicators */
       --status-delivered-bg: #e8f5ee;
       --status-delivered-text: #2d7a4f;
       --status-processing-bg: #eaf0fb;
@@ -68,7 +68,7 @@
       overflow: hidden;
     }
 
-    /* ── MAIN LAYOUT ALIGNMENT ── */
+    /* MAIN LAYOUT ALIGNMENT */
     .main {
       flex: 1;
       display: flex;
@@ -76,7 +76,7 @@
       overflow: hidden;
     }
 
-    /* ── CONTENT ── */
+    /* CONTENT */
     .content {
       padding: 28px 32px;
       flex: 1;
@@ -96,7 +96,7 @@
       font-weight: 600;
     }
 
-    /* ── FILTERS BAR ── */
+    /* FILTERS BAR */
     .filters-bar {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -222,7 +222,7 @@
       color: var(--text-muted);
     }
 
-    /* ── TABLE ── */
+    /* TABLE */
     .table-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -309,7 +309,7 @@
       font-family: 'DM Sans', sans-serif;
     }
 
-    /* ── BADGES ── */
+    /* BADGES */
     .badge {
       display: inline-flex;
       align-items: center;
@@ -379,7 +379,7 @@
       color: var(--pay-failed-text);
     }
 
-    /* ── STATUS DROPDOWN ── */
+    /* STATUS DROPDOWN */
     .status-cell {
       position: relative;
     }
@@ -451,7 +451,7 @@
       padding-right: 10px;
     }
 
-    /* ── CONFIRM & ALERT MODALS ── */
+    /* CONFIRM & ALERT MODALS */
     .sm-modal-overlay {
       display: none;
       position: fixed;
@@ -560,7 +560,7 @@
       opacity: 0.85;
     }
 
-    /* ── ACTIONS ── */
+    /* ACTIONS */
     .action-btn {
       background: none;
       border: 1.5px solid var(--border);
@@ -589,7 +589,7 @@
       height: 13px;
     }
 
-    /* ── PAGINATION ── */
+    /* PAGINATION */
     .pagination-bar {
       display: flex;
       align-items: center;
@@ -640,7 +640,7 @@
       cursor: not-allowed;
     }
 
-    /* ── MODAL ── */
+    /* MODAL */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -1023,7 +1023,7 @@
         if (payment) url += `&payment=${encodeURIComponent(payment)}`;
         if (search) url += `&search=${encodeURIComponent(search)}`;
 
-        // Keep sorting parameters if existing
+        // Keep Sorting Parameters If Existing
         const params = new URLSearchParams(window.location.search);
         if (params.get('sortField')) url += `&sortField=${params.get('sortField')}`;
         if (params.get('sortOrder')) url += `&sortOrder=${params.get('sortOrder')}`;
@@ -1080,7 +1080,7 @@
         window.location.href = `/admin/orders?${params.toString()}`;
       }
 
-      // Pending status change state
+      // Pending Status Change State
       let _pendingOrderId = null;
       let _pendingNewStatus = null;
       let _pendingSelectEl = null;
@@ -1098,7 +1098,7 @@
       }
 
       function cancelStatusChange() {
-        // Revert the select back to its previous value
+        // Revert The Select Back To Its Previous Value
         if (_pendingSelectEl && _pendingPrevValue) {
           _pendingSelectEl.value = _pendingPrevValue;
         }
@@ -1130,7 +1130,7 @@
             window.location.reload();
           } else {
             showErrorModal(data.message || 'Failed to update order status.');
-            // Revert select
+            // Revert Select
             if (selectEl) selectEl.value = selectEl.dataset.prev || newStatus;
           }
         } catch (err) {

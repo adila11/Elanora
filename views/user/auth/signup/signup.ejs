@@ -14,7 +14,7 @@
             --text-light: #777777;
             --border-color: #E0E0E0;
             --error-color: #e74c3c;
-            /* Home-page footer variables */
+            /* Home-page Footer Variables */
             --cream: #f9f5ef;
             --warm-white: #fdfaf5;
             --gold: #c8972a;
@@ -304,13 +304,13 @@
     <%- include('../../../partials/user/footer') %>
 
     <script>
-        // Show referral field
+        // Show Referral Field
         function showReferral() {
             document.getElementById('toggle-referral').style.display = 'none';
             document.getElementById('referral-field').style.display = 'block';
         }
 
-        // Auto-fill referral code from query string
+        // Auto-fill Referral Code From Query String
         const googleAuthLink = document.getElementById('googleAuthLink');
         const referralInput = document.getElementById('referralCode');
 
@@ -339,7 +339,7 @@
             referralInput.addEventListener('input', updateGoogleLink);
         }
 
-        // Password SVG eye toggle
+        // Password SVG Eye Toggle
         const EYE_OPEN  = `<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>`;
         const EYE_SLASH = `<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88L6.59 6.59m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>`;
 
@@ -354,7 +354,7 @@
         setupEyeToggle('togglePassword',        'password',        'eyePassword');
         setupEyeToggle('toggleConfirmPassword', 'confirmPassword', 'eyeConfirmPassword');
 
-        // Error handling functions
+        // Error Handling Functions
         function showError(inputId, message) {
             const errorElement = document.getElementById(inputId + 'Error');
             const input = document.getElementById(inputId);
@@ -381,10 +381,10 @@
         }
 
         function clearGeneralError() {
-            // No action needed for toasts
+            // No Action Needed For Toasts
         }
 
-        // Validation functions
+        // Validation Functions
         function validateFullName() {
             const fullName = document.getElementById('fullName').value.trim();
             clearError('fullName');
@@ -455,7 +455,7 @@
             return true;
         }
 
-        // Real-time validation
+        // Real-time Validation
         document.getElementById('fullName').addEventListener('input', validateFullName);
         document.getElementById('email').addEventListener('input', validateEmail);
         document.getElementById('password').addEventListener('input', () => {
@@ -465,7 +465,7 @@
         document.getElementById('confirmPassword').addEventListener('input', validateConfirmPassword);
         document.getElementById('terms').addEventListener('change', validateTerms);
 
-        // Password eye toggles
+        // Password Eye Toggles
         document.getElementById('togglePassword').addEventListener('click', () => {
             togglePasswordVisibility('password', 'togglePassword');
         });
@@ -474,7 +474,7 @@
             togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword');
         });
 
-        // Form Submission with AJAX
+        // Form Submission With AJAX
         const form = document.getElementById('signupForm');
         const createBtn = document.getElementById('createBtn');
 
@@ -490,7 +490,7 @@
             if (!validateConfirmPassword()) isValid = false;
             if (!validateTerms()) isValid = false;
 
-            // Referral validation if visible
+            // Referral Validation If Visible
             const referralField = document.getElementById('referral-field');
             if (referralField.style.display !== 'none') {
                 const referralCode = document.getElementById('referralCode').value.trim();
@@ -502,7 +502,7 @@
 
             if (!isValid) return;
 
-            // Disable button
+            // Disable Button
             createBtn.disabled = true;
             createBtn.textContent = 'Creating Account...';
 

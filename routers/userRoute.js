@@ -78,10 +78,7 @@ router.post("/profile", isLoggedIn, isBlocked, upload.single("profileIcon"), edi
 router.post("/profile/email/send-otp", isLoggedIn, isBlocked, editEmail)
 router.post("/profile/email/verify-otp", isLoggedIn, isBlocked, verifyEmail)
 
-router.get("/orders", isLoggedIn, isBlocked)
-
 router.get("/addresses", isLoggedIn, isBlocked, loadAddress)
-
 router.get("/addresses/add", isLoggedIn, isBlocked, loadAddAddress)
 router.post("/addresses/add", isLoggedIn, isBlocked, addAddress)
 router.get("/addresses/edit/:id", isLoggedIn, isBlocked, loadEditAddress)
@@ -123,29 +120,7 @@ router.post("/apply-coupon", isLoggedIn, isBlocked, applyCoupon);
 router.post("/create-razorpay-order", createRazorpayOrder);
 router.post("/verify-razorpay-payment", verifyPayment);
 
-router.get("/check-pincode/:pincode", isLoggedIn, isBlocked, async (req, res) => {
-    try {
-        const { pincode } = req.params;
-        if (!/^[0-9]{6}$/.test(pincode)) {
-            return res.status(400).json({ success: false, message: "Invalid pincode" });
-        }
-        const result = await checkPincode(pincode);
-        if (result.success) {
-            return res.json({
-                success: true,
-                data: {
-                    district: result.district,
-                    state: result.state
-                }
-            });
-        } else {
-            return res.status(400).json({ success: false, message: result.message || "Invalid pincode" });
-        }
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ success: false, message: "Internal server error" });
-    }
-});
+router.get("/check-pincode/:pincode", isLoggedIn, isBlocked, checkPincode);
 
 
 
@@ -164,6 +139,7 @@ router.get("/logout", logout)
 
 
 router.use(loadPagenotFound);
+// Router
 export default router
 
 

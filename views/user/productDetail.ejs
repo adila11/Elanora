@@ -40,7 +40,7 @@
         }
 
 
-        /* ── BREADCRUMB ── */
+        /* BREADCRUMB */
         .breadcrumb {
             max-width: 1100px;
             margin: 90px auto 20px;
@@ -62,7 +62,7 @@
         .breadcrumb span { color: var(--text-dark); }
         .breadcrumb svg { width: 12px; height: 12px; }
 
-        /* ── PRODUCT SECTION ── */
+        /* PRODUCT SECTION */
         .product-section {
             max-width: 1100px;
             margin: 0 auto 48px;
@@ -79,14 +79,14 @@
             gap: 40px;
         }
 
-        /* LEFT – images */
+        /* LEFT – Images */
         .img-col {
             display: flex;
             flex-direction: column;
             gap: 14px;
         }
 
-        /* ── MAGNIFIER ── */
+        /* MAGNIFIER */
         .main-img-wrap {
             position: relative;
             border-radius: 12px;
@@ -168,7 +168,7 @@
             object-fit: cover;
         }
 
-        /* RIGHT – info */
+        /* RIGHT – Info */
         .info-col {
             display: flex;
             flex-direction: column;
@@ -331,7 +331,7 @@
             margin: 4px 0 20px;
         }
 
-        /* ── CTA BUTTONS ── */
+        /* CTA BUTTONS */
         .cta-row {
             display: flex;
             gap: 12px;
@@ -417,7 +417,7 @@
 
         .perk-text span { font-size: 0.75rem; color: var(--text-light); }
 
-        /* ── TABS ── */
+        /* TABS */
         .tabs-section {
             max-width: 1100px;
             margin: 0 auto 48px;
@@ -486,7 +486,7 @@
         .feature-list li:last-child { border-bottom: none; }
         .feature-list li svg { color: var(--gold); flex-shrink: 0; }
 
-        /* reviews */
+        /* Reviews */
         .reviews-grid { display: flex; flex-direction: column; gap: 18px; }
 
         .review-card {
@@ -520,7 +520,7 @@
         .reviewer-date { font-size: 0.75rem; color: var(--text-light); }
         .review-text { font-size: 0.85rem; color: var(--text-mid); line-height: 1.7; }
 
-        /* ── YOU MAY ALSO LIKE ── */
+        /* YOU MAY ALSO LIKE */
         .related-section {
             max-width: 1100px;
             margin: 0 auto 60px;
@@ -880,7 +880,7 @@
     <%- include('partials/user/modal') %>
 
     <script>
-        // ── DATA ──
+        // DATA
         const allVariants = <%- variantsJson %>;
         const productId   = '<%= product._id %>';
 
@@ -888,31 +888,31 @@
         let qty = 1;
         const QTY_MAX = 10;
 
-        // Track state
+        // Track State
         let inCart     = false;
         let inWishlist = <%= typeof inWishlist !== 'undefined' ? inWishlist : false %>;
 
-        // Initialize wishlist UI state on page load
+        // Initialize Wishlist UI State On Page Load
         if (inWishlist) {
             document.addEventListener('DOMContentLoaded', () => { updateWishlistUI(); });
         }
 
-        // ── VARIANT SELECTION & IMAGE GALLERY ──
+        // VARIANT SELECTION & IMAGE GALLERY
         function selectVariant(id, color, el) {
             selectedVariantId = id;
             document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
             el.classList.add('active');
 
-            // Show only this variant's images
+            // Show Only This Variant's Images
             const variant = allVariants.find(v => v.id === id);
             if (!variant) return;
             const images = variant.images.length > 0 ? variant.images : ['https://via.placeholder.com/600'];
 
-            // Update main image
+            // Update Main Image
             document.getElementById('mainImg').src = images[0];
             updateMagnifierSrc(images[0]);
 
-            // Rebuild thumbnails
+            // Rebuild Thumbnails
             const row = document.getElementById('thumbnailsRow');
             row.innerHTML = '';
             images.forEach((url, idx) => {
@@ -926,7 +926,7 @@
                 row.appendChild(div);
             });
 
-            // Reset cart/wishlist button states for new variant
+            // Reset Cart/wishlist Button States For New Variant
             inCart     = false;
             inWishlist = false;
             resetCartBtn();
@@ -940,7 +940,7 @@
             updateMagnifierSrc(src);
         }
 
-        // ── MAGNIFIER ──
+        // MAGNIFIER
         const ZOOM = 2.5;
         let currentImgSrc = document.getElementById('mainImg').src;
 
@@ -962,7 +962,7 @@
             glass.style.left = cx + 'px';
             glass.style.top  = cy + 'px';
 
-            // Background position
+            // Background Position
             const bgX = -(cx * ZOOM - gW / 2);
             const bgY = -(cy * ZOOM - gH / 2);
 
@@ -979,7 +979,7 @@
             document.getElementById('magnifierGlass').style.display = 'block';
         });
 
-        // ── QUANTITY ──
+        // QUANTITY
         function changeQty(d) {
             const next = qty + d;
             if (next < 1) return;
@@ -997,7 +997,7 @@
             document.getElementById('qtyPlus').disabled  = qty >= QTY_MAX;
         }
 
-        // ── ADD TO CART ──
+        // ADD TO CART
         async function addToCart() {
             if (inCart) {
                 showModal('info',
@@ -1053,7 +1053,7 @@
             }
         }
 
-        // ── TOGGLE WISHLIST ──
+        // TOGGLE WISHLIST
         async function toggleWishlist(e) {
             if (e) e.stopPropagation();
 
@@ -1137,7 +1137,7 @@
 
 
 
-        // ── TABS ──
+        // TABS
         function switchTab(btn, id) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1145,7 +1145,7 @@
             document.getElementById(id).classList.add('active');
         }
 
-        // Init magnifier src
+        // Init Magnifier Src
         updateMagnifierSrc(document.getElementById('mainImg').src);
     </script>
 </body>

@@ -40,7 +40,7 @@
       min-height: 100vh;
     }
 
-    /* ── MAIN ── */
+    /* MAIN */
     main {
       max-width: 1160px;
       margin: 0 auto;
@@ -76,7 +76,7 @@
       align-items: start;
     }
 
-    /* ── CART TABLE ── */
+    /* CART TABLE */
     .cart-card {
       background: var(--white);
       border-radius: var(--radius);
@@ -244,7 +244,7 @@
       text-align: right;
     }
 
-    /* ── ORDER SUMMARY ── */
+    /* ORDER SUMMARY */
     .order-card {
       background: var(--white);
       border-radius: var(--radius);
@@ -350,7 +350,7 @@
       line-height: 1.45;
     }
 
-    /* ── EMPTY CART ── */
+    /* EMPTY CART */
     .empty-cart {
       text-align: center;
       padding: 60px 20px;
@@ -408,7 +408,7 @@
       background: var(--gold-light);
     }
 
-    /* ── RESPONSIVE ── */
+    /* RESPONSIVE */
     @media (max-width: 900px) {
       .cart-layout {
         grid-template-columns: 1fr;
@@ -612,7 +612,7 @@
           document.getElementById('subtotal').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
           document.getElementById('total').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
 
-          // Update button disabled states
+          // Update Button Disabled States
           const minusBtn = row.querySelectorAll('.qty-btn')[0];
           const plusBtn = row.querySelectorAll('.qty-btn')[1];
           minusBtn.disabled = finalQty <= 1;
@@ -635,7 +635,7 @@
         { label: 'Yes, Remove', primary: true, action: `removeItem(document.getElementById('btn-remove-${productId}-${variantId}'), '${productId}', '${variantId}'); closeModal();` },
         { label: 'Cancel', primary: false, action: 'closeModal()' }
       ]);
-      // Temporarily assign ID to button for the callback
+      // Temporarily Assign ID To Button For The Callback
       btn.id = `btn-remove-${productId}-${variantId}`;
     }
 
@@ -657,7 +657,7 @@
             row.remove();
 
             if (data.cartCount === 0) {
-              // Reload page to show empty cart state
+              // Reload Page To Show Empty Cart State
               location.reload();
             } else {
               document.getElementById('subtotal').textContent = '₹' + data.subtotal.toLocaleString('en-IN');

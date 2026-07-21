@@ -3,6 +3,7 @@ import Cart from "../../model/cartSchema.js";
 import { User } from "../../model/userSchema.js";
 
 
+// Apply Coupon
 export const applyCoupon = async (req, res) => {
     try {
         const userEmail = req.session.user;

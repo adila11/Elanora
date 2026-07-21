@@ -125,7 +125,7 @@
               <span id="nameError" class="error-text">Full name is required</span>
             </div>
 
-            <!-- Phone Number (Indian) -->
+            <!-- Phone Number (indian) -->
             <div>
               <label class="field-label">Phone Number</label>
               <input type="tel" id="phone" class="field-input" maxlength="10" placeholder="9876543210" required>
@@ -186,7 +186,7 @@
   <%- include('partials/user/footer') %>
 
   <script>
-    // Show success message
+    // Show Success Message
     function showPageSuccess(message) {
       if (typeof window.showToast === 'function') {
         window.showToast(message, 'success');
@@ -195,7 +195,7 @@
       }
     }
 
-    // Show error message
+    // Show Error Message
     function showPageError(message) {
       if (typeof window.showToast === 'function') {
         window.showToast(message, 'error');
@@ -205,10 +205,10 @@
     }
 
     function clearMessages() {
-      // Handled by SweetAlert2
+      // Handled By Sweetalert2
     }
 
-    // Clear all field errors
+    // Clear All Field Errors
     function clearFieldErrors() {
       const errors = document.querySelectorAll('.error-text');
       errors.forEach(err => err.style.display = 'none');
@@ -217,7 +217,7 @@
       inputs.forEach(input => input.classList.remove('error'));
     }
 
-    // Mark field as error
+    // Mark Field As Error
     function markError(fieldId, errorId, message) {
       const input = document.getElementById(fieldId);
       const errorEl = document.getElementById(errorId);
@@ -246,7 +246,7 @@
         isValid = false;
       }
 
-      // Phone Number (Indian Mobile)
+      // Phone Number (indian Mobile)
       const phone = document.getElementById('phone').value.trim();
       if (!/^[6-9]\d{9}$/.test(phone)) {
         markError('phone', 'phoneError', 'Please enter a valid 10-digit Indian mobile number (starting with 6-9)');
@@ -267,7 +267,7 @@
         isValid = false;
       }
 
-      // Pincode (Indian)
+      // Pincode (indian)
       const pincode = document.getElementById('pincode').value.trim();
       if (!/^\d{6}$/.test(pincode)) {
         markError('pincode', 'pincodeError', 'Pincode must be exactly 6 digits');
@@ -341,7 +341,7 @@
       }
     }
 
-    // Optional: Real-time validation on blur
+    // Optional: Real-time Validation On Blur
     document.querySelectorAll('.field-input').forEach(input => {
       input.addEventListener('blur', () => {
         if (input.id !== 'pincode' && input.id !== 'district' && input.id !== 'state') {

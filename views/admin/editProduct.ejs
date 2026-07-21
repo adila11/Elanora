@@ -318,7 +318,7 @@
         return;
       }
       
-      // Prevent submission while cropping
+      // Prevent Submission While Cropping
       document.getElementById('submit-btn').disabled = true;
       document.getElementById('submit-btn').textContent = 'Processing Images...';
       
@@ -419,14 +419,14 @@
     function renderPreviews(id) {
       const grid = document.getElementById('preview-' + id);
       
-      // Clean up old object URLs to prevent memory leaks
+      // Clean Up Old Object Urls To Prevent Memory Leaks
       grid.querySelectorAll('img[data-new="true"]').forEach(img => {
         if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
       });
       
       grid.innerHTML = '';
 
-      // Existing images
+      // Existing Images
       (variantExistingImages[id] || []).forEach((url, idx) => {
         const thumb = document.createElement('div');
         thumb.className = 'img-thumb';
@@ -518,7 +518,7 @@
       const variants = [];
       const wrappers = document.querySelectorAll('.variant-wrapper');
       
-      // Collect and check duplicate SKUs
+      // Collect And Check Duplicate Skus
       const skus = [];
       wrappers.forEach(wrapper => {
         const skuInput = wrapper.querySelector('.v-sku');
@@ -616,7 +616,7 @@
       }
     };
 
-    // Initialize with existing variants
+    // Initialize With Existing Variants
     if (product.variants && product.variants.length > 0) {
       product.variants.forEach(v => addVariant(v));
     } else {

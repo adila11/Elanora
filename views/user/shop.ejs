@@ -39,7 +39,7 @@
       font-weight: 300;
     }
 
-    /* ── HERO BANNER ── */
+    /* HERO BANNER */
     .shop-hero {
       background: var(--warm-white);
       text-align: center;
@@ -65,7 +65,7 @@
       line-height: 1.7;
     }
 
-    /* ── MAIN LAYOUT ── */
+    /* MAIN LAYOUT */
     .shop-layout {
       display: flex;
       gap: 28px;
@@ -75,7 +75,7 @@
       align-items: flex-start;
     }
 
-    /* ── SIDEBAR ── */
+    /* SIDEBAR */
     .sidebar {
       width: 220px;
       flex-shrink: 0;
@@ -144,7 +144,7 @@
       margin: 18px 0;
     }
 
-    /* ── PRICE RANGE FILTER ── */
+    /* PRICE RANGE FILTER */
     .price-range-wrap {
       margin-top: 4px;
     }
@@ -201,7 +201,7 @@
       flex-shrink: 0;
     }
 
-    /* Dual range slider */
+    /* Dual Range Slider */
     .range-slider-wrap {
       position: relative;
       height: 28px;
@@ -318,7 +318,7 @@
       color: var(--gold);
     }
 
-    /* ── PRODUCT AREA ── */
+    /* PRODUCT AREA */
     .product-area {
       flex: 1;
       min-width: 0;
@@ -347,7 +347,7 @@
       font-weight: 500;
     }
 
-    /* ── IMPROVED SEARCH BAR ── */
+    /* IMPROVED SEARCH BAR */
     .search-bar {
       flex: 1;
       position: relative;
@@ -393,7 +393,7 @@
       color: var(--text-light);
     }
 
-    /* Clear button */
+    /* Clear Button */
     .clear-search-btn {
       position: absolute;
       right: 7px;
@@ -456,7 +456,7 @@
       background-position: right 10px center;
     }
 
-    /* ── PRODUCT GRID ── */
+    /* PRODUCT GRID */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -575,7 +575,7 @@
       transform: scale(1.01);
     }
 
-    /* ── PAGINATION ── */
+    /* PAGINATION */
     .pagination {
       display: flex;
       justify-content: center;
@@ -618,7 +618,7 @@
       pointer-events: none;
     }
 
-    /* ── TOAST NOTIFICATION ── */
+    /* TOAST NOTIFICATION */
     #toast-container {
       position: fixed;
       bottom: 28px;
@@ -727,7 +727,7 @@
       color: var(--text-dark);
     }
 
-    /* ── RESPONSIVE ── */
+    /* RESPONSIVE */
     @media (max-width: 900px) {
       .product-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -977,15 +977,10 @@
     <%- include('partials/user/footer') %>
 
       <script>
-        /* ══════════════════════════════════════
-           TOAST SYSTEM
-        ══════════════════════════════════════ */
+        /* TOAST SYSTEM */
         const toastContainer = document.getElementById('toast-container');
 
-        /**
-         * showToast({ type, title, subtitle, duration })
-         * type: 'wishlist-add' | 'wishlist-remove' | 'cart-add' | 'error'
-         */
+        /* Showtoast({ Type, Title, Subtitle, Duration }) Type: 'wishlist-add' | 'wishlist-remove' | 'cart-add' | 'error' */
         function showToast({ type = 'wishlist-add', title, subtitle = '', duration = 3500 }) {
           const toast = document.createElement('div');
           toast.className = 'toast';
@@ -1038,7 +1033,7 @@
 
           toastContainer.appendChild(toast);
 
-          /* Trigger enter animation on next frame */
+          /* Trigger Enter Animation On Next Frame */
           requestAnimationFrame(() => {
             requestAnimationFrame(() => toast.classList.add('toast-show'));
           });
@@ -1047,7 +1042,7 @@
           const timer = setTimeout(() => dismissToast(toast), duration);
           toast._dismissTimer = timer;
 
-          /* Pause auto-dismiss on hover */
+          /* Pause Auto-dismiss On Hover */
           toast.addEventListener('mouseenter', () => clearTimeout(toast._dismissTimer));
           toast.addEventListener('mouseleave', () => {
             toast._dismissTimer = setTimeout(() => dismissToast(toast), 1800);
@@ -1063,9 +1058,7 @@
           toast.addEventListener('transitionend', () => toast.remove(), { once: true });
         }
 
-        /* ══════════════════════════════════════
-           SEARCH
-        ══════════════════════════════════════ */
+        /* SEARCH */
         function onSearchInput() {
           const val = document.getElementById('shopSearch').value;
           const btn = document.getElementById('clearSearchBtn');
@@ -1109,9 +1102,7 @@
           window.location.href = url.toString();
         }
 
-        /* ══════════════════════════════════════
-           PRICE RANGE
-        ══════════════════════════════════════ */
+        /* PRICE RANGE */
         const PRICE_MAX_LIMIT = 5000;
 
         function updateRangeFill() {
@@ -1183,9 +1174,7 @@
 
         updateRangeFill();
 
-        /* ══════════════════════════════════════
-           WISHLIST
-        ══════════════════════════════════════ */
+        /* WISHLIST */
         async function toggleWishlist(productId, productName) {
           const btn = document.getElementById('wish-' + productId);
           const isLiked = btn.classList.contains('liked');
@@ -1240,9 +1229,7 @@
           }
         }
 
-        /* ══════════════════════════════════════
-           ADD TO CART  ← updated with toast
-        ══════════════════════════════════════ */
+        /* ADD TO CART ← Updated With Toast */
         async function addToCart(productId, variantId, btnEl, productName) {
           if (!variantId) {
             showModal('error', 'Variant Unavailable', 'This product has no available variant.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
@@ -1267,7 +1254,7 @@
               btnEl.style.background = '#2e7d32';
               setTimeout(() => { btnEl.innerHTML = origHTML; btnEl.style.background = ''; }, 2000);
 
-              /* ── Toast confirmation ── */
+              /* Toast Confirmation */
               showToast({
                 type: 'cart-add',
                 title: 'Added to cart',

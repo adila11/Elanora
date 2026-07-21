@@ -184,6 +184,7 @@ async function buildReportData(query) {
 
 
 
+// Get Sales Report Page
 export const getSalesReportPage = async (req, res, next) => {
   try {
     const data = await buildReportData(req.query);
@@ -224,6 +225,7 @@ export const getSalesReportPage = async (req, res, next) => {
 };
 
 
+// Export Sales Report Excel
 export const exportSalesReportExcel = async (req, res, next) => {
   try {
     const data = await buildReportData(req.query);
@@ -288,6 +290,7 @@ export const exportSalesReportExcel = async (req, res, next) => {
 
 
 
+// Export Sales Report Pdf
 export const exportSalesReportPDF = async (req, res, next) => {
   try {
     const data = await buildReportData(req.query);

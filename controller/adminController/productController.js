@@ -3,6 +3,7 @@ import Category from "../../model/categoriesSchema.js";
 import mongoose from "mongoose";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
 
+// Load Product
 export const loadProduct = async (req, res) => {
     try {
         if (!req.session.admin) return res.redirect('/admin');
@@ -64,6 +65,7 @@ export const loadProduct = async (req, res) => {
 
 
 
+// Load Add Product
 export const loadAddProduct = async (req, res) => {
     try {
         if (!req.session.admin) {
@@ -77,12 +79,13 @@ export const loadAddProduct = async (req, res) => {
     }
 }
 
+// Add Product
 export const addProduct = async (req, res) => {
     try {
         const { name, description, category, basePrice, discountPrice, variants: rawVariants } = req.body;
         const files = req.files || [];
 
-        // Validation: required fields, non-empty, valid formats
+        // Validation: Required Fields, Non-empty, Valid Formats
         if (!name || !name.trim()) {
             return res.status(400).json({ success: false, message: "Product name is required" });
         }
@@ -123,7 +126,7 @@ export const addProduct = async (req, res) => {
             return res.status(400).json({ success: false, message: "At least one variant is required" });
         }
 
-        // Validate variants
+        // Validate Variants
         const skus = variants.map(v => v.sku ? v.sku.trim() : '');
         if (skus.some(s => !s)) {
             return res.status(400).json({ success: false, message: "SKU is required for all variants" });
@@ -191,6 +194,7 @@ export const addProduct = async (req, res) => {
     }
 };
 
+// Load Edit Product
 export const loadEditProduct = async (req, res) => {
     try {
         if (!req.session.admin) return res.redirect('/admin');
@@ -206,13 +210,14 @@ export const loadEditProduct = async (req, res) => {
     }
 };
 
+// Edit Product
 export const editProduct = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, description, category, basePrice, discountPrice, variants: rawVariants } = req.body;
         const files = req.files || [];
 
-        // Validation: required fields, non-empty, valid formats
+        // Validation: Required Fields, Non-empty, Valid Formats
         if (!name || !name.trim()) {
             return res.status(400).json({ success: false, message: "Product name is required" });
         }
@@ -267,7 +272,7 @@ export const editProduct = async (req, res) => {
             return res.status(400).json({ success: false, message: "At least one variant is required" });
         }
 
-        // Validate variants
+        // Validate Variants
         const skus = variants.map(v => v.sku ? v.sku.trim() : '');
         if (skus.some(s => !s)) {
             return res.status(400).json({ success: false, message: "SKU is required for all variants" });
@@ -354,6 +359,7 @@ export const editProduct = async (req, res) => {
     }
 };
 
+// Toggle Product Status
 export const toggleProductStatus = async (req, res) => {
     try {
         const product = await Products.findById(req.params.id);
@@ -367,6 +373,7 @@ export const toggleProductStatus = async (req, res) => {
     }
 };
 
+// Delete Product
 export const deleteProduct = async (req, res) => {
     try {
         await Products.findByIdAndDelete(req.params.id);
@@ -376,6 +383,7 @@ export const deleteProduct = async (req, res) => {
     }
 };
 
+// Save Product Offer
 export const saveProductOffer = async (req, res) => {
     try {
         if (!req.session.admin) {
@@ -385,7 +393,7 @@ export const saveProductOffer = async (req, res) => {
         const { id } = req.params;
         const { name, discountType, discountValue, startDate, endDate } = req.body;
 
-        // Validation checks
+        // Validation Checks
         if (!name || !name.trim()) {
             return res.status(400).json({ success: false, message: "Offer name is required" });
         }
@@ -460,6 +468,7 @@ export const saveProductOffer = async (req, res) => {
     }
 };
 
+// Delete Product Offer
 export const deleteProductOffer = async (req, res) => {
     try {
         if (!req.session.admin) {
@@ -472,7 +481,7 @@ export const deleteProductOffer = async (req, res) => {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
 
-        // Remove the nested offer object
+        // Remove The Nested Offer Object
         product.offer = undefined;
         
         const categoryDoc = await Category.findById(product.category);

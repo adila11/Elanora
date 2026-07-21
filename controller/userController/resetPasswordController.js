@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import { User } from "../../model/userSchema.js";
 
 
+// Loadresetpassword
 export const loadresetpassword = async (req, res) => {
     try {
         const email = req.session.user;
@@ -13,6 +14,7 @@ export const loadresetpassword = async (req, res) => {
         res.status(500).send("Server error")
     }
 }
+// Resetpassword
 export const resetpassword = async (req, res) => {
     try {
         const email = req.session.user;

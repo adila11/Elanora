@@ -145,7 +145,7 @@
       background: var(--accent-hover);
     }
 
-    /* ── Download dropdown ── */
+    /* Download Dropdown */
     .download-wrap {
       position: relative;
     }
@@ -201,7 +201,7 @@
       background: var(--accent-light);
     }
 
-    /* ── Stat Cards ── */
+    /* Stat Cards */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -242,7 +242,7 @@
       color: var(--red);
     }
 
-    /* ── Chart Cards ── */
+    /* Chart Cards */
     .charts-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -268,7 +268,7 @@
       height: 280px;
     }
 
-    /* ── Transactions Table ── */
+    /* Transactions Table */
     .table-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -421,7 +421,7 @@
             </div>
           </div>
 
-          <!-- Custom range picker (shown when "Custom" tab is active) -->
+          <!-- Custom Range Picker (shown When "custom" Tab Is Active) -->
           <div class="custom-range-bar <%= currentRange === 'custom' ? 'visible' : '' %>" id="customRangeBar">
             <label style="font-size:13px; color:var(--muted);">From</label>
             <input type="date" id="customStart" value="<%= startDate %>" />
@@ -575,7 +575,7 @@
       const ordersSeries = <%- JSON.stringify(ordersSeries) %>;
       const currentRange = <%- JSON.stringify(currentRange) %>;
 
-      // ── Revenue Trend (area / line) ─────────────────────────────────────────
+      // Revenue Trend (area / Line)
       const revenueCtx = document.getElementById('revenueChart').getContext('2d');
       const revenueGradient = revenueCtx.createLinearGradient(0, 0, 0, 280);
       revenueGradient.addColorStop(0, 'rgba(200, 169, 110, 0.35)');
@@ -634,7 +634,7 @@
         }
       });
 
-      // ── Orders Volume (bar) ─────────────────────────────────────────────────
+      // Orders Volume (bar)
       const ordersCtx = document.getElementById('ordersChart').getContext('2d');
       new Chart(ordersCtx, {
         type: 'bar',
@@ -675,11 +675,11 @@
         }
       });
 
-      // ── Range Tabs ───────────────────────────────────────────────────────────
+      // Range Tabs
       const rangeTabs = document.getElementById('rangeTabs');
       const customRangeBar = document.getElementById('customRangeBar');
 
-      // mark the active tab based on server-provided currentRange
+      // Mark The Active Tab Based On Server-provided Currentrange
       document.querySelectorAll('.range-tab').forEach(t => {
         t.classList.toggle('active', t.dataset.range === currentRange);
       });
@@ -706,7 +706,7 @@
         location.href = `?range=custom&startDate=${startDate}&endDate=${endDate}`;
       });
 
-      // ── Download dropdown ───────────────────────────────────────────────────
+      // Download Dropdown
       const btnDownloadToggle = document.getElementById('btnDownloadToggle');
       const downloadMenu = document.getElementById('downloadMenu');
 

@@ -1,6 +1,7 @@
 import { User } from "../../model/userSchema.js"
 import Address from "../../model/addressSchema.js";
 
+// Load Address
 export const loadAddress = async (req, res) => {
     try {
         const email = req.session.user;
@@ -26,6 +27,7 @@ export const loadAddress = async (req, res) => {
 
 
 
+// Load Add Address
 export const loadAddAddress = async (req, res) => {
     try {
         const email = req.session.user;
@@ -39,6 +41,7 @@ export const loadAddAddress = async (req, res) => {
         res.status(500).send("Server error");
     }
 }
+// Add Address
 export const addAddress = async (req, res) => {
     try {
         const email = req.session.user;
@@ -155,6 +158,7 @@ export const addAddress = async (req, res) => {
 
 
 
+// Load Edit Address
 export const loadEditAddress = async (req, res) => {
     try {
         const email = req.session.user;
@@ -177,6 +181,7 @@ export const loadEditAddress = async (req, res) => {
 }
 
 
+// Edit Address
 export const editAddress = async (req, res) => {
     try {
         const email = req.session.user;
@@ -286,6 +291,7 @@ export const editAddress = async (req, res) => {
 };
 
 
+// Set Default
 export const setDefault = async (req, res) => {
     try {
         const email = req.session.user;
@@ -315,6 +321,7 @@ export const setDefault = async (req, res) => {
 }
 
 
+// Delete Address
 export const deleteAddress = async (req, res) => {
     try {
         console.log("flag")

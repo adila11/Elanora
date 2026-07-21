@@ -1,6 +1,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  // Global SweetAlert2 Toast configuration
+  // Global Sweetalert2 Toast Configuration
   const Toast = Swal.mixin({
     toast: true,
     position: 'bottom-end',
@@ -13,7 +13,7 @@
     }
   });
 
-  // Reusable function for frontend Fetch/AJAX requests
+  // Reusable Function For Frontend Fetch/ajax Requests
   window.showToast = function(message, type = 'success') {
     Toast.fire({
       icon: type,
@@ -21,7 +21,7 @@
     });
   };
 
-  // Automatically trigger toasts for Server-Side Flash Messages
+  // Automatically Trigger Toasts For Server-side Flash Messages
   document.addEventListener("DOMContentLoaded", function() {
     <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
       Toast.fire({
@@ -37,7 +37,7 @@
       });
     <% } %>
 
-    // Handle legacy 'error' variable if passed directly via res.render
+    // Handle Legacy 'error' Variable If Passed Directly Via Res.render
     <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
       Toast.fire({
         icon: 'error',

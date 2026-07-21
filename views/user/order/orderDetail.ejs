@@ -26,7 +26,7 @@
       color: #2c2c2c;
     }
 
-    /* ── ORDER HEADER ── */
+    /* ORDER HEADER */
     .order-header {
       display: flex;
       align-items: center;
@@ -63,7 +63,7 @@
       color: #2c2c2c;
     }
 
-    /* ── META GRID ── */
+    /* META GRID */
     .order-meta {
       background: #fdfaf5;
       border: 1px solid #e8e0d0;
@@ -108,7 +108,7 @@
       flex-shrink: 0;
     }
 
-    /* ── STATUS BADGES ── */
+    /* STATUS BADGES */
     .status-badge {
       padding: 5px 14px;
       border-radius: 20px;
@@ -172,7 +172,7 @@
       border: 1px solid #E8B4B0;
     }
 
-    /* ── TRACKER ── */
+    /* TRACKER */
     .tracker-wrap {
       position: relative;
       display: flex;
@@ -258,7 +258,7 @@
       font-weight: 600;
     }
 
-    /* ── SECTION TITLE ── */
+    /* SECTION TITLE */
     .section-title {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.1rem;
@@ -267,7 +267,7 @@
       margin-bottom: 14px;
     }
 
-    /* ── ITEM ROWS ── */
+    /* ITEM ROWS */
     .order-item {
       display: flex;
       align-items: flex-start;
@@ -452,7 +452,7 @@
       color: #fff;
     }
 
-    /* ── ITEM STATUS BADGES ── */
+    /* ITEM STATUS BADGES */
     .item-status-badge {
       padding: 4px 12px;
       border-radius: 20px;
@@ -497,7 +497,7 @@
       border: 1px solid #E8B4B0;
     }
 
-    /* ── SUMMARY ── */
+    /* SUMMARY */
     .order-summary {
       margin-top: 26px;
       padding-top: 22px;
@@ -521,7 +521,7 @@
       border-top: 1px solid #e8e0d0;
     }
 
-    /* ── MODALS ── */
+    /* MODALS */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -816,13 +816,13 @@
       background: #a93226;
     }
 
-    /* ── PREMIUM INVOICE PRINT ONLY ── */
+    /* PREMIUM INVOICE PRINT ONLY */
     .invoice-container-wrap {
       position: absolute;
       left: -9999px;
       top: -9999px;
       width: 190mm;
-      /* width adjusted for proper fitting without overflow */
+      /* Width Adjusted For Proper Fitting Without Overflow */
       background: #fff;
     }
 
@@ -1093,7 +1093,7 @@
                   icon: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0zM12 10m-3 0a3 3 0 106 0 3 3 0 10-6 0' }, {
                   key: 'delivered' , label: 'Delivered' , icon: 'M20 6L9 17l-5-5' } ]; %>
 
-                  <!-- ── Header row ── -->
+                  <!-- Header Row -->
                   <div class="order-header">
                     <a href="/orders" class="back-btn">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1129,7 +1129,7 @@
                     </div>
                   </div>
 
-                  <!-- ── Meta ── -->
+                  <!-- Meta -->
                   <div class="order-meta">
                     <div class="meta-group">
                       <label>Order Date</label>
@@ -1165,9 +1165,7 @@
                     </span>
                   </div>
 
-                  <!-- ══════════════════════════════════
-     ORDER TRACKER
-     ══════════════════════════════════ -->
+                  <!-- ORDER TRACKER -->
                   <% /* * Build renderNodes for the tracker. * Each node: { label, icon, state } * state: 'done'
                     | 'pending' | 'cancelled' | 'partial-cancel' | 'returned' | 'partial-return' */ const
                     cancelIcon='M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM15 9l-6 6M9 9l6 6'
@@ -1248,12 +1246,12 @@
                       <div class="tracker-wrap">
                         <div class="tracker-line"></div>
 
-                        <%# Gold progress fill %>
+                        <%# Gold Progress Fill %>
                           <% if (goldFillPct> 0) { %>
                             <div class="tracker-fill" style="width:<%= goldFillPct %>%;"></div>
                             <% } %>
 
-                              <%# Red segment fill (from last gold dot to cancel/return dot) %>
+                              <%# Red Segment Fill (from Last Gold Dot To Cancel/return Dot) %>
                                 <% if (hasRedSegment && redFillEnd> redFillStart) { %>
                                   <div class="tracker-fill red-fill"
                                     style="left:calc(32px + <%= redFillStart %>% * (100% - 64px) / 100); width:calc(<%= redFillEnd - redFillStart %>% * (100% - 64px) / 100);">
@@ -1280,9 +1278,7 @@
                                       <% }) %>
                       </div>
 
-                      <!-- ══════════════════════════════════
-             ITEMS
-             ══════════════════════════════════ -->
+                      <!-- ITEMS -->
                       <p class="section-title">Items in this Order</p>
 
                       <% order.items.forEach(item=> {
@@ -1365,7 +1361,7 @@
                               <strong>₹<%= item.total %></strong>
                             </div>
 
-                            <%# Cancelled-item info %>
+                            <%# Cancelled-item Info %>
                               <% if (item.itemStatus==='cancelled' && (item.cancelReason || item.cancelledAt)) { %>
                                 <div class="item-meta-info cancelled-meta">
                                   <% if (item.cancelReason) { %>
@@ -1384,7 +1380,7 @@
                                 </div>
                                 <% } %>
 
-                                  <%# Returned-item info %>
+                                  <%# Returned-item Info %>
                                     <% if (item.itemStatus==='returned' && (item.returnReason || item.returnedAt)) { %>
                                       <div class="item-meta-info returned-meta">
                                         <% if (item.returnReason) { %>
@@ -1403,7 +1399,7 @@
                                       </div>
                                       <% } %>
 
-                                        <%# Return request – pending %>
+                                        <%# Return Request – Pending %>
                                           <% if (rrStatus==='pending' && rr.reason) { %>
                                             <div class="item-meta-info returned-meta"
                                               style="background:#FFF3E6;border-color:#F5C97A;">
@@ -1422,7 +1418,7 @@
                                             </div>
                                             <% } %>
 
-                                              <%# Return request – approved %>
+                                              <%# Return Request – Approved %>
                                                 <% if (rrStatus==='approved' ) { %>
                                                   <div class="item-meta-info returned-meta">
                                                     <% if (rr.refundAmount) { %>
@@ -1448,7 +1444,7 @@
                                                   </div>
                                                   <% } %>
 
-                                                    <%# Return request – rejected %>
+                                                    <%# Return Request – Rejected %>
                                                       <% if (rrStatus==='rejected' ) { %>
                                                         <div class="item-meta-info cancelled-meta">
                                                           <% if (rr.reason) { %>
@@ -1510,7 +1506,7 @@
                         </div>
                         <% }) %>
 
-                          <!-- ── Summary ── -->
+                          <!-- Summary -->
                           <div class="order-summary">
                             <% const originalSubtotal=order.items.reduce((sum, item)=> sum + item.total, 0);
 
@@ -1559,9 +1555,7 @@
 
     <%- include('partials/user/footer') %>
 
-      <!-- ══════════════════════════════════
-       RETURN ITEM MODAL
-       ══════════════════════════════════ -->
+      <!-- RETURN ITEM MODAL -->
       <div class="modal-overlay" id="returnModal" onclick="if(event.target===this) closeReturnModal()">
         <div class="modal">
           <div class="modal-header">
@@ -1612,9 +1606,7 @@
         </div>
       </div>
 
-      <!-- ══════════════════════════════════
-       FULL ORDER CANCEL MODAL
-       ══════════════════════════════════ -->
+      <!-- FULL ORDER CANCEL MODAL -->
       <div class="modal-overlay" id="fullCancelModal" onclick="if(event.target===this) closeFullCancelModal()">
         <div class="modal">
           <div class="modal-header">
@@ -1638,9 +1630,7 @@
         </div>
       </div>
 
-      <!-- ══════════════════════════════════
-       PARTIAL ITEM CANCEL MODAL
-       ══════════════════════════════════ -->
+      <!-- PARTIAL ITEM CANCEL MODAL -->
       <div class="modal-overlay" id="partialCancelModal" onclick="if(event.target===this) closePartialCancelModal()">
         <div class="modal">
           <div class="modal-header">
@@ -1689,7 +1679,7 @@
           if (submitBtnId) document.getElementById(submitBtnId).disabled = false;
         }
 
-        /* ── Return modal ── */
+        /* Return Modal */
         function openReturnModal(btn) {
           returnItemId = btn.dataset.id;
           document.getElementById('returnItemName').textContent = btn.dataset.name;
@@ -1738,7 +1728,7 @@
           }
         }
 
-        /* ── Full cancel modal ── */
+        /* Full Cancel Modal */
         function openFullCancelModal() {
           document.getElementById('fullCancelReason').value = '';
           document.getElementById('fullCancelModal').classList.add('active');
@@ -1782,7 +1772,7 @@
           }
         }
 
-        /* ── Partial item cancel modal ── */
+        /* Partial Item Cancel Modal */
         function openPartialCancelModal(btn) {
           partialCancelItemId = btn.dataset.id;
           document.getElementById('partialCancelName').textContent = btn.dataset.name;
@@ -1830,7 +1820,7 @@
           }
         }
 
-        /* ── Download Invoice ── */
+        /* Download Invoice */
         function downloadInvoice() {
           const btn = document.getElementById('downloadInvoiceBtn');
           btn.disabled = true;

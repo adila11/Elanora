@@ -20,4 +20,5 @@ const walletSchema = new mongoose.Schema(
   }
 );
 
+// Mongoose
 export default mongoose.model("Wallet", walletSchema);

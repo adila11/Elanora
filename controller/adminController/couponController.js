@@ -279,6 +279,7 @@ const isCouponCodeTaken = async (couponCode,excludeId = null) => {
 
 
 
+// Load Coupons
 export const loadCoupons = async (req, res) => {
 
     try {
@@ -351,6 +352,7 @@ export const loadCoupons = async (req, res) => {
 
 
 
+// Create Coupon
 export const createCoupon = async (req, res) => {
 
     try {
@@ -415,6 +417,7 @@ export const createCoupon = async (req, res) => {
 
 
 
+// Update Coupon
 export const updateCoupon = async (req, res) => {
     try {
         const { id } = req.params;
@@ -490,6 +493,7 @@ export const updateCoupon = async (req, res) => {
 
 
 
+// Delete Coupon
 export const deleteCoupon = async (req, res) => {
 
     try {

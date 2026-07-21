@@ -2,6 +2,7 @@ import Referral from "../../model/referralSchema.js";
 import {User} from "../../model/userSchema.js";
 import generateReferralCode from "../../utils/generateReferralCode.js";
 
+// Load Referral Page
 export const loadReferralPage = async (req, res) => {
 
     try {
@@ -13,7 +14,7 @@ export const loadReferralPage = async (req, res) => {
             return res.redirect("/login");
         }
 
-        // Generate referral code on-the-fly if missing (for legacy users)
+        // Generate Referral Code On-the-fly If Missing (for Legacy Users)
         if (!user.referralCode) {
             let code = generateReferralCode(user.fullName);
             let isUnique = false;

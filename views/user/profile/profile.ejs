@@ -319,7 +319,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   <script>
-    // Original values for cancel functionality
+    // Original Values For Cancel Functionality
     const orig = {
       fullName: document.getElementById('fullName').value,
       email: document.getElementById('email').value,
@@ -351,7 +351,7 @@
       document.getElementById('email').disabled = true;
       document.getElementById('phone').disabled = true;
 
-      // Reset image
+      // Reset Image
       const resetSrc = orig.profileIcon.startsWith('http') ? orig.profileIcon : (orig.profileIcon.startsWith('/') ? orig.profileIcon : '/' + orig.profileIcon);
       document.getElementById('profilePreview').src = resetSrc;
       
@@ -395,7 +395,7 @@
         });
       };
       reader.readAsDataURL(file);
-      // Reset value so same file can trigger change again if cancelled
+      // Reset Value So Same File Can Trigger Change Again If Cancelled
       event.target.value = '';
     }
 
@@ -416,10 +416,10 @@
         imageSmoothingQuality: 'high',
       });
 
-      // Show preview on main screen
+      // Show Preview On Main Screen
       document.getElementById('profilePreview').src = canvas.toDataURL('image/jpeg', 0.9);
 
-      // Create Blob for backend upload
+      // Create Blob For Backend Upload
       canvas.toBlob(function(blob) {
         croppedFile = new File([blob], 'profile_cropped.jpg', { type: 'image/jpeg' });
         closeCropperModal();
@@ -432,7 +432,7 @@
       document.getElementById('emailWarning').style.display = changed ? 'block' : 'none';
     }
 
-    // Form Submission - Now refreshes the page after successful update
+    // Form Submission - Now Refreshes The Page After Successful Update
     document.getElementById('profileForm').addEventListener('submit', async function (e) {
       e.preventDefault();
 
@@ -465,8 +465,6 @@
         if (res.ok && data.success) {
           if (typeof window.showToast === 'function') window.showToast(data.message || 'Profile updated successfully!', 'success');
 
-          // Refresh the entire page after successful update
-          // This ensures header, sidebar, and profile picture are updated from server
           setTimeout(() => {
             window.location.reload();
           }, 1200);
@@ -603,7 +601,7 @@
       }
     }
 
-    // SweetAlert2 is handled globally now
+    // Sweetalert2 Is Handled Globally Now
   </script>
 </body>
 

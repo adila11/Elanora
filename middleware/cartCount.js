@@ -34,4 +34,5 @@ const cartCountMiddleware = async (req, res, next) => {
     }
 };
 
+// Cart Count Middleware
 export default cartCountMiddleware;

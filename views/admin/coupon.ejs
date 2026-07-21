@@ -469,7 +469,7 @@
 
   .form-hint { font-size: 11.5px; color: var(--muted); margin-top: 4px; }
 
-  /* JS validation error state */
+  /* JS Validation Error State */
   .form-input.invalid, .form-select.invalid, .form-textarea.invalid {
     border-color: var(--red);
     background: var(--red-bg);
@@ -722,7 +722,7 @@
       </button>
     </div>
 
-    <!-- novalidate: we handle every rule ourselves in JS so messages match the backend exactly -->
+    <!-- Novalidate: We Handle Every Rule Ourselves In JS So Messages Match The Backend Exactly -->
     <form id="couponForm" novalidate>
       <input type="hidden" id="couponId" value="">
 
@@ -871,9 +871,7 @@
     document.getElementById('couponModal').style.display = 'none';
   }
 
-  // ------------------------------------------------------------------
-  // Field-error helpers
-  // ------------------------------------------------------------------
+  // Field-error Helpers
   function showFieldError(field, message) {
     const errEl = document.getElementById('err-' + field);
     const inputEl = document.getElementById(field);
@@ -893,19 +891,13 @@
       .forEach(el => el.classList.remove('invalid'));
   }
 
-  // ------------------------------------------------------------------
-  // Frontend validation — mirrors the backend's validateCouponInput
-  // rules exactly, so users see the same messages before the request
-  // ever reaches the server. The server still re-validates everything;
-  // this is purely to give fast feedback and isn't a substitute for it.
-  // ------------------------------------------------------------------
   function validateCouponForm() {
     clearFieldErrors();
 
     const errors = {};
     const data = {};
 
-    // 1. Coupon Code — required, trimmed, uppercased, A-Z0-9 only, 4-20 chars
+    // 1. Coupon Code — Required, Trimmed, Uppercased, A-Z0-9 Only, 4-20 Chars
     const rawCode = document.getElementById('couponCode').value.trim();
     if (!rawCode) {
       errors.couponCode = 'Coupon code is required.';
@@ -920,7 +912,7 @@
       }
     }
 
-    // 2. Coupon Name — required, trimmed, 3-50 chars
+    // 2. Coupon Name — Required, Trimmed, 3-50 Chars
     const rawName = document.getElementById('couponName').value.trim();
     if (!rawName) {
       errors.couponName = 'Coupon name is required.';
@@ -932,7 +924,7 @@
       data.couponName = rawName;
     }
 
-    // 3. Description — optional, trimmed, max 200 chars
+    // 3. Description — Optional, Trimmed, Max 200 Chars
     const rawDescription = document.getElementById('description').value.trim();
     if (rawDescription.length > 200) {
       errors.description = 'Description cannot exceed 200 characters.';
@@ -940,7 +932,7 @@
       data.description = rawDescription;
     }
 
-    // 4. Discount Type — required, must be percentage or fixed
+    // 4. Discount Type — Required, Must Be Percentage Or Fixed
     const rawType = document.getElementById('discountType').value.trim().toLowerCase();
     if (!rawType) {
       errors.discountType = 'Discount type is required.';
@@ -950,7 +942,7 @@
       data.discountType = rawType;
     }
 
-    // 5. Discount Value — required, positive; percentage capped at 100
+    // 5. Discount Value — Required, Positive; Percentage Capped At 100
     const rawValue = document.getElementById('discountValue').value.trim();
     if (rawValue === '') {
       errors.discountValue = 'Discount value is required.';
@@ -967,7 +959,7 @@
       }
     }
 
-    // 6. Minimum Purchase — required, number, not negative
+    // 6. Minimum Purchase — Required, Number, Not Negative
     const rawMinPurchase = document.getElementById('minimumPurchase').value.trim();
     if (rawMinPurchase === '') {
       errors.minimumPurchase = 'Minimum purchase amount is required.';
@@ -982,7 +974,7 @@
       }
     }
 
-    // 7. Maximum Discount — required only for percentage coupons; zeroed for fixed
+    // 7. Maximum Discount — Required Only For Percentage Coupons; Zeroed For Fixed
     const rawMaxDiscount = document.getElementById('maximumDiscount').value.trim();
     if (data.discountType === 'percentage') {
       if (rawMaxDiscount === '') {
@@ -1001,7 +993,7 @@
       data.maximumDiscount = 0;
     }
 
-    // 8 & 9. Start Date / Expiry Date — required, valid, expiry after start
+    // 8 & 9. Start Date / Expiry Date — Required, Valid, Expiry After Start
     const rawStart = document.getElementById('startDate').value;
     const rawExpiry = document.getElementById('expiryDate').value;
     const parsedStart = new Date(rawStart);
@@ -1029,7 +1021,7 @@
       errors.expiryDate = 'Expiry date must be later than the start date.';
     }
 
-    // 10. Usage Limit — optional; if given, must be a whole number >= 1
+    // 10. Usage Limit — Optional; If Given, Must Be A Whole Number >= 1
     const rawUsage = document.getElementById('usageLimit').value.trim();
     if (rawUsage === '') {
       data.usageLimit = null;
@@ -1046,7 +1038,7 @@
 
     data.isActive = document.getElementById('isActive').checked;
 
-    // Render every collected error next to its field
+    // Render Every Collected Error Next To Its Field
     Object.keys(errors).forEach(field => showFieldError(field, errors[field]));
 
     return { isValid: Object.keys(errors).length === 0, data };
@@ -1084,9 +1076,6 @@
       });
       const result = await res.json();
 
-      // Server-side validation is the final word — if it disagrees
-      // (e.g. a duplicate coupon code slipped past the client check),
-      // surface those errors inline too.
       if (!result.success) {
         if (result.errors) {
           Object.keys(result.errors).forEach(field => showFieldError(field, result.errors[field]));
@@ -1133,7 +1122,7 @@
     }
   }
 
-  // Filter & Search with debounce
+  // Filter & Search With Debounce
   let debounceTimer;
   document.getElementById('coupSearch').addEventListener('input', function() {
     clearTimeout(debounceTimer);
@@ -1148,7 +1137,7 @@
     window.location.href = `?search=${encodeURIComponent(search)}&status=${status}`;
   }
 
-  // Close modals when clicking outside
+  // Close Modals When Clicking Outside
   document.getElementById('couponModal').addEventListener('click', function(e) {
     if (e.target === this) closeCouponModal();
   });

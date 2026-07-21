@@ -40,9 +40,9 @@
       flex-direction: column;
     }
 
-    /* ── NAV STYLES REMOVED TO USE PARTIAL STYLES ── */
+    /* NAV STYLES REMOVED TO USE PARTIAL STYLES */
 
-    /* ── MAIN ── */
+    /* MAIN */
     main {
       flex: 1;
       padding: 110px 48px 64px;
@@ -61,7 +61,7 @@
       letter-spacing: 0.02em;
     }
 
-    /* ── STEPPER ── */
+    /* STEPPER */
     .stepper {
       display: flex;
       align-items: center;
@@ -116,7 +116,7 @@
       margin: 0 16px;
     }
 
-    /* ── LAYOUT ── */
+    /* LAYOUT */
     .checkout-layout {
       display: grid;
       grid-template-columns: 1fr 360px;
@@ -124,7 +124,7 @@
       align-items: start;
     }
 
-    /* ── CARD ── */
+    /* CARD */
     .card {
       background: var(--white);
       border-radius: 16px;
@@ -132,7 +132,7 @@
       box-shadow: 0 2px 16px rgba(44, 36, 22, 0.06);
     }
 
-    /* ── SECTION HEADER ── */
+    /* SECTION HEADER */
     .section-header {
       display: flex;
       align-items: center;
@@ -169,7 +169,7 @@
       opacity: 0.75;
     }
 
-    /* ── ADDRESS CARD ── */
+    /* ADDRESS CARD */
     .address-card {
       border: 1.5px solid var(--border);
       border-radius: 10px;
@@ -243,7 +243,7 @@
       margin: 28px 0;
     }
 
-    /* ── SHIPPING METHOD ── */
+    /* SHIPPING METHOD */
     .method-card {
       border: 1.5px solid var(--border);
       border-radius: 10px;
@@ -301,7 +301,7 @@
       color: var(--text-dark);
     }
 
-    /* ── CONTINUE BTN ── */
+    /* CONTINUE BTN */
     .continue-row {
       display: flex;
       justify-content: flex-end;
@@ -339,7 +339,7 @@
       stroke-width: 2;
     }
 
-    /* ── ORDER SUMMARY ── */
+    /* ORDER SUMMARY */
     .summary-title {
       font-size: 1rem;
       font-weight: 500;
@@ -399,7 +399,7 @@
 
 
 
-    /* totals */
+    /* Totals */
     .totals {
       margin-top: 20px;
     }
@@ -448,7 +448,7 @@
       color: var(--gold);
     }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer {
       background: var(--white);
       border-top: 1px solid var(--border);
@@ -619,7 +619,7 @@
     }
 
 
-    /* ── ADDRESS TYPE BADGE ── */
+    /* ADDRESS TYPE BADGE */
     .addr-type-badge {
       display: inline-block;
       font-size: 0.65rem;
@@ -635,7 +635,7 @@
       vertical-align: middle;
     }
 
-    /* ── EDIT BUTTON ── */
+    /* EDIT BUTTON */
     .edit-addr-btn {
       flex-shrink: 0;
       width: 34px;
@@ -670,7 +670,7 @@
       stroke: var(--gold);
     }
 
-    /* ── MODAL OVERLAY ── */
+    /* MODAL OVERLAY */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -765,7 +765,7 @@
       padding: 24px 28px;
     }
 
-    /* Address type tabs */
+    /* Address Type Tabs */
     .type-tabs {
       display: flex;
       gap: 10px;
@@ -809,7 +809,7 @@
       color: var(--text-dark);
     }
 
-    /* Form grid */
+    /* Form Grid */
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -881,7 +881,7 @@
       display: block;
     }
 
-    /* Select wrapper */
+    /* Select Wrapper */
     .select-wrap {
       position: relative;
     }
@@ -897,7 +897,7 @@
       pointer-events: none;
     }
 
-    /* Default checkbox */
+    /* Default Checkbox */
     .default-row {
       display: flex;
       align-items: center;
@@ -943,7 +943,7 @@
       user-select: none;
     }
 
-    /* Modal footer */
+    /* Modal Footer */
     .modal-footer {
       padding: 20px 28px 24px;
       border-top: 1px solid var(--border);
@@ -1345,7 +1345,7 @@
 
             </div>
 
-            <!-- Set as Default -->
+            <!-- Set As Default -->
             <label class="default-row" id="defaultRow">
               <div class="custom-checkbox" id="defaultCheck">
                 <svg viewBox="0 0 12 12">
@@ -1414,7 +1414,7 @@
           document.getElementById('state').value = card.dataset.state || '';
           document.getElementById('district').value = card.dataset.district || '';
 
-          // clear any leftover error states from a previous form attempt
+          // Clear Any Leftover Error States From A Previous Form Attempt
           Object.keys(rules).forEach(function (k) {
             document.getElementById(rules[k].el).classList.remove('error');
             document.getElementById(rules[k].err).classList.remove('show');
@@ -1428,8 +1428,6 @@
           isDefault = card.dataset.isdefault === 'true';
           defaultCheck.classList.toggle('checked', isDefault);
 
-          // keep the pincode-duplicate-check guard in sync so re-entering the
-          // same pincode while editing still re-validates if needed
           lastCheckedPincode = card.dataset.pincode || '';
 
           overlay.classList.add('open');
@@ -1457,7 +1455,7 @@
             return;
           }
 
-          // Address card selection
+          // Address Card Selection
           const card = e.target.closest('.address-card');
           if (card) {
             document.querySelectorAll('.address-card').forEach(c => c.classList.remove('selected'));
@@ -1498,11 +1496,6 @@
           defaultCheck.classList.toggle('checked', isDefault);
         });
 
-        // NOTE: every key here must have a matching `err` <span id="..."> in the
-        // HTML above, otherwise validateAll() will throw and silently break the
-        // save button. Thresholds are kept in sync with the backend controller
-        // (addAddress / editAddress) so the form never accepts something the
-        // server will reject.
         const rules = {
           fullName: { el: 'fullName', err: 'fullNameErr', test: v => v.trim().length >= 3 },
           phone: { el: 'phone', err: 'phoneErr', test: v => /^[6-9]\d{9}$/.test(v.trim()) },

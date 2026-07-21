@@ -562,7 +562,7 @@
     padding: 24px 0;
   }
 
-  /* scrollbar */
+  /* Scrollbar */
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
@@ -767,18 +767,11 @@
           Add New Product
         </a>
 
-        <a href="/admin/coupons/add" class="action-btn">
-          <div class="action-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-          </div>
-          Create Coupon
-        </a>
-
-        <a href="/admin/reports" class="action-btn">
+        <a href="/admin/sales-reports" class="action-btn">
           <div class="action-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           </div>
-          View Reports
+          View Sales Reports
         </a>
 
         <a href="/admin/returns" class="action-btn">
@@ -980,7 +973,7 @@
     }
   });
 
-  // Period tab active state with dynamic fetching
+  // Period Tab Active State With Dynamic Fetching
   document.querySelectorAll('.period-tab').forEach(tab => {
     tab.addEventListener('click', async function() {
       document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
