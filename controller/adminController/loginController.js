@@ -4,7 +4,7 @@ import Admin from "../../model/adminSchema.js";
 export const loadLogin = async (req, res) => {
     try {
         if (req.session.admin) {
-            return res.redirect('admin/dashboard');
+            return res.redirect('/admin/dashboard');
         }
 
         return res.render("admin/login", { error: null });
@@ -19,7 +19,7 @@ export const loadLogin = async (req, res) => {
 export const login = async (req, res) => {
     try {
         if (req.session.admin) {
-            return res.redirect('admin/dashboard');
+            return res.redirect('/admin/dashboard');
         }
 
         const { email, password } = req.body;

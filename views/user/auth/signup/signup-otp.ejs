@@ -219,6 +219,25 @@
                 inputs[index - 1].focus();
             }
         });
+
+        // Paste Support - distribute pasted digits across fields
+        input.addEventListener("paste", (e) => {
+            e.preventDefault();
+            const pastedData = (e.clipboardData || window.clipboardData).getData("text");
+            const digits = pastedData.replace(/[^0-9]/g, "").slice(0, 6);
+
+            if (digits.length > 0) {
+                digits.split("").forEach((digit, i) => {
+                    if (inputs[i]) {
+                        inputs[i].value = digit;
+                    }
+                });
+
+                // Focus last filled field or the next empty one
+                const focusIndex = Math.min(digits.length, inputs.length) - 1;
+                inputs[focusIndex].focus();
+            }
+        });
     });
 
     // Form Submit - Combine OTP

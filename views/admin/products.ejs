@@ -515,7 +515,28 @@
                           <span><%= p.category.offer.discountValue %><%= p.category.offer.discountType === 'flat' ? '₹' : '%' %> Off</span>
                         </div>
                         <% if (isProdOfferActive) { %>
-                          <span style="font-size:11px; color:var(--muted)">Overrode Prod Offer (<%= p.offer.discountValue %><%= p.offer.discountType === 'flat' ? '₹' : '%' %>)</span>
+                          <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="font-size:11px; color:var(--muted)">Prod Offer (<%= p.offer.discountValue %><%= p.offer.discountType === 'flat' ? '₹' : '%' %>)</span>
+                            <button type="button" class="offer-add-btn" style="width:20px; height:20px; min-width:20px; padding:0;" title="Edit Product Offer"
+                                    onclick="editOfferFromBadge(this)"
+                                    data-id="<%= p._id %>"
+                                    data-name="<%= p.offer.name || '' %>"
+                                    data-type="<%= p.offer.discountType || 'percentage' %>"
+                                    data-value="<%= p.offer.discountValue %>"
+                                    data-start="<%= hasProdOffer && p.offer.startDate ? new Date(p.offer.startDate).toISOString().split('T')[0] : '' %>"
+                                    data-end="<%= hasProdOffer && p.offer.endDate ? new Date(p.offer.endDate).toISOString().split('T')[0] : '' %>">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                              </svg>
+                            </button>
+                          </div>
+                        <% } else { %>
+                          <button type="button" class="offer-add-btn" style="font-size:11px; height:auto; padding:3px 8px; gap:3px;" title="Add Product Offer to Override" onclick="openOfferModal('<%= p._id %>')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Override
+                          </button>
                         <% } %>
                       </div>
                     <% } else { %>

@@ -145,20 +145,24 @@ async function buildReportData(query) {
     )
     .lean();
 
-  const transactionRows = transactions.map((o) => ({
-    orderId: o.orderId,
-    date: o.createdAt,
-    customer: o.userId?.name || o.userId?.email || "—",
-    itemsCount: o.items?.reduce((sum, it) => sum + it.qty, 0) || 0,
-    orderTotal: o.orderTotal,
-    discount: o.discount || 0,
-    coupon: o.isCouponApplied ? o.couponCode || "Applied" : "—",
-    deliveryCharge: o.deliveryCharge || 0,
-    finalAmount: o.finalAmount,
-    paymentMethod: o.paymentMethod,
-    paymentStatus: o.paymentStatus,
-    orderStatus: o.orderStatus,
-  }));
+  const transactionRows = transactions.map((o) => {
+    // Compute original subtotal from items to avoid mismatch from return mutations
+    const computedOrderTotal = o.items?.reduce((sum, it) => sum + (it.total || 0), 0) || o.orderTotal;
+    return {
+      orderId: o.orderId,
+      date: o.createdAt,
+      customer: o.userId?.name || o.userId?.email || "—",
+      itemsCount: o.items?.reduce((sum, it) => sum + it.qty, 0) || 0,
+      orderTotal: computedOrderTotal,
+      discount: o.discount || 0,
+      coupon: o.isCouponApplied ? o.couponCode || "Applied" : "—",
+      deliveryCharge: o.deliveryCharge || 0,
+      finalAmount: o.finalAmount,
+      paymentMethod: o.paymentMethod,
+      paymentStatus: o.paymentStatus,
+      orderStatus: o.orderStatus,
+    };
+  });
 
   return {
     range: { start, end },

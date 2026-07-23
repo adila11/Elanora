@@ -11,10 +11,15 @@ import { createCoupon, deleteCoupon, loadCoupons, updateCoupon } from "../contro
 
 import upload from "../config/multerCloudinary.js"
 import { getSalesReportPage, exportSalesReportExcel, exportSalesReportPDF } from "../controller/adminController/salesController.js"
+import { adminAuth } from "../middleware/adminAuth.js"
+
 const router = express.Router()
 
 router.get("/", loadLogin)
 router.post("/", login)
+
+// Apply Admin Auth Middleware to protect all subsequent admin routes
+router.use(adminAuth)
 
 router.get("/dashboard", loadDashboard)
 router.get("/dashboard/chart-data", getDashboardChartData)

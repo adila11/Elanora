@@ -104,7 +104,7 @@ export const loadCheckoutPayment = async (req, res) => {
             return res.redirect("/cart?error=unavailable");
         }
 
-        const { addressId } = req.body;
+        const addressId = req.body?.addressId || req.query?.addressId || req.session?.checkoutData?.addressId;
         if (!addressId) {
             return res.redirect("/checkout/address");
         }
@@ -120,7 +120,7 @@ export const loadCheckoutPayment = async (req, res) => {
             ]
         }).select("couponCode description discountType discountValue minimumPurchase maximumDiscount").lean();
 
-        res.render("user/checkout/checkoutPayment", { cart, user, addressId, availableCoupons, walletBalance,subtotal });
+        res.render("user/checkout/checkoutPayment", { cart, user, addressId, availableCoupons, walletBalance, subtotal });
     } catch (error) {
         console.error(error);
         res.status(500).send("Server Error");
@@ -169,6 +169,14 @@ export const loadCheckoutReview = async (req, res) => {
         if (!cart || !address) {
             return res.redirect("/checkout/address");
         }
+
+        // Store checkout data in session for retry flow
+        req.session.checkoutData = {
+            addressId,
+            paymentMethod,
+            couponCode: couponCode || "",
+            discountAmount: Number(discountAmount) || 0
+        };
 
         res.render("user/checkout/checkoutReview", {
             cart,
@@ -924,9 +932,16 @@ export const loadOrderFailed = async (req, res) => {
         const rawReason = req.query.reason || "Payment Failed";
         const reason = rawReason.length > 150 ? "Payment Failed" : rawReason;
 
+        // Retrieve checkout data from session for retry
+        const checkoutData = req.session.checkoutData || {};
+
         return res.render("user/checkout/orderFailed", {
             title: "Payment Failed",
-            reason
+            reason,
+            addressId: checkoutData.addressId || "",
+            paymentMethod: checkoutData.paymentMethod || "razorpay",
+            couponCode: checkoutData.couponCode || "",
+            discountAmount: checkoutData.discountAmount || 0
         });
 
     } catch (error) {

@@ -34,7 +34,7 @@ export const getReturnsPage = async (req, res) => {
                 customerPhone: order?.shippingAddress?.phone ?? user?.phone ?? "—",
                 product: orderItem?.productName ?? "N/A",
                 variant: orderItem?.variantName ?? "",
-                price: orderItem?.price ?? r.refundAmount ?? 0,
+                price: orderItem?.total ?? r.refundAmount ?? 0,
                 quantity: orderItem?.qty ?? 1,
                 image: orderItem?.productImage ?? "",
                 reason: r.reason,

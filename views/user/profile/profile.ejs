@@ -188,9 +188,11 @@
 
             <div id="profilePreviewContainer" style="position:relative; width:120px; height:120px; margin:0 auto;">
               <img id="profilePreview" 
-                   src="<%= user.profileIcon ? (user.profileIcon.startsWith('http') ? user.profileIcon : '/' + user.profileIcon.replace('public/', '')) : '/uploads/profile/default.png' %>" 
+                   src="<%= user.profileIcon ? (user.profileIcon.startsWith('http') ? user.profileIcon : '/' + user.profileIcon.replace('public/', '')) : '' %>" 
                    alt="Profile Picture"
-                   style="width:120px; height:120px; object-fit:cover; border-radius:9999px; border:4px solid #e8e0d0;">
+                   style="width:120px; height:120px; object-fit:cover; border-radius:9999px; border:4px solid #e8e0d0;"
+                   onerror="this.onerror=null; const initials = '<%= (user.fullName || 'U').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2) %>'; this.src='data:image/svg+xml,' + encodeURIComponent('<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;120&quot; height=&quot;120&quot;><rect width=&quot;120&quot; height=&quot;120&quot; rx=&quot;60&quot; fill=&quot;%23c49a2a&quot;/><text x=&quot;50%&quot; y=&quot;54%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot; font-family=&quot;DM Sans,sans-serif&quot; font-size=&quot;42&quot; font-weight=&quot;600&quot;>' + initials + '</text></svg>');"
+              >
 
               <div id="profileEditOverlay" 
                    style="display:none; position:absolute; inset:0; background:rgba(0,0,0,0.5); border-radius:9999px; align-items:center; justify-content:center; cursor:pointer;">

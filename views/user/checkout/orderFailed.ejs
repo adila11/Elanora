@@ -454,9 +454,15 @@
           </div>
 
           <div class="btn-row">
-            <button type="button" class="btn-solid" onclick="location.href='/checkout/review'">
-              Try Again
-            </button>
+            <form id="retryForm" method="POST" action="/checkout/review" style="flex:1; display:flex;">
+              <input type="hidden" name="addressId" value="<%= addressId %>">
+              <input type="hidden" name="paymentMethod" value="<%= paymentMethod %>">
+              <input type="hidden" name="couponCode" value="<%= couponCode %>">
+              <input type="hidden" name="discountAmount" value="<%= discountAmount %>">
+              <button type="submit" class="btn-solid" style="width:100%;">
+                Try Again
+              </button>
+            </form>
             <a href="/checkout/payment" class="btn-outline">Change Payment Method</a>
           </div>
         </div>
