@@ -84,5 +84,4 @@ const couponSchema = new mongoose.Schema(
   }
 );
 
-// Mongoose
 export default mongoose.model("Coupon", couponSchema);

@@ -9,7 +9,6 @@ function calcPercentChange(current, previous) {
   return Number((((current - previous) / previous) * 100).toFixed(1));
 }
 
-// Load Dashboard
 export const loadDashboard = async (req, res) => {
   try {
     const now = new Date();
@@ -121,7 +120,6 @@ export const loadDashboard = async (req, res) => {
   }
 };
 
-// Get Dashboard Chart Data
 export const getDashboardChartData = async (req, res) => {
   try {
     const period = req.query.period || "6m";

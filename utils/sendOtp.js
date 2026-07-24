@@ -5,19 +5,17 @@ const sentOtp = async (email, purpose = "verification") => {
     try {
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-        // Delete Old Otps
         await UserOtp.deleteMany({ email });
 
         const newOtp = new UserOtp({
             email,
             otp,
-            purpose, //  store purpose
+            purpose, 
             expiresAt: Date.now() + 5 * 60 * 1000
         });
 
         await newOtp.save();
 
-        // Transporter
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -26,7 +24,6 @@ const sentOtp = async (email, purpose = "verification") => {
             }
         });
 
-        // Dynamic Content
         let subject = "";
         let message = "";
 
@@ -65,5 +62,4 @@ const sentOtp = async (email, purpose = "verification") => {
     }
 };
 
-// Sent Otp
 export default sentOtp;

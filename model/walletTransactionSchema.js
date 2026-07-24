@@ -65,5 +65,4 @@ const walletTransactionSchema = new mongoose.Schema(
   }
 );
 
-// Mongoose
 export default mongoose.model("WalletTransaction", walletTransactionSchema);

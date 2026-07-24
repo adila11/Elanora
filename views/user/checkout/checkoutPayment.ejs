@@ -1309,6 +1309,17 @@
       <script>
 
         let appliedCoupon = null;
+        <% if (typeof couponCode !== 'undefined' && couponCode) { %>
+        appliedCoupon = {
+            code: "<%= couponCode %>",
+            discount: <%= discountAmount %>,
+            desc: "<%= discountType === 'percentage' ? discountValue + '% off' : '₹' + discountValue + ' off' %>"
+        };
+        // Ensure UI updates on load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateSummary();
+        });
+        <% } %>
         let selectedMethod = 'cod';
 
         const rawSub = document.getElementById('subtotalValue').textContent.replace(/[^0-9.]/g, '');
@@ -1488,7 +1499,10 @@
         });
 
         // Remove Coupon
-        document.getElementById('removePromo').addEventListener('click', function () {
+        document.getElementById('removePromo').addEventListener('click', async function () {
+          try {
+            await fetch('/remove-coupon', { method: 'POST', credentials: 'include' });
+          } catch(e) { console.error(e); }
           appliedCoupon = null;
           updateSummary();
           showToast('Coupon removed.', 'success');

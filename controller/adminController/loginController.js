@@ -1,6 +1,5 @@
 import Admin from "../../model/adminSchema.js";
 
-// Load Login
 export const loadLogin = async (req, res) => {
     try {
         if (req.session.admin) {
@@ -15,7 +14,6 @@ export const loadLogin = async (req, res) => {
     }
 };
 
-// Login
 export const login = async (req, res) => {
     try {
         if (req.session.admin) {
@@ -60,7 +58,6 @@ export const login = async (req, res) => {
 
 
 
-// Logout
 export const logout =async(req,res)=>{
     try {
         delete req.session.admin

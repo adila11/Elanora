@@ -1,4 +1,3 @@
-// Load About
 export const loadAbout = async (req, res) => {
     try {
 

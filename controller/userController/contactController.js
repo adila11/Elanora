@@ -1,4 +1,3 @@
-// Load Contact
 export const loadContact = async (req, res) => {
     try {
 

@@ -65,5 +65,4 @@ const loadHome = async (req, res) => {
     }
 };
 
-// Load Home
 export default loadHome;

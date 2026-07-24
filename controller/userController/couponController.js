@@ -3,7 +3,6 @@ import Cart from "../../model/cartSchema.js";
 import { User } from "../../model/userSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
 
-// Apply Coupon
 export const applyCoupon = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -86,6 +85,7 @@ export const applyCoupon = async (req, res) => {
         }
 
         discount = Math.min(discount, subtotal);
+        req.session.appliedCoupon = code;
 
         return res.json({
             success: true,
@@ -100,6 +100,16 @@ export const applyCoupon = async (req, res) => {
 
     } catch (error) {
         console.error("APPLY COUPON ERROR:", error);
+        res.status(500).json({ success: false, message: "Server error. Please try again." });
+    }
+};
+
+export const removeCoupon = async (req, res) => {
+    try {
+        req.session.appliedCoupon = null;
+        return res.json({ success: true, message: "Coupon removed" });
+    } catch (error) {
+        console.error("REMOVE COUPON ERROR:", error);
         res.status(500).json({ success: false, message: "Server error. Please try again." });
     }
 };

@@ -7,7 +7,6 @@ const generateTransactionId = () => {
 };
 
 
-// Get Or Create Wallet
 export const getOrCreateWallet = async (userId) => {
 
     let wallet = await Wallet.findOne({ userId });
@@ -24,7 +23,6 @@ export const getOrCreateWallet = async (userId) => {
 
 
 
-// Credit Wallet
 export const creditWallet = async ({
     userId,
     amount,
@@ -57,7 +55,6 @@ export const creditWallet = async ({
 
 
 
-// Debit Wallet
 export const debitWallet = async ({
     userId,
     amount,

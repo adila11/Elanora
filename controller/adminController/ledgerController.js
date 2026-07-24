@@ -1,7 +1,6 @@
 import Order from "../../model/orderSchema.js";
 import PDFDocument from "pdfkit";
 
-// Export Ledger
 export const exportLedger = async (req, res) => {
   try {
     const orders = await Order.find({ paymentStatus: "paid" })

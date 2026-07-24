@@ -5,7 +5,6 @@ import Referral from "../../model/referralSchema.js";
 import bcrypt from "bcrypt";
 import { error } from "console";
 
-// Load Login
 export const loadLogin = async (req, res) => {
     try {
         if (req.session.user) {
@@ -20,7 +19,6 @@ export const loadLogin = async (req, res) => {
     }
 };
 
-// Login
 export const login = async (req, res) => {
     try {
         if (req.session.user) {
@@ -64,7 +62,6 @@ export const login = async (req, res) => {
     }
 };
 
-// Loadforgotpassword
 export const loadforgotpassword = async (req,res) =>{
     try {
         if(req.session.user){
@@ -77,7 +74,6 @@ export const loadforgotpassword = async (req,res) =>{
     }
 }
 
-// Forgotpassword
 export const forgotpassword = async (req, res) => {
     try {
         if (req.session.user) {
@@ -112,7 +108,6 @@ export const forgotpassword = async (req, res) => {
 };
  
 
-// Loadforgotpass Verification
 export const loadforgotpassOTPVerification = async (req,res)=>{
     try {
         if(req.session.user){
@@ -127,7 +122,6 @@ export const loadforgotpassOTPVerification = async (req,res)=>{
 }
 
 
-// Forgotpass Verification
 export const forgotpassOTPVerification = async (req,res)=>{
     try {
         if(req.session.user){
@@ -155,7 +149,6 @@ export const forgotpassOTPVerification = async (req,res)=>{
     }
 }
 
-// Loadnewpassword
 export const loadnewpassword = async (req,res) => {
     try {
         if(req.session.user){
@@ -174,7 +167,6 @@ export const loadnewpassword = async (req,res) => {
 }
 
 
-// Newpassword
 export const newpassword = async (req,res)=>{
     try {
         if(req.session.user){
@@ -220,7 +212,6 @@ export const newpassword = async (req,res)=>{
 }
 
 
-// Load Signup
 export const loadSignup = async (req, res) => {
     try {
         if(req.session.user){
@@ -233,7 +224,6 @@ export const loadSignup = async (req, res) => {
     }
 }
 
-// Signup
 export const signup = async (req, res) => {
     try {
         const { fullName, email, password, confirmPassword, referralCode, agreeTerms } = req.body;
@@ -322,7 +312,6 @@ export const signup = async (req, res) => {
 };
 
 
-// Load Signup Verification
 export const loadSignupOTPVerification = async (req, res) => {
     try {
         if (!req.session.tempUser) return res.redirect("/signup");
@@ -333,13 +322,11 @@ export const loadSignupOTPVerification = async (req, res) => {
     }
 
 }
-// Signup Verification
 export const SignupOTPVerification = async (req, res) => {
     try {
         const tempUser = req.session.tempUser;
         if (!tempUser) return res.redirect("/signup");
 
-        // Prevent E11000 Duplicate Key Error From Double-clicks/parallel Submissions
         const existingUser = await User.findOne({ email: tempUser.email });
         if (existingUser) {
             await UserOtp.deleteOne({ email: tempUser.email });
@@ -381,7 +368,6 @@ export const SignupOTPVerification = async (req, res) => {
         if (tempUser.referredBy) {
             const referrer = await User.findOne({ referralCode: tempUser.referredBy });
             if (referrer) {
-                // Reward The Referred User (new User) With 100rs
                 await creditWallet({
                     userId: newUser._id,
                     amount: 100,
@@ -389,7 +375,6 @@ export const SignupOTPVerification = async (req, res) => {
                     description: `Referral bonus for signing up with code ${tempUser.referredBy}`
                 });
 
-                // Reward The Referrer (user Who Referred) With 100rs
                 await creditWallet({
                     userId: referrer._id,
                     amount: 100,
@@ -397,7 +382,6 @@ export const SignupOTPVerification = async (req, res) => {
                     description: `Referral reward for inviting ${newUser.fullName}`
                 });
 
-                // Create Tracking Document For The Referrer To See Who Registered
                 await Referral.create({
                     userId: referrer._id,
                     referredUserId: newUser._id,
@@ -424,7 +408,6 @@ export const SignupOTPVerification = async (req, res) => {
 
 
 
-// Logout
 export const logout = async (req, res) => {
     try {
         delete req.session.user;
@@ -435,7 +418,6 @@ export const logout = async (req, res) => {
     }
 };
 
-// Resend Otp
 export const resendOtp = async (req, res) => {
     try {
         const tempUser = req.session.tempUser;

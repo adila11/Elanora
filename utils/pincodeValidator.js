@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Check Pincode
 export const checkPincode = async (req, res) => {
     try {
         const { pincode } = req.params;

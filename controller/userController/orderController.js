@@ -8,7 +8,6 @@ import { creditWallet } from "../../utils/walletHelper.js";
 import { revalidateCouponAgainstCart, cancelOrderDueToCouponBreach } from "../../utils/couponValidator.js";
 
 
-// Get Orders
 export const getOrders = async (req, res) => {
     try {
         if (!req.session.user) {
@@ -54,7 +53,6 @@ export const getOrders = async (req, res) => {
 };
 
 
-// Get Order Detail
 export const getOrderDetail = async (req, res) => {
     try {
         if (!req.session.user) {
@@ -84,7 +82,6 @@ export const getOrderDetail = async (req, res) => {
 };
 
 
-// Cancel Full Order
 export const cancelFullOrder = async (req, res) => {
     try {
         const orderId = req.params.id;
@@ -147,7 +144,6 @@ export const cancelFullOrder = async (req, res) => {
 };
 
 
-// Cancel Single Item
 export const cancelSingleItem = async (req, res) => {
     try {
         const { orderId, itemId, reason } = req.body;
@@ -269,7 +265,6 @@ export const cancelSingleItem = async (req, res) => {
 };
 
 
-// Return Item
 export const returnItem = async (req, res) => {
     try {
 

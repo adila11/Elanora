@@ -88,7 +88,7 @@ const userOtpSchema = new mongoose.Schema({
   },
 });
 
-userOtpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 300 }); // 5 min
+userOtpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 300 }); 
 
 const User = mongoose.model("User", userSchema);
 const UserOtp = mongoose.model("UserOtp", userOtpSchema);

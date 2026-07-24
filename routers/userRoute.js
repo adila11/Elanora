@@ -17,7 +17,7 @@ import { loadAbout } from '../controller/userController/aboutController.js'
 import { loadContact } from '../controller/userController/contactController.js'
 import { createWalletTopupOrder, loadWallet, loadWalletTransactions, verifyWalletPayment } from '../controller/userController/walletController.js'
 import { loadReferralPage } from '../controller/userController/referralController.js'
-import { applyCoupon } from '../controller/userController/couponController.js'
+import { applyCoupon, removeCoupon } from '../controller/userController/couponController.js'
 const router = express.Router()
 
 
@@ -91,7 +91,6 @@ router.get("/wallet/transactions", loadWalletTransactions);
 router.post("/wallet/topup/create-order", isLoggedIn, isBlocked, createWalletTopupOrder);
 router.post("/wallet/topup/verify", isLoggedIn, isBlocked, verifyWalletPayment);
 
-
 router.get("/resetPassword", isLoggedIn, isBlocked, loadresetpassword)
 router.post("/resetPassword", isLoggedIn, isBlocked, resetpassword)
 
@@ -117,12 +116,11 @@ router.post("/checkout/review", isLoggedIn, isBlocked, loadCheckoutReview);
 router.get("/checkout/review", isLoggedIn, isBlocked, (req, res) => res.redirect("/checkout/address"));
 router.post("/place-order", isLoggedIn, isBlocked, placeOrder);
 router.post("/apply-coupon", isLoggedIn, isBlocked, applyCoupon);
+router.post("/remove-coupon", isLoggedIn, isBlocked, removeCoupon);
 router.post("/create-razorpay-order", createRazorpayOrder);
 router.post("/verify-razorpay-payment", verifyPayment);
 
 router.get("/check-pincode/:pincode", isLoggedIn, isBlocked, checkPincode);
-
-
 
 router.get("/order-success/:id", isLoggedIn, isBlocked, loadOrderSuccess);
 router.get("/order-failed", isLoggedIn, isBlocked, loadOrderFailed)
@@ -137,9 +135,7 @@ router.post("/resend-otp", resendOtp)
 
 router.get("/logout", logout)
 
-
 router.use(loadPagenotFound);
-// Router
 export default router
 
 

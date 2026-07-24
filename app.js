@@ -26,7 +26,7 @@ app.use(session({
     saveUninitialized: false,
 
     store: MongoStore.create({
-        mongoUrl: "mongodb://127.0.0.1:27017/elanora",
+        mongoUrl: process.env.MONGODB_URI,
         collectionName: "sessions",
         ttl: 14 * 24 * 60 * 60,
     }),

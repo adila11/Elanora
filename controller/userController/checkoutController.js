@@ -22,7 +22,6 @@ const checkCartAvailability = (cart) => {
     return true;
 };
 
-// Load Checkout Address
 export const loadCheckoutAddress = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -69,7 +68,6 @@ export const loadCheckoutAddress = async (req, res) => {
     }
 };
 
-// Load Checkout Payment
 export const loadCheckoutPayment = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -120,7 +118,55 @@ export const loadCheckoutPayment = async (req, res) => {
             ]
         }).select("couponCode description discountType discountValue minimumPurchase maximumDiscount").lean();
 
-        res.render("user/checkout/checkoutPayment", { cart, user, addressId, availableCoupons, walletBalance, subtotal });
+        let appliedCouponCode = "";
+        let appliedDiscountAmount = 0;
+        let appliedDiscountType = "";
+        let appliedDiscountValue = 0;
+        
+        if (req.session.appliedCoupon) {
+            const code = req.session.appliedCoupon;
+            const coupon = await Coupon.findOne({ couponCode: code });
+            
+            if (coupon && coupon.isActive) {
+                const withinDates = now >= new Date(coupon.startDate) && now <= new Date(coupon.expiryDate);
+                const withinLimit = !coupon.usageLimit || (coupon.usageCount || 0) < coupon.usageLimit;
+                const meetsMinimum = subtotal >= (coupon.minimumPurchase || 0);
+                const notUsedBefore = !coupon.usedBy || !coupon.usedBy.some(id => id.toString() === user._id.toString());
+                
+                if (withinDates && withinLimit && meetsMinimum && notUsedBefore) {
+                    appliedCouponCode = code;
+                    appliedDiscountType = coupon.discountType;
+                    appliedDiscountValue = coupon.discountValue;
+                    
+                    if (coupon.discountType === "percentage") {
+                        appliedDiscountAmount = Math.round(subtotal * coupon.discountValue / 100);
+                        if (coupon.maximumDiscount && coupon.maximumDiscount > 0) {
+                            appliedDiscountAmount = Math.min(appliedDiscountAmount, coupon.maximumDiscount);
+                        }
+                    } else {
+                        appliedDiscountAmount = coupon.discountValue;
+                    }
+                    appliedDiscountAmount = Math.min(appliedDiscountAmount, subtotal);
+                } else {
+                    req.session.appliedCoupon = null;
+                }
+            } else {
+                req.session.appliedCoupon = null;
+            }
+        }
+
+        res.render("user/checkout/checkoutPayment", { 
+            cart, 
+            user, 
+            addressId, 
+            availableCoupons, 
+            walletBalance, 
+            subtotal,
+            couponCode: appliedCouponCode,
+            discountAmount: appliedDiscountAmount,
+            discountType: appliedDiscountType,
+            discountValue: appliedDiscountValue
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send("Server Error");
@@ -128,7 +174,6 @@ export const loadCheckoutPayment = async (req, res) => {
 };
 
 
-// Load Checkout Review
 export const loadCheckoutReview = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -145,12 +190,14 @@ export const loadCheckoutReview = async (req, res) => {
                 }
             });
 
+        let subtotal = 0;
         if (cart) {
             cart.items.forEach(item => {
                 if (item.productId) {
                     const pricing = getEffectivePrice(item.productId);
                     item.price = pricing.price;
                     item.total = item.price * item.qty;
+                    subtotal += item.total;
                 }
             });
         }
@@ -159,7 +206,7 @@ export const loadCheckoutReview = async (req, res) => {
             return res.redirect("/cart?error=unavailable");
         }
 
-        const { addressId, paymentMethod = "cod", couponCode = "", discountAmount = 0 } = req.body;
+        const { addressId, paymentMethod = "cod" } = req.body;
 
         const address = await Address.findOne({
             _id: addressId,
@@ -170,12 +217,44 @@ export const loadCheckoutReview = async (req, res) => {
             return res.redirect("/checkout/address");
         }
 
-        // Store checkout data in session for retry flow
+        let finalCouponCode = "";
+        let finalDiscountAmount = 0;
+
+        if (req.session.appliedCoupon) {
+            const code = req.session.appliedCoupon;
+            const coupon = await Coupon.findOne({ couponCode: code });
+            
+            if (coupon && coupon.isActive) {
+                const now = new Date();
+                const withinDates = now >= new Date(coupon.startDate) && now <= new Date(coupon.expiryDate);
+                const withinLimit = !coupon.usageLimit || (coupon.usageCount || 0) < coupon.usageLimit;
+                const meetsMinimum = subtotal >= (coupon.minimumPurchase || 0);
+                const notUsedBefore = !coupon.usedBy || !coupon.usedBy.some(id => id.toString() === user._id.toString());
+                
+                if (withinDates && withinLimit && meetsMinimum && notUsedBefore) {
+                    finalCouponCode = code;
+                    if (coupon.discountType === "percentage") {
+                        finalDiscountAmount = Math.round(subtotal * coupon.discountValue / 100);
+                        if (coupon.maximumDiscount && coupon.maximumDiscount > 0) {
+                            finalDiscountAmount = Math.min(finalDiscountAmount, coupon.maximumDiscount);
+                        }
+                    } else {
+                        finalDiscountAmount = coupon.discountValue;
+                    }
+                    finalDiscountAmount = Math.min(finalDiscountAmount, subtotal);
+                } else {
+                    req.session.appliedCoupon = null;
+                }
+            } else {
+                req.session.appliedCoupon = null;
+            }
+        }
+
         req.session.checkoutData = {
             addressId,
             paymentMethod,
-            couponCode: couponCode || "",
-            discountAmount: Number(discountAmount) || 0
+            couponCode: finalCouponCode,
+            discountAmount: finalDiscountAmount
         };
 
         res.render("user/checkout/checkoutReview", {
@@ -183,8 +262,8 @@ export const loadCheckoutReview = async (req, res) => {
             address,
             user,
             paymentMethod,
-            couponCode: couponCode || "",
-            discountAmount: Number(discountAmount) || 0
+            couponCode: finalCouponCode,
+            discountAmount: finalDiscountAmount
         });
     } catch (error) {
         console.error(error);
@@ -202,7 +281,6 @@ const generateOrderId = () => {
 
 
 
-// Create Razorpay Order
 export const createRazorpayOrder = async (req, res) => {
     try {
 
@@ -227,9 +305,9 @@ export const createRazorpayOrder = async (req, res) => {
         const userId = user._id;
 
         const {
-            addressId,
-            couponCode = ""
+            addressId
         } = req.body;
+        const couponCode = req.session.appliedCoupon || req.body.couponCode || "";
 
 
 
@@ -431,7 +509,6 @@ export const createRazorpayOrder = async (req, res) => {
 
 
 
-// Place Order
 export const placeOrder = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -446,7 +523,8 @@ export const placeOrder = async (req, res) => {
 
         const userId = user._id;
 
-        const { addressId, paymentMethod = "cod", couponCode = "", discountAmount = 0 } = req.body;
+        const { addressId, paymentMethod = "cod", discountAmount = 0 } = req.body;
+        const couponCode = req.session.appliedCoupon || req.body.couponCode || "";
 
         const address = await Address.findOne({ _id: addressId, user: userId });
         if (!address) {
@@ -658,6 +736,9 @@ export const placeOrder = async (req, res) => {
 
         await Cart.findOneAndDelete({ userId: userId });
 
+        req.session.appliedCoupon = null;
+        req.session.checkoutData = null;
+
         res.json({
             success: true,
             message: "Order placed successfully!",
@@ -673,12 +754,12 @@ export const placeOrder = async (req, res) => {
 };
 
 
-// Verify Payment
 export const verifyPayment = async (req, res) => {
 
     try {
 
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, addressId, paymentMethod, couponCode } = req.body;
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, addressId, paymentMethod } = req.body;
+        const couponCode = req.session.appliedCoupon || req.body.couponCode || "";
 
         const generatedSignature = crypto
             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -880,10 +961,13 @@ export const verifyPayment = async (req, res) => {
 
         await Cart.findOneAndDelete({ userId: userId });
 
+        req.session.appliedCoupon = null;
+        req.session.checkoutData = null;
+
         return res.json({
             success: true,
             message: "Payment verified successfully",
-            orderId: order.orderId || order._id,
+            orderId: order._id,
             redirectUrl: `/order-success/${order._id}`
         });
 
@@ -898,7 +982,6 @@ export const verifyPayment = async (req, res) => {
 
 };
 
-// Load Order Success
 export const loadOrderSuccess = async (req, res) => {
     try {
         const order = await Order.findById(req.params.id);
@@ -924,7 +1007,6 @@ export const loadOrderSuccess = async (req, res) => {
     }
 };
 
-// Load Order Failed
 export const loadOrderFailed = async (req, res) => {
 
     try {
@@ -932,7 +1014,6 @@ export const loadOrderFailed = async (req, res) => {
         const rawReason = req.query.reason || "Payment Failed";
         const reason = rawReason.length > 150 ? "Payment Failed" : rawReason;
 
-        // Retrieve checkout data from session for retry
         const checkoutData = req.session.checkoutData || {};
 
         return res.render("user/checkout/orderFailed", {

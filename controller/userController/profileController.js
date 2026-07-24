@@ -1,7 +1,6 @@
 import { User, UserOtp } from "../../model/userSchema.js"
 import sentOtp from "../../utils/sendOtp.js";
 
-// Load Profile
 export const loadProfile = async (req, res) => {
     try {
         const email = req.session.user;
@@ -16,7 +15,6 @@ export const loadProfile = async (req, res) => {
 
 
 
-// Edit Profile
 export const editProfile = async (req, res) => {
     try {
         if (!req.session.user) {
@@ -109,7 +107,6 @@ export const editProfile = async (req, res) => {
 
 
 
-// Edit Email
 export const editEmail = async (req, res) => {
     try {
         const { newEmail } = req.body;
@@ -164,7 +161,6 @@ export const editEmail = async (req, res) => {
     }
 }
 
-// Verify Email
 export const verifyEmail = async (req, res) => {
     try {
         console.log("Flag")
@@ -210,7 +206,7 @@ export const verifyEmail = async (req, res) => {
         }
 
         if (userOtp.expiresAt && Date.now() > new Date(userOtp.expiresAt).getTime()) {
-            await UserOtp.deleteOne({ email: newEmail }); // cleanup
+            await UserOtp.deleteOne({ email: newEmail }); 
             return res.status(400).json({
                 success: false,
                 message: "Verification code has expired"
@@ -247,7 +243,6 @@ export const verifyEmail = async (req, res) => {
 
 
 
-// Load Pagenot Found
 export const loadPagenotFound = async (req, res) => {
     try {
         const email = req.session.user;

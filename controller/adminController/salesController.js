@@ -146,8 +146,31 @@ async function buildReportData(query) {
     .lean();
 
   const transactionRows = transactions.map((o) => {
-    // Compute original subtotal from items to avoid mismatch from return mutations
     const computedOrderTotal = o.items?.reduce((sum, it) => sum + (it.total || 0), 0) || o.orderTotal;
+
+    let refundedAmount = 0;
+    if (o.items && o.items.length > 0) {
+      o.items.forEach(item => {
+        const netItemPaid = (item.total || 0) - (item.couponDiscountLine || 0);
+        if (item.itemStatus === 'returned') {
+          refundedAmount += netItemPaid;
+        } else if (item.itemStatus === 'cancelled') {
+          if (o.paymentMethod !== 'cod' || o.paymentStatus === 'refunded') {
+            refundedAmount += netItemPaid;
+          }
+        }
+      });
+
+      const allInactive = o.items.every(item => item.itemStatus === 'cancelled' || item.itemStatus === 'returned');
+      if (allInactive && o.paymentStatus === 'refunded') {
+        refundedAmount = computedOrderTotal + (o.deliveryCharge || 0) - (o.discount || 0);
+      }
+    }
+
+    const originalTotal = computedOrderTotal - (o.discount || 0) + (o.deliveryCharge || 0);
+    const allInactiveFlag = o.items && o.items.length > 0 ? o.items.every(item => item.itemStatus === 'cancelled' || item.itemStatus === 'returned') : false;
+    const computedFinalAmount = allInactiveFlag ? 0 : Math.max(0, originalTotal - refundedAmount);
+
     return {
       orderId: o.orderId,
       date: o.createdAt,
@@ -157,7 +180,7 @@ async function buildReportData(query) {
       discount: o.discount || 0,
       coupon: o.isCouponApplied ? o.couponCode || "Applied" : "—",
       deliveryCharge: o.deliveryCharge || 0,
-      finalAmount: o.finalAmount,
+      finalAmount: computedFinalAmount,
       paymentMethod: o.paymentMethod,
       paymentStatus: o.paymentStatus,
       orderStatus: o.orderStatus,
@@ -188,7 +211,6 @@ async function buildReportData(query) {
 
 
 
-// Get Sales Report Page
 export const getSalesReportPage = async (req, res, next) => {
   try {
     const data = await buildReportData(req.query);
@@ -229,7 +251,6 @@ export const getSalesReportPage = async (req, res, next) => {
 };
 
 
-// Export Sales Report Excel
 export const exportSalesReportExcel = async (req, res, next) => {
   try {
     const data = await buildReportData(req.query);
@@ -294,7 +315,6 @@ export const exportSalesReportExcel = async (req, res, next) => {
 
 
 
-// Export Sales Report Pdf
 export const exportSalesReportPDF = async (req, res, next) => {
   try {
     const data = await buildReportData(req.query);

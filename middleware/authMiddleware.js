@@ -1,6 +1,5 @@
 import { User } from "../model/userSchema.js";
 
-// Is Logged In
 export const isLoggedIn = (req, res, next) => {
     if (req.session.user) {
         next();
@@ -10,7 +9,6 @@ export const isLoggedIn = (req, res, next) => {
 };
 
 
-// Is Blocked
 export const isBlocked = async (req, res, next) => {
     try {
         const userEmail = req.session.user;

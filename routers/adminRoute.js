@@ -18,7 +18,6 @@ const router = express.Router()
 router.get("/", loadLogin)
 router.post("/", login)
 
-// Apply Admin Auth Middleware to protect all subsequent admin routes
 router.use(adminAuth)
 
 router.get("/dashboard", loadDashboard)

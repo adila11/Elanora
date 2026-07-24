@@ -2,7 +2,6 @@ import Category from "../../model/categoriesSchema.js";
 import Products from "../../model/productSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
 
-// Load Categories
 export const loadCategories = async (req, res) => {
     try {
         if (!req.session.admin) return res.redirect('/admin');
@@ -71,7 +70,6 @@ export const loadCategories = async (req, res) => {
     }
 };
 
-// Add Category
 export const addCategory = async (req, res) => {
     try {
         if (!req.session.admin) return res.status(401).json({ message: 'Unauthorized' });
@@ -114,7 +112,6 @@ export const addCategory = async (req, res) => {
     }
 };
 
-// Edit Category
 export const editCategory = async (req, res) => {
     try {
         if (!req.session.admin) return res.status(401).json({ message: 'Unauthorized' });
@@ -169,7 +166,6 @@ export const editCategory = async (req, res) => {
     }
 };
 
-// Toggle Category
 export const toggleCategory = async (req, res) => {
     try {
         if (!req.session.admin) {
@@ -210,7 +206,6 @@ export const toggleCategory = async (req, res) => {
     }
 };
 
-// Delete Category
 export const deleteCategory = async (req, res) => {
     try {
         if (!req.session.admin) return res.status(401).json({ message: 'Unauthorized' });
@@ -226,7 +221,6 @@ export const deleteCategory = async (req, res) => {
     }
 };
 
-// Save Category Offer
 export const saveCategoryOffer = async (req, res) => {
     try {
         if (!req.session.admin) {
@@ -236,7 +230,6 @@ export const saveCategoryOffer = async (req, res) => {
         const { id } = req.params;
         const { name, discountType, discountValue, startDate, endDate } = req.body;
 
-        // Validation Checks
         if (!name || !name.trim()) {
             return res.status(400).json({ success: false, message: "Offer name is required" });
         }
@@ -290,7 +283,6 @@ export const saveCategoryOffer = async (req, res) => {
 
         await category.save();
 
-        // Update All Products In This Category
         const products = await Products.find({ category: id });
         for (const product of products) {
             if (!product.merchantDiscountPrice) {
@@ -308,7 +300,6 @@ export const saveCategoryOffer = async (req, res) => {
     }
 };
 
-// Delete Category Offer
 export const deleteCategoryOffer = async (req, res) => {
     try {
         if (!req.session.admin) {
@@ -324,7 +315,6 @@ export const deleteCategoryOffer = async (req, res) => {
         category.offer = undefined;
         await category.save();
 
-        // Update All Products In This Category
         const products = await Products.find({ category: id });
         for (const product of products) {
             if (!product.merchantDiscountPrice) {

@@ -6,7 +6,6 @@ import razorpay from "../../config/razorpay.js";
 import crypto from "crypto";
 
 
-// Load Wallet
 export const loadWallet = async (req, res) => {
     try {
 
@@ -48,7 +47,6 @@ export const loadWallet = async (req, res) => {
 };
 
 
-// Load Wallet Transactions
 export const loadWalletTransactions = async (req, res) => {
     try {
 
@@ -111,7 +109,6 @@ export const loadWalletTransactions = async (req, res) => {
     }
 };
 
-// Create Wallet Topup Order
 export const createWalletTopupOrder = async (req, res) => {
     try {
         const { amount } = req.body;
@@ -146,7 +143,6 @@ export const createWalletTopupOrder = async (req, res) => {
     }
 };
 
-// Verify Wallet Payment
 export const verifyWalletPayment = async (req, res) => {
     try {
 

@@ -4,7 +4,6 @@ import Wishlist from "../../model/wishlistSchema.js";
 import { User } from "../../model/userSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
 
-// Load Shop
 export const loadShop = async (req, res) => {
     try {
         const { search = '', category = 'all', sort = 'newest', page = 1, priceMin = '', priceMax = '' } = req.query;
@@ -123,7 +122,6 @@ export const loadShop = async (req, res) => {
     }
 };
 
-// Load Product Detail
 export const loadProductDetail = async (req, res) => {
     try {
         const product = await Products.findById(req.params.id)

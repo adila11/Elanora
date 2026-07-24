@@ -3,7 +3,6 @@ import Coupon from "../model/couponSchema.js";
 import Product from "../model/productSchema.js";
 import { creditWallet } from "./walletHelper.js";
 
-// Revalidate Coupon Against Cart
 export async function revalidateCouponAgainstCart(order, cancellingItemIds = []) {
   if (!order || !order.isCouponApplied || !order.couponCode) {
     return {
@@ -73,7 +72,6 @@ export async function revalidateCouponAgainstCart(order, cancellingItemIds = [])
 }
 
 
-// Cancel Order Due To Coupon Breach
 export async function cancelOrderDueToCouponBreach(order, validationResult, cancelReason = "", initiatedBy = "system") {
   const now = new Date();
   const breachMessage = `Coupon minimum purchase requirement breached (${order.couponCode}: min ₹${validationResult.minCartValue}, remaining ₹${validationResult.remainingSubtotal}). Entire order cancelled.`;

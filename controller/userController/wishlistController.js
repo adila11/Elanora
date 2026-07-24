@@ -4,7 +4,6 @@ import { User } from "../../model/userSchema.js";
 import Cart from "../../model/cartSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
 
-// Load Wishlist
 export const loadWishlist = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -44,7 +43,6 @@ export const loadWishlist = async (req, res) => {
     }
 };
 
-// Add To Wishlist
 export const addToWishlist = async (req, res) => {
     try {
         const userEmail = req.session.user;
@@ -101,7 +99,6 @@ export const addToWishlist = async (req, res) => {
     }
 };
 
-// Remove From Wishlist
 export const removeFromWishlist = async (req, res) => {
     try {
         const userEmail = req.session.user;
