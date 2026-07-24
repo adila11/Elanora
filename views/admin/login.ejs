@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Elanora</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <style>
         :root {
@@ -44,14 +46,12 @@
         }
 
         .brand-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            color: var(--primary-gold);
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            color: #BC984D;
+            margin-bottom: 30px;
+            font-family: "Playfair Display", serif;
         }
 
         h2 {
@@ -181,8 +181,13 @@
         }
 
         @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -191,9 +196,7 @@
 
     <div class="login-container">
         <div class="brand-logo">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L4.5 9L12 22L19.5 9L12 2Z" fill="#BC984D" />
-            </svg>
+
             Elanora
         </div>
 
@@ -203,35 +206,36 @@
         <div class="login-card">
 
             <!-- Backend Error Message -->
-            <% if (typeof error !== 'undefined' && error) { %>
+            <% if (typeof error !=='undefined' && error) { %>
                 <div class="message error-box" id="backendError">
                     <%= error %>
                 </div>
-            <% } %>
+                <% } %>
 
-            <!-- Frontend JS Message Box -->
-            <div id="messageBox" class="message"></div>
+                    <!-- Frontend JS Message Box -->
+                    <div id="messageBox" class="message"></div>
 
-            <form id="loginForm" method="post" action="/admin">
-                <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="text" id="email" name="email" placeholder="Enter admin email">
-                </div>
+                    <form id="loginForm" method="post" action="/admin">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="text" id="email" name="email" placeholder="Enter admin email">
+                        </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="password" name="password" placeholder="Enter password">
-                        <button class="eye-btn" id="eyeBtn" type="button" aria-label="Toggle password visibility">
-                            <i class="ti ti-eye" id="eyeIcon"></i>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="password" name="password" placeholder="Enter password">
+                                <button class="eye-btn" id="eyeBtn" type="button"
+                                    aria-label="Toggle password visibility">
+                                    <i class="ti ti-eye" id="eyeIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn-signin">
+                            Sign in
                         </button>
-                    </div>
-                </div>
-
-                <button type="submit" id="submitBtn" class="btn-signin">
-                    Sign in
-                </button>
-            </form>
+                    </form>
         </div>
     </div>
 

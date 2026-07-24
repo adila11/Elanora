@@ -7,18 +7,16 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 28px;
-    gap: 20px;
-    height: 68px;
-    flex-shrink: 0;
-  }
+    padding: 16px 28px;
+    height: 72px;
+}
 
   .page-title {
-    font-size: 20px;
+    font-size: 30px;
     font-weight: 600;
-    color: var(--text);
-    white-space: nowrap;
-  }
+    color: #1F1F1F;
+    font-family: "DM Serif Display", serif;
+}
 
   .search-wrap {
     flex: 1;
@@ -158,24 +156,9 @@
 <header class="topbar">
   <div class="page-title"><%= locals.title || 'Dashboard' %></div>
 
-  <div class="search-wrap">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="11" cy="11" r="8"/>
-      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-    </svg>
-    <input class="search-input" type="text" placeholder="Search products, orders..." id="globalSearch">
-  </div>
 
   <div class="topbar-right">
-    <!-- Notification Button -->
-    <div class="icon-btn" id="notificationBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-        <path d="M13.73 21a2 2 0 01-3.46 0"/>
-      </svg>
-      <span class="notif-dot" id="notifDot"></span>
-    </div>
-
+   
     <!-- User Profile -->
     <div class="user-pill" id="userProfile">
       <div class="avatar">EA</div>

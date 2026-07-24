@@ -872,8 +872,7 @@
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </span>
-            <input type="text" id="shopSearch" placeholder="Search products…" value="<%= search %>"
-              oninput="onSearchInput()" onkeyup="if(event.key==='Enter') applyFilters()" />
+            <input type="text" id="shopSearch" placeholder="Search products…" value="<%= search %>" />
             <button type="button" id="clearSearchBtn" class="clear-search-btn <%= search ? 'visible' : '' %>"
               onclick="clearSearch()" title="Clear search" aria-label="Clear search">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
@@ -1059,15 +1058,19 @@
         }
 
         /* SEARCH */
-        function onSearchInput() {
-          const val = document.getElementById('shopSearch').value;
+        // Debounced Search — fires applyFilters after 700ms of inactivity
+        let debounceTimer;
+        document.getElementById('shopSearch').addEventListener('input', function () {
+          const val = this.value;
           const btn = document.getElementById('clearSearchBtn');
           if (val) {
             btn.classList.add('visible');
           } else {
             btn.classList.remove('visible');
           }
-        }
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(applyFilters, 700);
+        });
 
         function clearSearch() {
           const input = document.getElementById('shopSearch');

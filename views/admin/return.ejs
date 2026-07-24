@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elanora — Returns</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap"
     rel="stylesheet">
   <style>
     :root {
@@ -587,7 +587,7 @@
             <circle cx="11" cy="11" r="8"/>
             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
-          <input type="text" id="searchInp" placeholder="Search returns…" onkeyup="filterSearch(this.value)">
+          <input type="text" id="searchInp" placeholder="Search returns…">
         </div>
       </div>
 
@@ -834,6 +834,14 @@
       currentFilter = filter;
       applyVisibility();
     }
+
+    // Debounced Search — matches Customers page pattern
+    let debounceTimer;
+    document.getElementById('searchInp').addEventListener('input', function () {
+      clearTimeout(debounceTimer);
+      const val = this.value.toLowerCase();
+      debounceTimer = setTimeout(() => applyVisibility(val), 700);
+    });
 
     function filterSearch(val) { applyVisibility(val.toLowerCase()); }
 
