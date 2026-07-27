@@ -10,7 +10,7 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: "/auth/google/callback",
+            callbackURL: process.env.GOOGLE_CALLBACK_URL,
             passReqToCallback: true,
         },
         async (req, accessToken, refreshToken, profile, done) => {
@@ -31,11 +31,11 @@ passport.use(
                 } else {
                     const referredBy = req.session && req.session.referredBy || null;
                     user = await User.create({
-                        fullName: profile.displayName, 
+                        fullName: profile.displayName,
                         email: email,
                         googleId: profile.id,
                         isGoogleUser: true,
-                        password: null, 
+                        password: null,
                         referredBy: referredBy
                     });
 
@@ -74,7 +74,7 @@ passport.use(
                 return done(null, user);
 
             } catch (err) {
-                console.log(" GOOGLE ERROR:", err); 
+                console.log(" GOOGLE ERROR:", err);
                 return done(err, null);
             }
         }
