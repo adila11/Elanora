@@ -23,11 +23,11 @@ function getDateRange(query) {
     start = new Date(now);
 
     switch (range) {
+      case "today":
+        // start is already today, no adjustment needed
+        break;
       case "7d":
         start.setDate(start.getDate() - 6);
-        break;
-      case "90d":
-        start.setDate(start.getDate() - 89);
         break;
       case "1y":
         start.setFullYear(start.getFullYear() - 1);

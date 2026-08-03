@@ -398,9 +398,9 @@
             <div class="section-title">Sales Reports</div>
             <div style="display:flex; align-items:center; gap:14px;">
               <div class="range-tabs" id="rangeTabs">
+                <button class="range-tab" data-range="today">Today</button>
                 <button class="range-tab" data-range="7d">7D</button>
                 <button class="range-tab" data-range="30d">30D</button>
-                <button class="range-tab" data-range="90d">90D</button>
                 <button class="range-tab" data-range="1y">1Y</button>
                 <button class="range-tab" data-range="custom">Custom</button>
               </div>
@@ -428,6 +428,7 @@
             <label style="font-size:13px; color:var(--muted);">To</label>
             <input type="date" id="customEnd" value="<%= endDate %>" />
             <button id="applyCustomRange">Apply</button>
+            <span id="dateError" style="font-size:12.5px; color:var(--red); display:none; margin-left:4px;"></span>
           </div>
 
           <!-- Stat Cards -->
@@ -675,11 +676,39 @@
         }
       });
 
-      // Range Tabs
-      const rangeTabs = document.getElementById('rangeTabs');
+      // ── Date helpers ──────────────────────────────────────────────────────
+      function todayStr() {
+        const d = new Date();
+        return d.toISOString().slice(0, 10); // YYYY-MM-DD
+      }
+
+      const customStart = document.getElementById('customStart');
+      const customEnd   = document.getElementById('customEnd');
+      const dateError   = document.getElementById('dateError');
+
+      // Clamp both inputs so the calendar never shows future dates
+      customStart.max = todayStr();
+      customEnd.max   = todayStr();
+
+      // When 'From' changes → update 'To' minimum so To ≥ From
+      customStart.addEventListener('change', function () {
+        customEnd.min = this.value || '';
+        // If current 'To' is before new 'From', clear it
+        if (customEnd.value && customEnd.value < this.value) {
+          customEnd.value = '';
+        }
+        dateError.style.display = 'none';
+      });
+
+      customEnd.addEventListener('change', function () {
+        dateError.style.display = 'none';
+      });
+
+      // ── Range Tabs ────────────────────────────────────────────────────────
+      const rangeTabs    = document.getElementById('rangeTabs');
       const customRangeBar = document.getElementById('customRangeBar');
 
-      // Mark The Active Tab Based On Server-provided Currentrange
+      // Mark the active tab based on server-provided currentRange
       document.querySelectorAll('.range-tab').forEach(t => {
         t.classList.toggle('active', t.dataset.range === currentRange);
       });
@@ -699,12 +728,42 @@
         location.href = `?range=${range}`;
       });
 
+      // ── Apply Custom Range (with validation) ──────────────────────────────
       document.getElementById('applyCustomRange').addEventListener('click', function () {
-        const startDate = document.getElementById('customStart').value;
-        const endDate = document.getElementById('customEnd').value;
-        if (!startDate || !endDate) return;
-        location.href = `?range=custom&startDate=${startDate}&endDate=${endDate}`;
+        const from  = customStart.value;
+        const to    = customEnd.value;
+        const today = todayStr();
+
+        dateError.style.display = 'none';
+
+        if (!from || !to) {
+          dateError.textContent = 'Please select both From and To dates.';
+          dateError.style.display = 'inline';
+          return;
+        }
+        if (from > today) {
+          dateError.textContent = 'From date cannot be in the future.';
+          dateError.style.display = 'inline';
+          return;
+        }
+        if (to > today) {
+          dateError.textContent = 'To date cannot be in the future.';
+          dateError.style.display = 'inline';
+          return;
+        }
+        if (to < from) {
+          dateError.textContent = '"To" date must be on or after the "From" date.';
+          dateError.style.display = 'inline';
+          return;
+        }
+
+        location.href = `?range=custom&startDate=${from}&endDate=${to}`;
       });
+
+      // On page load: restore the min on 'To' if From already has a value
+      if (customStart.value) {
+        customEnd.min = customStart.value;
+      }
 
       // Download Dropdown
       const btnDownloadToggle = document.getElementById('btnDownloadToggle');

@@ -240,6 +240,29 @@
   }
   .offer-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
 
+  .btn-override {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 11px;
+    font-size: 11.5px;
+    font-weight: 600;
+    font-family: inherit;
+    color: #78450a;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+  }
+  .btn-override:hover {
+    background: #f59e0b;
+    color: #fff;
+    border-color: #f59e0b;
+  }
+
   /* OFFER MODAL */
   .modal-overlay {
     display: none;
@@ -531,11 +554,11 @@
                             </button>
                           </div>
                         <% } else { %>
-                          <button type="button" class="offer-add-btn" style="font-size:11px; height:auto; padding:3px 8px; gap:3px;" title="Add Product Offer to Override" onclick="openOfferModal('<%= p._id %>')">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                          <button type="button" class="btn-override" title="Add a product-level offer" onclick="openOfferModal('<%= p._id %>')">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                               <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                             </svg>
-                            Override
+                            Add
                           </button>
                         <% } %>
                       </div>
