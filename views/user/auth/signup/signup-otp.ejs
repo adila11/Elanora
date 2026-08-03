@@ -120,6 +120,11 @@
             font-weight: 500;
             cursor: pointer;
             margin-bottom: 25px;
+            transition: background-color 0.25s ease;
+        }
+
+        .btn-verify.ready {
+            background-color: var(--primary-gold);
         }
 
         .resend-text {
@@ -212,6 +217,7 @@
             if (input.value && inputs[index + 1]) {
                 inputs[index + 1].focus();
             }
+            checkOtpComplete();
         });
 
         // Backspace Move
@@ -219,6 +225,8 @@
             if (e.key === "Backspace" && !input.value && inputs[index - 1]) {
                 inputs[index - 1].focus();
             }
+            // Delay so value is cleared before we check
+            setTimeout(checkOtpComplete, 0);
         });
 
         // Paste Support - distribute pasted digits across fields
@@ -237,9 +245,17 @@
                 // Focus last filled field or the next empty one
                 const focusIndex = Math.min(digits.length, inputs.length) - 1;
                 inputs[focusIndex].focus();
+                checkOtpComplete();
             }
         });
     });
+
+    // Light up verify button when all 6 digits are filled
+    const verifyBtn = document.querySelector('.btn-verify');
+    function checkOtpComplete() {
+        const allFilled = Array.from(inputs).every(i => i.value.trim() !== '');
+        verifyBtn.classList.toggle('ready', allFilled);
+    }
 
     // Form Submit - Combine OTP
     form.addEventListener("submit", (e) => {

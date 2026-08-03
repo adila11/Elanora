@@ -147,6 +147,11 @@
             justify-content: center;
             gap: 10px;
             margin-bottom: 25px;
+            transition: background-color 0.25s ease;
+        }
+
+        .btn-continue.ready {
+            background-color: var(--primary-gold);
         }
 
         .btn-continue:disabled {
@@ -328,14 +333,22 @@
                 if (field.value.length === 1 && index < otpFields.length - 1) {
                     otpFields[index + 1].focus();
                 }
+                checkOtpComplete();
             });
 
             field.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' && field.value === '' && index > 0) {
                     otpFields[index - 1].focus();
                 }
+                setTimeout(checkOtpComplete, 0);
             });
         });
+
+        // Light up button when all 6 digits are filled
+        function checkOtpComplete() {
+            const allFilled = Array.from(otpFields).every(f => f.value.trim() !== '');
+            submitBtn.classList.toggle('ready', allFilled);
+        }
 
         function validateOTP() {
             let isComplete = true;
@@ -458,6 +471,7 @@
                     field.value = pasteData[i];
                 });
                 otpFields[5].focus();
+                checkOtpComplete();
             }
         });
 
