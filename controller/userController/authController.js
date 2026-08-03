@@ -14,7 +14,6 @@ export const loadLogin = async (req, res) => {
         return res.render("user/auth/login/login", { error: null });
 
     } catch (error) {
-        console.log(error);
         res.status(500).send("Server error");
     }
 };
@@ -51,13 +50,11 @@ export const login = async (req, res) => {
         }
 
         req.session.user = user.email;
-        console.log(req.session.user);
         
         req.flash('success', "Logged in successfully!");
         return res.redirect('/');
 
     } catch (error) {
-        console.log(error);
         return res.status(500).send("Server Error");
     }
 };
@@ -69,7 +66,6 @@ export const loadforgotpassword = async (req,res) =>{
         }
         return res.render("user/auth/forgotpassword/forgotpassword")
     } catch (error) {
-        console.log(error);
         return res.status(500).send("Server Error");
     }
 }
@@ -101,7 +97,6 @@ export const forgotpassword = async (req, res) => {
         req.session.tempUser = email
         return res.redirect('/forgotpassword-otpverify');   
     } catch (error) {
-        console.error(error);
         req.flash('error', 'Something went wrong. Please try again.');
         return res.redirect('/forgotpassword');
     }
@@ -116,7 +111,6 @@ export const loadforgotpassOTPVerification = async (req,res)=>{
         if(!req.session.tempUser) return res.redirect("/forgotpassword")
         return res.render("user/auth/forgotpassword/forgotpass-otp")
     } catch (error) {
-        console.log(error)
         res.status(500).send("Server error")
     }
 }
@@ -144,7 +138,6 @@ export const forgotpassOTPVerification = async (req,res)=>{
         return res.redirect('/newpassword')
 
     } catch (error) {
-        console.log(error)
         res.status(500).send("Server error")
     }
 }
@@ -161,7 +154,6 @@ export const loadnewpassword = async (req,res) => {
 
         return res.render("user/auth/forgotpassword/newpassword")
     } catch (error) {
-        console.log(error)
         res.status(500).send("Server error")
     }
 }
@@ -206,7 +198,6 @@ export const newpassword = async (req,res)=>{
         return res.redirect("/login")
 
     } catch (error) {
-        console.log(error)
         res.status(500).send("Server error")
     }
 }
@@ -219,7 +210,6 @@ export const loadSignup = async (req, res) => {
         } 
         return res.render("user/auth/signup/signup")
     } catch (error) {
-        console.log(error)
         res.status(500).send("Server error")
     }
 }
@@ -237,6 +227,13 @@ export const signup = async (req, res) => {
             });
         }
 
+        if (!/^[A-Za-z\s]+$/.test(fullName.trim())) {
+            return res.status(400).json({
+                success: false,
+                message: "Full name must contain only alphabets",
+                field: "fullName"
+            });
+        }
 
         const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
@@ -303,7 +300,6 @@ export const signup = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Signup Error:", error);
         return res.status(500).json({
             success: false,
             message: "Server error. Please try again later."
@@ -317,7 +313,6 @@ export const loadSignupOTPVerification = async (req, res) => {
         if (!req.session.tempUser) return res.redirect("/signup");
         return res.render("user/auth/signup/signup-otp")
     } catch (error) {
-        console.log(error)
         return res.status(500).send("Server Error");
     }
 
@@ -401,7 +396,6 @@ export const SignupOTPVerification = async (req, res) => {
         return res.redirect('/');
 
     } catch (error) {
-        console.log(error)
         return res.status(500).send("Server Error");
     }
 }
@@ -413,7 +407,6 @@ export const logout = async (req, res) => {
         delete req.session.user;
         return res.redirect("/");
     } catch (error) {
-        console.log(error);
         return res.status(500).send("Server Error");
     }
 };
@@ -436,7 +429,6 @@ export const resendOtp = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Resend OTP Error:", error);
         return res.status(500).json({
             success: false,
             message: "Failed to resend OTP. Please try again."

@@ -95,7 +95,6 @@ export const getOrdersPage = async (req, res) => {
         });
 
     } catch (error) {
-        console.log("Order page error:", error);
         res.redirect("/admin/pageerror");
     }
 };
@@ -218,7 +217,6 @@ export const updateOrderStatus = async (req, res) => {
         return res.json({ success: true });
 
     } catch (error) {
-        console.error("updateOrderStatus error:", error);
         return res.status(500).json({ success: false, message: "An error occurred while updating the status." });
     }
 };
@@ -300,7 +298,6 @@ export const updateItemStatus = async (req, res) => {
         return res.json({ success: true });
 
     } catch (error) {
-        console.error("updateItemStatus error:", error);
         return res.status(500).json({ success: false, message: "An error occurred while updating the item status." });
     }
 };
@@ -322,7 +319,6 @@ export const getOrderDetail = async (req, res) => {
 
         res.render('admin/orderDetail', { order, title: "Order Details" });
     } catch (err) {
-        console.error('getOrderDetail error:', err);
         res.status(500).render('admin/error', { message: 'Server error' });
     }
 };

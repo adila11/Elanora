@@ -4,7 +4,6 @@ export const loadAbout = async (req, res) => {
         res.render("user/about");
 
     } catch (error) {
-        console.log(error);
         res.redirect("/");
     }
 };

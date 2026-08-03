@@ -74,7 +74,6 @@ passport.use(
                 return done(null, user);
 
             } catch (err) {
-                console.log(" GOOGLE ERROR:", err);
                 return done(err, null);
             }
         }

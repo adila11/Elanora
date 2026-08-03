@@ -63,7 +63,6 @@ export const loadCheckoutAddress = async (req, res) => {
             user
         });
     } catch (error) {
-        console.error(error);
         res.status(500).send("Server Error");
     }
 };
@@ -168,7 +167,6 @@ export const loadCheckoutPayment = async (req, res) => {
             discountValue: appliedDiscountValue
         });
     } catch (error) {
-        console.error(error);
         res.status(500).send("Server Error");
     }
 };
@@ -266,7 +264,6 @@ export const loadCheckoutReview = async (req, res) => {
             discountAmount: finalDiscountAmount
         });
     } catch (error) {
-        console.error(error);
         res.status(500).send("Server Error");
     }
 };
@@ -492,7 +489,6 @@ export const createRazorpayOrder = async (req, res) => {
 
     } catch (error) {
 
-        console.error(error);
 
         return res.status(500).json({
 
@@ -747,7 +743,6 @@ export const placeOrder = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error);
         res.status(500).json({ success: false, message: "Failed to place order" });
     }
 
@@ -972,7 +967,6 @@ export const verifyPayment = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         return res.status(500).json({
             success: false,
             message: "Payment verification failed"
@@ -985,7 +979,7 @@ export const verifyPayment = async (req, res) => {
 export const loadOrderSuccess = async (req, res) => {
     try {
         const order = await Order.findById(req.params.id);
-        if (!order) return res.redirect("/");
+        if (!order) return res.status(404).render("user/profile/pageNotFound");
 
         const from = new Date(order.createdAt);
         const to = new Date(order.createdAt);
@@ -1002,7 +996,9 @@ export const loadOrderSuccess = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error(error);
+        if (error.name === 'CastError') {
+            return res.status(404).render("user/profile/pageNotFound");
+        }
         res.redirect("/");
     }
 };
@@ -1026,7 +1022,6 @@ export const loadOrderFailed = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         return res.redirect("/cart");
 
     }

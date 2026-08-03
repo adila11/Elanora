@@ -41,7 +41,6 @@ export const loadWallet = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         res.status(500).send("Server Error");
     }
 };
@@ -104,7 +103,6 @@ export const loadWalletTransactions = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         res.status(500).send("Server Error");
     }
 };
@@ -135,7 +133,6 @@ export const createWalletTopupOrder = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             success: false,
             message: "Unable to create payment"
@@ -221,7 +218,6 @@ export const verifyWalletPayment = async (req, res) => {
 
     } catch (error) {
 
-        console.error(error);
 
         return res.status(500).json({
             success: false,

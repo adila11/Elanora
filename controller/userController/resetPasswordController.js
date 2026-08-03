@@ -9,7 +9,6 @@ export const loadresetpassword = async (req, res) => {
         const user = await User.findOne({ email: email });
         return res.render("user/profile/resetPassword", { user })
     } catch (error) {
-        console.log(error)
         res.status(500).send("Server error")
     }
 }
@@ -27,7 +26,6 @@ export const resetpassword = async (req, res) => {
 
         const { oldPassword, newPassword, confirmPassword } = req.body;
 
-        console.log(req.body);        
 
         if (!oldPassword || !newPassword || !confirmPassword) {
             return res.status(400).json({
@@ -78,7 +76,6 @@ export const resetpassword = async (req, res) => {
         return res.json({ success: true });   
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 };

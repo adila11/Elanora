@@ -625,7 +625,6 @@
           showModal('error', 'Update Error', data.message || 'Failed to update cart', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
         }
       } catch (err) {
-        console.error(err);
         showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
       }
     }
@@ -668,7 +667,6 @@
           showModal('error', 'Remove Error', data.message || 'Failed to remove item', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
         }
       } catch (err) {
-        console.error(err);
         showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
       }
     }

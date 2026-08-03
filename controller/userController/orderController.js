@@ -47,7 +47,6 @@ export const getOrders = async (req, res) => {
             },
         });
     } catch (err) {
-        console.error(err);
         res.status(500).send('Server Error');
     }
 };
@@ -63,7 +62,7 @@ export const getOrderDetail = async (req, res) => {
         if (!user) return res.redirect("/login");
 
         const order = await Order.findOne({ _id: req.params.id, userId: user._id });
-        if (!order) return res.status(404).send("Order not found");
+        if (!order) return res.status(404).render("user/profile/pageNotFound");
 
         const returnRequests = await Return.find({ orderId: order._id });
 
@@ -76,7 +75,10 @@ export const getOrderDetail = async (req, res) => {
         res.render("user/order/orderDetail", { order: orderObj, user });
 
     } catch (error) {
-        console.log("Get order detail error:", error);
+        // Invalid ObjectId format → treat as 404
+        if (error.name === 'CastError') {
+            return res.status(404).render("user/profile/pageNotFound");
+        }
         res.status(500).send("Server Error");
     }
 };
@@ -138,7 +140,6 @@ export const cancelFullOrder = async (req, res) => {
         return res.status(200).json({ success: true, message: "Order cancelled successfully" });
 
     } catch (error) {
-        console.log("Cancel full order error:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -259,7 +260,6 @@ export const cancelSingleItem = async (req, res) => {
         res.json({ success: true, message: "Item cancelled successfully" });
 
     } catch (error) {
-        console.log("Cancel item error:", error);
         res.status(500).json({ success: false });
     }
 };
@@ -352,7 +352,6 @@ export const returnItem = async (req, res) => {
 
     } catch (error) {
 
-        console.log(error);
 
         return res.status(500).json({
             success: false,

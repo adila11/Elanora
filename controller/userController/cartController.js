@@ -107,7 +107,6 @@ export const addToCart = async (req, res) => {
         );
 
         const wishlist = await Wishlist.findOne({ userId: userId });
-        console.log(wishlist)
         if (wishlist) {
             const initialLength = wishlist.products.length;
             wishlist.products = wishlist.products.filter(
@@ -126,7 +125,6 @@ export const addToCart = async (req, res) => {
 
 
     } catch (error) {
-        console.error("ADD TO CART ERROR:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
@@ -215,7 +213,6 @@ export const updateCartItem = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("UPDATE CART ERROR:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
@@ -265,7 +262,6 @@ export const removeCartItem = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("REMOVE CART ITEM ERROR:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
@@ -309,7 +305,6 @@ export const loadCart = async (req, res) => {
         res.render("user/cart", { cart, subtotal, title: "Shopping Cart" });
 
     } catch (error) {
-        console.error("LOAD CART ERROR:", error);
         res.status(500).send("Server error");
     }
 };

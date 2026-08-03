@@ -54,7 +54,6 @@ export const loadReferralPage = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         res.redirect("/pageNotFound");
 
     }

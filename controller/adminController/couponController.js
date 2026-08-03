@@ -338,7 +338,6 @@ export const loadCoupons = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         return res.status(500).render("admin/coupon", {
             title: "Coupon",
             coupons: [],
@@ -402,7 +401,6 @@ export const createCoupon = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         return res.status(500).json({
             success: false,
             message:"Something went wrong while creating the coupon."
@@ -479,7 +477,6 @@ export const updateCoupon = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         return res.status(500).json({
             success: false,
             message:"Something went wrong while updating the coupon."
@@ -510,7 +507,6 @@ export const deleteCoupon = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         return res.status(500).json({
             success: false,
             message: "Something went wrong while deleting the coupon."

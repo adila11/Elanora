@@ -434,6 +434,15 @@
       document.getElementById('emailWarning').style.display = changed ? 'block' : 'none';
     }
 
+    // Block numbers from being typed into the full name field
+    document.getElementById('fullName').addEventListener('input', function () {
+      const cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+      if (this.value !== cleaned) {
+        this.value = cleaned;
+        if (typeof window.showToast === 'function') window.showToast('Full name must contain only alphabets', 'error');
+      }
+    });
+
     // Form Submission - Now Refreshes The Page After Successful Update
     document.getElementById('profileForm').addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -442,6 +451,17 @@
 
       if (currentEmail !== orig.email) {
         if (typeof window.showToast === 'function') window.showToast('Please verify your new email before saving changes.', 'error');
+        return;
+      }
+
+      // Validate full name
+      const fullNameVal = document.getElementById('fullName').value.trim();
+      if (!fullNameVal || fullNameVal.length < 2) {
+        if (typeof window.showToast === 'function') window.showToast('Full name must be at least 2 characters', 'error');
+        return;
+      }
+      if (!/^[A-Za-z\s]+$/.test(fullNameVal)) {
+        if (typeof window.showToast === 'function') window.showToast('Full name must contain only alphabets', 'error');
         return;
       }
 
@@ -477,7 +497,6 @@
           saveBtn.disabled = false;
         }
       } catch (err) {
-        console.error(err);
         if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
         saveBtn.textContent = originalText;
         saveBtn.disabled = false;
@@ -562,7 +581,6 @@
           if (typeof window.showToast === 'function') window.showToast(data.message || 'Could not send OTP.', 'error');
         }
       } catch (err) {
-        console.error(err);
         if (typeof window.showToast === 'function') window.showToast('Something went wrong. Please try again.', 'error');
       }
     }
@@ -598,7 +616,6 @@
           if (typeof window.showToast === 'function') window.showToast(data.message || 'Invalid or expired code.', 'error');
         }
       } catch (err) {
-        console.error(err);
         if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
       }
     }

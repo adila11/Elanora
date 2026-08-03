@@ -82,7 +82,6 @@ export const exportLedger = async (req, res) => {
 
     doc.end();
   } catch (err) {
-    console.error("Ledger export error:", err);
     res.status(500).json({ success: false, message: "Failed to generate ledger" });
   }
 };

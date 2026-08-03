@@ -115,7 +115,6 @@ export const loadDashboard = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("Dashboard load error:", err);
     res.status(500).send("Dashboard temporarily unavailable. Please try again.");
   }
 };
@@ -180,7 +179,6 @@ export const getDashboardChartData = async (req, res) => {
 
     res.json({ success: true, labels, data });
   } catch (err) {
-    console.error("Chart data error:", err);
     res.status(500).json({ success: false, message: "Failed to fetch chart data" });
   }
 };

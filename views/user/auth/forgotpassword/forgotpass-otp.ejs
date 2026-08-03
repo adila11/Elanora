@@ -319,7 +319,8 @@
         const timerContainer = document.getElementById('timerContainer');
         const timerDisplay = document.getElementById('timer');
 
-        let timeLeft = 60;
+        const TIMER_DURATION = 60;
+        let timeLeft = TIMER_DURATION;
         let timerInterval = null;
 
         otpFields.forEach((field, index) => {
@@ -359,13 +360,30 @@
             return otp;
         }
 
-        function startTimer() {
-            timeLeft = 60;
+        function startTimer(fresh = true) {
+            if (fresh) {
+                // Store the timestamp when the timer was started
+                sessionStorage.setItem('forgotOtpTimerStart', Date.now().toString());
+                timeLeft = TIMER_DURATION;
+            } else {
+                // Calculate remaining time based on when the timer was originally started
+                const startTime = parseInt(sessionStorage.getItem('forgotOtpTimerStart') || '0', 10);
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                timeLeft = Math.max(TIMER_DURATION - elapsed, 0);
+            }
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            if (timeLeft <= 0) {
+                // Timer already expired — show resend link immediately
+                timerContainer.style.display = 'none';
+                resendLink.classList.remove('disabled');
+                return;
+            }
+
             timerDisplay.textContent = timeLeft;
             timerContainer.style.display = 'inline';
             resendLink.classList.add('disabled');
-
-            if (timerInterval) clearInterval(timerInterval);
 
             timerInterval = setInterval(() => {
                 timeLeft--;
@@ -402,7 +420,8 @@
                     } else {
                         alert("New OTP has been sent!");
                     }
-                    startTimer();
+                    // fresh=true resets the timer (new OTP was sent)
+                    startTimer(true);
                 } else {
                     throw new Error(data.message || "Failed to resend OTP");
                 }
@@ -442,7 +461,12 @@
             }
         });
 
-        window.onload = startTimer;
+        window.onload = () => {
+            // If there's no stored timer start, this is a fresh visit — start fresh.
+            // If there is one, resume from wherever the timer left off (e.g. after invalid OTP).
+            const hasExistingTimer = sessionStorage.getItem('forgotOtpTimerStart') !== null;
+            startTimer(!hasExistingTimer);
+        };
     </script>
 
     <%- include('../../../partials/user/flash') %>

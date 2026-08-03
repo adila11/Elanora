@@ -201,6 +201,7 @@
     const resendText = document.querySelector(".resend-text");
     let timerInterval = null;
     let timeLeft = 25;
+    const TIMER_DURATION = 25;
 
     // OTP Input Handling
     inputs.forEach((input, index) => {
@@ -275,13 +276,31 @@
         }
     }
 
-    function startTimer() {
+    function startTimer(fresh = true) {
         // Clear Any Existing Interval
         if (timerInterval) {
             clearInterval(timerInterval);
         }
 
-        timeLeft = 25;
+        if (fresh) {
+            // Store the timestamp when the timer was first started
+            sessionStorage.setItem('signupOtpTimerStart', Date.now().toString());
+            timeLeft = TIMER_DURATION;
+        } else {
+            // Calculate remaining time based on the original start time
+            const startTime = parseInt(sessionStorage.getItem('signupOtpTimerStart') || '0', 10);
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            timeLeft = Math.max(TIMER_DURATION - elapsed, 0);
+        }
+
+        if (timeLeft <= 0) {
+            // Timer already expired — show resend link immediately
+            resendText.innerHTML = `Didn't receive the code? <span class="resend-link" id="resend-btn">Resend OTP</span>`;
+            const resendBtn = document.getElementById("resend-btn");
+            if (resendBtn) resendBtn.addEventListener("click", handleResend);
+            return;
+        }
+
         updateResendUI();
 
         timerInterval = setInterval(() => {
@@ -324,8 +343,8 @@
                     alert("New OTP has been sent to your email!");
                 }
                 
-                // Restart The 25-second Cooldown
-                startTimer();
+                // Restart The 25-second Cooldown (fresh=true — new OTP was sent)
+                startTimer(true);
             } else {
                 const errorMsg = data.message || "Failed to resend OTP. Please try again.";
                 if (typeof window.showToast === 'function') {
@@ -351,7 +370,10 @@
 
     // Start The Countdown Timer Immediately When Page Loads
     window.addEventListener("load", () => {
-        startTimer();
+        // If there's no stored timer start, this is a fresh visit — start fresh.
+        // If there is one, resume from wherever the timer left off (e.g. after invalid OTP).
+        const hasExistingTimer = sessionStorage.getItem('signupOtpTimerStart') !== null;
+        startTimer(!hasExistingTimer);
     });
 
     // Bonus: Allow Pressing Enter In OTP Fields To Submit

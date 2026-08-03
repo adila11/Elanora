@@ -787,7 +787,6 @@
       updateToggleLabel(checkbox, isBlocked);
 
     } catch (err) {
-      console.error(err);
       if (typeof window.showToast === 'function') window.showToast(err.message || 'Something went wrong.', 'error');
       checkbox.checked = originalChecked;
     } finally {

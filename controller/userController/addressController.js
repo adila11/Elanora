@@ -19,7 +19,6 @@ export const loadAddress = async (req, res) => {
             addresses
         });
     } catch (error) {
-        console.error("Load Address Error:", error);
         res.status(500).send("Server error");
     }
 };
@@ -35,7 +34,6 @@ export const loadAddAddress = async (req, res) => {
         if (!user) return res.redirect("/login");
         res.render("user/address/add-address", { user });
     } catch (error) {
-        console.error("Load Address Error:", error);
         res.status(500).send("Server error");
     }
 }
@@ -146,7 +144,6 @@ export const addAddress = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Add Address Error:", error);
         res.status(500).json({ 
             message: "Something went wrong. Please try again later." 
         });
@@ -164,14 +161,16 @@ export const loadEditAddress = async (req, res) => {
         if (!user) return res.redirect("/login");
 
         const { id } = req.params;
-        if (!id) return res.redirect('/addresses');
+        if (!id) return res.status(404).render("user/profile/pageNotFound");
 
         const address = await Address.findById(id);
-        if (!address) return res.redirect('/addresses');
+        if (!address) return res.status(404).render("user/profile/pageNotFound");
 
         res.render("user/address/edit-address", { user, address });
     } catch (error) {
-        console.error("Load Address Error:", error);
+        if (error.name === 'CastError') {
+            return res.status(404).render("user/profile/pageNotFound");
+        }
         res.status(500).send("Server error");
     }
 }
@@ -278,7 +277,6 @@ export const editAddress = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Edit Address Error:", error);
         res.status(500).json({ 
             message: "Something went wrong. Please try again later." 
         });
@@ -309,7 +307,6 @@ export const setDefault = async (req, res) => {
 
         res.status(201).json({ message: "Default Address Has Been. Updated  " }); req.flash('Success', "Default address updated")
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: "Server error" });
     }
 }
@@ -317,7 +314,6 @@ export const setDefault = async (req, res) => {
 
 export const deleteAddress = async (req, res) => {
     try {
-        console.log("flag")
         const email = req.session.user;
         if (!email) return res.status(401).json({ message: "Please login" });
 
@@ -347,7 +343,6 @@ export const deleteAddress = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Delete Address Error:", error);
         res.status(500).json({ message: "Server error" });
     }
 };

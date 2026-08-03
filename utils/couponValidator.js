@@ -76,17 +76,7 @@ export async function cancelOrderDueToCouponBreach(order, validationResult, canc
   const now = new Date();
   const breachMessage = `Coupon minimum purchase requirement breached (${order.couponCode}: min ₹${validationResult.minCartValue}, remaining ₹${validationResult.remainingSubtotal}). Entire order cancelled.`;
 
-  console.log(`[AUDIT LOG - COUPON RE-VALIDATION BREACH]`, {
-    timestamp: now.toISOString(),
-    orderId: order.orderId,
-    orderDbId: order._id,
-    userId: order.userId,
-    couponCode: order.couponCode,
-    minCartValue: validationResult.minCartValue,
-    remainingSubtotal: validationResult.remainingSubtotal,
-    initiatedBy,
-    action: "FULL_ORDER_CANCEL_AND_COUPON_REVERSAL",
-  });
+
 
   let totalRefundForNewlyCancelled = 0;
 

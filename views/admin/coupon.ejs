@@ -1086,7 +1086,6 @@
       if (typeof window.showToast === 'function') window.showToast(result.message || 'Coupon saved successfully', 'success');
       setTimeout(() => window.location.reload(), 600);
     } catch (err) {
-      console.error(err);
       if (typeof window.showToast === 'function') window.showToast(err.message || 'Something went wrong.', 'error');
       else alert(err.message);
     }
@@ -1114,7 +1113,6 @@
       if (typeof window.showToast === 'function') window.showToast(data.message || 'Coupon deleted successfully', 'success');
       setTimeout(() => window.location.reload(), 600);
     } catch (err) {
-      console.error(err);
       if (typeof window.showToast === 'function') window.showToast(err.message || 'Something went wrong.', 'error');
       else alert(err.message);
     } finally {

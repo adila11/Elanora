@@ -57,7 +57,6 @@ export const loadProduct = async (req, res) => {
             sort
         });
     } catch (error) {
-        console.log(error);
         res.status(500).send("Server error");
     }
 };
@@ -72,7 +71,6 @@ export const loadAddProduct = async (req, res) => {
         const categories = await Category.find({ isActive: true });
         return res.render("admin/addProduct", { title: "Add Product", categories })
     } catch (error) {
-        console.log(error)
         res.status(500).send("Server error")
     }
 }
@@ -182,7 +180,6 @@ export const addProduct = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("ADD PRODUCT ERROR:", error);
         let message = error.message || "Something went wrong";
         if (error.code === 11000) message = "A product with this SKU already exists";
         res.status(500).json({ success: false, message });
@@ -199,7 +196,6 @@ export const loadEditProduct = async (req, res) => {
         const categories = await Category.find({});
         res.render("admin/editProduct", { title: "Edit Product", product, categories });
     } catch (error) {
-        console.error(error);
         res.status(500).send("Server error");
     }
 };
@@ -340,7 +336,6 @@ export const editProduct = async (req, res) => {
         res.json({ success: true, message: "Product updated successfully" });
 
     } catch (error) {
-        console.error("EDIT PRODUCT ERROR:", error);
         let message = error.message || "Update failed";
         if (error.code === 11000) message = "Another product with this SKU already exists";
         if (error.name === 'ValidationError') {
@@ -450,7 +445,6 @@ export const saveProductOffer = async (req, res) => {
 
         res.json({ success: true, message: "Offer saved successfully and product price updated" });
     } catch (error) {
-        console.error("SAVE OFFER ERROR:", error);
         res.status(500).json({ success: false, message: "Server error saving offer" });
     }
 };
@@ -477,7 +471,6 @@ export const deleteProductOffer = async (req, res) => {
 
         res.json({ success: true, message: "Offer removed successfully and product price reverted" });
     } catch (error) {
-        console.error("DELETE OFFER ERROR:", error);
         res.status(500).json({ success: false, message: "Server error removing offer" });
     }
 };

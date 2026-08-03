@@ -351,14 +351,12 @@
 
       const reader = new FileReader();
       reader.onload = e => {
-        console.log("File read successfully, showing modal...");
         const modal = document.getElementById('cropModal');
         const img = document.getElementById('cropTarget');
         
         modal.style.display = 'flex';
         
         img.onload = () => {
-          console.log("Image loaded in modal, initializing Cropper...");
           if (cropper) cropper.destroy();
           cropper = new Cropper(img, {
             aspectRatio: 1,
@@ -375,7 +373,6 @@
     }
 
     function cancelCrop() {
-      console.log("Crop cancelled.");
       document.getElementById('cropModal').style.display = 'none';
       if (cropper) {
         cropper.destroy();
@@ -387,19 +384,15 @@
 
     function proceedCrop() {
       if (!cropper) {
-        console.warn("No cropper instance found!");
         return;
       }
 
-      console.log("Generating cropped canvas...");
       const canvas = cropper.getCroppedCanvas({ width: 800, height: 800 });
       if (!canvas) {
-        console.error("Canvas generation failed!");
         Swal.fire('Error', 'Could not crop image. Please try again.', 'error');
         return;
       }
       canvas.toBlob(blob => {
-        console.log("Blob created, saving file...");
         const id = currentVariantId;
         const file = new File([blob], `cropped-${Date.now()}.jpg`, { type: 'image/jpeg' });
         

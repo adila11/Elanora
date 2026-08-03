@@ -28,7 +28,6 @@ const cartCountMiddleware = async (req, res, next) => {
         next();
 
     } catch (error) {
-        console.log(error);
         res.locals.cartCount = 0;
         next();
     }

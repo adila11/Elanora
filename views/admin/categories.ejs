@@ -969,7 +969,6 @@
             setFieldError('f_name', 'nameError', data.message || 'Failed to save category.');
           }
         } catch (err) {
-          console.error(err);
           showToast('Connection error. Please try again.', 'error');
         } finally {
           btn.disabled = false;

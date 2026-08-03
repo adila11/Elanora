@@ -38,7 +38,6 @@ export const loadWishlist = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("LOAD WISHLIST ERROR:", error);
         res.status(500).send("Server error");
     }
 };
@@ -94,7 +93,6 @@ export const addToWishlist = async (req, res) => {
         res.json({ success: true, message: "Added to wishlist" });
 
     } catch (error) {
-        console.error("ADD TO WISHLIST ERROR:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
@@ -128,7 +126,6 @@ export const removeFromWishlist = async (req, res) => {
         res.json({ success: true, message: "Removed from wishlist" });
 
     } catch (error) {
-        console.error("REMOVE FROM WISHLIST ERROR:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 };

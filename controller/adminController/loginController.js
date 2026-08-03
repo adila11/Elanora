@@ -9,7 +9,6 @@ export const loadLogin = async (req, res) => {
         return res.render("admin/login", { error: null });
 
     } catch (error) {
-        console.log(error);
         res.status(500).send("Server error");
     }
 };
@@ -35,8 +34,6 @@ export const login = async (req, res) => {
                 error: "Admin not found" 
             });
         }
-        console.log(email , password)
-        console.log(admin.password)
         if(admin.password!=password){
             return res.render("admin/login", { 
                 error: "Admin password incorrect" 
@@ -44,12 +41,10 @@ export const login = async (req, res) => {
         }
       
         req.session.admin=email;
-        console.log("Flag")
 
         res.redirect("/admin/dashboard")
 
     } catch (error) {
-        console.log(error);
         res.status(500).send("Server error");
     }
 };
@@ -63,7 +58,6 @@ export const logout =async(req,res)=>{
         delete req.session.admin
         return res.redirect("/admin")
     } catch (error) {
-        console.log(error)
         return res.status(500).send("Server Error");
     }
 

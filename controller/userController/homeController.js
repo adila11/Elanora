@@ -60,7 +60,6 @@ const loadHome = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("LOAD HOME ERROR:", error);
         res.status(500).send("Server error");
     }
 };

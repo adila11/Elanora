@@ -37,7 +37,6 @@ export const checkPincode = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Pincode Validation API Error:", error.message);
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };

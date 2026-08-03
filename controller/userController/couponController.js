@@ -99,7 +99,6 @@ export const applyCoupon = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("APPLY COUPON ERROR:", error);
         res.status(500).json({ success: false, message: "Server error. Please try again." });
     }
 };
@@ -109,7 +108,6 @@ export const removeCoupon = async (req, res) => {
         req.session.appliedCoupon = null;
         return res.json({ success: true, message: "Coupon removed" });
     } catch (error) {
-        console.error("REMOVE COUPON ERROR:", error);
         res.status(500).json({ success: false, message: "Server error. Please try again." });
     }
 };

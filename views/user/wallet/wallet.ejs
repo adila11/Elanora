@@ -562,14 +562,12 @@
 
             rzp.on("payment.failed", function (response) {
               showNotification("Payment failed", "error");
-              console.log(response.error);
             });
 
             rzp.open();
 
           } catch (error) {
 
-            console.error(error);
             showNotification("Something went wrong. Please try again.", "error");
 
           }

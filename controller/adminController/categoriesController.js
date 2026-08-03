@@ -65,7 +65,6 @@ export const loadCategories = async (req, res) => {
             sort
         });
     } catch (error) {
-        console.error("LOAD CATEGORIES ERROR:", error);
         res.status(500).send("Server error");
     }
 };
@@ -107,7 +106,6 @@ export const addCategory = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("ADD CATEGORY ERROR:", error);
         res.status(500).json({ message: 'Server error. Please try again.' });
     }
 };
@@ -161,7 +159,6 @@ export const editCategory = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("EDIT CATEGORY ERROR:", error);
         res.status(500).json({ message: 'Server error. Please try again.' });
     }
 };
@@ -199,7 +196,6 @@ export const toggleCategory = async (req, res) => {
 
 
     } catch (error) {
-        console.error("TOGGLE CATEGORY ERROR:", error);
         res.status(500).json({
             message: "Server error."
         });
@@ -216,7 +212,6 @@ export const deleteCategory = async (req, res) => {
 
         return res.json({ message: 'Category deleted successfully.' });
     } catch (error) {
-        console.error("DELETE CATEGORY ERROR:", error);
         res.status(500).json({ message: 'Server error.' });
     }
 };
@@ -295,7 +290,6 @@ export const saveCategoryOffer = async (req, res) => {
 
         res.json({ success: true, message: "Category offer saved successfully and product prices updated" });
     } catch (error) {
-        console.error("SAVE CATEGORY OFFER ERROR:", error);
         res.status(500).json({ success: false, message: "Server error saving category offer" });
     }
 };
@@ -327,7 +321,6 @@ export const deleteCategoryOffer = async (req, res) => {
 
         res.json({ success: true, message: "Category offer removed successfully and product prices reverted" });
     } catch (error) {
-        console.error("DELETE CATEGORY OFFER ERROR:", error);
         res.status(500).json({ success: false, message: "Server error removing category offer" });
     }
 };

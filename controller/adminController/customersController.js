@@ -60,7 +60,6 @@ export const loadUserManagement = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error);
         res.status(500).send("Server error");
     }
 };
@@ -98,7 +97,6 @@ export const blockUser = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Block error:', error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }

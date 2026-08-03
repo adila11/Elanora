@@ -8,7 +8,6 @@ export const loadProfile = async (req, res) => {
         const user = await User.findOne({ email: email });
         return res.render("user/profile/profile", { user })
     } catch (error) {
-        console.log(error)
         res.status(500).send("Server error")
     }
 }
@@ -28,6 +27,13 @@ export const editProfile = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "Full name is required and must be at least 2 characters"
+            });
+        }
+
+        if (!/^[A-Za-z\s]+$/.test(fullName.trim())) {
+            return res.status(400).json({
+                success: false,
+                message: "Full name must contain only alphabets"
             });
         }
 
@@ -68,7 +74,6 @@ export const editProfile = async (req, res) => {
         }
 
         if (req.file) {
-            console.log(req.file)
             user.profileIcon = req.file.secure_url || req.file.url || req.file.path;           
             user.cloudinaryId = req.file.public_id || req.file.filename;      
             updated = true;
@@ -97,7 +102,6 @@ export const editProfile = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Profile update error:", error);
         res.status(500).json({
             success: false,
             message: "Something went wrong while updating profile"
@@ -153,7 +157,6 @@ export const editEmail = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Send OTP Error:", error);
         res.status(500).json({
             success: false,
             message: "Something went wrong while sending OTP"
@@ -163,7 +166,6 @@ export const editEmail = async (req, res) => {
 
 export const verifyEmail = async (req, res) => {
     try {
-        console.log("Flag")
         if (!req.session.user) {
             return res.status(401).json({
                 success: false,
@@ -233,7 +235,6 @@ export const verifyEmail = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Verify Email OTP Error:", error);
         res.status(500).json({
             success: false,
             message: "Something went wrong during verification"
@@ -245,11 +246,8 @@ export const verifyEmail = async (req, res) => {
 
 export const loadPagenotFound = async (req, res) => {
     try {
-        const email = req.session.user;
-        if (!email) return res.redirect("/login")
-        return res.render("user/profile/pageNotFound")
+        return res.status(404).render("user/profile/pageNotFound")
     } catch (error) {
-        console.log(error)
         res.status(500).send("Server error")
     }
 }

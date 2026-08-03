@@ -465,7 +465,6 @@
               showModal('error', 'Remove Error', data.message || 'Failed to remove from wishlist', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
             }
           } catch (err) {
-            console.error(err);
             showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
           }
         }
@@ -527,7 +526,6 @@
               showModal('error', 'Could Not Add to Cart', data.message || 'Failed to add to cart', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
             }
           } catch (err) {
-            console.error(err);
             showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
           }
         }

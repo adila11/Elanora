@@ -1502,7 +1502,7 @@
         document.getElementById('removePromo').addEventListener('click', async function () {
           try {
             await fetch('/remove-coupon', { method: 'POST', credentials: 'include' });
-          } catch(e) { console.error(e); }
+          } catch(e) {  }
           appliedCoupon = null;
           updateSummary();
           showToast('Coupon removed.', 'success');

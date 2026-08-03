@@ -827,6 +827,7 @@
                     <span>Shipping (Standard)</span>
                     <span>₹<%= (order.deliveryCharge || 0).toLocaleString('en-IN') %></span>
                   </div>
+
         
                   <% if(order.discount && order.discount> 0) { %>
                     <div class="breakdown-row">

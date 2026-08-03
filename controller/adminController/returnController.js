@@ -61,7 +61,6 @@ export const getReturnsPage = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         res.redirect("/admin/pageerror");
     }
 };
@@ -139,7 +138,6 @@ export const approveReturn = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({ success: false, message: "Something went wrong" });
     }
 };
@@ -177,7 +175,6 @@ export const rejectReturn = async (req, res) => {
         res.json({ success: true, message: "Return rejected" });
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({ success: false, message: "Something went wrong" });
     }
 };

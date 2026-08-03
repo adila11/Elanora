@@ -396,8 +396,21 @@
                 showError('fullName', 'Full name must be at least 2 characters');
                 return false;
             }
+            if (!/^[A-Za-z\s]+$/.test(fullName)) {
+                showError('fullName', 'Full name must contain only alphabets');
+                return false;
+            }
             return true;
         }
+
+        // Block numbers from being typed into the full name field
+        document.getElementById('fullName').addEventListener('input', function () {
+            const cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+            if (this.value !== cleaned) {
+                this.value = cleaned;
+                showError('fullName', 'Full name must contain only alphabets');
+            }
+        });
 
         function validateEmail() {
             const email = document.getElementById('email').value.trim();
@@ -534,7 +547,6 @@
                     }
                 }
             } catch (error) {
-                console.error(error);
                 showGeneralError("Network error. Please check your connection and try again.");
             } finally {
                 createBtn.disabled = false;

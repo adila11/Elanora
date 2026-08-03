@@ -117,7 +117,6 @@ export const loadShop = async (req, res) => {
             buildQuery
         });
     } catch (error) {
-        console.error("LOAD SHOP ERROR:", error);
         res.status(500).send("Server error");
     }
 };
@@ -132,9 +131,8 @@ export const loadProductDetail = async (req, res) => {
                 }
             });
 
-
         if (!product || !product.isListed || !product.category) {
-            return res.redirect('/shop');
+            return res.status(404).render("user/profile/pageNotFound");
         }
 
         const pricing = getEffectivePrice(product);
@@ -176,7 +174,10 @@ export const loadProductDetail = async (req, res) => {
             offerDiscountType: pricing.offerDiscountType
         });
     } catch (error) {
-        console.error("LOAD PRODUCT DETAIL ERROR:", error);
+        // Invalid ObjectId format → treat as 404
+        if (error.name === 'CastError') {
+            return res.status(404).render("user/profile/pageNotFound");
+        }
         res.status(500).send("Server error");
     }
 };

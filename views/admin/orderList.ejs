@@ -1140,7 +1140,6 @@
             if (selectEl) selectEl.value = selectEl.dataset.prev || newStatus;
           }
         } catch (err) {
-          console.error(err);
           showErrorModal('A network error occurred. Please check your connection and try again.');
           if (selectEl) selectEl.value = selectEl.dataset.prev || newStatus;
         }
