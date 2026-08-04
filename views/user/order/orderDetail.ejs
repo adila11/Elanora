@@ -938,6 +938,11 @@
       border-bottom: 2px solid #e8e6e0;
     }
 
+    .invoice-item-status.cancelled { background: #fcecea; color: #c0392b; }
+    .invoice-item-status.returned { background: #eef0fd; color: #5b52e8; }
+    .invoice-item-status.return_requested { background: #fff4e0; color: #c47a10; }
+    .invoice-item-status.return_rejected { background: #fcecea; color: #c0392b; }
+
     .invoice-item-name {
       font-weight: 500;
     }
@@ -1316,22 +1321,31 @@
                         badgeText = 'Return Rejected';
 
                         } else {
-                        /* Active item — show contextual badge & buttons */
+                        /* Active item — show contextual status label & buttons */
                         if (os === 'delivered') {
-                        badgeClass = 'item-active-delivered';
-                        badgeText = 'Active';
+                          badgeClass = 'item-active-delivered';
+                          badgeText = 'Delivered';
+                        } else if (os === 'shipped') {
+                          badgeClass = 'item-active-progress';
+                          badgeText = 'Shipped';
+                        } else if (os === 'out_for_delivery') {
+                          badgeClass = 'item-active-progress';
+                          badgeText = 'Out for Delivery';
+                        } else if (os === 'processing') {
+                          badgeClass = 'item-active-progress';
+                          badgeText = 'Processing';
                         } else {
-                        badgeClass = 'item-active-progress';
-                        badgeText = 'Active';
+                          badgeClass = 'item-active-progress';
+                          badgeText = 'Order Placed';
                         }
 
-                        /* Cancel button: only before shipment */
-                        if (['pending', 'processing', 'shipped'].includes(os)) {
-                        showCancelItemBtn = true;
+                        /* Cancel button: strictly BEFORE shipment only */
+                        if (['pending', 'processing'].includes(os) && !['shipped', 'out_for_delivery', 'delivered', 'cancelled', 'returned'].includes(item.itemStatus)) {
+                          showCancelItemBtn = true;
                         }
                         /* Return button: only after delivery */
                         if (os === 'delivered') {
-                        showReturnItemBtn = true;
+                          showReturnItemBtn = true;
                         }
                         }
                         %>
@@ -1621,7 +1635,8 @@
           </div>
           <p style="font-size:0.82rem;color:#aaa;margin-bottom:18px;">This will cancel all items in your order. This
             action cannot be undone.</p>
-          <label class="modal-label">Reason <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;">(optional)</span></label>
+          <label class="modal-label">Reason <span
+              style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;">(optional)</span></label>
           <textarea class="modal-textarea" id="fullCancelReason"
             placeholder="Tell us why you're cancelling…"></textarea>
           <div class="modal-actions">
@@ -1666,9 +1681,9 @@
           <div class="modal-header">
             <div class="modal-title" style="color: #c0392b; display: flex; align-items: center; gap: 8px;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2">
-                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                <line x1="12" y1="9" x2="12" y2="13"/>
-                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
               Coupon Requirement Warning
             </div>
@@ -1682,7 +1697,8 @@
           <p id="couponBreachMessage" style="font-size:0.85rem;color:#444;line-height:1.6;margin-bottom:20px;"></p>
           <div class="modal-actions" style="display:flex;gap:12px;">
             <button class="modal-btn-cancel" onclick="closeCouponBreachModal()">Cancel Request (Keep Item)</button>
-            <button class="modal-btn-danger" id="confirmBreachCancelBtn" onclick="proceedFullCancelAfterBreach()">Proceed with Full Order Cancel</button>
+            <button class="modal-btn-danger" id="confirmBreachCancelBtn"
+              onclick="proceedFullCancelAfterBreach()">Proceed with Full Order Cancel</button>
           </div>
         </div>
       </div>
@@ -1938,8 +1954,11 @@
               <div class="invoice-meta-row"><strong>Payment Method:</strong>
                 <%= order.paymentMethod.toUpperCase() %>
               </div>
-              <div class="invoice-meta-row" style="text-transform: capitalize;"><strong>Status:</strong>
-                <%= order.paymentStatus %>
+              <div class="invoice-meta-row" style="text-transform: capitalize;"><strong>Order Status:</strong>
+                <%= String(order.orderStatus || 'pending').replace(/_/g, ' ') %>
+              </div>
+              <div class="invoice-meta-row" style="text-transform: capitalize;"><strong>Payment Status:</strong>
+                <%= (order.orderStatus === 'delivered' || order.paymentStatus === 'paid') ? 'Paid' : order.paymentStatus %>
               </div>
             </div>
           </div>
@@ -1986,24 +2005,54 @@
             <tbody>
               <% order.items.forEach(item=> { %>
                 <%
-                  const _iStatus = item.itemStatus || 'active';
-                  const _iLabel  = _iStatus.replace(/_/g, ' ');
+                  const rrStatus = item.returnRequest ? item.returnRequest.status : null;
+                  let _iStatus = 'delivered';
+                  let _iLabel = 'Delivered';
+
+                  if (item.itemStatus === 'cancelled') {
+                    _iStatus = 'cancelled';
+                    _iLabel = 'Cancelled';
+                  } else if (item.itemStatus === 'returned' || rrStatus === 'approved') {
+                    _iStatus = 'returned';
+                    _iLabel = 'Returned';
+                  } else if (item.itemStatus === 'return_requested' || rrStatus === 'pending') {
+                    _iStatus = 'return_requested';
+                    _iLabel = 'Return Requested';
+                  } else if (item.itemStatus === 'return_rejected' || rrStatus === 'rejected') {
+                    _iStatus = 'return_rejected';
+                    _iLabel = 'Return Rejected';
+                  } else if (item.itemStatus && item.itemStatus !== 'active') {
+                    _iStatus = item.itemStatus;
+                    _iLabel = item.itemStatus.replace(/_/g, ' ');
+                  } else if (order.orderStatus) {
+                    _iStatus = order.orderStatus;
+                    _iLabel = order.orderStatus.replace(/_/g, ' ');
+                  }
                 %>
-                <tr>
-                  <td>
-                    <div class="invoice-item-name"><%= item.productName %></div>
-                    <% if (item.variantName) { %>
-                      <div class="invoice-item-variant">Color: <%= item.variantName %></div>
-                    <% } %>
-                  </td>
-                  <td style="text-align: right;">₹<%= item.price.toLocaleString('en-IN') %></td>
-                  <td style="text-align: center;"><%= item.qty %></td>
-                  <td style="text-align: right;">₹<%= item.total.toLocaleString('en-IN') %></td>
-                  <td style="text-align: center;">
-                    <span class="invoice-item-status <%= _iStatus %>"><%= _iLabel %></span>
-                  </td>
-                </tr>
-              <% }) %>
+                  <tr>
+                    <td>
+                      <div class="invoice-item-name">
+                        <%= item.productName %>
+                      </div>
+                      <% if (item.variantName) { %>
+                        <div class="invoice-item-variant">Color: <%= item.variantName %>
+                        </div>
+                        <% } %>
+                    </td>
+                    <td style="text-align: right;">₹<%= item.price.toLocaleString('en-IN') %>
+                    </td>
+                    <td style="text-align: center;">
+                      <%= item.qty %>
+                    </td>
+                    <td style="text-align: right;">₹<%= item.total.toLocaleString('en-IN') %>
+                    </td>
+                    <td style="text-align: center;">
+                      <span class="invoice-item-status <%= _iStatus %>">
+                        <%= _iLabel %>
+                      </span>
+                    </td>
+                  </tr>
+                  <% }) %>
             </tbody>
           </table>
 
@@ -2015,60 +2064,67 @@
                 are accepted within 7 days in their original packaging and unused condition.</p>
             </div>
             <div>
-              <%
-                /* ── Invoice refund calculation ── */
-                const _inv_subtotal = order.items.reduce((s, it) => s + it.total, 0);
+              <% /* ── Invoice refund calculation ── */ const _inv_subtotal=order.items.reduce((s, it)=> s + it.total,
+                0);
 
                 let _inv_refunded = 0;
                 order.items.forEach(it => {
-                  const netItPaid = it.total - (it.couponDiscountLine || 0);
-                  if (it.itemStatus === 'returned') {
-                    _inv_refunded += netItPaid;
-                  } else if (it.itemStatus === 'cancelled') {
-                    if (order.paymentMethod !== 'cod' || order.paymentStatus === 'refunded') {
-                      _inv_refunded += netItPaid;
-                    }
-                  }
+                const netItPaid = it.total - (it.couponDiscountLine || 0);
+                if (it.itemStatus === 'returned') {
+                _inv_refunded += netItPaid;
+                } else if (it.itemStatus === 'cancelled') {
+                if (order.paymentMethod !== 'cod' || order.paymentStatus === 'refunded') {
+                _inv_refunded += netItPaid;
+                }
+                }
                 });
 
-                const _inv_allGone = order.items.every(it => it.itemStatus === 'cancelled' || it.itemStatus === 'returned');
+                const _inv_allGone = order.items.every(it => it.itemStatus === 'cancelled' || it.itemStatus ===
+                'returned');
                 if (_inv_allGone && order.paymentStatus === 'refunded') {
-                  _inv_refunded = _inv_subtotal + (order.deliveryCharge || 0) - (order.discount || 0);
+                _inv_refunded = _inv_subtotal + (order.deliveryCharge || 0) - (order.discount || 0);
                 }
 
                 const _inv_originalTotal = _inv_subtotal + (order.deliveryCharge || 0) - (order.discount || 0);
                 const _inv_netTotal = _inv_allGone ? 0 : Math.max(0, _inv_originalTotal - _inv_refunded);
-              %>
-              <table class="invoice-summary-table">
-                <tr>
-                  <td>Subtotal:</td>
-                  <td style="text-align: right;">₹<%= _inv_subtotal.toLocaleString('en-IN') %></td>
-                </tr>
-                <tr>
-                  <td>Shipping:</td>
-                  <td style="text-align: right;">₹<%= (order.deliveryCharge || 0).toLocaleString('en-IN') %></td>
-                </tr>
-                <% if (order.discount && order.discount > 0) { %>
+                %>
+                <table class="invoice-summary-table">
                   <tr>
-                    <td>Discount:</td>
-                    <td style="text-align: right; color: #2d7a4f;">-₹<%= order.discount.toLocaleString('en-IN') %></td>
-                  </tr>
-                <% } %>
-                <% if (_inv_refunded > 0) { %>
-                  <tr>
-                    <td>Original Total:</td>
-                    <td style="text-align: right;">₹<%= _inv_originalTotal.toLocaleString('en-IN') %></td>
+                    <td>Subtotal:</td>
+                    <td style="text-align: right;">₹<%= _inv_subtotal.toLocaleString('en-IN') %>
+                    </td>
                   </tr>
                   <tr>
-                    <td style="color: #c0392b; font-weight: 600;">Refunded Amount:</td>
-                    <td style="text-align: right; color: #c0392b; font-weight: 600;">-₹<%= _inv_refunded.toLocaleString('en-IN') %></td>
+                    <td>Shipping:</td>
+                    <td style="text-align: right;">₹<%= (order.deliveryCharge || 0).toLocaleString('en-IN') %>
+                    </td>
                   </tr>
-                <% } %>
-                <tr class="grand-total">
-                  <td>Total Amount:</td>
-                  <td style="text-align: right;">₹<%= _inv_netTotal.toLocaleString('en-IN') %></td>
-                </tr>
-              </table>
+                  <% if (order.discount && order.discount> 0) { %>
+                    <tr>
+                      <td>Discount:</td>
+                      <td style="text-align: right; color: #2d7a4f;">-₹<%= order.discount.toLocaleString('en-IN') %>
+                      </td>
+                    </tr>
+                    <% } %>
+                      <% if (_inv_refunded> 0) { %>
+                        <tr>
+                          <td>Original Total:</td>
+                          <td style="text-align: right;">₹<%= _inv_originalTotal.toLocaleString('en-IN') %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="color: #c0392b; font-weight: 600;">Refunded Amount:</td>
+                          <td style="text-align: right; color: #c0392b; font-weight: 600;">-₹<%=
+                              _inv_refunded.toLocaleString('en-IN') %>
+                          </td>
+                        </tr>
+                        <% } %>
+                          <tr class="grand-total">
+                            <td>Total Amount:</td>
+                            <td style="text-align: right;">₹<%= _inv_netTotal.toLocaleString('en-IN') %>
+                            </td>
+                          </tr>
+                </table>
             </div>
           </div>
 
@@ -2080,6 +2136,15 @@
 
         </div>
       </div>
+
+</body>
+
+</html> Thank you for shopping with Elanora! We appreciate your business.<br>
+For inquiries, contact support@elanora.com or call +91 98765 43210
+</div>
+
+</div>
+</div>
 
 </body>
 

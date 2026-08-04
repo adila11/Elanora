@@ -252,4 +252,34 @@
         : `<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>`
     })
   }
+
+  // Active Link Highlighting
+  function highlightActiveNav() {
+    const currentPath = window.location.pathname;
+    const allNavLinks = document.querySelectorAll('nav a[href]');
+
+    allNavLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (!href || href === '#' || link.classList.contains('nav-logo')) return;
+
+      let isActive = false;
+      if (href === '/' && currentPath === '/') {
+        isActive = true;
+      } else if (href !== '/') {
+        if (currentPath === href || currentPath.startsWith(href + '/')) {
+          isActive = true;
+        } else if (href === '/shop' && (currentPath.startsWith('/product') || currentPath.startsWith('/category'))) {
+          isActive = true;
+        }
+      }
+
+      if (isActive) {
+        link.classList.remove('text-text');
+        link.classList.add('text-gold', 'font-semibold');
+      }
+    });
+  }
+
+  highlightActiveNav();
+  document.addEventListener('DOMContentLoaded', highlightActiveNav);
 </script>

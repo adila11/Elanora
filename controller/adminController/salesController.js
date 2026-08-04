@@ -1,7 +1,8 @@
 import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
-import Order from "../../model/orderSchema.js";       
-import Return from "../../model/returnSchema.js";     
+import Order from "../../model/orderSchema.js";
+import Return from "../../model/returnSchema.js";
+import WalletTransaction from "../../model/walletTransactionSchema.js";
 
 const REVENUE_EXCLUDED_STATUSES = ["cancelled", "return_rejected"];
 
@@ -24,7 +25,6 @@ function getDateRange(query) {
 
     switch (range) {
       case "today":
-        // start is already today, no adjustment needed
         break;
       case "7d":
         start.setDate(start.getDate() - 6);
@@ -50,142 +50,220 @@ function getDateRange(query) {
 }
 
 
+// ── Helper: compute net final amount actually paid ───────────────────────
+const computeFinal = (o) => {
+  const total = o.items?.reduce((s, it) => s + (it.total || 0), 0) || o.orderTotal;
+  let refunded = 0;
+  if (o.items?.length) {
+    o.items.forEach(it => {
+      const net = (it.total || 0) - (it.couponDiscountLine || 0);
+      if (it.itemStatus === 'returned') refunded += net;
+      else if (it.itemStatus === 'cancelled' && (o.paymentMethod !== 'cod' || o.paymentStatus === 'refunded')) refunded += net;
+    });
+    const allInactive = o.items.every(it => it.itemStatus === 'cancelled' || it.itemStatus === 'returned');
+    if (allInactive && o.paymentStatus === 'refunded') refunded = total + (o.deliveryCharge || 0) - (o.discount || 0);
+  }
+  const orig = total - (o.discount || 0) + (o.deliveryCharge || 0);
+  const allFlag = o.items?.length ? o.items.every(it => it.itemStatus === 'cancelled' || it.itemStatus === 'returned') : false;
+  return allFlag ? 0 : Math.max(0, orig - refunded);
+};
+
+
 async function buildReportData(query) {
   const { start, end, prevStart, prevEnd, groupBy } = getDateRange(query);
 
-  const baseMatch = {
+  const orderSelectFields = "orderId createdAt deliveredAt updatedAt userId orderTotal discount deliveryCharge finalAmount paymentMethod paymentStatus orderStatus couponCode isCouponApplied items";
+
+  // 1. Online paid orders — money received when payment confirmed
+  const onlineOrders = await Order.find({
     createdAt: { $gte: start, $lte: end },
-    orderStatus: { $nin: REVENUE_EXCLUDED_STATUSES },
-  };
-  const prevMatch = {
+    paymentMethod: { $in: ['razorpay', 'wallet'] },
+    paymentStatus: 'paid',
+  }).populate('userId', 'name email').select(orderSelectFields).lean();
+
+  // 2. COD orders — money received ONLY when delivered
+  const codOrders = await Order.find({
+    deliveredAt: { $gte: start, $lte: end },
+    paymentMethod: 'cod',
+    orderStatus: 'delivered',
+  }).populate('userId', 'name email').select(orderSelectFields).lean();
+
+  // 3. Wallet refund credits (cancellation & return refunds)
+  const refundTxs = await WalletTransaction.find({
+    createdAt: { $gte: start, $lte: end },
+    type: 'credit',
+    source: { $in: ['order_cancel', 'order_return'] },
+    status: 'success',
+  }).populate('userId', 'name email').populate('orderId', 'orderId').lean();
+
+  // 4. Referral bonus wallet credits
+  const referralTxs = await WalletTransaction.find({
+    createdAt: { $gte: start, $lte: end },
+    type: 'credit',
+    source: 'referral',
+    status: 'success',
+  }).populate('userId', 'name email').lean();
+
+  // ── Previous period for deltas ──────────────────────────────────────────
+  const prevOnlineOrders = await Order.find({
     createdAt: { $gte: prevStart, $lte: prevEnd },
-    orderStatus: { $nin: REVENUE_EXCLUDED_STATUSES },
-  };
+    paymentMethod: { $in: ['razorpay', 'wallet'] },
+    paymentStatus: 'paid',
+  }).select(orderSelectFields).lean();
 
-  const [currentSummary] = await Order.aggregate([
-    { $match: baseMatch },
-    {
-      $group: {
-        _id: null,
-        totalRevenue: { $sum: "$finalAmount" },
-        totalOrders: { $sum: 1 },
-        totalDiscount: { $sum: { $ifNull: ["$discount", 0] } },
-        couponDiscount: {
-          $sum: {
-            $cond: [{ $eq: ["$isCouponApplied", true] }, { $ifNull: ["$discount", 0] }, 0],
-          },
-        },
-      },
-    },
-  ]);
+  const prevCodOrders = await Order.find({
+    deliveredAt: { $gte: prevStart, $lte: prevEnd },
+    paymentMethod: 'cod',
+    orderStatus: 'delivered',
+  }).select(orderSelectFields).lean();
 
-  const [prevSummary] = await Order.aggregate([
-    { $match: prevMatch },
-    {
-      $group: {
-        _id: null,
-        totalRevenue: { $sum: "$finalAmount" },
-        totalOrders: { $sum: 1 },
-        totalDiscount: { $sum: { $ifNull: ["$discount", 0] } },
-      },
-    },
-  ]);
+  const prevRefundTxs = await WalletTransaction.find({
+    createdAt: { $gte: prevStart, $lte: prevEnd },
+    type: 'credit',
+    source: { $in: ['order_cancel', 'order_return'] },
+    status: 'success',
+  }).lean();
 
-  const cur = currentSummary || { totalRevenue: 0, totalOrders: 0, totalDiscount: 0, couponDiscount: 0 };
-  const prev = prevSummary || { totalRevenue: 0, totalOrders: 0, totalDiscount: 0 };
+  // ── Current Period Totals ────────────────────────────────────────────────
+  const totalRevenue = Math.round(
+    onlineOrders.reduce((s, o) => s + computeFinal(o), 0) +
+    codOrders.reduce((s, o) => s + computeFinal(o), 0)
+  );
+  const totalOrders = onlineOrders.length + codOrders.length;
+  const totalRefunded = Math.round(refundTxs.reduce((s, tx) => s + (tx.amount || 0), 0));
+
+  const totalDiscount = Math.round(
+    onlineOrders.reduce((s, o) => s + (o.discount || 0), 0) +
+    codOrders.reduce((s, o) => s + (o.discount || 0), 0)
+  );
+  const couponDiscount = Math.round(
+    onlineOrders.filter(o => o.isCouponApplied).reduce((s, o) => s + (o.discount || 0), 0) +
+    codOrders.filter(o => o.isCouponApplied).reduce((s, o) => s + (o.discount || 0), 0)
+  );
+
+  // ── Previous Period Totals ───────────────────────────────────────────────
+  const prevTotalRevenue = Math.round(
+    prevOnlineOrders.reduce((s, o) => s + computeFinal(o), 0) +
+    prevCodOrders.reduce((s, o) => s + computeFinal(o), 0)
+  );
+  const prevTotalOrders = prevOnlineOrders.length + prevCodOrders.length;
+  const prevTotalRefunded = Math.round(prevRefundTxs.reduce((s, tx) => s + (tx.amount || 0), 0));
+  const prevTotalDiscount = Math.round(
+    prevOnlineOrders.reduce((s, o) => s + (o.discount || 0), 0) +
+    prevCodOrders.reduce((s, o) => s + (o.discount || 0), 0)
+  );
 
   const pctDelta = (curVal, prevVal) => {
     if (!prevVal) return curVal ? 100 : 0;
     return Number((((curVal - prevVal) / prevVal) * 100).toFixed(1));
   };
 
-  const totalRevenue = Math.round(cur.totalRevenue || 0);
-  const totalOrders = cur.totalOrders || 0;
-  const totalDiscount = Math.round(cur.totalDiscount || 0);
-  const couponDiscount = Math.round(cur.couponDiscount || 0);
-  const avgOrderValue = totalOrders ? Math.round(totalRevenue / totalOrders) : 0;
+  const revenueDelta = pctDelta(totalRevenue, prevTotalRevenue);
+  const ordersDelta = pctDelta(totalOrders, prevTotalOrders);
+  const refundDelta = pctDelta(totalRefunded, prevTotalRefunded);
+  const discountDelta = pctDelta(totalDiscount, prevTotalDiscount);
 
-  const revenueDelta = pctDelta(totalRevenue, prev.totalRevenue);
-  const ordersDelta = pctDelta(totalOrders, prev.totalOrders);
-  const discountDelta = pctDelta(totalDiscount, prev.totalDiscount);
-  const aovDelta = pctDelta(
-    avgOrderValue,
-    prev.totalOrders ? Math.round(prev.totalRevenue / prev.totalOrders) : 0
-  );
+  // ── Chart series ────────────────────────────────────────────────────────
+  const revenueMap = {};
+  const ordersMap = {};
 
-  const [returnsSummary] = await Return.aggregate([
-    { $match: { createdAt: { $gte: start, $lte: end }, status: "approved" } },
-    { $group: { _id: null, totalReturns: { $sum: 1 }, totalRefunded: { $sum: "$refundAmount" } } },
-  ]);
+  onlineOrders.forEach(o => {
+    const k = new Date(o.createdAt).toISOString().slice(0, groupBy === 'month' ? 7 : 10);
+    revenueMap[k] = (revenueMap[k] || 0) + Math.round(computeFinal(o));
+    ordersMap[k] = (ordersMap[k] || 0) + 1;
+  });
 
-  const dateFormat = groupBy === "month" ? "%Y-%m" : "%Y-%m-%d";
+  codOrders.forEach(o => {
+    const k = new Date(o.deliveredAt || o.createdAt).toISOString().slice(0, groupBy === 'month' ? 7 : 10);
+    revenueMap[k] = (revenueMap[k] || 0) + Math.round(computeFinal(o));
+    ordersMap[k] = (ordersMap[k] || 0) + 1;
+  });
 
-  const series = await Order.aggregate([
-    { $match: baseMatch },
-    {
-      $group: {
-        _id: { $dateToString: { format: dateFormat, date: "$createdAt" } },
-        revenue: { $sum: "$finalAmount" },
-        orders: { $sum: 1 },
-      },
-    },
-    { $sort: { _id: 1 } },
-  ]);
+  const chartLabels = Array.from(new Set([...Object.keys(revenueMap), ...Object.keys(ordersMap)])).sort();
+  const revenueSeries = chartLabels.map(k => revenueMap[k] || 0);
+  const ordersSeries = chartLabels.map(k => ordersMap[k] || 0);
 
-  const chartLabels = series.map((s) => s._id);
-  const revenueSeries = series.map((s) => Math.round(s.revenue));
-  const ordersSeries = series.map((s) => s.orders);
+  // ── Build unified transaction rows ────────────────────────────────────────
+  const transactionRows = [];
 
-  const transactions = await Order.find(baseMatch)
-    .populate("userId", "name email")
-    .sort({ createdAt: -1 })
-    .limit(500) 
-    .select(
-      "orderId createdAt userId orderTotal discount deliveryCharge finalAmount paymentMethod paymentStatus orderStatus couponCode isCouponApplied items"
-    )
-    .lean();
-
-  const transactionRows = transactions.map((o) => {
-    const computedOrderTotal = o.items?.reduce((sum, it) => sum + (it.total || 0), 0) || o.orderTotal;
-
-    let refundedAmount = 0;
-    if (o.items && o.items.length > 0) {
-      o.items.forEach(item => {
-        const netItemPaid = (item.total || 0) - (item.couponDiscountLine || 0);
-        if (item.itemStatus === 'returned') {
-          refundedAmount += netItemPaid;
-        } else if (item.itemStatus === 'cancelled') {
-          if (o.paymentMethod !== 'cod' || o.paymentStatus === 'refunded') {
-            refundedAmount += netItemPaid;
-          }
-        }
-      });
-
-      const allInactive = o.items.every(item => item.itemStatus === 'cancelled' || item.itemStatus === 'returned');
-      if (allInactive && o.paymentStatus === 'refunded') {
-        refundedAmount = computedOrderTotal + (o.deliveryCharge || 0) - (o.discount || 0);
-      }
-    }
-
-    const originalTotal = computedOrderTotal - (o.discount || 0) + (o.deliveryCharge || 0);
-    const allInactiveFlag = o.items && o.items.length > 0 ? o.items.every(item => item.itemStatus === 'cancelled' || item.itemStatus === 'returned') : false;
-    const computedFinalAmount = allInactiveFlag ? 0 : Math.max(0, originalTotal - refundedAmount);
-
-    return {
+  onlineOrders.forEach(o => {
+    const amt = computeFinal(o);
+    transactionRows.push({
+      txType: 'order',
       orderId: o.orderId,
       date: o.createdAt,
-      customer: o.userId?.name || o.userId?.email || "—",
-      itemsCount: o.items?.reduce((sum, it) => sum + it.qty, 0) || 0,
-      orderTotal: computedOrderTotal,
+      customer: o.userId?.name || o.userId?.email || '—',
+      itemsCount: o.items?.reduce((s, it) => s + it.qty, 0) || 0,
+      orderTotal: o.items?.reduce((s, it) => s + (it.total || 0), 0) || o.orderTotal,
       discount: o.discount || 0,
-      coupon: o.isCouponApplied ? o.couponCode || "Applied" : "—",
+      coupon: o.isCouponApplied ? (o.couponCode || 'Applied') : '—',
       deliveryCharge: o.deliveryCharge || 0,
-      finalAmount: computedFinalAmount,
+      finalAmount: Math.round(amt),
       paymentMethod: o.paymentMethod,
       paymentStatus: o.paymentStatus,
       orderStatus: o.orderStatus,
-    };
+    });
   });
+
+  codOrders.forEach(o => {
+    const amt = computeFinal(o);
+    transactionRows.push({
+      txType: 'order',
+      orderId: o.orderId,
+      date: o.deliveredAt || o.updatedAt || o.createdAt,
+      customer: o.userId?.name || o.userId?.email || '—',
+      itemsCount: o.items?.reduce((s, it) => s + it.qty, 0) || 0,
+      orderTotal: o.items?.reduce((s, it) => s + (it.total || 0), 0) || o.orderTotal,
+      discount: o.discount || 0,
+      coupon: o.isCouponApplied ? (o.couponCode || 'Applied') : '—',
+      deliveryCharge: o.deliveryCharge || 0,
+      finalAmount: Math.round(amt),
+      paymentMethod: 'cod',
+      paymentStatus: 'paid',
+      orderStatus: 'delivered',
+    });
+  });
+
+  refundTxs.forEach(tx => {
+    transactionRows.push({
+      txType: 'refund',
+      orderId: tx.orderId?.orderId || '—',
+      date: tx.createdAt,
+      customer: tx.userId?.name || tx.userId?.email || '—',
+      itemsCount: '—',
+      orderTotal: 0,
+      discount: 0,
+      coupon: '—',
+      deliveryCharge: 0,
+      finalAmount: Math.round(tx.amount),
+      paymentMethod: 'wallet',
+      paymentStatus: 'refunded',
+      orderStatus: tx.source === 'order_cancel' ? 'cancelled' : 'returned',
+      refundLabel: tx.source === 'order_cancel' ? 'Cancellation Refund' : 'Return Refund',
+    });
+  });
+
+  referralTxs.forEach(tx => {
+    transactionRows.push({
+      txType: 'referral',
+      orderId: '—',
+      date: tx.createdAt,
+      customer: tx.userId?.name || tx.userId?.email || '—',
+      itemsCount: '—',
+      orderTotal: 0,
+      discount: 0,
+      coupon: '—',
+      deliveryCharge: 0,
+      finalAmount: Math.round(tx.amount),
+      paymentMethod: 'wallet',
+      paymentStatus: 'paid',
+      orderStatus: 'referral',
+      refundLabel: 'Referral Bonus',
+    });
+  });
+
+  // Sort newest first
+  transactionRows.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return {
     range: { start, end },
@@ -194,13 +272,11 @@ async function buildReportData(query) {
       revenueDelta,
       totalOrders,
       ordersDelta,
-      avgOrderValue,
-      aovDelta,
+      totalRefunded,
+      refundDelta,
       totalDiscount,
       discountDelta,
       couponDiscount,
-      totalReturns: returnsSummary?.totalReturns || 0,
-      totalRefunded: Math.round(returnsSummary?.totalRefunded || 0),
     },
     chartLabels,
     revenueSeries,
@@ -208,7 +284,6 @@ async function buildReportData(query) {
     transactionRows,
   };
 }
-
 
 
 export const getSalesReportPage = async (req, res, next) => {
@@ -229,8 +304,8 @@ export const getSalesReportPage = async (req, res, next) => {
       revenueDelta: data.stats.revenueDelta,
       totalOrders: data.stats.totalOrders,
       ordersDelta: data.stats.ordersDelta,
-      avgOrderValue: data.stats.avgOrderValue,
-      aovDelta: data.stats.aovDelta,
+      totalRefunded: data.stats.totalRefunded,
+      refundDelta: data.stats.refundDelta,
       totalDiscount: data.stats.totalDiscount,
       discountDelta: data.stats.discountDelta,
       couponDiscount: data.stats.couponDiscount,
@@ -258,7 +333,6 @@ export const exportSalesReportExcel = async (req, res, next) => {
     workbook.creator = "Elanora Admin";
     workbook.created = new Date();
 
-
     const summarySheet = workbook.addWorksheet("Summary");
     summarySheet.columns = [
       { header: "Metric", key: "metric", width: 30 },
@@ -268,11 +342,9 @@ export const exportSalesReportExcel = async (req, res, next) => {
       { metric: "Report Period", value: `${data.range.start.toDateString()} - ${data.range.end.toDateString()}` },
       { metric: "Total Revenue (₹)", value: data.stats.totalRevenue },
       { metric: "Total Orders", value: data.stats.totalOrders },
-      { metric: "Average Order Value (₹)", value: data.stats.avgOrderValue },
+      { metric: "Total Refunded Amount (₹)", value: data.stats.totalRefunded },
       { metric: "Total Discount Given (₹)", value: data.stats.totalDiscount },
       { metric: "Coupon Deductions (₹)", value: data.stats.couponDiscount },
-      { metric: "Approved Returns", value: data.stats.totalReturns },
-      { metric: "Refunded Amount (₹)", value: data.stats.totalRefunded },
     ]);
     summarySheet.getRow(1).font = { bold: true };
 
@@ -314,7 +386,6 @@ export const exportSalesReportExcel = async (req, res, next) => {
 };
 
 
-
 export const exportSalesReportPDF = async (req, res, next) => {
   try {
     const data = await buildReportData(req.query);
@@ -343,13 +414,11 @@ export const exportSalesReportPDF = async (req, res, next) => {
     const fmtCurr = (n) => `Rs. ${Number(n || 0).toLocaleString("en-IN")}`;
 
     const summaryRows = [
-      ["Total Revenue",        fmtCurr(data.stats.totalRevenue)],
-      ["Total Orders",          String(data.stats.totalOrders)],
-      ["Average Order Value",  fmtCurr(data.stats.avgOrderValue)],
+      ["Total Revenue", fmtCurr(data.stats.totalRevenue)],
+      ["Total Orders", String(data.stats.totalOrders)],
+      ["Total Refunded Amount", fmtCurr(data.stats.totalRefunded)],
       ["Total Discount Given", fmtCurr(data.stats.totalDiscount)],
-      ["Coupon Deductions",    fmtCurr(data.stats.couponDiscount)],
-      ["Approved Returns",      String(data.stats.totalReturns)],
-      ["Refunded Amount",      fmtCurr(data.stats.totalRefunded)],
+      ["Coupon Deductions", fmtCurr(data.stats.couponDiscount)],
     ];
 
     const SUM_LABEL_X = 40;
@@ -377,20 +446,20 @@ export const exportSalesReportPDF = async (req, res, next) => {
     doc.moveDown(0.5);
 
     // A4 usable width = 515 (595 − 40 left − 40 right)
-    const PAGE_LEFT  = 40;
+    const PAGE_LEFT = 40;
     const PAGE_WIDTH = 515;
     const PAGE_BREAK = 760;
-    const ROW_H      = 16;
-    const HEADER_H   = 18;
+    const ROW_H = 16;
+    const HEADER_H = 18;
 
     const cols = [
-      { label: "Order ID",  width: 82  },
-      { label: "Date",      width: 70  },
-      { label: "Customer",  width: 97  },
-      { label: "Total",     width: 62  },
-      { label: "Discount",  width: 58  },
-      { label: "Final",     width: 60  },
-      { label: "Status",    width: 86  },
+      { label: "Order ID", width: 82 },
+      { label: "Date", width: 70 },
+      { label: "Customer", width: 97 },
+      { label: "Total", width: 62 },
+      { label: "Discount", width: 58 },
+      { label: "Final", width: 60 },
+      { label: "Status", width: 86 },
     ];
 
     // Assign absolute X start per column

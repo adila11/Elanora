@@ -504,7 +504,7 @@
                 <p style="color: #d35400; font-size: 0.8rem; font-weight: 500; margin-bottom: 6px;">Only <%= variant.stock %> quantity available.</p>
               <% } %>
 
-              <button class="remove-btn" onclick="removeItem(this, '<%= product._id %>', '<%= item.variantId %>')">
+              <button class="remove-btn" onclick="confirmRemoveItem(this, '<%= product._id %>', '<%= item.variantId %>')">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="3 6 5 6 21 6" />
                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />

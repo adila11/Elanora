@@ -539,13 +539,15 @@
                 <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#2c2c2c;">
                   Order History
                 </h3>
-                <div class="search-wrap">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                  <input type="text" id="searchInput" placeholder="Search by order # or item…" oninput="filterOrders()">
-                </div>
+                <% if (orders && orders.length > 0) { %>
+                  <div class="search-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search by order # or item…" oninput="filterOrders()">
+                  </div>
+                <% } %>
               </div>
 
               <div id="orderList">

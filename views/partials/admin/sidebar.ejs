@@ -118,47 +118,22 @@
 
 <script>
   // Dynamic Active Menu Based On Current URL
-  document.addEventListener('DOMContentLoaded', function () {
+  function updateSidebarActive() {
     const currentPath = window.location.pathname;
 
-    // Remove Active Class From All Items First
     document.querySelectorAll('.nav-item').forEach(item => {
       item.classList.remove('active');
-    });
-
-    // Define Mapping Of Paths To Menu Items
-    const menuMapping = {
-      '/admin/dashboard': 'dashboard',
-      '/admin/orders': 'orders',
-      '/admin/products': 'products',
-      '/admin/categories': 'categories',
-      '/admin/customers': 'customers',
-      // Add More Pages As Needed
-    };
-
-    // Check Exact Match
-    let activeFound = false;
-
-    Object.keys(menuMapping).forEach(path => {
-      if (currentPath === path || currentPath.startsWith(path + '/')) {
-        const menuId = menuMapping[path];
-        const activeItem = document.querySelector(`.nav-item[data-menu="${menuId}"]`);
-        if (activeItem) {
-          activeItem.classList.add('active');
-          activeFound = true;
+      const href = item.getAttribute('href');
+      if (href && href !== '#' && !href.includes('logout')) {
+        if (currentPath === href || currentPath.startsWith(href + '/')) {
+          item.classList.add('active');
         }
       }
     });
+  }
 
-    // Fallback: If No Exact Match, Try Partial Match (useful For Sub-pages)
-    if (!activeFound) {
-      if (currentPath.includes('/customers')) {
-        document.querySelector('.nav-item[data-menu="customers"]').classList.add('active');
-      } else if (currentPath.includes('/dashboard')) {
-        document.querySelector('.nav-item[data-menu="dashboard"]').classList.add('active');
-      }
-    }
-  });
+  updateSidebarActive();
+  document.addEventListener('DOMContentLoaded', updateSidebarActive);
 </script>
 
 <aside class="sidebar">
@@ -230,7 +205,7 @@
 
   <div class="nav-section">
     <div class="nav-label">Analytics</div>
-    <a href="/admin/sales-reports" class="nav-item">
+    <a href="/admin/sales-reports" class="nav-item" data-menu="sales-reports">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
         stroke-linejoin="round">
         <line x1="18" y1="20" x2="18" y2="10" />
@@ -239,7 +214,7 @@
       </svg>
       Sales Reports
     </a>
-    <a href="/admin/returns" class="nav-item">
+    <a href="/admin/returns" class="nav-item" data-menu="returns">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
         stroke-linejoin="round">
         <polyline points="1 4 1 10 7 10" />

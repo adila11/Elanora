@@ -615,9 +615,31 @@
             margin-bottom: 4px;
         }
 
-        .r-price { font-size: 0.9rem; color: var(--gold); font-weight: 500; }
+        /* LIMITED STOCK BADGE STYLES */
+        .stock-bar-wrap {
+            margin-bottom: 16px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            width: fit-content;
+        }
 
+        .stock-bar-wrap.limited {
+            background: #fdf2f2;
+            border: 1px solid #f8d7da;
+            color: #c0392b;
+        }
 
+        .stock-bar-wrap.out-of-stock {
+            background: #fdf0ee;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
 
     </style>
 </head>
@@ -650,6 +672,7 @@
                 const variantsJson = JSON.stringify(product.variants.map(v => ({
                     id: v._id.toString(),
                     color: v.color,
+                    stock: v.stock,
                     images: v.images.map(i => i.url)
                 })));
             %>
@@ -729,6 +752,11 @@
                     <button class="qty-btn" id="qtyPlus" onclick="changeQty(1)">+</button>
                 </div>
                 <p class="qty-note">Maximum 10 items per order</p>
+
+                <!-- STOCK BADGE -->
+                <div id="stockBarWrap" class="stock-bar-wrap" style="display: none;">
+                    <span id="stockBarText"></span>
+                </div>
 
                 <div class="divider-line"></div>
 
@@ -892,10 +920,49 @@
         let inCart     = false;
         let inWishlist = <%= typeof inWishlist !== 'undefined' ? inWishlist : false %>;
 
-        // Initialize Wishlist UI State On Page Load
-        if (inWishlist) {
-            document.addEventListener('DOMContentLoaded', () => { updateWishlistUI(); });
+        // Stock UI Handler
+        function updateStockUI(variant) {
+            const stockWrap = document.getElementById('stockBarWrap');
+            const stockText = document.getElementById('stockBarText');
+            const addCartBtn = document.getElementById('addCartBtn');
+
+            if (!variant || !stockWrap) return;
+
+            const stock = Number(variant.stock || 0);
+
+            if (stock <= 0) {
+                stockWrap.style.display = 'inline-flex';
+                stockWrap.className = 'stock-bar-wrap out-of-stock';
+                stockText.innerHTML = `Out of Stock`;
+                if (addCartBtn) {
+                    addCartBtn.disabled = true;
+                    addCartBtn.style.opacity = '0.5';
+                    addCartBtn.style.cursor = 'not-allowed';
+                }
+            } else if (stock < 5) {
+                stockWrap.style.display = 'inline-flex';
+                stockWrap.className = 'stock-bar-wrap limited';
+                stockText.innerHTML = `Only ${stock} left`;
+                if (addCartBtn) {
+                    addCartBtn.disabled = false;
+                    addCartBtn.style.opacity = '1';
+                    addCartBtn.style.cursor = 'pointer';
+                }
+            } else {
+                stockWrap.style.display = 'none';
+                if (addCartBtn) {
+                    addCartBtn.disabled = false;
+                    addCartBtn.style.opacity = '1';
+                    addCartBtn.style.cursor = 'pointer';
+                }
+            }
         }
+
+        // Initialize UI State On Page Load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (inWishlist) updateWishlistUI();
+            if (allVariants.length > 0) updateStockUI(allVariants[0]);
+        });
 
         // VARIANT SELECTION & IMAGE GALLERY
         function selectVariant(id, color, el) {
@@ -931,6 +998,7 @@
             inWishlist = false;
             resetCartBtn();
             resetWishBtn();
+            updateStockUI(variant);
         }
 
         function switchImg(thumb, src) {

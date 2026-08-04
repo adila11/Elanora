@@ -182,6 +182,17 @@ export const updateOrderStatus = async (req, res) => {
         if (dbStatus === 'delivered') {
             existingOrder.deliveredAt  = new Date();
             existingOrder.paymentStatus = 'paid';
+            for (let item of existingOrder.items) {
+                if (item.itemStatus !== 'cancelled' && item.itemStatus !== 'returned') {
+                    item.itemStatus = 'delivered';
+                }
+            }
+        } else if (['shipped', 'processing', 'out_for_delivery'].includes(dbStatus)) {
+            for (let item of existingOrder.items) {
+                if (item.itemStatus !== 'cancelled' && item.itemStatus !== 'returned') {
+                    item.itemStatus = dbStatus;
+                }
+            }
         } else if (dbStatus === 'cancelled') {
             existingOrder.cancelledAt = new Date();
             for (let item of existingOrder.items) {

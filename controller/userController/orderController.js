@@ -64,6 +64,21 @@ export const getOrderDetail = async (req, res) => {
         const order = await Order.findOne({ _id: req.params.id, userId: user._id });
         if (!order) return res.status(404).render("user/profile/pageNotFound");
 
+        if (order.orderStatus === 'delivered') {
+            let modified = false;
+            if (order.paymentStatus !== 'paid') {
+                order.paymentStatus = 'paid';
+                modified = true;
+            }
+            order.items.forEach(item => {
+                if (item.itemStatus !== 'cancelled' && item.itemStatus !== 'returned' && item.itemStatus !== 'delivered') {
+                    item.itemStatus = 'delivered';
+                    modified = true;
+                }
+            });
+            if (modified) await order.save();
+        }
+
         const returnRequests = await Return.find({ orderId: order._id });
 
         const orderObj = order.toObject();
@@ -121,6 +136,21 @@ export const cancelFullOrder = async (req, res) => {
             }
         }
 
+        if (order.orderStatus === 'delivered') {
+            let modified = false;
+            if (order.paymentStatus !== 'paid') {
+                order.paymentStatus = 'paid';
+                modified = true;
+            }
+            order.items.forEach(item => {
+                if (item.itemStatus !== 'cancelled' && item.itemStatus !== 'returned' && item.itemStatus !== 'delivered') {
+                    item.itemStatus = 'delivered';
+                    modified = true;
+                }
+            });
+            if (modified) await order.save();
+        }
+
         await order.save();
 
         if (order.paymentStatus === "paid") {
@@ -171,7 +201,7 @@ export const cancelSingleItem = async (req, res) => {
             'delivered'
         ];
 
-        if (blockedStatuses.includes(item.itemStatus)) {
+        if (blockedStatuses.includes(order.orderStatus) || blockedStatuses.includes(item.itemStatus)) {
             return res.status(400).json({
                 success: false,
                 message: "Cannot cancel this item after shipping"
