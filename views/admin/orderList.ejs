@@ -794,8 +794,7 @@
                 <option value="out_for_delivery" <%=currentStatus==='out_for_delivery' ?'selected':'' %>>Out for
                   Delivery</option>
                 <option value="delivered" <%=currentStatus==='delivered' ?'selected':'' %>>Delivered</option>
-                <option value="cancelled" <%=currentStatus==='cancelled' ?'selected':'' %>>Cancelled</option>
-                <option value="returned" <%=currentStatus==='returned' ?'selected':'' %>>Returned</option>
+
               </select>
             </div>
 
@@ -860,11 +859,7 @@
                     <th style="text-align:right;">Action</th>
                   </tr>
                 </thead>
-                <% const statusFlow={ Pending: [ "Pending" , "Processing" , "Shipped" , "Out for Delivery" , "Delivered"
-                  , "Cancelled" , "Returned" ], Processing: [ "Processing" , "Shipped" , "Out for Delivery"
-                  , "Delivered" , "Cancelled" , "Returned" ], Shipped: [ "Shipped" , "Out for Delivery" , "Delivered"
-                  , "Cancelled" , "Returned" ], "Out for Delivery" : [ "Out for Delivery" , "Delivered" , "Cancelled"
-                  , "Returned" ], Delivered: ["Delivered"], Cancelled: ["Cancelled"], Returned: ["Returned"] }; %>
+                <% const statusFlow={ Pending: [ "Pending" , "Processing" , "Shipped" , "Out for Delivery" , "Delivered" ], Processing: [ "Processing" , "Shipped" , "Out for Delivery" , "Delivered" ], Shipped: [ "Shipped" , "Out for Delivery" , "Delivered" ], "Out for Delivery" : [ "Out for Delivery" , "Delivered" ], Delivered: ["Delivered"], Cancelled: ["Cancelled"], Returned: ["Returned"] }; %>
                   <tbody>
                     <% if(orders && orders.length> 0) { %>
                       <% orders.forEach(o=> { %>

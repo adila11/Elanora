@@ -990,15 +990,7 @@
                 </div>
                 <div class="card-body">
                   <% const isLocked=['delivered','cancelled','returned'].includes(order.orderStatus); %>
-                    <% const statusFlow={ pending: [ "pending" , "processing" , "shipped" , "out_for_delivery"
-                      , "delivered" , "cancelled" , "returned" ], processing: [ "processing" , "shipped"
-                      , "out_for_delivery" , "delivered" , "cancelled" , "returned" ], shipped: [ "shipped"
-                      , "out_for_delivery" , "delivered" , "cancelled" , "returned" ], out_for_delivery:
-                      [ "out_for_delivery" , "delivered" , "cancelled" , "returned" ], delivered: ["delivered"],
-                      cancelled: ["cancelled"], returned: ["returned"] }; const statusLabels={ pending: "Pending" ,
-                      processing: "Processing" , shipped: "Shipped" , out_for_delivery: "Out for Delivery" ,
-                      delivered: "Delivered" , cancelled: "Cancelled" , returned: "Returned" }; const
-                      allowedStatuses=statusFlow[order.orderStatus] || [order.orderStatus]; %>
+                    <% const statusFlow={ pending: [ "pending" , "processing" , "shipped" , "out_for_delivery" , "delivered" ], processing: [ "processing" , "shipped" , "out_for_delivery" , "delivered" ], shipped: [ "shipped" , "out_for_delivery" , "delivered" ], out_for_delivery: [ "out_for_delivery" , "delivered" ], delivered: ["delivered"], cancelled: ["cancelled"], returned: ["returned"] }; const statusLabels={ pending: "Pending" , processing: "Processing" , shipped: "Shipped" , out_for_delivery: "Out for Delivery" , delivered: "Delivered" , cancelled: "Cancelled" , returned: "Returned" }; const allowedStatuses=statusFlow[order.orderStatus] || [order.orderStatus]; %>
 
                       <select id="orderStatusSelect" class="status-select-full" <%=isLocked ? 'disabled' : '' %>
                         >
