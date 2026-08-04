@@ -325,49 +325,123 @@ export const exportSalesReportPDF = async (req, res, next) => {
     const doc = new PDFDocument({ margin: 40, size: "A4" });
     doc.pipe(res);
 
-    doc.fontSize(18).text("Sales Report", { align: "center" });
-    doc
-      .fontSize(10)
-      .fillColor("#666")
-      .text(`${data.range.start.toDateString()} - ${data.range.end.toDateString()}`, { align: "center" });
-    doc.moveDown(1.5);
+    // ── Title ─────────────────────────────────────────────────────────────────
+    doc.fontSize(20).fillColor("#1a1a18").font("Helvetica-Bold")
+      .text("Elanora – Sales Report", { align: "center" });
+    doc.moveDown(0.3);
+    doc.fontSize(10).fillColor("#666666").font("Helvetica")
+      .text(
+        `${data.range.start.toDateString()}  –  ${data.range.end.toDateString()}`,
+        { align: "center" }
+      );
+    doc.moveDown(1.2);
 
-    doc.fillColor("#000").fontSize(12).text("Summary", { underline: true });
-    doc.moveDown(0.5);
-    doc.fontSize(10);
-    [
-      ["Total Revenue", `Rs. ${data.stats.totalRevenue}`],
-      ["Total Orders", data.stats.totalOrders],
-      ["Average Order Value", `Rs. ${data.stats.avgOrderValue}`],
-      ["Total Discount Given", `Rs. ${data.stats.totalDiscount}`],
-      ["Coupon Deductions", `Rs. ${data.stats.couponDiscount}`],
-      ["Approved Returns", data.stats.totalReturns],
-      ["Refunded Amount", `Rs. ${data.stats.totalRefunded}`],
-    ].forEach(([label, value]) => {
-      doc.text(`${label}: ${value}`);
-    });
-
-    doc.moveDown(1);
-    doc.fontSize(12).text("Transactions", { underline: true });
-    doc.moveDown(0.5);
-    doc.fontSize(8);
-
-    const colX = [40, 110, 200, 280, 340, 400, 460];
-    const headers = ["Order ID", "Date", "Customer", "Total", "Discount", "Final", "Status"];
-    headers.forEach((h, i) => doc.text(h, colX[i], doc.y, { continued: i < headers.length - 1 }));
+    // ── Summary ───────────────────────────────────────────────────────────────
+    doc.fontSize(12).fillColor("#1a1a18").font("Helvetica-Bold").text("Summary");
     doc.moveDown(0.3);
 
-    data.transactionRows.slice(0, 200).forEach((row) => {
-      const y = doc.y;
-      doc.text(row.orderId, colX[0], y, { width: 65 });
-      doc.text(new Date(row.date).toLocaleDateString("en-IN"), colX[1], y, { width: 85 });
-      doc.text(row.customer, colX[2], y, { width: 75 });
-      doc.text(String(row.orderTotal), colX[3], y, { width: 55 });
-      doc.text(String(row.discount), colX[4], y, { width: 55 });
-      doc.text(String(row.finalAmount), colX[5], y, { width: 55 });
-      doc.text(row.orderStatus, colX[6], y, { width: 90 });
-      doc.moveDown(0.6);
-      if (doc.y > 760) doc.addPage();
+    const fmtCurr = (n) => `Rs. ${Number(n || 0).toLocaleString("en-IN")}`;
+
+    const summaryRows = [
+      ["Total Revenue",        fmtCurr(data.stats.totalRevenue)],
+      ["Total Orders",          String(data.stats.totalOrders)],
+      ["Average Order Value",  fmtCurr(data.stats.avgOrderValue)],
+      ["Total Discount Given", fmtCurr(data.stats.totalDiscount)],
+      ["Coupon Deductions",    fmtCurr(data.stats.couponDiscount)],
+      ["Approved Returns",      String(data.stats.totalReturns)],
+      ["Refunded Amount",      fmtCurr(data.stats.totalRefunded)],
+    ];
+
+    const SUM_LABEL_X = 40;
+    const SUM_VALUE_X = 230;
+    doc.fontSize(10).font("Helvetica");
+
+    summaryRows.forEach(([label, value], idx) => {
+      const rowY = doc.y;
+      // Alternating stripe
+      if (idx % 2 === 0) {
+        doc.save()
+          .rect(SUM_LABEL_X - 4, rowY - 2, 519 - SUM_LABEL_X, 18)
+          .fill("#f5f4f0")
+          .restore();
+      }
+      doc.fillColor("#555555").font("Helvetica").text(label, SUM_LABEL_X, rowY + 2, { lineBreak: false });
+      doc.fillColor("#1a1a18").font("Helvetica-Bold").text(value, SUM_VALUE_X, rowY + 2, { lineBreak: false });
+      doc.y = rowY + 18;
+    });
+
+    doc.moveDown(1.2);
+
+    // ── Transactions Table ────────────────────────────────────────────────────
+    doc.fontSize(12).fillColor("#1a1a18").font("Helvetica-Bold").text("Transactions");
+    doc.moveDown(0.5);
+
+    // A4 usable width = 515 (595 − 40 left − 40 right)
+    const PAGE_LEFT  = 40;
+    const PAGE_WIDTH = 515;
+    const PAGE_BREAK = 760;
+    const ROW_H      = 16;
+    const HEADER_H   = 18;
+
+    const cols = [
+      { label: "Order ID",  width: 82  },
+      { label: "Date",      width: 70  },
+      { label: "Customer",  width: 97  },
+      { label: "Total",     width: 62  },
+      { label: "Discount",  width: 58  },
+      { label: "Final",     width: 60  },
+      { label: "Status",    width: 86  },
+    ];
+
+    // Assign absolute X start per column
+    let xCursor = PAGE_LEFT;
+    cols.forEach(c => { c.x = xCursor; xCursor += c.width; });
+
+    const drawTableHeader = () => {
+      const hy = doc.y;
+      doc.save().rect(PAGE_LEFT, hy, PAGE_WIDTH, HEADER_H).fill("#1a1a18").restore();
+      doc.fontSize(8).font("Helvetica-Bold").fillColor("#ffffff");
+      cols.forEach(c => {
+        doc.text(c.label, c.x + 3, hy + 5, { width: c.width - 6, lineBreak: false });
+      });
+      doc.y = hy + HEADER_H + 1;
+    };
+
+    drawTableHeader();
+    doc.font("Helvetica").fontSize(7.5).fillColor("#1a1a18");
+
+    data.transactionRows.slice(0, 200).forEach((row, idx) => {
+      // Page break guard
+      if (doc.y + ROW_H > PAGE_BREAK) {
+        doc.addPage();
+        doc.font("Helvetica").fontSize(7.5);
+        drawTableHeader();
+        doc.font("Helvetica").fontSize(7.5).fillColor("#1a1a18");
+      }
+
+      const rowY = doc.y;
+
+      // Alternating stripe
+      if (idx % 2 === 0) {
+        doc.save().rect(PAGE_LEFT, rowY, PAGE_WIDTH, ROW_H).fill("#f5f4f0").restore();
+      }
+
+      const cells = [
+        row.orderId || "—",
+        new Date(row.date).toLocaleDateString("en-IN"),
+        row.customer || "—",
+        fmtCurr(row.orderTotal),
+        fmtCurr(row.discount),
+        fmtCurr(row.finalAmount),
+        row.orderStatus || "—",
+      ];
+
+      doc.fillColor("#1a1a18");
+      cols.forEach((c, i) => {
+        doc.text(cells[i], c.x + 3, rowY + 3, { width: c.width - 6, lineBreak: false });
+      });
+
+      doc.y = rowY + ROW_H;
     });
 
     doc.end();
