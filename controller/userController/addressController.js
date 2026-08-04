@@ -69,6 +69,10 @@ export const addAddress = async (req, res) => {
 
         if (!fullName || fullName.trim().length < 3) {
             errors.push("Full name must be at least 3 characters");
+        } else if (fullName.trim().length > 40) {
+            errors.push("Full name cannot exceed 40 characters");
+        } else if (!/^[A-Za-z\s]+$/.test(fullName.trim())) {
+            errors.push("Full name must contain only alphabets");
         }
 
         if (!phone || !/^[6-9]\d{9}$/.test(phone.trim())) {
@@ -77,10 +81,16 @@ export const addAddress = async (req, res) => {
 
         if (!addressLine || addressLine.trim().length < 10) {
             errors.push("Address line must be at least 10 characters");
+        } else if (addressLine.trim().length > 100) {
+            errors.push("Address line cannot exceed 100 characters");
         }
 
         if (!city || city.trim().length < 2) {
             errors.push("City is required");
+        } else if (city.trim().length > 20) {
+            errors.push("City cannot exceed 20 characters");
+        } else if (!/^[A-Za-z\s]+$/.test(city.trim())) {
+            errors.push("City must contain only alphabets");
         }
 
         if (!district || district.trim().length < 2) {
@@ -219,6 +229,10 @@ export const editAddress = async (req, res) => {
 
         if (!fullName || fullName.trim().length < 3) {
             errors.push("Full name must be at least 3 characters");
+        } else if (fullName.trim().length > 40) {
+            errors.push("Full name cannot exceed 40 characters");
+        } else if (!/^[A-Za-z\s]+$/.test(fullName.trim())) {
+            errors.push("Full name must contain only alphabets");
         }
 
         if (!phone || !/^[6-9]\d{9}$/.test(phone.trim())) {
@@ -227,10 +241,16 @@ export const editAddress = async (req, res) => {
 
         if (!addressLine || addressLine.trim().length < 10) {
             errors.push("Address line must be at least 10 characters");
+        } else if (addressLine.trim().length > 100) {
+            errors.push("Address line cannot exceed 100 characters");
         }
 
         if (!city || city.trim().length < 2) {
             errors.push("City is required");
+        } else if (city.trim().length > 20) {
+            errors.push("City cannot exceed 20 characters");
+        } else if (!/^[A-Za-z\s]+$/.test(city.trim())) {
+            errors.push("City must contain only alphabets");
         }
 
         if (!district || district.trim().length < 2) {

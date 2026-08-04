@@ -1085,6 +1085,15 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ productId, variantId: selectedVariantId, qty })
                 });
+
+                if (res.status === 401) {
+                    showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your cart.', [
+                        { label: 'Cancel', primary: false, action: 'closeModal()' },
+                        { label: 'Login', primary: true, action: "window.location.href='/login'" }
+                    ]);
+                    return;
+                }
+
                 const data = await res.json();
 
                 if (data.success) {
@@ -1092,6 +1101,10 @@
                     const btn = document.getElementById('addCartBtn');
                     btn.classList.add('in-cart');
                     btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Already in Cart`;
+
+                    if (data.cartCount !== undefined && typeof window.updateCartBadge === 'function') {
+                        window.updateCartBadge(data.cartCount);
+                    }
 
                     if (inWishlist) {
                         inWishlist = false;
@@ -1106,6 +1119,11 @@
                             { label: 'Continue Shopping', primary: false, action: 'closeModal()' }
                         ]
                     );
+                } else if (data.notLoggedIn || data.message === 'Please login first') {
+                    showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your cart.', [
+                        { label: 'Cancel', primary: false, action: 'closeModal()' },
+                        { label: 'Login', primary: true, action: "window.location.href='/login'" }
+                    ]);
                 } else {
                     const msg = data.message || 'Unable to add item to cart. Please try again.';
                     showModal('error', 'Could Not Add to Cart', msg,
@@ -1132,6 +1150,15 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ productId, variantId: selectedVariantId })
                 });
+
+                if (res.status === 401) {
+                    showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your wishlist.', [
+                        { label: 'Cancel', primary: false, action: 'closeModal()' },
+                        { label: 'Login', primary: true, action: "window.location.href='/login'" }
+                    ]);
+                    return;
+                }
+
                 const data = await res.json();
 
                 if (data.success) {
@@ -1154,6 +1181,11 @@
                             [{ label: 'OK', primary: true, action: 'closeModal()' }]
                         );
                     }
+                } else if (data.notLoggedIn || data.message === 'Please login first') {
+                    showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your wishlist.', [
+                        { label: 'Cancel', primary: false, action: 'closeModal()' },
+                        { label: 'Login', primary: true, action: "window.location.href='/login'" }
+                    ]);
                 } else {
                     const msg = data.message || 'Unable to update wishlist. Please try again.';
                     showModal('error', 'Wishlist Error', msg,

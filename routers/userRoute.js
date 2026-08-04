@@ -1,7 +1,7 @@
 import express from 'express'
 import loadHome from '../controller/userController/homeController.js'
 import { loadLogin, login, loadSignup, signup, loadSignupOTPVerification, SignupOTPVerification, loadforgotpassword, forgotpassword, loadforgotpassOTPVerification, forgotpassOTPVerification, loadnewpassword, newpassword, logout, resendOtp } from '../controller/userController/authController.js'
-import { editEmail, editProfile, loadPagenotFound, loadProfile, verifyEmail, } from '../controller/userController/profileController.js'
+import { editEmail, editProfile, loadPagenotFound, loadProfile, verifyEmail, sendCurrentEmailOtp, verifyCurrentEmailOtp, sendNewEmailOtp, verifyNewEmailOtp } from '../controller/userController/profileController.js'
 import { addAddress, deleteAddress, editAddress, loadAddAddress, loadAddress, loadEditAddress, setDefault } from '../controller/userController/addressController.js'
 import { isLoggedIn, isBlocked } from "../middleware/authMiddleware.js";
 import upload from '../config/multerCloudinary.js'
@@ -75,6 +75,10 @@ router.post("/signup-verification", SignupOTPVerification)
 router.get("/profile", isLoggedIn, isBlocked, loadProfile)
 router.post("/profile", isLoggedIn, isBlocked, upload.single("profileIcon"), editProfile)
 
+router.post("/profile/email/send-current-otp", isLoggedIn, isBlocked, sendCurrentEmailOtp)
+router.post("/profile/email/verify-current-otp", isLoggedIn, isBlocked, verifyCurrentEmailOtp)
+router.post("/profile/email/send-new-otp", isLoggedIn, isBlocked, sendNewEmailOtp)
+router.post("/profile/email/verify-new-otp", isLoggedIn, isBlocked, verifyNewEmailOtp)
 router.post("/profile/email/send-otp", isLoggedIn, isBlocked, editEmail)
 router.post("/profile/email/verify-otp", isLoggedIn, isBlocked, verifyEmail)
 

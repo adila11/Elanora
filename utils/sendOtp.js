@@ -39,8 +39,14 @@ const sentOtp = async (email, purpose = "verification") => {
                 break;
 
             case "editEmail":
-                subject = "Verify Email OTP";
-                message = `Use this OTP to Veify your New Email: ${otp}. It expires in 5 minutes.`;
+            case "editEmailNew":
+                subject = "Verify New Email OTP";
+                message = `Use this OTP to verify your new email address: ${otp}. It expires in 5 minutes.`;
+                break;
+
+            case "editEmailCurrent":
+                subject = "Security Verification - Current Email OTP";
+                message = `Use this OTP to verify ownership of your current email address: ${otp}. It expires in 5 minutes.`;
                 break;
 
             default:

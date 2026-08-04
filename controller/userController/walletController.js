@@ -110,16 +110,24 @@ export const loadWalletTransactions = async (req, res) => {
 export const createWalletTopupOrder = async (req, res) => {
     try {
         const { amount } = req.body;
+        const numAmount = Number(amount);
 
-        if (!amount || amount < 100) {
+        if (!numAmount || numAmount < 100) {
             return res.status(400).json({
                 success: false,
-                message: "Minimum amount is ₹100"
+                message: "Minimum wallet top-up amount is ₹100"
+            });
+        }
+
+        if (numAmount > 50000) {
+            return res.status(400).json({
+                success: false,
+                message: "Maximum wallet top-up amount per transaction is ₹50,000"
             });
         }
 
         const options = {
-            amount: amount * 100,
+            amount: Math.round(numAmount * 100),
             currency: "INR",
             receipt: `wallet_${Date.now()}`
         };
@@ -150,18 +158,26 @@ export const verifyWalletPayment = async (req, res) => {
             amount
         } = req.body;
 
-        if (!razorpay_order_id ||!razorpay_payment_id ||!razorpay_signature ||!amount ) {
+        if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !amount) {
             return res.status(400).json({
                 success: false,
                 message: "Missing payment details"
             });
         }
 
-      
-        if (Number(amount) <= 0) {
+        const numAmount = Number(amount);
+
+        if (isNaN(numAmount) || numAmount < 100) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid amount"
+                message: "Minimum wallet top-up amount is ₹100"
+            });
+        }
+
+        if (numAmount > 50000) {
+            return res.status(400).json({
+                success: false,
+                message: "Maximum wallet top-up amount per transaction is ₹50,000"
             });
         }
 

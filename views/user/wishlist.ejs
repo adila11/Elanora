@@ -481,27 +481,22 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ productId, variantId, qty: 1 })
             });
+
+            if (res.status === 401) {
+              showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your cart.', [
+                { label: 'Cancel', primary: false, action: 'closeModal()' },
+                { label: 'Login', primary: true, action: "window.location.href='/login'" }
+              ]);
+              return;
+            }
+
             const data = await res.json();
 
             if (data.success) {
-
-              const badge = document.getElementById("cart-badge");
-
-
-              if (badge && data.cartCount !== undefined) {
-
-                badge.textContent =
-                  data.cartCount > 99
-                    ? "99+"
-                    : data.cartCount;
-
-
-                badge.style.display =
-                  data.cartCount > 0
-                    ? "flex"
-                    : "none";
-
+              if (data.cartCount !== undefined && typeof window.updateCartBadge === 'function') {
+                window.updateCartBadge(data.cartCount);
               }
+
               // Change Button To Show Success
               const card = document.getElementById('wishlist-card-' + productId);
               if (card) {
@@ -522,6 +517,11 @@
                   }, 300);
                 }, 1000);
               }
+            } else if (data.notLoggedIn || data.message === 'Please login first') {
+              showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your cart.', [
+                { label: 'Cancel', primary: false, action: 'closeModal()' },
+                { label: 'Login', primary: true, action: "window.location.href='/login'" }
+              ]);
             } else {
               showModal('error', 'Could Not Add to Cart', data.message || 'Failed to add to cart', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
             }

@@ -119,14 +119,19 @@ export const cancelFullOrder = async (req, res) => {
             return res.status(400).json({ success: false, message: "Order already cancelled" });
         }
 
+        let sanitizedReason = (reason || "").trim();
+        if (sanitizedReason.length > 100) {
+            sanitizedReason = sanitizedReason.substring(0, 100);
+        }
+
         order.orderStatus = "cancelled";
-        order.cancelReason = reason || "";
+        order.cancelReason = sanitizedReason;
         order.cancelledAt = new Date();
 
         for (let item of order.items) {
             if (item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
                 item.itemStatus = "cancelled";
-                item.cancelReason = reason || "";
+                item.cancelReason = sanitizedReason;
                 item.cancelledAt = new Date();
 
                 await Product.findOneAndUpdate(
@@ -238,9 +243,14 @@ export const cancelSingleItem = async (req, res) => {
             }
         }
 
+        let sanitizedReason = (reason || "").trim();
+        if (sanitizedReason.length > 100) {
+            sanitizedReason = sanitizedReason.substring(0, 100);
+        }
+
         if (item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
             item.itemStatus = "cancelled";
-            item.cancelReason = reason;
+            item.cancelReason = sanitizedReason;
             item.cancelledAt = new Date();
 
             await Product.findOneAndUpdate(

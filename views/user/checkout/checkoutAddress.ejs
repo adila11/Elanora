@@ -222,19 +222,25 @@
 
     .address-info {
       flex: 1;
-    }
-
-    .address-name {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--text-dark);
-      margin-bottom: 6px;
+      min-width: 0;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     .address-detail {
       font-size: 0.83rem;
       color: var(--text-mid);
       line-height: 1.7;
+    }
+
+    .address-line-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     .divider {
@@ -1111,10 +1117,10 @@
                       </span>
                   </div>
                   <div class="address-detail">
-                    <%= addr.addressLine %><br />
-                      <%= addr.city %>, <%= addr.state %>, <%= addr.pincode %><br />
-                            India<br />
-                            +91 <%= addr.phone %>
+                    <div class="address-line-text" title="<%= addr.addressLine %>"><%= addr.addressLine %></div>
+                    <%= addr.city %>, <%= addr.state %>, <%= addr.pincode %><br />
+                    India<br />
+                    +91 <%= addr.phone %>
                   </div>
                 </div>
                 <button class="edit-addr-btn" title="Edit address" aria-label="Edit address">
@@ -1280,8 +1286,8 @@
               <div class="form-group full">
                 <label class="form-label" for="fullName">Full Name <span>*</span></label>
                 <input class="form-input" type="text" id="fullName" placeholder="Enter your full name"
-                  autocomplete="name" />
-                <span class="form-error" id="fullNameErr">Please enter your full name (min 3 characters).</span>
+                  maxlength="40" autocomplete="name" />
+                <span class="form-error" id="fullNameErr">Please enter a valid full name (alphabets only, 3 to 40 characters).</span>
               </div>
 
               <div class="form-group full">
@@ -1294,15 +1300,15 @@
               <div class="form-group full">
                 <label class="form-label" for="addressLine">Address Line <span>*</span></label>
                 <input class="form-input" type="text" id="addressLine" placeholder="House no., Street, Area"
-                  autocomplete="street-address" />
-                <span class="form-error" id="addressLineErr">Please enter a full address (min 10 characters).</span>
+                  maxlength="100" autocomplete="street-address" />
+                <span class="form-error" id="addressLineErr">Please enter a full address (10 to 100 characters).</span>
               </div>
 
               <!-- City & Pincode -->
               <div class="form-group">
                 <label class="form-label" for="city">City <span>*</span></label>
-                <input class="form-input" type="text" id="city" placeholder="City">
-                <span class="form-error" id="cityErr">Please enter a valid city.</span>
+                <input class="form-input" type="text" id="city" placeholder="City" maxlength="20">
+                <span class="form-error" id="cityErr">Please enter a valid city (alphabets only, max 20 characters).</span>
               </div>
 
 
@@ -1497,10 +1503,10 @@
         });
 
         const rules = {
-          fullName: { el: 'fullName', err: 'fullNameErr', test: v => v.trim().length >= 3 },
+          fullName: { el: 'fullName', err: 'fullNameErr', test: v => { const t = v.trim(); return t.length >= 3 && t.length <= 40 && /^[A-Za-z\s]+$/.test(t); } },
           phone: { el: 'phone', err: 'phoneErr', test: v => /^[6-9]\d{9}$/.test(v.trim()) },
-          addressLine: { el: 'addressLine', err: 'addressLineErr', test: v => v.trim().length >= 10 },
-          city: { el: 'city', err: 'cityErr', test: v => v.trim().length >= 2 },
+          addressLine: { el: 'addressLine', err: 'addressLineErr', test: v => { const t = v.trim(); return t.length >= 10 && t.length <= 100; } },
+          city: { el: 'city', err: 'cityErr', test: v => { const t = v.trim(); return t.length >= 2 && t.length <= 20 && /^[A-Za-z\s]+$/.test(t); } },
           pincode: { el: 'pincode', err: 'pincodeErr', test: v => /^\d{6}$/.test(v.trim()) },
           district: { el: 'district', err: 'districtErr', test: v => v.trim().length >= 2 },
           state: { el: 'state', err: 'stateErr', test: v => v.trim().length >= 2 },
@@ -1519,6 +1525,32 @@
           }
           return valid;
         }
+
+        // Restrict phone input to numeric digits only (max 10)
+        document.getElementById('phone').addEventListener('input', function () {
+          let cleaned = this.value.replace(/\D/g, '');
+          if (cleaned.length > 10) cleaned = cleaned.slice(0, 10);
+          if (this.value !== cleaned) this.value = cleaned;
+        });
+
+        // Restrict fullName input to alphabets only and max 40 chars
+        document.getElementById('fullName').addEventListener('input', function () {
+          let cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+          if (cleaned.length > 40) cleaned = cleaned.slice(0, 40);
+          if (this.value !== cleaned) this.value = cleaned;
+        });
+
+        // Restrict addressLine input to max 100 chars
+        document.getElementById('addressLine').addEventListener('input', function () {
+          if (this.value.length > 100) this.value = this.value.slice(0, 100);
+        });
+
+        // Restrict city input to alphabets only and max 20 chars
+        document.getElementById('city').addEventListener('input', function () {
+          let cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+          if (cleaned.length > 20) cleaned = cleaned.slice(0, 20);
+          if (this.value !== cleaned) this.value = cleaned;
+        });
 
         for (const key in rules) {
           const r = rules[key];

@@ -50,7 +50,7 @@ export const login = async (req, res) => {
         }
 
         req.session.user = user.email;
-        
+
         req.flash('success', "Logged in successfully!");
         return res.redirect('/');
 
@@ -59,9 +59,9 @@ export const login = async (req, res) => {
     }
 };
 
-export const loadforgotpassword = async (req,res) =>{
+export const loadforgotpassword = async (req, res) => {
     try {
-        if(req.session.user){
+        if (req.session.user) {
             return res.redirect("/")
         }
         return res.render("user/auth/forgotpassword/forgotpassword")
@@ -76,7 +76,7 @@ export const forgotpassword = async (req, res) => {
             return res.redirect("/");
         }
 
-        const {email}  = req.body
+        const { email } = req.body
 
         if (!email) {
             req.flash('error', 'Please enter your email address');
@@ -92,23 +92,23 @@ export const forgotpassword = async (req, res) => {
 
         req.flash('success', 'Verification code has been sent to your email');
 
-        sentOtp(email,"forgotpassword")
+        sentOtp(email, "forgotpassword")
 
         req.session.tempUser = email
-        return res.redirect('/forgotpassword-otpverify');   
+        return res.redirect('/forgotpassword-otpverify');
     } catch (error) {
         req.flash('error', 'Something went wrong. Please try again.');
         return res.redirect('/forgotpassword');
     }
 };
- 
 
-export const loadforgotpassOTPVerification = async (req,res)=>{
+
+export const loadforgotpassOTPVerification = async (req, res) => {
     try {
-        if(req.session.user){
+        if (req.session.user) {
             return res.redirect("/")
-        } 
-        if(!req.session.tempUser) return res.redirect("/forgotpassword")
+        }
+        if (!req.session.tempUser) return res.redirect("/forgotpassword")
         return res.render("user/auth/forgotpassword/forgotpass-otp")
     } catch (error) {
         res.status(500).send("Server error")
@@ -116,25 +116,25 @@ export const loadforgotpassOTPVerification = async (req,res)=>{
 }
 
 
-export const forgotpassOTPVerification = async (req,res)=>{
+export const forgotpassOTPVerification = async (req, res) => {
     try {
-        if(req.session.user){
+        if (req.session.user) {
             return res.redirect("/")
-        } 
-        const {otp} =req.body;
-        const email=req.session.tempUser
-        const userOtp= await UserOtp.findOne({email:email})
-        
+        }
+        const { otp } = req.body;
+        const email = req.session.tempUser
+        const userOtp = await UserOtp.findOne({ email: email })
+
         if (!userOtp) {
             req.flash('error', 'Otp has expired. Please request a new one.');
             return res.redirect('/forgotpassword-otpverify');
         }
-        
-        if(otp!=userOtp.otp){
+
+        if (otp != userOtp.otp) {
             req.flash('error', 'Otp Is Invalid');
             return res.redirect('/forgotpassword-otpverify');
         }
-        req.session.isVerified = true ;
+        req.session.isVerified = true;
         return res.redirect('/newpassword')
 
     } catch (error) {
@@ -142,15 +142,15 @@ export const forgotpassOTPVerification = async (req,res)=>{
     }
 }
 
-export const loadnewpassword = async (req,res) => {
+export const loadnewpassword = async (req, res) => {
     try {
-        if(req.session.user){
+        if (req.session.user) {
             return res.redirect("/")
-        } 
-        if(!req.session.isVerified && req.session.isVerified !== true){
+        }
+        if (!req.session.isVerified && req.session.isVerified !== true) {
             return res.redirect('/forgotpassword')
         }
-        if(!req.session.tempUser) return res.redirect('/forgotpassword')
+        if (!req.session.tempUser) return res.redirect('/forgotpassword')
 
         return res.render("user/auth/forgotpassword/newpassword")
     } catch (error) {
@@ -159,40 +159,40 @@ export const loadnewpassword = async (req,res) => {
 }
 
 
-export const newpassword = async (req,res)=>{
+export const newpassword = async (req, res) => {
     try {
-        if(req.session.user){
+        if (req.session.user) {
             return res.redirect("/")
         }
-        const email = req.session.tempUser ;
-        if(!email)return res.redirect("/forgotpassword")
+        const email = req.session.tempUser;
+        if (!email) return res.redirect("/forgotpassword")
 
-        const {newPassword,confirmPassword} = req.body
-        if(newPassword!=confirmPassword){
-            req.flash("error","New Password and Confirm Passwords do not match");
-            return res.redirect('/newpassword') ;
+        const { newPassword, confirmPassword } = req.body
+        if (newPassword != confirmPassword) {
+            req.flash("error", "New Password and Confirm Passwords do not match");
+            return res.redirect('/newpassword');
         }
 
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-        if(!passwordRegex.test(newPassword)){
-            req.flash("error","Password must be at least 8 characters long and include uppercase, lowercase, and a number");
-            return res.redirect('/newpassword') ;
+        if (!passwordRegex.test(newPassword)) {
+            req.flash("error", "Password must be at least 8 characters long and include uppercase, lowercase, and a number");
+            return res.redirect('/newpassword');
         }
 
-        const hashedPassword=await bcrypt.hash(newPassword,10) ; 
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        const user=await User.findOne({email:email})
+        const user = await User.findOne({ email: email })
 
-        if(!user) return res.redirect("/forgotpassword")
+        if (!user) return res.redirect("/forgotpassword")
 
-        user.password=hashedPassword ;
+        user.password = hashedPassword;
         await user.save()
 
-        delete req.session.tempUser ;
-        delete req.session.isVerified ;
-        
-        req.flash("success","Password has been reseted")
+        delete req.session.tempUser;
+        delete req.session.isVerified;
+
+        req.flash("success", "Password has been reseted")
 
 
         return res.redirect("/login")
@@ -205,9 +205,9 @@ export const newpassword = async (req,res)=>{
 
 export const loadSignup = async (req, res) => {
     try {
-        if(req.session.user){
+        if (req.session.user) {
             return res.redirect("/")
-        } 
+        }
         return res.render("user/auth/signup/signup")
     } catch (error) {
         res.status(500).send("Server error")
@@ -218,12 +218,12 @@ export const signup = async (req, res) => {
     try {
         const { fullName, email, password, confirmPassword, referralCode, agreeTerms } = req.body;
 
-        
+
         if (!fullName || !email || !password || !confirmPassword) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required",
-                field: "fullName" 
+                field: "fullName"
             });
         }
 
@@ -231,6 +231,14 @@ export const signup = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "Full name must contain only alphabets",
+                field: "fullName"
+            });
+        }
+
+        if (fullName.trim().length > 40) {
+            return res.status(400).json({
+                success: false,
+                message: "Full name cannot exceed 40 characters",
                 field: "fullName"
             });
         }
@@ -255,7 +263,7 @@ export const signup = async (req, res) => {
 
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-        if(!passwordRegex.test(password)){
+        if (!passwordRegex.test(password)) {
             return res.status(400).json({
                 success: false,
                 message: "Password must be at least 8 characters long and include uppercase, lowercase, and a number",
@@ -290,7 +298,7 @@ export const signup = async (req, res) => {
         };
 
 
-        await sentOtp(email,"signup");
+        await sentOtp(email, "signup");
 
 
         return res.status(200).json({
@@ -349,7 +357,7 @@ export const SignupOTPVerification = async (req, res) => {
             return res.redirect("/signup-verification");
         }
 
-        const hashedPassword=await bcrypt.hash(tempUser.password,10)
+        const hashedPassword = await bcrypt.hash(tempUser.password, 10)
 
         const newUser = new User({
             fullName: tempUser.name,
@@ -391,7 +399,7 @@ export const SignupOTPVerification = async (req, res) => {
         await UserOtp.deleteOne({ email: tempUser.email });
 
         req.session.user = tempUser.email;
-        
+
         req.flash('success', "Account created successfully!");
         return res.redirect('/');
 

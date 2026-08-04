@@ -450,239 +450,278 @@
 
   <%- include('partials/user/header') %>
 
-  <!-- MAIN -->
-  <main>
-    <div class="page-header">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <path d="M16 10a4 4 0 0 1-8 0" />
-      </svg>
-      <h1>Shopping Cart</h1>
-    </div>
-
-    <% if (cart && cart.items.length > 0) { %>
-
-<div class="cart-layout">
-
-  <!-- Cart Items -->
-  <div class="cart-card">
-    <div class="cart-table-header">
-      <span>Product</span>
-      <span>Price</span>
-      <span>Quantity</span>
-      <span>Total</span>
-    </div>
-
-    <% cart.items.forEach(item => { %>
-      <% const product = item.productId; %>
-      <% if (product) { %>
-        <% 
-           const variant = product.variants.find(v => v._id.toString() === item.variantId.toString()); 
-           const image = variant?.images[0]?.url || 'https://via.placeholder.com/150'; 
-           const completelyUnavailable = !product.isListed || !variant || !variant.isActive || variant.stock === 0;
-           const isOutOfStock = !completelyUnavailable && variant && variant.stock < item.qty;
-           const isAvailable = product.isListed && variant && variant.isActive && variant.stock >= item.qty;
-           // NOTE: canCheckout removed entirely — validation now lives server-side in the checkout controller
-        %>
-
-        <div class="cart-item <%= completelyUnavailable ? 'unavailable' : '' %>" data-product-id="<%= product._id %>" data-variant-id="<%= item.variantId %>">
-          <div class="item-info">
-            <a href="/product/<%= product._id %>" class="item-img" style="display: block;">
-              <img src="<%= image %>" alt="<%= product.name %>" style="<%= completelyUnavailable ? 'filter: grayscale(100%); opacity: 0.7;' : '' %>"/>
-            </a>
-
-            <div class="item-details">
-              <a href="/product/<%= product._id %>" style="text-decoration: none; color: inherit;">
-                <h3><%= product.name %></h3>
-              </a>
-              <p class="item-color">Color: <%= variant?.color || 'N/A' %></p>
-              
-              <% if (completelyUnavailable) { %>
-                <p style="color: var(--red); font-size: 0.8rem; font-weight: 500; margin-bottom: 6px;">This product is out of stock.</p>
-              <% } else if (isOutOfStock) { %>
-                <p style="color: #d35400; font-size: 0.8rem; font-weight: 500; margin-bottom: 6px;">Only <%= variant.stock %> quantity available.</p>
-              <% } %>
-
-              <button class="remove-btn" onclick="confirmRemoveItem(this, '<%= product._id %>', '<%= item.variantId %>')">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="3 6 5 6 21 6" />
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                </svg>
-                Remove
-              </button>
-            </div>
-          </div>
-
-          <div class="item-price">₹<%= item.price.toLocaleString('en-IN') %></div>
-
-          <div class="qty-control" style="<%= completelyUnavailable ? 'opacity: 0.5; pointer-events: none;' : '' %>">
-            <button class="qty-btn" onclick="changeQty(this, -1, '<%= product._id %>', '<%= item.variantId %>')" <%= item.qty <= 1 || completelyUnavailable ? 'disabled' : '' %>>−</button>
-            <input class="qty-value" value="<%= item.qty %>" readonly />
-            <button class="qty-btn" onclick="changeQty(this, 1, '<%= product._id %>', '<%= item.variantId %>')" <%= item.qty >= 10 || completelyUnavailable || (variant && item.qty >= variant.stock) ? 'disabled' : '' %>>+</button>
-          </div>
-
-          <div class="item-total">₹<%= item.total.toLocaleString('en-IN') %></div>
-        </div>
-      <% } %>
-    <% }) %>
-  </div>
-
-  <!-- Order Summary -->
-  <div class="order-card">
-    <h2>Order Summary</h2>
-
-    <div class="summary-row">
-      <span>Subtotal</span>
-      <span id="subtotal">₹<%= subtotal.toLocaleString('en-IN') %></span>
-    </div>
-    <div class="summary-row">
-      <span>Shipping</span>
-      <span class="free-label">Free</span>
-    </div>
-    <div class="summary-row total">
-      <span>Total</span>
-      <span class="total-amount" id="total">₹<%= subtotal.toLocaleString('en-IN') %></span>
-    </div>
-
-    <button class="checkout-btn" onclick="location.href='/checkout/address'">
-      Proceed to Checkout
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="5" y1="12" x2="19" y2="12" />
-        <polyline points="12 5 19 12 12 19" />
-      </svg>
-    </button>
-
-    <div class="secure-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-      <p>Secure checkout. All transactions are encrypted and authenticated.</p>
-    </div>
-  </div>
-
-</div>
-
-    <% } else { %>
-
-    <div class="empty-cart">
-      <div class="empty-cart-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <!-- MAIN -->
+    <main>
+      <div class="page-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
           <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
           <line x1="3" y1="6" x2="21" y2="6" />
           <path d="M16 10a4 4 0 0 1-8 0" />
         </svg>
+        <h1>Shopping Cart</h1>
       </div>
-      <h2>Your Cart is Empty</h2>
-      <p>Looks like you haven't added any items yet. Explore our collection and find something you love.</p>
-      <a href="/shop" class="shop-now-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="5" y1="12" x2="19" y2="12" />
-          <polyline points="12 5 19 12 12 19" />
-        </svg>
-        Shop Now
-      </a>
-    </div>
 
-    <% } %>
-  </main>
+      <% if (cart && cart.items.length> 0) { %>
 
-  <%- include('partials/user/footer') %>
+        <div class="cart-layout">
 
-  <script>
-    async function changeQty(btn, delta, productId, variantId) {
-      const row = btn.closest('.cart-item');
-      const input = row.querySelector('.qty-value');
-      const newQty = parseInt(input.value) + delta;
+          <!-- Cart Items -->
+          <div class="cart-card">
+            <div class="cart-table-header">
+              <span>Product</span>
+              <span>Price</span>
+              <span>Quantity</span>
+              <span>Total</span>
+            </div>
 
-      if (newQty < 1 || newQty > 10) return;
+            <% cart.items.forEach(item=> { %>
+              <% const product=item.productId; %>
+                <% if (product) { %>
+                  <% const variant=product.variants ? product.variants.find(v=> v._id.toString() ===
+                    item.variantId.toString()) : null;
+                    const image = variant?.images[0]?.url || 'https://via.placeholder.com/150';
+                    const isUnlistedOrInactive = !product.isListed || !variant || !variant.isActive;
+                    const isZeroStock = !isUnlistedOrInactive && variant && variant.stock === 0;
+                    const completelyUnavailable = isUnlistedOrInactive || isZeroStock;
+                    const isOutOfStock = !completelyUnavailable && variant && variant.stock < item.qty; %>
 
-      try {
-        const res = await fetch('/update-cart', {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ productId, variantId, qty: newQty })
-        });
-        const data = await res.json();
+                      <div class="cart-item <%= completelyUnavailable ? 'unavailable' : '' %>"
+                        data-product-id="<%= product._id %>" data-variant-id="<%= item.variantId %>">
+                        <div class="item-info">
+                          <a href="/product/<%= product._id %>" class="item-img" style="display: block;">
+                            <img src="<%= image %>" alt="<%= product.name %>"
+                              style="<%= completelyUnavailable ? 'filter: grayscale(100%); opacity: 0.7;' : '' %>" />
+                          </a>
 
-        if (data.success) {
-          const finalQty = data.updatedQty !== undefined ? data.updatedQty : newQty;
-          input.value = finalQty;
-          row.querySelector('.item-total').textContent = '₹' + data.itemTotal.toLocaleString('en-IN');
-          document.getElementById('subtotal').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
-          document.getElementById('total').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
+                          <div class="item-details">
+                            <a href="/product/<%= product._id %>" style="text-decoration: none; color: inherit;">
+                              <h3>
+                                <%= product.name %>
+                              </h3>
+                            </a>
+                            <p class="item-color">Color: <%= variant?.color || 'N/A' %>
+                            </p>
 
-          // Update Button Disabled States
-          const minusBtn = row.querySelectorAll('.qty-btn')[0];
-          const plusBtn = row.querySelectorAll('.qty-btn')[1];
-          minusBtn.disabled = finalQty <= 1;
-          plusBtn.disabled = finalQty >= 10 || (data.message && data.message !== "Cart updated");
+                            <% if (isUnlistedOrInactive) { %>
+                              <p style="color: var(--red); font-size: 0.75rem; font-weight: 500; margin-bottom: 6px; text-transform: lowercase;">
+                                item unavailable</p>
+                              <% } else if (isZeroStock) { %>
+                                <p style="color: var(--red); font-size: 0.75rem; font-weight: 500; margin-bottom: 6px; text-transform: lowercase;">
+                                  out of stock</p>
+                              <% } else if (variant && (variant.stock <= 5 || variant.stock < item.qty)) { %>
+                                <p style="color: #d35400; font-size: 0.75rem; font-weight: 400; margin-bottom: 6px; text-transform: lowercase;">
+                                  only <%= variant.stock %> left in stock
+                                </p>
+                              <% } %>
 
-          if (data.message && data.message !== "Cart updated") {
-             showModal('info', 'Stock Updated', data.message, [{ label: 'OK', primary: true, action: 'closeModal()' }]);
+                                    <button class="remove-btn"
+                                      onclick="confirmRemoveItem(this, '<%= product._id %>', '<%= item.variantId %>')">
+                                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6" />
+                                        <path
+                                          d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                      </svg>
+                                      Remove
+                                    </button>
+                          </div>
+                        </div>
+
+                        <div class="item-price">₹<%= item.price.toLocaleString('en-IN') %>
+                        </div>
+
+                        <div class="qty-control"
+                          style="<%= completelyUnavailable ? 'opacity: 0.5; pointer-events: none;' : '' %>">
+                          <button class="qty-btn"
+                            onclick="changeQty(this, -1, '<%= product._id %>', '<%= item.variantId %>')" <%=item.qty <=1
+                            || completelyUnavailable ? 'disabled' : '' %>>−</button>
+                          <input class="qty-value" value="<%= item.qty %>" readonly />
+                          <button class="qty-btn"
+                            onclick="changeQty(this, 1, '<%= product._id %>', '<%= item.variantId %>')" <%=item.qty>= 10
+                            || completelyUnavailable || (variant && item.qty >= variant.stock) ? 'disabled' : ''
+                            %>>+</button>
+                        </div>
+
+                        <div class="item-total">₹<%= item.total.toLocaleString('en-IN') %>
+                        </div>
+                      </div>
+                      <% } %>
+                        <% }) %>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="order-card">
+            <h2>Order Summary</h2>
+
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span id="subtotal">₹<%= subtotal.toLocaleString('en-IN') %></span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span class="free-label">Free</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span class="total-amount" id="total">₹<%= subtotal.toLocaleString('en-IN') %></span>
+            </div>
+
+            <button class="checkout-btn" onclick="proceedToCheckout()">
+              Proceed to Checkout
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+
+            <div class="secure-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <p>Secure checkout. All transactions are encrypted and authenticated.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <% } else { %>
+
+          <div class="empty-cart">
+            <div class="empty-cart-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+            </div>
+            <h2>Your Cart is Empty</h2>
+            <p>Looks like you haven't added any items yet. Explore our collection and find something you love.</p>
+            <a href="/shop" class="shop-now-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+              Shop Now
+            </a>
+          </div>
+
+          <% } %>
+    </main>
+
+    <%- include('partials/user/footer') %>
+
+      <script>
+        function proceedToCheckout() {
+          const unavailableItems = document.querySelectorAll('.cart-item.unavailable');
+          if (unavailableItems.length > 0) {
+            showModal('error', 'Update Required', 'One or more items in your cart are no longer available or out of stock. Please remove unavailable items to proceed.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+            return;
           }
-        } else {
-          showModal('error', 'Update Error', data.message || 'Failed to update cart', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+          location.href = '/checkout/address';
         }
-      } catch (err) {
-        showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
-      }
-    }
 
-    function confirmRemoveItem(btn, productId, variantId) {
-      showModal('info', 'Remove Item', 'Are you sure you want to remove this item from your cart?', [
-        { label: 'Yes, Remove', primary: true, action: `removeItem(document.getElementById('btn-remove-${productId}-${variantId}'), '${productId}', '${variantId}'); closeModal();` },
-        { label: 'Cancel', primary: false, action: 'closeModal()' }
-      ]);
-      // Temporarily Assign ID To Button For The Callback
-      btn.id = `btn-remove-${productId}-${variantId}`;
-    }
+        async function changeQty(btn, delta, productId, variantId) {
+          const row = btn.closest('.cart-item');
+          const input = row.querySelector('.qty-value');
+          const currentVal = parseInt(input.value, 10);
+          const newQty = currentVal + delta;
 
-    async function removeItem(btn, productId, variantId) {
-      const row = btn.closest('.cart-item');
+          if (newQty < 1 || newQty > 10) return;
 
-      try {
-        const res = await fetch('/remove-cart-item', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ productId, variantId })
-        });
-        const data = await res.json();
+          try {
+            const res = await fetch('/update-cart', {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ productId, variantId, qty: newQty })
+            });
+            const data = await res.json();
 
-        if (data.success) {
-          row.style.opacity = '0';
-          row.style.transform = 'translateX(-20px)';
-          setTimeout(() => {
-            row.remove();
-
-            if (data.cartCount === 0) {
-              // Reload Page To Show Empty Cart State
-              location.reload();
-            } else {
+            if (data.success) {
+              const finalQty = data.updatedQty !== undefined ? data.updatedQty : newQty;
+              input.value = finalQty;
+              row.querySelector('.item-total').textContent = '₹' + data.itemTotal.toLocaleString('en-IN');
               document.getElementById('subtotal').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
               document.getElementById('total').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
-            }
-          }, 300);
-        } else {
-          showModal('error', 'Remove Error', data.message || 'Failed to remove item', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
-        }
-      } catch (err) {
-        showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
-      }
-    }
-  </script>
 
-  <%- include('partials/user/modal') %>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('error') && urlParams.get('error') === 'unavailable') {
-        showModal('error', 'Update Required', 'One or more items in your cart are no longer available or out of stock. Please update your cart to proceed.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    });
-  </script>
+              if (data.cartCount !== undefined && typeof window.updateCartBadge === 'function') {
+                window.updateCartBadge(data.cartCount);
+              }
+
+              // Update Button Disabled States
+              const minusBtn = row.querySelectorAll('.qty-btn')[0];
+              const plusBtn = row.querySelectorAll('.qty-btn')[1];
+              minusBtn.disabled = finalQty <= 1;
+              plusBtn.disabled = finalQty >= 10 || (data.message && data.message !== "Cart updated");
+
+              if (data.message && data.message !== "Cart updated") {
+                showModal('info', 'Stock Updated', data.message, [{ label: 'OK', primary: true, action: 'closeModal()' }]);
+              }
+            } else {
+              showModal('error', 'Update Error', data.message || 'Failed to update cart', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+            }
+          } catch (err) {
+            showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+          }
+        }
+
+        function confirmRemoveItem(btn, productId, variantId) {
+          showModal('info', 'Remove Item', 'Are you sure you want to remove this item from your cart?', [
+            { label: 'Yes, Remove', primary: true, action: `removeItem(document.getElementById('btn-remove-${productId}-${variantId}'), '${productId}', '${variantId}'); closeModal();` },
+            { label: 'Cancel', primary: false, action: 'closeModal()' }
+          ]);
+          // Temporarily Assign ID To Button For The Callback
+          btn.id = `btn-remove-${productId}-${variantId}`;
+        }
+
+        async function removeItem(btn, productId, variantId) {
+          const row = btn.closest('.cart-item');
+
+          try {
+            const res = await fetch('/remove-cart-item', {
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ productId, variantId })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+              if (data.cartCount !== undefined && typeof window.updateCartBadge === 'function') {
+                window.updateCartBadge(data.cartCount);
+              }
+
+              row.style.opacity = '0';
+              row.style.transform = 'translateX(-20px)';
+              setTimeout(() => {
+                row.remove();
+
+                if (data.cartCount === 0) {
+                  // Reload Page To Show Empty Cart State
+                  location.reload();
+                } else {
+                  document.getElementById('subtotal').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
+                  document.getElementById('total').textContent = '₹' + data.subtotal.toLocaleString('en-IN');
+                }
+              }, 300);
+            } else {
+              showModal('error', 'Remove Error', data.message || 'Failed to remove item', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+            }
+          } catch (err) {
+            showModal('error', 'Something Went Wrong', 'A network error occurred. Please try again.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+          }
+        }
+      </script>
+
+      <%- include('partials/user/modal') %>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('error') && urlParams.get('error') === 'unavailable') {
+              showModal('error', 'Update Required', 'One or more items in your cart are no longer available or out of stock. Please update your cart to proceed.', [{ label: 'Close', primary: true, action: 'closeModal()' }]);
+              window.history.replaceState({}, document.title, window.location.pathname);
+            }
+          });
+        </script>
 </body>
 
 </html>

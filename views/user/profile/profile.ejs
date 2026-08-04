@@ -59,7 +59,8 @@
     .btn-gold {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      justify-content: center;
+      gap: 8px;
       background: #c49a2a;
       color: #fff;
       border: none;
@@ -70,6 +71,7 @@
       font-family: 'DM Sans', sans-serif;
       cursor: pointer;
       transition: background 0.15s;
+      line-height: 1;
     }
 
     .btn-gold:hover {
@@ -173,11 +175,11 @@
           <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#2c2c2c;">
             Personal Information
           </h3>
-          <button id="editBtn" onclick="enableEdit()" class="btn-gold" style="padding:9px 20px; font-size:0.8rem;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <button id="editBtn" onclick="enableEdit()" class="btn-gold" style="display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:9px 20px; font-size:0.8rem; line-height:1;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
               <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            Edit Profile
+            <span>Edit Profile</span>
           </button>
         </div>
 
@@ -219,7 +221,7 @@
 
             <div style="grid-column:span 2;">
               <label class="field-label" for="fullName">Full Name</label>
-              <input id="fullName" name="fullName" type="text" class="field-input" value="<%= user.fullName || '' %>" disabled>
+              <input id="fullName" name="fullName" type="text" class="field-input" value="<%= user.fullName || '' %>" maxlength="40" disabled>
             </div>
 
             <div style="grid-column:span 2;">
@@ -228,17 +230,17 @@
                 <input id="email" name="email" type="email" class="field-input" value="<%= user.email %>" disabled>
                 <button type="button" id="verifyEmailBtn" onclick="openEmailModal()" class="btn-gold"
                         style="display:none; white-space:nowrap; padding:11px 18px; font-size:0.8rem; flex-shrink:0;">
-                  Verify Change
+                  Verify
                 </button>
               </div>
               <p id="emailWarning" style="display:none; font-size:0.75rem; color:#b45309; margin-top:7px;">
-                ⚠ Changing your email requires verification. Click "Verify Change" to proceed.
+                ⚠ Changing your email requires 2-step verification. Click "Verify" to proceed.
               </p>
             </div>
 
             <div style="grid-column:span 2;">
               <label class="field-label" for="phone">Phone Number</label>
-              <input id="phone" name="phone" type="tel" class="field-input" value="<%= user.phone || '' %>" disabled>
+              <input id="phone" name="phone" type="tel" class="field-input" value="<%= user.phone || '' %>" maxlength="10" placeholder="10-digit mobile number" disabled>
             </div>
 
           </div>
@@ -253,43 +255,81 @@
     </div>
   </div>
 
-  <!-- Email Verification Modal -->
+  <!-- Email Verification Modal (2-Step / 2-Side Verification) -->
   <div id="emailModal" class="modal-backdrop" onclick="outsideClose(event)">
     <div class="modal-card">
-      <h4 style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:700; color:#2c2c2c; margin-bottom:4px;">
-        Verify New Email
-      </h4>
-      <p style="font-size:0.82rem; color:#999; margin-bottom:24px;">
-        Enter your new email and we'll send a verification code.
-      </p>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h4 style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:700; color:#2c2c2c;">
+          Change Email Address
+        </h4>
+        <span id="stepIndicatorBadge" style="font-size:0.7rem; font-weight:600; padding:4px 10px; border-radius:20px; background:#fdf9ef; color:#c49a2a; border:1px solid #e8e0d0;">
+          Step 1 of 2
+        </span>
+      </div>
 
-      <div id="step1">
-        <label class="field-label" style="margin-bottom:7px;">New Email Address</label>
-        <input id="newEmailInput" type="email" class="field-input" placeholder="you@example.com" style="margin-bottom:16px;">
-        <button onclick="sendOtp(false)" class="btn-gold" style="width:100%; justify-content:center;">
-          Send Verification Code
+      <!-- STEP 1: VERIFY CURRENT EMAIL -->
+      <div id="step1CurrentEmail">
+        <p style="font-size:0.82rem; color:#666; margin-bottom:16px; line-height:1.5;">
+          For security, a 6-digit verification code will be sent to your current email: <strong id="currentEmailDisplay" style="color:#2c2c2c;"><%= user.email %></strong>
+        </p>
+
+        <div id="currentOtpSection" style="display:none; margin-bottom:16px;">
+          <label class="field-label" style="margin-bottom:7px;">Current Email Verification Code</label>
+          <input id="currentOtpInput" type="text" maxlength="6" class="otp-input" placeholder="••••••" style="margin-bottom:14px;">
+          <button onclick="verifyCurrentOtp()" class="btn-gold" style="width:100%; justify-content:center; margin-bottom:10px;">
+            Verify Current Email Code
+          </button>
+          
+          <div style="text-align:center;">
+            <button id="resendCurrentBtn" onclick="sendCurrentOtp(true)" 
+                    style="background:none; border:none; font-size:0.82rem; color:#c49a2a; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:600;">
+              Resend Code
+            </button>
+            <span id="timerCurrentContainer" style="font-size:0.82rem; color:#999; margin-left:8px; display:none;">
+              in <span id="timerCurrentValue">60</span>s
+            </span>
+          </div>
+        </div>
+
+        <button id="sendCurrentOtpBtn" onclick="sendCurrentOtp(false)" class="btn-gold" style="width:100%; justify-content:center;">
+          Send Code to Current Email
         </button>
       </div>
 
-      <div id="step2" style="display:none;">
-        <p style="font-size:0.82rem; color:#666; margin-bottom:16px;">
-          Code sent to <strong id="otpEmailLabel" style="color:#2c2c2c;"></strong>
+      <!-- STEP 2: VERIFY NEW EMAIL -->
+      <div id="step2NewEmail" style="display:none;">
+        <p style="font-size:0.82rem; color:#2e7d32; font-weight:600; margin-bottom:14px; display:flex; align-items:center; gap:6px; background:#e8f5e9; padding:8px 12px; border-radius:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Current email verified! Now enter your new email.
         </p>
-        <label class="field-label" style="margin-bottom:7px;">Verification Code</label>
-        <input id="otpInput" type="text" maxlength="6" class="otp-input" placeholder="••••••" style="margin-bottom:16px;">
-        
-        <button onclick="verifyOtp()" class="btn-gold" style="width:100%; justify-content:center; margin-bottom:10px;">
-          Verify & Update Email
+
+        <label class="field-label" style="margin-bottom:7px;">New Email Address</label>
+        <input id="newEmailInput" type="email" class="field-input" placeholder="newemail@example.com" style="margin-bottom:16px;">
+
+        <button id="sendNewOtpBtn" onclick="sendNewOtp(false)" class="btn-gold" style="width:100%; justify-content:center; margin-bottom:16px;">
+          Send Code to New Email
         </button>
-        
-        <div style="text-align:center; margin-top:10px;">
-          <button id="resendBtn" onclick="sendOtp(true)" 
-                  style="background:none; border:none; font-size:0.82rem; color:#c49a2a; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:600;">
-            Resend Code
+
+        <div id="newOtpSection" style="display:none;">
+          <p style="font-size:0.82rem; color:#666; margin-bottom:12px;">
+            Code sent to <strong id="newOtpEmailLabel" style="color:#2c2c2c;"></strong>
+          </p>
+          <label class="field-label" style="margin-bottom:7px;">New Email Verification Code</label>
+          <input id="newOtpInput" type="text" maxlength="6" class="otp-input" placeholder="••••••" style="margin-bottom:16px;">
+          
+          <button onclick="verifyNewOtp()" class="btn-gold" style="width:100%; justify-content:center; margin-bottom:10px;">
+            Verify & Save New Email
           </button>
-          <span id="timerContainer" style="font-size:0.82rem; color:#999; margin-left:8px; display:none;">
-            in <span id="timerValue">60</span>s
-          </span>
+          
+          <div style="text-align:center;">
+            <button id="resendNewBtn" onclick="sendNewOtp(true)" 
+                    style="background:none; border:none; font-size:0.82rem; color:#c49a2a; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:600;">
+              Resend Code
+            </button>
+            <span id="timerNewContainer" style="font-size:0.82rem; color:#999; margin-left:8px; display:none;">
+              in <span id="timerNewValue">60</span>s
+            </span>
+          </div>
         </div>
       </div>
 
@@ -362,7 +402,7 @@
       croppedFile = null;
 
       // Reset UI
-      document.getElementById('editBtn').style.display = 'block';
+      document.getElementById('editBtn').style.display = 'inline-flex';
       document.getElementById('formActions').style.display = 'none';
       document.getElementById('changePhotoBtn').style.display = 'none';
       document.getElementById('profileEditOverlay').style.display = 'none';
@@ -429,17 +469,30 @@
     });
 
     function onEmailChange() {
-      const changed = document.getElementById('email').value.trim() !== orig.email;
+      const changed = document.getElementById('email').value.trim().toLowerCase() !== orig.email.toLowerCase();
       document.getElementById('verifyEmailBtn').style.display = changed ? 'block' : 'none';
       document.getElementById('emailWarning').style.display = changed ? 'block' : 'none';
     }
 
-    // Block numbers from being typed into the full name field
+    // Block non-alphabets and limit to 40 characters for full name field
     document.getElementById('fullName').addEventListener('input', function () {
-      const cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+      let cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+      if (cleaned.length > 40) {
+        cleaned = cleaned.slice(0, 40);
+      }
       if (this.value !== cleaned) {
         this.value = cleaned;
-        if (typeof window.showToast === 'function') window.showToast('Full name must contain only alphabets', 'error');
+      }
+    });
+
+    // Block non-digits and limit to 10 digits for phone field
+    document.getElementById('phone').addEventListener('input', function () {
+      let cleaned = this.value.replace(/\D/g, '');
+      if (cleaned.length > 10) {
+        cleaned = cleaned.slice(0, 10);
+      }
+      if (this.value !== cleaned) {
+        this.value = cleaned;
       }
     });
 
@@ -447,10 +500,11 @@
     document.getElementById('profileForm').addEventListener('submit', async function (e) {
       e.preventDefault();
 
-      const currentEmail = document.getElementById('email').value.trim();
-
-      if (currentEmail !== orig.email) {
-        if (typeof window.showToast === 'function') window.showToast('Please verify your new email before saving changes.', 'error');
+      const currentEmail = document.getElementById('email').value.trim().toLowerCase();
+      if (currentEmail !== orig.email.toLowerCase()) {
+        if (typeof window.showToast === 'function') {
+          window.showToast('Please verify your new email before saving changes.', 'error');
+        }
         return;
       }
 
@@ -460,9 +514,22 @@
         if (typeof window.showToast === 'function') window.showToast('Full name must be at least 2 characters', 'error');
         return;
       }
+      if (fullNameVal.length > 40) {
+        if (typeof window.showToast === 'function') window.showToast('Full name cannot exceed 40 characters', 'error');
+        return;
+      }
       if (!/^[A-Za-z\s]+$/.test(fullNameVal)) {
         if (typeof window.showToast === 'function') window.showToast('Full name must contain only alphabets', 'error');
         return;
+      }
+
+      // Validate phone number
+      const phoneVal = document.getElementById('phone').value.trim();
+      if (phoneVal) {
+        if (!/^[6-9]\d{9}$/.test(phoneVal)) {
+          if (typeof window.showToast === 'function') window.showToast('Please enter a valid 10-digit mobile number starting with 6-9', 'error');
+          return;
+        }
       }
 
       const saveBtn = document.getElementById('saveBtn');
@@ -503,17 +570,27 @@
       }
     });
 
-    // Email Verification Modal Functions
+    // Email Verification Modal Functions (2-Step / 2-Side Flow)
     function openEmailModal() {
+      document.getElementById('step1CurrentEmail').style.display = 'block';
+      document.getElementById('step2NewEmail').style.display = 'none';
+      document.getElementById('currentOtpSection').style.display = 'none';
+      document.getElementById('sendCurrentOtpBtn').style.display = 'flex';
+      document.getElementById('newOtpSection').style.display = 'none';
+      document.getElementById('sendNewOtpBtn').style.display = 'flex';
+      document.getElementById('stepIndicatorBadge').textContent = 'Step 1 of 2';
+
+      document.getElementById('currentEmailDisplay').textContent = orig.email;
+      document.getElementById('currentOtpInput').value = '';
       document.getElementById('newEmailInput').value = document.getElementById('email').value.trim();
-      document.getElementById('step1').style.display = 'block';
-      document.getElementById('step2').style.display = 'none';
-      document.getElementById('otpInput').value = '';
+      document.getElementById('newOtpInput').value = '';
+
       document.getElementById('emailModal').classList.add('open');
     }
 
     function closeEmailModal() {
       document.getElementById('emailModal').classList.remove('open');
+      clearInterval(timerInterval);
     }
 
     function outsideClose(e) {
@@ -521,15 +598,14 @@
     }
 
     let timerInterval = null;
-    let timeLeft = 60;
 
-    function startTimer() {
-      const resendBtn = document.getElementById('resendBtn');
-      const timerContainer = document.getElementById('timerContainer');
-      const timerValue = document.getElementById('timerValue');
+    function startTimer(btnId, containerId, valueId) {
+      const resendBtn = document.getElementById(btnId);
+      const timerContainer = document.getElementById(containerId);
+      const timerValue = document.getElementById(valueId);
       
       clearInterval(timerInterval);
-      timeLeft = 60;
+      let timeLeft = 60;
       resendBtn.style.opacity = '0.5';
       resendBtn.style.pointerEvents = 'none';
       resendBtn.style.color = '#999';
@@ -549,44 +625,110 @@
       }, 1000);
     }
 
-    async function sendOtp(isResend = false) {
-      const newEmail = document.getElementById('newEmailInput').value.trim();
+    // STEP 1: Send OTP to Current Email
+    async function sendCurrentOtp(isResend = false) {
+      const resendBtn = document.getElementById('resendCurrentBtn');
+      if (isResend && resendBtn && resendBtn.style.pointerEvents === 'none') return;
 
-      if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
-        if (typeof window.showToast === 'function') window.showToast('Please enter a valid email address.', 'error');
+      try {
+        const res = await fetch('/profile/email/send-current-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          document.getElementById('currentOtpSection').style.display = 'block';
+          document.getElementById('sendCurrentOtpBtn').style.display = 'none';
+          startTimer('resendCurrentBtn', 'timerCurrentContainer', 'timerCurrentValue');
+
+          if (typeof window.showToast === 'function') {
+            window.showToast(isResend ? 'Verification code resent to current email.' : 'Verification code sent to current email.', 'success');
+          }
+        } else {
+          if (typeof window.showToast === 'function') {
+            window.showToast(data.message || 'Could not send verification code.', 'error');
+          }
+        }
+      } catch (err) {
+        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+      }
+    }
+
+    // STEP 1: Verify Current Email OTP
+    async function verifyCurrentOtp() {
+      const otp = document.getElementById('currentOtpInput').value.trim();
+
+      if (!otp || otp.length !== 6) {
+        if (typeof window.showToast === 'function') window.showToast('Please enter a valid 6-digit verification code.', 'error');
         return;
       }
 
-      const resendBtn = document.getElementById('resendBtn');
-      if (isResend && resendBtn.style.pointerEvents === 'none') return;
+      try {
+        const res = await fetch('/profile/email/verify-current-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ otp })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          clearInterval(timerInterval);
+          document.getElementById('step1CurrentEmail').style.display = 'none';
+          document.getElementById('step2NewEmail').style.display = 'block';
+          document.getElementById('stepIndicatorBadge').textContent = 'Step 2 of 2';
+
+          if (typeof window.showToast === 'function') {
+            window.showToast('Current email verified! Now enter your new email.', 'success');
+          }
+        } else {
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Invalid or expired verification code.', 'error');
+        }
+      } catch (err) {
+        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+      }
+    }
+
+    // STEP 2: Send OTP to New Email
+    async function sendNewOtp(isResend = false) {
+      const newEmail = document.getElementById('newEmailInput').value.trim();
+
+      if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+        if (typeof window.showToast === 'function') window.showToast('Please enter a valid new email address.', 'error');
+        return;
+      }
+
+      const resendBtn = document.getElementById('resendNewBtn');
+      if (isResend && resendBtn && resendBtn.style.pointerEvents === 'none') return;
 
       try {
-        const res = await fetch('/profile/email/send-otp', {
+        const res = await fetch('/profile/email/send-new-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ newEmail })
         });
-
         const data = await res.json();
 
         if (res.ok && data.success) {
-          document.getElementById('otpEmailLabel').textContent = newEmail;
-          document.getElementById('step1').style.display = 'none';
-          document.getElementById('step2').style.display = 'block';
-          
-          startTimer();
-          
-          if (typeof window.showToast === 'function') window.showToast(isResend ? 'Code resent successfully!' : 'Verification code sent!', 'success');
+          document.getElementById('newOtpEmailLabel').textContent = newEmail;
+          document.getElementById('newOtpSection').style.display = 'block';
+          document.getElementById('sendNewOtpBtn').style.display = 'none';
+          startTimer('resendNewBtn', 'timerNewContainer', 'timerNewValue');
+
+          if (typeof window.showToast === 'function') {
+            window.showToast(isResend ? 'Verification code resent to new email.' : 'Verification code sent to new email.', 'success');
+          }
         } else {
-          if (typeof window.showToast === 'function') window.showToast(data.message || 'Could not send OTP.', 'error');
+          if (typeof window.showToast === 'function') window.showToast(data.message || 'Could not send verification code to new email.', 'error');
         }
       } catch (err) {
-        if (typeof window.showToast === 'function') window.showToast('Something went wrong. Please try again.', 'error');
+        if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
       }
     }
 
-    async function verifyOtp() {
-      const otp = document.getElementById('otpInput').value.trim();
+    // STEP 2: Verify New Email OTP & Finalize Change
+    async function verifyNewOtp() {
+      const otp = document.getElementById('newOtpInput').value.trim();
       const newEmail = document.getElementById('newEmailInput').value.trim();
 
       if (!otp || otp.length !== 6) {
@@ -595,23 +737,22 @@
       }
 
       try {
-        const res = await fetch('/profile/email/verify-otp', {
+        const res = await fetch('/profile/email/verify-new-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ newEmail, otp })
         });
-
         const data = await res.json();
 
         if (res.ok && data.success) {
-          document.getElementById('email').value = newEmail;
-          orig.email = newEmail;
-
-          document.getElementById('verifyEmailBtn').style.display = 'none';
-          document.getElementById('emailWarning').style.display = 'none';
+          document.getElementById('email').value = data.newEmail || newEmail;
+          orig.email = data.newEmail || newEmail;
 
           closeEmailModal();
-          if (typeof window.showToast === 'function') window.showToast(data.message || 'Email updated successfully!', 'success');
+          if (typeof window.showToast === 'function') {
+            window.showToast(data.message || 'Email updated successfully!', 'success');
+          }
+          setTimeout(() => location.reload(), 1200);
         } else {
           if (typeof window.showToast === 'function') window.showToast(data.message || 'Invalid or expired code.', 'error');
         }
@@ -619,8 +760,6 @@
         if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
       }
     }
-
-    // Sweetalert2 Is Handled Globally Now
   </script>
 </body>
 

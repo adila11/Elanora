@@ -4,6 +4,18 @@ export const isLoggedIn = (req, res, next) => {
     if (req.session.user) {
         next();
     } else {
+        if (
+            req.xhr ||
+            req.headers['x-requested-with'] === 'XMLHttpRequest' ||
+            req.headers['content-type'] === 'application/json' ||
+            (req.headers.accept && req.headers.accept.includes('application/json'))
+        ) {
+            return res.status(401).json({
+                success: false,
+                notLoggedIn: true,
+                message: 'Please login to continue'
+            });
+        }
         res.redirect("/login");
     }
 };

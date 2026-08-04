@@ -280,6 +280,24 @@
     });
   }
 
+  // Dynamic Cart Badge Helper
+  window.updateCartBadge = function(count) {
+    const cartBtn = document.querySelector('button[aria-label="Cart"]');
+    if (!cartBtn) return;
+    let badge = document.getElementById('cart-badge');
+    if (count > 0) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.id = 'cart-badge';
+        badge.className = 'badge absolute top-0 right-0 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-gold text-white text-[10px] font-semibold leading-none';
+        cartBtn.appendChild(badge);
+      }
+      badge.textContent = count > 99 ? '99+' : count;
+    } else if (badge) {
+      badge.remove();
+    }
+  };
+
   highlightActiveNav();
   document.addEventListener('DOMContentLoaded', highlightActiveNav);
 </script>

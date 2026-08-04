@@ -1636,8 +1636,8 @@
           <p style="font-size:0.82rem;color:#aaa;margin-bottom:18px;">This will cancel all items in your order. This
             action cannot be undone.</p>
           <label class="modal-label">Reason <span
-              style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;">(optional)</span></label>
-          <textarea class="modal-textarea" id="fullCancelReason"
+              style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;">(optional, max 100 characters)</span></label>
+          <textarea class="modal-textarea" id="fullCancelReason" maxlength="100"
             placeholder="Tell us why you're cancelling…"></textarea>
           <div class="modal-actions">
             <button class="modal-btn-cancel" onclick="closeFullCancelModal()">Keep Order</button>
@@ -1665,8 +1665,9 @@
               <p id="partialCancelSub"></p>
             </div>
           </div>
-          <label class="modal-label">Reason</label>
-          <textarea class="modal-textarea" id="partialCancelReason"
+          <label class="modal-label">Reason <span
+              style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;">(optional, max 100 characters)</span></label>
+          <textarea class="modal-textarea" id="partialCancelReason" maxlength="100"
             placeholder="Tell us why you're cancelling this item…"></textarea>
           <div class="modal-actions">
             <button class="modal-btn-cancel" onclick="closePartialCancelModal()">Keep Item</button>
@@ -1835,10 +1836,6 @@
 
         async function submitPartialCancel(confirmFullCancel = false) {
           const reason = document.getElementById('partialCancelReason').value.trim();
-          if (!reason) {
-            if (typeof window.showToast === 'function') window.showToast('Please enter a cancellation reason.', 'error');
-            return;
-          }
           const btn = confirmFullCancel
             ? document.getElementById('confirmBreachCancelBtn')
             : document.querySelector('#partialCancelModal .modal-btn-danger');

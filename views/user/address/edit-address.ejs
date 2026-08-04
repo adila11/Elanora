@@ -124,7 +124,7 @@
             <div>
               <label class="field-label">Full Name</label>
               <input type="text" id="fullName" class="field-input" 
-                     value="<%= address ? address.fullName : '' %>" placeholder="Enter full name">
+                     value="<%= address ? address.fullName : '' %>" placeholder="Enter full name" maxlength="40">
               <span id="nameError" class="error-text">Full name must be at least 3 characters</span>
             </div>
 
@@ -139,7 +139,7 @@
             <!-- Address Line -->
             <div>
               <label class="field-label">Address Line</label>
-              <textarea id="addressLine" rows="3" class="field-input resize-y" placeholder="House no, Street, Area">
+              <textarea id="addressLine" rows="3" class="field-input resize-y" placeholder="House no, Street, Area" maxlength="100">
 <%= address ? address.addressLine : '' %>
               </textarea>
               <span id="addressError" class="error-text">Address line must be at least 10 characters</span>
@@ -150,7 +150,7 @@
               <div>
                 <label class="field-label">City</label>
                 <input type="text" id="city" class="field-input" 
-                       value="<%= address ? address.city : '' %>" placeholder="City">
+                       value="<%= address ? address.city : '' %>" placeholder="City" maxlength="20">
                 <span id="cityError" class="error-text">City name is required</span>
               </div>
               <div>
@@ -227,6 +227,36 @@
       inputs.forEach(input => input.classList.remove('error'));
     }
 
+    // Restrict phone input to max 10 numeric digits
+    document.getElementById('phone').addEventListener('input', function () {
+      let cleaned = this.value.replace(/\D/g, '');
+      if (cleaned.length > 10) {
+        cleaned = cleaned.slice(0, 10);
+      }
+      if (this.value !== cleaned) {
+        this.value = cleaned;
+      }
+    });
+
+    // Restrict fullName input to alphabets only and max 40 chars
+    document.getElementById('fullName').addEventListener('input', function () {
+      let cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+      if (cleaned.length > 40) cleaned = cleaned.slice(0, 40);
+      if (this.value !== cleaned) this.value = cleaned;
+    });
+
+    // Restrict addressLine input to max 100 chars
+    document.getElementById('addressLine').addEventListener('input', function () {
+      if (this.value.length > 100) this.value = this.value.slice(0, 100);
+    });
+
+    // Restrict city input to alphabets only and max 20 chars
+    document.getElementById('city').addEventListener('input', function () {
+      let cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+      if (cleaned.length > 20) cleaned = cleaned.slice(0, 20);
+      if (this.value !== cleaned) this.value = cleaned;
+    });
+
     // Mark Field As Error
     function markError(fieldId, errorId, message) {
       const input = document.getElementById(fieldId);
@@ -254,6 +284,12 @@
       if (fullName.length < 3) {
         markError('fullName', 'nameError', 'Full name must be at least 3 characters');
         isValid = false;
+      } else if (fullName.length > 40) {
+        markError('fullName', 'nameError', 'Full name cannot exceed 40 characters');
+        isValid = false;
+      } else if (!/^[A-Za-z\s]+$/.test(fullName)) {
+        markError('fullName', 'nameError', 'Full name must contain only alphabets');
+        isValid = false;
       }
 
       // Phone Number (indian)
@@ -268,12 +304,21 @@
       if (addressLine.length < 10) {
         markError('addressLine', 'addressError', 'Please enter a complete address (minimum 10 characters)');
         isValid = false;
+      } else if (addressLine.length > 100) {
+        markError('addressLine', 'addressError', 'Address line cannot exceed 100 characters');
+        isValid = false;
       }
 
       // City
       const city = document.getElementById('city').value.trim();
       if (city.length < 2) {
         markError('city', 'cityError', 'City name is required');
+        isValid = false;
+      } else if (city.length > 20) {
+        markError('city', 'cityError', 'City name cannot exceed 20 characters');
+        isValid = false;
+      } else if (!/^[A-Za-z\s]+$/.test(city)) {
+        markError('city', 'cityError', 'City must contain only alphabets');
         isValid = false;
       }
 

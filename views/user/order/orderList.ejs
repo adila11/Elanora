@@ -741,9 +741,9 @@
         <div class="cancel-items-list" id="cancelItemsList"></div>
 
         <label class="reason-label">
-          Reason <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;">(optional)</span>
+          Reason <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;">(optional, max 100 characters)</span>
         </label>
-        <textarea id="cancelReason" placeholder="Tell us why you're cancelling…"></textarea>
+        <textarea id="cancelReason" maxlength="100" placeholder="Tell us why you're cancelling…"></textarea>
 
         <div class="modal-actions">
           <button class="btn-keep" onclick="closeCancelModal()">Keep Order</button>

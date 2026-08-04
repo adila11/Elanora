@@ -30,6 +30,13 @@ export const editProfile = async (req, res) => {
             });
         }
 
+        if (fullName.trim().length > 40) {
+            return res.status(400).json({
+                success: false,
+                message: "Full name cannot exceed 40 characters"
+            });
+        }
+
         if (!/^[A-Za-z\s]+$/.test(fullName.trim())) {
             return res.status(400).json({
                 success: false,
@@ -44,10 +51,10 @@ export const editProfile = async (req, res) => {
             });
         }
 
-        if (phone && !/^\+?\d{10,15}$/.test(phone.replace(/\s/g, ''))) {
+        if (phone && !/^[6-9]\d{9}$/.test(phone.trim())) {
             return res.status(400).json({
                 success: false,
-                message: "Please enter a valid phone number"
+                message: "Please enter a valid 10-digit mobile number starting with 6-9"
             });
         }
 
@@ -111,25 +118,17 @@ export const editProfile = async (req, res) => {
 
 
 
-export const editEmail = async (req, res) => {
+export const sendCurrentEmailOtp = async (req, res) => {
     try {
-        const { newEmail } = req.body;
-
-        if (!req.session.user) {
+        const currentEmail = req.session.user;
+        if (!currentEmail) {
             return res.status(401).json({
                 success: false,
                 message: "Please login to continue"
             });
         }
 
-        if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
-            return res.status(400).json({
-                success: false,
-                message: "Please enter a valid email address"
-            });
-        }
-
-        const user = await User.findOne({ email: req.session.user });
+        const user = await User.findOne({ email: currentEmail });
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -137,11 +136,112 @@ export const editEmail = async (req, res) => {
             });
         }
 
-        const existingUser = await User.findOne({
-            email: newEmail,
-            _id: { $ne: user._id }
-        });
+        await sentOtp(currentEmail, "editEmailCurrent");
 
+        res.json({
+            success: true,
+            currentEmail,
+            message: `Verification code sent to your current email (${currentEmail})`
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong while sending code to current email"
+        });
+    }
+};
+
+export const verifyCurrentEmailOtp = async (req, res) => {
+    try {
+        const currentEmail = req.session.user;
+        if (!currentEmail) {
+            return res.status(401).json({
+                success: false,
+                message: "Please login to continue"
+            });
+        }
+
+        const { otp } = req.body;
+        if (!otp || otp.length !== 6 || isNaN(otp)) {
+            return res.status(400).json({
+                success: false,
+                message: "Valid 6-digit OTP is required"
+            });
+        }
+
+        const userOtp = await UserOtp.findOne({ email: currentEmail }).sort({ createdAt: -1 });
+        if (!userOtp) {
+            return res.status(400).json({
+                success: false,
+                message: "No verification request found or code has expired"
+            });
+        }
+
+        if (userOtp.otp != otp) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid verification code for current email"
+            });
+        }
+
+        if (userOtp.expiresAt && Date.now() > new Date(userOtp.expiresAt).getTime()) {
+            await UserOtp.deleteOne({ email: currentEmail });
+            return res.status(400).json({
+                success: false,
+                message: "Verification code has expired"
+            });
+        }
+
+        req.session.currentEmailVerified = true;
+        await UserOtp.deleteOne({ email: currentEmail });
+
+        res.json({
+            success: true,
+            message: "Current email verified successfully! Please enter your new email address."
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong while verifying current email code"
+        });
+    }
+};
+
+export const sendNewEmailOtp = async (req, res) => {
+    try {
+        const currentEmail = req.session.user;
+        if (!currentEmail) {
+            return res.status(401).json({
+                success: false,
+                message: "Please login to continue"
+            });
+        }
+
+        if (!req.session.currentEmailVerified) {
+            return res.status(403).json({
+                success: false,
+                message: "Please verify your current email first before requesting code for new email"
+            });
+        }
+
+        const { newEmail } = req.body;
+        if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+            return res.status(400).json({
+                success: false,
+                message: "Please enter a valid email address"
+            });
+        }
+
+        const sanitizedNewEmail = newEmail.trim().toLowerCase();
+
+        if (sanitizedNewEmail === currentEmail.toLowerCase()) {
+            return res.status(400).json({
+                success: false,
+                message: "New email cannot be the same as your current email"
+            });
+        }
+
+        const existingUser = await User.findOne({ email: sanitizedNewEmail });
         if (existingUser) {
             return res.status(409).json({
                 success: false,
@@ -149,38 +249,47 @@ export const editEmail = async (req, res) => {
             });
         }
 
-        await sentOtp(newEmail, "editEmail");
+        await sentOtp(sanitizedNewEmail, "editEmailNew");
 
         res.json({
             success: true,
-            message: "Verification code sent to your new email"
+            newEmail: sanitizedNewEmail,
+            message: `Verification code sent to your new email (${sanitizedNewEmail})`
         });
-
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Something went wrong while sending OTP"
+            message: "Something went wrong while sending code to new email"
         });
     }
-}
+};
 
-export const verifyEmail = async (req, res) => {
+export const verifyNewEmailOtp = async (req, res) => {
     try {
-        if (!req.session.user) {
+        const currentEmail = req.session.user;
+        if (!currentEmail) {
             return res.status(401).json({
                 success: false,
                 message: "Please login to continue"
             });
         }
 
-        const { newEmail, otp } = req.body;
+        if (!req.session.currentEmailVerified) {
+            return res.status(403).json({
+                success: false,
+                message: "Current email verification is required first"
+            });
+        }
 
+        const { newEmail, otp } = req.body;
         if (!newEmail) {
             return res.status(400).json({
                 success: false,
-                message: "Email is required"
+                message: "New email is required"
             });
         }
+
+        const sanitizedNewEmail = newEmail.trim().toLowerCase();
 
         if (!otp || otp.length !== 6 || isNaN(otp)) {
             return res.status(400).json({
@@ -189,33 +298,30 @@ export const verifyEmail = async (req, res) => {
             });
         }
 
-        const userOtp = await UserOtp
-            .findOne({ email: newEmail })
-            .sort({ createdAt: -1 });
-
+        const userOtp = await UserOtp.findOne({ email: sanitizedNewEmail }).sort({ createdAt: -1 });
         if (!userOtp) {
             return res.status(400).json({
                 success: false,
-                message: "No OTP request found or code has expired"
+                message: "No verification request found or code has expired for new email"
             });
         }
 
         if (userOtp.otp != otp) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid verification code"
+                message: "Invalid verification code for new email"
             });
         }
 
         if (userOtp.expiresAt && Date.now() > new Date(userOtp.expiresAt).getTime()) {
-            await UserOtp.deleteOne({ email: newEmail }); 
+            await UserOtp.deleteOne({ email: sanitizedNewEmail });
             return res.status(400).json({
                 success: false,
                 message: "Verification code has expired"
             });
         }
 
-        const user = await User.findOne({ email: req.session.user });
+        const user = await User.findOne({ email: currentEmail });
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -223,24 +329,29 @@ export const verifyEmail = async (req, res) => {
             });
         }
 
-        user.email = newEmail;
+        user.email = sanitizedNewEmail;
         await user.save();
-        req.session.user = newEmail ;
 
-        await UserOtp.deleteOne({ email: newEmail });
+        req.session.user = sanitizedNewEmail;
+        req.session.currentEmailVerified = false;
+
+        await UserOtp.deleteOne({ email: sanitizedNewEmail });
 
         res.json({
             success: true,
-            message: "Email updated successfully!"
+            newEmail: sanitizedNewEmail,
+            message: "Email address updated successfully!"
         });
-
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Something went wrong during verification"
+            message: "Something went wrong while verifying new email code"
         });
     }
-}
+};
+
+export const editEmail = sendNewEmailOtp;
+export const verifyEmail = verifyNewEmailOtp;
 
 
 

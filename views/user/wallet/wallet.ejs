@@ -388,8 +388,9 @@
           Enter the amount you would like to add to your wallet.
         </p>
 
-        <input id="amountInput" type="number" min="1" step="1" class="field-input" placeholder="0.00"
-          style="font-size:1.3rem; margin-bottom:16px;">
+        <input id="amountInput" type="number" min="100" max="50000" step="1" class="field-input" placeholder="0.00"
+          style="font-size:1.3rem; margin-bottom:6px;">
+        <span id="amountError" class="error-text" style="display:none; color:#d0483f; font-size:0.8rem; font-weight:500; margin-bottom:14px;"></span>
 
         <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-bottom:20px;">
           <button type="button" class="quick-amount" onclick="setQuickAmount(100, this)">₹100</button>
@@ -442,13 +443,28 @@
       <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
       <script>
+        function showAmountError(msg) {
+          const errEl = document.getElementById('amountError');
+          const inputEl = document.getElementById('amountInput');
+          if (msg) {
+            errEl.textContent = msg;
+            errEl.style.display = 'block';
+            inputEl.style.borderColor = '#d0483f';
+          } else {
+            errEl.style.display = 'none';
+            inputEl.style.borderColor = '#e8e0d0';
+          }
+        }
+
         function openAddFundsModal() {
           document.getElementById('amountInput').value = '';
+          showAmountError('');
           document.querySelectorAll('.quick-amount').forEach(btn => btn.classList.remove('active'));
           document.getElementById('addFundsModal').classList.add('open');
         }
 
         function closeAddFundsModal() {
+          showAmountError('');
           document.getElementById('addFundsModal').classList.remove('open');
         }
 
@@ -458,9 +474,23 @@
 
         function setQuickAmount(amount, btn) {
           document.getElementById('amountInput').value = amount;
+          showAmountError('');
           document.querySelectorAll('.quick-amount').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
         }
+
+        document.getElementById('amountInput').addEventListener('input', function () {
+          const amount = parseFloat(this.value);
+          if (isNaN(amount) || amount <= 0) {
+            showAmountError('');
+          } else if (amount < 100) {
+            showAmountError('Minimum wallet top-up amount is ₹100');
+          } else if (amount > 50000) {
+            showAmountError('Maximum wallet top-up amount per transaction is ₹50,000');
+          } else {
+            showAmountError('');
+          }
+        });
 
         // Notification Modal (replaces Alert())
         let notifyCallback = null;
@@ -507,8 +537,15 @@
 
             const amount = parseFloat(document.getElementById("amountInput").value);
 
-            if (!amount || amount < 100) {
-              showNotification("Minimum wallet top-up is ₹100", "error");
+            if (isNaN(amount) || amount < 100) {
+              showAmountError("Minimum wallet top-up amount is ₹100");
+              showNotification("Minimum wallet top-up amount is ₹100", "error");
+              return;
+            }
+
+            if (amount > 50000) {
+              showAmountError("Maximum wallet top-up amount per transaction is ₹50,000");
+              showNotification("Maximum wallet top-up amount per transaction is ₹50,000", "error");
               return;
             }
 

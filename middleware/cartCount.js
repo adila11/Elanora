@@ -17,7 +17,7 @@ const cartCountMiddleware = async (req, res, next) => {
                 const cart = await Cart.findOne({userId: user._id});
                 const wishlist = await Wishlist.findOne({userId:user._id}) ;
 
-                cartCount = cart?.items?.length || 0;
+                cartCount = cart?.items?.reduce((sum, item) => sum + Number(item.qty), 0) || 0;
                 wishlistCount = wishlist?.products?.length||0 ;
             }
         }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,18 +27,21 @@
             --border: #e8ddd0;
             --radius: 12px;
         }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
         }
+
         body {
             background-color: var(--bg-color);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
+
         .content-wrapper {
             flex: 1;
             display: flex;
@@ -45,15 +49,17 @@
             align-items: center;
             padding: 50px 20px;
         }
+
         .signup-card {
             background: white;
             width: 100%;
             max-width: 460px;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
             text-align: center;
         }
+
         .logo-box {
             display: flex;
             align-items: center;
@@ -63,21 +69,25 @@
             font-weight: 600;
             margin-bottom: 15px;
         }
+
         h1 {
             font-size: 1.4rem;
             color: var(--text-dark);
             margin-bottom: 8px;
         }
+
         .subtitle {
             color: var(--text-light);
             font-size: 0.8rem;
             margin-bottom: 25px;
         }
+
         .form-group {
             text-align: left;
             margin-bottom: 15px;
             position: relative;
         }
+
         label {
             display: block;
             font-size: 0.75rem;
@@ -85,6 +95,7 @@
             margin-bottom: 6px;
             color: var(--text-dark);
         }
+
         input[type="text"],
         input[type="email"],
         input[type="password"] {
@@ -96,12 +107,15 @@
             font-size: 0.85rem;
             transition: border 0.2s;
         }
+
         .password-wrapper {
             position: relative;
         }
+
         .password-wrapper input {
             padding-right: 45px !important;
         }
+
         .toggle-password {
             position: absolute;
             right: 12px;
@@ -116,11 +130,21 @@
             color: #bbb;
             transition: color 0.2s;
         }
-        .toggle-password:hover { color: var(--primary-gold); }
-        .toggle-password svg { width: 18px; height: 18px; display: block; }
+
+        .toggle-password:hover {
+            color: var(--primary-gold);
+        }
+
+        .toggle-password svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+        }
+
         input.error {
             border-color: var(--error-color);
         }
+
         .error-message {
             color: var(--error-color);
             font-size: 0.72rem;
@@ -138,15 +162,25 @@
             font-weight: 500;
             cursor: pointer;
         }
+
         #referral-field {
             display: none;
             margin-bottom: 15px;
             animation: fadeIn 0.3s ease-in;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .terms-container {
             display: flex;
             align-items: flex-start;
@@ -156,13 +190,16 @@
             color: var(--text-light);
             margin-bottom: 20px;
         }
+
         .terms-container input {
             margin-top: 2px;
         }
+
         .terms-container a {
             color: var(--primary-gold);
             text-decoration: none;
         }
+
         .btn-create {
             background-color: var(--primary-gold);
             color: white;
@@ -176,16 +213,19 @@
             margin-bottom: 15px;
             transition: background 0.2s;
         }
+
         .btn-create:disabled {
             background-color: #d4b88a;
             cursor: not-allowed;
         }
+
         .divider {
             margin: 15px 0;
             font-size: 0.75rem;
             color: var(--text-light);
             position: relative;
         }
+
         .btn-google {
             background: white;
             border: 1px solid var(--border-color);
@@ -200,27 +240,30 @@
             font-size: 0.85rem;
             transition: all 0.2s;
         }
+
         .btn-google:hover {
             border-color: var(--primary-gold);
             background: #fafafa;
         }
+
         .login-link {
             font-size: 0.8rem;
             color: var(--text-light);
         }
+
         .login-link a {
             color: var(--primary-gold);
             text-decoration: none;
             font-weight: 600;
         }
-
     </style>
 </head>
+
 <body>
     <div class="content-wrapper">
         <div class="signup-card">
             <div class="logo-box">
-                 Elanora
+                Elanora
             </div>
             <h1>Create Account</h1>
             <p class="subtitle">Join us to explore our jewelry world</p>
@@ -230,7 +273,7 @@
             <form id="signupForm">
                 <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" id="fullName" placeholder="Enter your full name">
+                    <input type="text" id="fullName" placeholder="Enter your full name" maxlength="40">
                     <div class="error-message" id="fullNameError"></div>
                 </div>
                 <div class="form-group">
@@ -242,10 +285,14 @@
                     <label>Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="password" placeholder="Create a password">
-                        <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
-                            <svg id="eyePassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        <button type="button" class="toggle-password" id="togglePassword"
+                            aria-label="Toggle password visibility">
+                            <svg id="eyePassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="1.6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                         </button>
                     </div>
@@ -255,24 +302,29 @@
                     <label>Confirm Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="confirmPassword" placeholder="Confirm your password">
-                        <button type="button" class="toggle-password" id="toggleConfirmPassword" aria-label="Toggle confirm password visibility">
-                            <svg id="eyeConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        <button type="button" class="toggle-password" id="toggleConfirmPassword"
+                            aria-label="Toggle confirm password visibility">
+                            <svg id="eyeConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                         </button>
                     </div>
                     <div class="error-message" id="confirmPasswordError"></div>
                 </div>
-                
-                <span class="referral-link" id="toggle-referral" onclick="showReferral()">🎁 Have a referral code?</span>
-               
+
+                <span class="referral-link" id="toggle-referral" onclick="showReferral()">🎁 Have a referral
+                    code?</span>
+
                 <div class="form-group" id="referral-field">
                     <label>Referral Code</label>
                     <input type="text" id="referralCode" placeholder="Enter code here">
                     <div class="error-message" id="referralCodeError"></div>
                 </div>
-                
+
                 <div class="terms-container">
                     <input type="checkbox" id="terms">
                     <label for="terms" style="font-weight: 400; margin-bottom: 0;">
@@ -280,19 +332,17 @@
                     </label>
                 </div>
                 <div class="error-message" id="termsError" style="margin-top: -10px; margin-bottom: 15px;"></div>
-                
+
                 <button type="submit" id="createBtn" class="btn-create">Create Account</button>
             </form>
-            
+
             <div class="divider">or signup with</div>
 
             <!-- FIXED Google Sign Up Button -->
             <a id="googleAuthLink" href="/auth/google" style="text-decoration: none; display: block; width: 100%;">
                 <button type="button" class="btn-google">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" 
-                         width="18" 
-                         height="18"
-                         alt="Google">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="18"
+                        height="18" alt="Google">
                     Continue with Google
                 </button>
             </a>
@@ -303,257 +353,265 @@
 
     <%- include('../../../partials/user/footer') %>
 
-    <script>
-        // Show Referral Field
-        function showReferral() {
-            document.getElementById('toggle-referral').style.display = 'none';
-            document.getElementById('referral-field').style.display = 'block';
-        }
-
-        // Auto-fill Referral Code From Query String
-        const googleAuthLink = document.getElementById('googleAuthLink');
-        const referralInput = document.getElementById('referralCode');
-
-        function updateGoogleLink() {
-            if (googleAuthLink && referralInput) {
-                const code = referralInput.value.trim();
-                if (code) {
-                    googleAuthLink.href = `/auth/google?ref=${encodeURIComponent(code)}`;
-                } else {
-                    googleAuthLink.href = `/auth/google`;
-                }
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const ref = urlParams.get('ref');
-            if (ref) {
-                showReferral();
-                if (referralInput) referralInput.value = ref;
-            }
-            updateGoogleLink();
-        });
-
-        if (referralInput) {
-            referralInput.addEventListener('input', updateGoogleLink);
-        }
-
-        // Password SVG Eye Toggle
-        const EYE_OPEN  = `<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>`;
-        const EYE_SLASH = `<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88L6.59 6.59m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>`;
-
-        function setupEyeToggle(btnId, inputId, iconId) {
-            let visible = false;
-            document.getElementById(btnId).addEventListener('click', () => {
-                visible = !visible;
-                document.getElementById(inputId).type = visible ? 'text' : 'password';
-                document.getElementById(iconId).innerHTML = visible ? EYE_SLASH : EYE_OPEN;
-            });
-        }
-        setupEyeToggle('togglePassword',        'password',        'eyePassword');
-        setupEyeToggle('toggleConfirmPassword', 'confirmPassword', 'eyeConfirmPassword');
-
-        // Error Handling Functions
-        function showError(inputId, message) {
-            const errorElement = document.getElementById(inputId + 'Error');
-            const input = document.getElementById(inputId);
-            if (errorElement) {
-                errorElement.textContent = message;
-                errorElement.style.display = 'block';
-            }
-            if (input) input.classList.add('error');
-        }
-
-        function clearError(inputId) {
-            const errorElement = document.getElementById(inputId + 'Error');
-            const input = document.getElementById(inputId);
-            if (errorElement) errorElement.style.display = 'none';
-            if (input) input.classList.remove('error');
-        }
-
-        function showGeneralError(message) {
-            if (typeof window.showToast === 'function') {
-                window.showToast(message, 'error');
-            } else {
-                alert(message);
-            }
-        }
-
-        function clearGeneralError() {
-            // No Action Needed For Toasts
-        }
-
-        // Validation Functions
-        function validateFullName() {
-            const fullName = document.getElementById('fullName').value.trim();
-            clearError('fullName');
-            if (fullName === '') {
-                showError('fullName', 'Full name is required');
-                return false;
-            }
-            if (fullName.length < 2) {
-                showError('fullName', 'Full name must be at least 2 characters');
-                return false;
-            }
-            if (!/^[A-Za-z\s]+$/.test(fullName)) {
-                showError('fullName', 'Full name must contain only alphabets');
-                return false;
-            }
-            return true;
-        }
-
-        // Block numbers from being typed into the full name field
-        document.getElementById('fullName').addEventListener('input', function () {
-            const cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
-            if (this.value !== cleaned) {
-                this.value = cleaned;
-                showError('fullName', 'Full name must contain only alphabets');
-            }
-        });
-
-        function validateEmail() {
-            const email = document.getElementById('email').value.trim();
-            clearError('email');
-            if (email === '') {
-                showError('email', 'Email address is required');
-                return false;
-            }
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showError('email', 'Please enter a valid email address');
-                return false;
-            }
-            return true;
-        }
-
-        function validatePassword() {
-            const password = document.getElementById('password').value;
-            clearError('password');
-            if (password === '') {
-                showError('password', 'Password is required');
-                return false;
-            }
-            if (password.length < 8) {
-                showError('password', 'Password must be at least 8 characters long');
-                return false;
-            }
-            return true;
-        }
-
-        function validateConfirmPassword() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            clearError('confirmPassword');
-            if (confirmPassword === '') {
-                showError('confirmPassword', 'Please confirm your password');
-                return false;
-            }
-            if (password !== confirmPassword) {
-                showError('confirmPassword', 'Passwords do not match');
-                return false;
-            }
-            return true;
-        }
-
-        function validateTerms() {
-            const termsChecked = document.getElementById('terms').checked;
-            const termsError = document.getElementById('termsError');
-            if (!termsChecked) {
-                termsError.textContent = 'You must agree to the Terms of Service and Privacy Policy';
-                termsError.style.display = 'block';
-                return false;
-            }
-            termsError.style.display = 'none';
-            return true;
-        }
-
-        // Real-time Validation
-        document.getElementById('fullName').addEventListener('input', validateFullName);
-        document.getElementById('email').addEventListener('input', validateEmail);
-        document.getElementById('password').addEventListener('input', () => {
-            validatePassword();
-            if (document.getElementById('confirmPassword').value) validateConfirmPassword();
-        });
-        document.getElementById('confirmPassword').addEventListener('input', validateConfirmPassword);
-        document.getElementById('terms').addEventListener('change', validateTerms);
-
-        // Password Eye Toggles
-        document.getElementById('togglePassword').addEventListener('click', () => {
-            togglePasswordVisibility('password', 'togglePassword');
-        });
-
-        document.getElementById('toggleConfirmPassword').addEventListener('click', () => {
-            togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword');
-        });
-
-        // Form Submission With AJAX
-        const form = document.getElementById('signupForm');
-        const createBtn = document.getElementById('createBtn');
-
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            clearGeneralError();
-
-            let isValid = true;
-
-            if (!validateFullName()) isValid = false;
-            if (!validateEmail()) isValid = false;
-            if (!validatePassword()) isValid = false;
-            if (!validateConfirmPassword()) isValid = false;
-            if (!validateTerms()) isValid = false;
-
-            // Referral Validation If Visible
-            const referralField = document.getElementById('referral-field');
-            if (referralField.style.display !== 'none') {
-                const referralCode = document.getElementById('referralCode').value.trim();
-                if (referralCode && referralCode.length < 3) {
-                    showError('referralCode', 'Referral code must be at least 3 characters');
-                    isValid = false;
-                }
+        <script>
+            // Show Referral Field
+            function showReferral() {
+                document.getElementById('toggle-referral').style.display = 'none';
+                document.getElementById('referral-field').style.display = 'block';
             }
 
-            if (!isValid) return;
+            // Auto-fill Referral Code From Query String
+            const googleAuthLink = document.getElementById('googleAuthLink');
+            const referralInput = document.getElementById('referralCode');
 
-            // Disable Button
-            createBtn.disabled = true;
-            createBtn.textContent = 'Creating Account...';
-
-            const formData = {
-                fullName: document.getElementById('fullName').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                password: document.getElementById('password').value,
-                confirmPassword: document.getElementById('confirmPassword').value,
-                referralCode: document.getElementById('referralCode').value.trim() || null,
-                agreeTerms: document.getElementById('terms').checked
-            };
-
-            try {
-                const response = await fetch('/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-
-                const result = await response.json();
-
-                if (response.ok && result.success) {
-                    window.location.href = '/signup-verification';
-                } else {
-                    if (result.field) {
-                        showError(result.field, result.message);
+            function updateGoogleLink() {
+                if (googleAuthLink && referralInput) {
+                    const code = referralInput.value.trim();
+                    if (code) {
+                        googleAuthLink.href = `/auth/google?ref=${encodeURIComponent(code)}`;
                     } else {
-                        showGeneralError(result.message || "An error occurred. Please try again.");
+                        googleAuthLink.href = `/auth/google`;
                     }
                 }
-            } catch (error) {
-                showGeneralError("Network error. Please check your connection and try again.");
-            } finally {
-                createBtn.disabled = false;
-                createBtn.textContent = 'Create Account';
             }
-        });
-    </script>
-    <%- include('../../../partials/user/flash') %>
+
+            window.addEventListener('DOMContentLoaded', () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const ref = urlParams.get('ref');
+                if (ref) {
+                    showReferral();
+                    if (referralInput) referralInput.value = ref;
+                }
+                updateGoogleLink();
+            });
+
+            if (referralInput) {
+                referralInput.addEventListener('input', updateGoogleLink);
+            }
+
+            // Password SVG Eye Toggle
+            const EYE_OPEN = `<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>`;
+            const EYE_SLASH = `<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88L6.59 6.59m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>`;
+
+            function setupEyeToggle(btnId, inputId, iconId) {
+                let visible = false;
+                document.getElementById(btnId).addEventListener('click', () => {
+                    visible = !visible;
+                    document.getElementById(inputId).type = visible ? 'text' : 'password';
+                    document.getElementById(iconId).innerHTML = visible ? EYE_SLASH : EYE_OPEN;
+                });
+            }
+            setupEyeToggle('togglePassword', 'password', 'eyePassword');
+            setupEyeToggle('toggleConfirmPassword', 'confirmPassword', 'eyeConfirmPassword');
+
+            // Error Handling Functions
+            function showError(inputId, message) {
+                const errorElement = document.getElementById(inputId + 'Error');
+                const input = document.getElementById(inputId);
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+                if (input) input.classList.add('error');
+            }
+
+            function clearError(inputId) {
+                const errorElement = document.getElementById(inputId + 'Error');
+                const input = document.getElementById(inputId);
+                if (errorElement) errorElement.style.display = 'none';
+                if (input) input.classList.remove('error');
+            }
+
+            function showGeneralError(message) {
+                if (typeof window.showToast === 'function') {
+                    window.showToast(message, 'error');
+                } else {
+                    alert(message);
+                }
+            }
+
+            function clearGeneralError() {
+                // No Action Needed For Toasts
+            }
+
+            // Validation Functions
+            function validateFullName() {
+                const fullName = document.getElementById('fullName').value.trim();
+                clearError('fullName');
+                if (fullName === '') {
+                    showError('fullName', 'Full name is required');
+                    return false;
+                }
+                if (fullName.length < 2) {
+                    showError('fullName', 'Full name must be at least 2 characters');
+                    return false;
+                }
+                if (fullName.length > 40) {
+                    showError('fullName', 'Full name cannot exceed 40 characters');
+                    return false;
+                }
+                if (!/^[A-Za-z\s]+$/.test(fullName)) {
+                    showError('fullName', 'Full name must contain only alphabets');
+                    return false;
+                }
+                return true;
+            }
+
+            // Block non-alphabets and limit to 40 characters for full name field
+            document.getElementById('fullName').addEventListener('input', function () {
+                let cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+                if (cleaned.length > 40) {
+                    cleaned = cleaned.slice(0, 40);
+                }
+                if (this.value !== cleaned) {
+                    this.value = cleaned;
+                }
+                validateFullName();
+            });
+
+            function validateEmail() {
+                const email = document.getElementById('email').value.trim();
+                clearError('email');
+                if (email === '') {
+                    showError('email', 'Email address is required');
+                    return false;
+                }
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showError('email', 'Please enter a valid email address');
+                    return false;
+                }
+                return true;
+            }
+
+            function validatePassword() {
+                const password = document.getElementById('password').value;
+                clearError('password');
+                if (password === '') {
+                    showError('password', 'Password is required');
+                    return false;
+                }
+                if (password.length < 8) {
+                    showError('password', 'Password must be at least 8 characters long');
+                    return false;
+                }
+                return true;
+            }
+
+            function validateConfirmPassword() {
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                clearError('confirmPassword');
+                if (confirmPassword === '') {
+                    showError('confirmPassword', 'Please confirm your password');
+                    return false;
+                }
+                if (password !== confirmPassword) {
+                    showError('confirmPassword', 'Passwords do not match');
+                    return false;
+                }
+                return true;
+            }
+
+            function validateTerms() {
+                const termsChecked = document.getElementById('terms').checked;
+                const termsError = document.getElementById('termsError');
+                if (!termsChecked) {
+                    termsError.textContent = 'You must agree to the Terms of Service and Privacy Policy';
+                    termsError.style.display = 'block';
+                    return false;
+                }
+                termsError.style.display = 'none';
+                return true;
+            }
+
+            // Real-time Validation
+            document.getElementById('fullName').addEventListener('input', validateFullName);
+            document.getElementById('email').addEventListener('input', validateEmail);
+            document.getElementById('password').addEventListener('input', () => {
+                validatePassword();
+                if (document.getElementById('confirmPassword').value) validateConfirmPassword();
+            });
+            document.getElementById('confirmPassword').addEventListener('input', validateConfirmPassword);
+            document.getElementById('terms').addEventListener('change', validateTerms);
+
+            // Password Eye Toggles
+            document.getElementById('togglePassword').addEventListener('click', () => {
+                togglePasswordVisibility('password', 'togglePassword');
+            });
+
+            document.getElementById('toggleConfirmPassword').addEventListener('click', () => {
+                togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword');
+            });
+
+            // Form Submission With AJAX
+            const form = document.getElementById('signupForm');
+            const createBtn = document.getElementById('createBtn');
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                clearGeneralError();
+
+                let isValid = true;
+
+                if (!validateFullName()) isValid = false;
+                if (!validateEmail()) isValid = false;
+                if (!validatePassword()) isValid = false;
+                if (!validateConfirmPassword()) isValid = false;
+                if (!validateTerms()) isValid = false;
+
+                // Referral Validation If Visible
+                const referralField = document.getElementById('referral-field');
+                if (referralField.style.display !== 'none') {
+                    const referralCode = document.getElementById('referralCode').value.trim();
+                    if (referralCode && referralCode.length < 3) {
+                        showError('referralCode', 'Referral code must be at least 3 characters');
+                        isValid = false;
+                    }
+                }
+
+                if (!isValid) return;
+
+                // Disable Button
+                createBtn.disabled = true;
+                createBtn.textContent = 'Creating Account...';
+
+                const formData = {
+                    fullName: document.getElementById('fullName').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    password: document.getElementById('password').value,
+                    confirmPassword: document.getElementById('confirmPassword').value,
+                    referralCode: document.getElementById('referralCode').value.trim() || null,
+                    agreeTerms: document.getElementById('terms').checked
+                };
+
+                try {
+                    const response = await fetch('/signup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        window.location.href = '/signup-verification';
+                    } else {
+                        if (result.field) {
+                            showError(result.field, result.message);
+                        } else {
+                            showGeneralError(result.message || "An error occurred. Please try again.");
+                        }
+                    }
+                } catch (error) {
+                    showGeneralError("Network error. Please check your connection and try again.");
+                } finally {
+                    createBtn.disabled = false;
+                    createBtn.textContent = 'Create Account';
+                }
+            });
+        </script>
+        <%- include('../../../partials/user/flash') %>
 </body>
+
 </html>
