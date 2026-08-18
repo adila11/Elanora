@@ -1,6 +1,5 @@
 export const MESSAGES = {
 
-  // ---------- AUTH MESSAGES ----------
   AUTH_PASSWORD_MUST_AT_LEAST: "Password must be at least 8 characters long and include uppercase, lowercase, and a number",
   AUTH_PASSWORDS_DO_NOT_MATCH: "Passwords do not match",
   AUTH_PLEASE_ENTER_VALID_EMAIL: "Please enter a valid email address",
@@ -16,7 +15,6 @@ export const MESSAGES = {
   VERIFICATION_CODE_SENT_TO_YOUR_NEW_EMAIL_DYNAMIC: (email) => `Verification code sent to your new email (${sanitizedNewEmail})`,
   AUTH_ACCOUNT_BLOCKED_BY_ADMIN: "Your account has been blocked by the admin",
 
-  // ---------- USER MESSAGES ----------
   USER_ADDRESS_NOT_FOUND: "Address not found",
   USER_INSUFFICIENT_WALLET_BALANCE: "Insufficient wallet balance",
   USER_MAXIMUM_WALLET_TOPUP_AMOUNT: "Maximum wallet top-up amount per transaction is ₹50,000",
@@ -24,7 +22,6 @@ export const MESSAGES = {
   RETURN_APPROVED_DYNAMIC_REFUNDED_TO_USERS_WALLET: (returnRequest) => `Return approved. ₹${returnRequest.refundAmount} refunded to user's wallet.`,
   USER_NOT_FOUND: "User not found",
 
-  // ---------- CART MESSAGES ----------
   DYNAMIC_DYNAMIC_IS_OUT_OF_STOCK: (val) => `${item.productName} (${item.variantName}) is out of stock`,
   DYNAMIC_IS_OUT_OF_STOCK: (product) => `${product.name} is out of stock`,
   CART_EMPTY: "Cart is empty",
@@ -39,7 +36,6 @@ export const MESSAGES = {
   YOU_CAN_ONLY_ADD_DYNAMIC_MORE_ITEMS_TO_THE_CART: (allowedQty) => `You can only add ${allowedQty} more items to the cart.`,
   YOU_CAN_ONLY_ADD_DYNAMIC_MORE_ITEMS_TO_THE_CART_1: (remaining) => `You can only add ${remaining} more items to the cart.`,
 
-  // ---------- ORDER MESSAGES ----------
   INVALID_ITEM_STATUS_TRANSITION_FROM_DYNAMIC_TO_DYNAMIC: (currentItemStatus, dbStatus) => `Invalid item status transition from ${currentItemStatus} to ${dbStatus}.`,
   ORDER_INVALID_PAYMENT_SIGNATURE: "Invalid payment signature",
   INVALID_STATUS_TRANSITION_FROM_DYNAMIC_TO_DYNAMIC: (currentStatus, dbStatus) => `Invalid status transition from ${currentStatus} to ${dbStatus}.`,
@@ -51,7 +47,6 @@ export const MESSAGES = {
   ORDER_THIS_ORDER_DOES_NOT: "This order does not have a failed payment",
   ORDER_THIS_ORDER_CANCELLED: "This order has been cancelled",
 
-  // ---------- COUPON MESSAGES ----------
   COUPON_APPLIED_YOU_SAVE_DYNAMIC: (val) => `Coupon applied! You save ₹${discount.toLocaleString('en-IN')}.`,
   COUPON_CODE_ALREADY_EXISTS: "Coupon code already exists.",
   COUPON_NOT_FOUND: "Coupon not found.",
@@ -63,7 +58,6 @@ export const MESSAGES = {
   COUPON_OFFER_NAME_MUST_BETWEEN: "Offer name must be between 3 and 50 characters",
   COUPON_PERCENTAGE_DISCOUNT_MUST_BETWEEN: "Percentage discount must be between 1 and 99",
 
-  // ---------- PRODUCT_CATEGORY MESSAGES ----------
   DYNAMIC_DYNAMIC_VARIANT_IS_INACTIVE: (val) => `${item.productName} (${item.variantName}) variant is inactive`,
   DYNAMIC_DYNAMIC_VARIANT_IS_NO_LONGER_AVAILABLE: (val) => `${item.productName} (${item.variantName}) variant is no longer available`,
   DYNAMIC_HAS_BEEN_DELISTED: (val) => `${item.productName} has been delisted`,
@@ -92,12 +86,10 @@ export const MESSAGES = {
   VARIANT_DYNAMIC_EXACTLY_4_IMAGES_ARE_REQUIRED_CURRENTLY_DYNAMIC_1: (val, images) => `Variant ${idx + 1}: Exactly 4 images are required (Currently: ${variantImages.length})`,
   PRODUCT_VARIANT_NOT_AVAILABLE: "Variant is not available",
 
-  // ---------- SERVER MESSAGES ----------
   SERVER_INTERNAL_SERVER_ERROR: "Internal server error",
   SERVER_ERROR_PLEASE_TRY_1: "Server error. Please try again.",
   SERVER_SOMETHING_WENT_WRONG_PLEASE: "Something went wrong. Please try again later.",
 
-  // ---------- VALIDATION MESSAGES ----------
   VALIDATION_ALL_FIELDS_REQUIRED: "All fields are required",
   VALIDATION_DESCRIPTION_REQUIRED: "Description is required",
   VALIDATION_END_DATE_MUST_AFTER: "End date must be after or equal to start date",
@@ -108,14 +100,12 @@ export const MESSAGES = {
   MINIMUM_PURCHASE_OF_DYNAMIC_REQUIRED: (minPurchase) => `Minimum purchase of ₹${minPurchase.toLocaleString('en-IN')} required.`,
   VALIDATION_ONLY_LETTERS_NUMBERS_SPACES: "Only letters, numbers and spaces are allowed.",
 
-  // ---------- OTHER MESSAGES ----------
   OTHER_ACCOUNT_CREATED_SUCCESSFULLY: "Account created successfully!",
   OTHER_FULL_NAME_MUST_CONTAIN: "Full name must contain only alphabets",
   OTHER_ITEM_NOT_FOUND: "Item not found",
   OTHER_PLEASE_CORRECT_VALIDATION_ERRORS: "Please correct the validation errors.",
   OTHER_VALIDATION_FAILED: "Validation failed",
 
-  // ---------- NEW VALIDATION MESSAGES ----------
   VALIDATION_ADDRESS_TYPE_REQUIRED: "Address type is required",
   VALIDATION_FULL_NAME_MUST_AT: "Full name must be at least 3 characters",
   VALIDATION_VALID_10DIGIT_INDIAN_PHONE: "Valid 10-digit Indian phone number is required",

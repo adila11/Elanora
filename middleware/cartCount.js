@@ -10,15 +10,15 @@ const cartCountMiddleware = async (req, res, next) => {
 
         if (req.session.user) {
 
-            const user = await User.findOne({email: req.session.user});
+            const user = await User.findOne({ email: req.session.user });
 
             if (user) {
 
-                const cart = await Cart.findOne({userId: user._id});
-                const wishlist = await Wishlist.findOne({userId:user._id}) ;
+                const cart = await Cart.findOne({ userId: user._id });
+                const wishlist = await Wishlist.findOne({ userId: user._id });
 
                 cartCount = cart?.items?.reduce((sum, item) => sum + Number(item.qty), 0) || 0;
-                wishlistCount = wishlist?.products?.length||0 ;
+                wishlistCount = wishlist?.products?.length || 0;
             }
         }
 

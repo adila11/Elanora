@@ -1,304 +1,495 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Order Successful – Elanora</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --cream: #f9f4ef;
-    --cream-dark: #f0e8de;
-    --gold: #b8922a;
-    --gold-light: #c9a020;
-    --text-dark: #2c2416;
-    --text-mid: #5a4a38;
-    --text-light: #9a8570;
-    --white: #ffffff;
-    --border: #e8ddd0;
-    --green: #5cb87a;
-    --green-bg: #e6f7ed;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--cream);
-    color: var(--text-dark);
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Successful – Elanora</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f9f4ef;
+      --cream-dark: #f0e8de;
+      --gold: #b8922a;
+      --gold-light: #c9a020;
+      --text-dark: #2c2416;
+      --text-mid: #5a4a38;
+      --text-light: #9a8570;
+      --white: #ffffff;
+      --border: #e8ddd0;
+      --green: #5cb87a;
+      --green-bg: #e6f7ed;
+    }
 
-  /* MAIN */
-  main {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 100px 24px 60px;
-  }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* CARD */
-  .success-card {
-    background: var(--white);
-    border-radius: 20px;
-    width: 100%;
-    max-width: 420px;
-    overflow: hidden;
-    box-shadow: 0 4px 32px rgba(44,36,22,0.10);
-    animation: fadeUp 0.5s ease both;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    body {
+      background: var(--cream);
+      color: var(--text-dark);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  /* DARK BANNER */
-  .card-banner {
-    background: #1a1208;
-    height: 90px;
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    /* Subtle Radial Glow */
-    background: radial-gradient(ellipse at 50% 120%, #3a2c10 0%, #1a1208 60%);
-  }
+    /* MAIN */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 24px 60px;
+    }
 
-  /* CHECK CIRCLE (overlapping Banner) */
-  .check-wrap {
-    position: absolute;
-    bottom: -36px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    background: var(--green-bg);
-    border: 3px solid var(--white);
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 16px rgba(92,184,122,0.25);
-  }
-  .checkmark {
-    width: 34px; height: 34px;
-    stroke: var(--green);
-    fill: none;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 60;
-    stroke-dashoffset: 60;
-    animation: drawCheck 0.55s ease 0.35s forwards;
-  }
-  @keyframes drawCheck {
-    to { stroke-dashoffset: 0; }
-  }
+    /* CARD */
+    .success-card {
+      background: var(--white);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 420px;
+      overflow: hidden;
+      box-shadow: 0 4px 32px rgba(44, 36, 22, 0.10);
+      animation: fadeUp 0.5s ease both;
+    }
 
-  /* BODY */
-  .card-body {
-    padding: 60px 36px 36px;
-    text-align: center;
-  }
-  .card-title {
-    font-family: 'Jost', sans-serif;
-    font-size: 1.55rem;
-    font-weight: 500;
-    color: var(--text-dark);
-    margin-bottom: 12px;
-    letter-spacing: 0.01em;
-  }
-  .card-sub {
-    font-size: 0.85rem;
-    color: var(--text-light);
-    line-height: 1.7;
-    margin-bottom: 28px;
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
 
-  /* INFO TABLE */
-  .info-table {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 28px;
-    text-align: left;
-  }
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 18px;
-    font-size: 0.84rem;
-  }
-  .info-row:not(:last-child) { border-bottom: 1px solid var(--border); }
-  .info-row .info-label { color: var(--text-light); }
-  .info-row .info-value { color: var(--text-dark); font-weight: 400; }
-  .info-row .info-value.gold { color: var(--gold); font-weight: 500; }
-  .delivery-value {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--text-dark);
-    font-size: 0.84rem;
-  }
-  .delivery-value svg { width: 14px; height: 14px; fill: var(--gold); flex-shrink: 0; }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  /* BUTTONS */
-  .btn-row {
-    display: flex;
-    gap: 12px;
-  }
-  .btn-outline {
-    flex: 1;
-    padding: 13px 10px;
-    border: 1.5px solid var(--border);
-    border-radius: 50px;
-    background: transparent;
-    color: var(--text-mid);
-    font-family: 'Jost', sans-serif;
-    font-size: 0.86rem;
-    font-weight: 400;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
-  .btn-solid {
-    flex: 1;
-    padding: 13px 10px;
-    border: none;
-    border-radius: 50px;
-    background: var(--gold);
-    color: var(--white);
-    font-family: 'Jost', sans-serif;
-    font-size: 0.86rem;
-    font-weight: 400;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: background 0.2s, transform 0.2s;
-  }
-  .btn-solid:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-solid svg { width: 15px; height: 15px; stroke: var(--white); fill: none; stroke-width: 2.5; }
+    /* DARK BANNER */
+    .card-banner {
+      background: #1a1208;
+      height: 90px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      /* Subtle Radial Glow */
+      background: radial-gradient(ellipse at 50% 120%, #3a2c10 0%, #1a1208 60%);
+    }
 
-  /* FOOTER */
-  footer { background: var(--white); border-top: 1px solid var(--border); margin-top: auto; }
-  .footer-top {
-    max-width: 1100px; margin: 0 auto;
-    padding: 56px 48px 40px;
-    display: grid; grid-template-columns: 2fr 1fr 1fr 1.6fr; gap: 48px;
-  }
-  .footer-logo {
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem; font-weight: 500; color: var(--gold); margin-bottom: 14px;
-  }
-  .footer-logo svg { width: 20px; height: 20px; fill: var(--gold); }
-  .footer-brand p { font-size: 0.82rem; line-height: 1.8; color: var(--text-light); max-width: 240px; }
-  .social-links { display: flex; gap: 10px; margin-top: 20px; }
-  .social-links a {
-    width: 36px; height: 36px; border-radius: 50%;
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    text-decoration: none; transition: border-color 0.2s, background 0.2s;
-  }
-  .social-links a:hover { border-color: var(--gold); background: #fdf8f3; }
-  .social-links svg { width: 14px; height: 14px; fill: var(--text-mid); }
-  .footer-col h4 {
-    font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--text-dark); margin-bottom: 18px;
-  }
-  .footer-col ul { list-style: none; }
-  .footer-col ul li { margin-bottom: 10px; }
-  .footer-col ul li a { font-size: 0.83rem; color: var(--text-light); text-decoration: none; transition: color 0.2s; }
-  .footer-col ul li a:hover { color: var(--gold); }
-  .footer-newsletter p { font-size: 0.82rem; color: var(--text-light); line-height: 1.7; margin-bottom: 14px; }
-  .newsletter-input {
-    width: 100%; border: 1px solid var(--border); border-radius: 6px;
-    padding: 11px 14px; font-family: 'Jost', sans-serif; font-size: 0.82rem;
-    color: var(--text-dark); background: var(--white); outline: none;
-    margin-bottom: 10px; transition: border-color 0.2s;
-  }
-  .newsletter-input:focus { border-color: var(--gold); }
-  .newsletter-input::placeholder { color: var(--text-light); }
-  .btn-subscribe {
-    width: 100%; background: var(--gold); border: none; border-radius: 6px;
-    padding: 12px; color: var(--white);
-    font-family: 'Jost', sans-serif; font-size: 0.8rem;
-    letter-spacing: 0.08em; cursor: pointer; transition: background 0.2s;
-  }
-  .btn-subscribe:hover { background: var(--gold-light); }
-  .footer-bottom {
-    border-top: 1px solid var(--border); padding: 20px 48px;
-    max-width: 1100px; margin: 0 auto;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .footer-bottom p { font-size: 0.76rem; color: var(--text-light); }
-  .footer-bottom a { font-size: 0.76rem; color: var(--text-light); text-decoration: none; margin-left: 20px; }
-  .footer-bottom a:hover { color: var(--gold); }
-</style>
+    /* CHECK CIRCLE (overlapping Banner) */
+    .check-wrap {
+      position: absolute;
+      bottom: -36px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--green-bg);
+      border: 3px solid var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(92, 184, 122, 0.25);
+    }
+
+    .checkmark {
+      width: 34px;
+      height: 34px;
+      stroke: var(--green);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      animation: drawCheck 0.55s ease 0.35s forwards;
+    }
+
+    @keyframes drawCheck {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    /* BODY */
+    .card-body {
+      padding: 60px 36px 36px;
+      text-align: center;
+    }
+
+    .card-title {
+      font-family: 'Jost', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      letter-spacing: 0.01em;
+    }
+
+    .card-sub {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 28px;
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* INFO TABLE */
+    .info-table {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      font-size: 0.84rem;
+    }
+
+    .info-row:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-row .info-label {
+      color: var(--text-light);
+    }
+
+    .info-row .info-value {
+      color: var(--text-dark);
+      font-weight: 400;
+    }
+
+    .info-row .info-value.gold {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .delivery-value {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-dark);
+      font-size: 0.84rem;
+    }
+
+    .delivery-value svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-outline {
+      flex: 1;
+      padding: 13px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      background: transparent;
+      color: var(--text-mid);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 400;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .btn-solid {
+      flex: 1;
+      padding: 13px 10px;
+      border: none;
+      border-radius: 50px;
+      background: var(--gold);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 400;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-solid:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-solid svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .footer-top {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 56px 48px 40px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.6fr;
+      gap: 48px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .footer-logo svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--gold);
+    }
+
+    .footer-brand p {
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: var(--text-light);
+      max-width: 240px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .social-links a {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .social-links a:hover {
+      border-color: var(--gold);
+      background: #fdf8f3;
+    }
+
+    .social-links svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--text-mid);
+    }
+
+    .footer-col h4 {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dark);
+      margin-bottom: 18px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col ul li a {
+      font-size: 0.83rem;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--gold);
+    }
+
+    .footer-newsletter p {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .newsletter-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 11px 14px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-dark);
+      background: var(--white);
+      outline: none;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--gold);
+    }
+
+    .newsletter-input::placeholder {
+      color: var(--text-light);
+    }
+
+    .btn-subscribe {
+      width: 100%;
+      background: var(--gold);
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-subscribe:hover {
+      background: var(--gold-light);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding: 20px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p {
+      font-size: 0.76rem;
+      color: var(--text-light);
+    }
+
+    .footer-bottom a {
+      font-size: 0.76rem;
+      color: var(--text-light);
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .footer-bottom a:hover {
+      color: var(--gold);
+    }
+  </style>
 </head>
+
 <body>
 
-<%- include('../../partials/user/header') %>
+  <%- include('../../partials/user/header') %>
 
-<main>
-  <div class="success-card">
+    <main>
+      <div class="success-card">
 
-    <!-- Dark Banner With Overlapping Check -->
-    <div class="card-banner">
-      <div class="check-wrap">
-        <svg class="checkmark" viewBox="0 0 52 52">
-          <polyline points="14 26 22 34 38 18"/>
-        </svg>
-      </div>
-    </div>
-
-    <!-- Body -->
-    <div class="card-body">
-      <h1 class="card-title">Order Successful!</h1>
-      <p class="card-sub">Thank you for your purchase. Your order has been received and is currently being processed.</p>
-
-      <div class="info-table">
-        <div class="info-row">
-          <span class="info-label">Order Number</span>
-          <span class="info-value gold">#<%= order.orderId %></span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Amount Paid</span>
-          <span class="info-value">₹<%= order.totalAmount.toLocaleString('en-IN') %></span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Estimated Delivery</span>
-          <div class="delivery-value">
-            <!-- Delivery Truck Icon -->
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            <%= order.deliveryRange || 'Oct 24 – Oct 26' %>
+        <!-- Dark Banner With Overlapping Check -->
+        <div class="card-banner">
+          <div class="check-wrap">
+            <svg class="checkmark" viewBox="0 0 52 52">
+              <polyline points="14 26 22 34 38 18" />
+            </svg>
           </div>
         </div>
+
+        <!-- Body -->
+        <div class="card-body">
+          <h1 class="card-title">Order Successful!</h1>
+          <p class="card-sub">Thank you for your purchase. Your order has been received and is currently being
+            processed.</p>
+
+          <div class="info-table">
+            <div class="info-row">
+              <span class="info-label">Order Number</span>
+              <span class="info-value gold">#<%= order.orderId %></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Amount Paid</span>
+              <span class="info-value">₹<%= order.totalAmount.toLocaleString('en-IN') %></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Estimated Delivery</span>
+              <div class="delivery-value">
+                <!-- Delivery Truck Icon -->
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" />
+                  <circle cx="5.5" cy="18.5" r="2.5" />
+                  <circle cx="18.5" cy="18.5" r="2.5" />
+                </svg>
+                <%= order.deliveryRange || 'Oct 24 – Oct 26' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <a href="/orders/<%= order._id %>" class="btn-outline">View Order</a>
+            <a href="/shop" class="btn-solid">
+              Continue Shopping
+              <svg viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
       </div>
+    </main>
 
-      <div class="btn-row">
-        <a href="/orders/<%= order._id %>" class="btn-outline">View Order</a>
-        <a href="/shop" class="btn-solid">
-          Continue Shopping
-          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        </a>
-      </div>
-    </div>
-
-  </div>
-</main>
-
-<%- include('../../partials/user/footer') %>
+    <%- include('../../partials/user/footer') %>
 
 </body>
+
 </html>

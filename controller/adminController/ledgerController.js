@@ -25,12 +25,12 @@ export const exportLedger = async (req, res) => {
     let y = 115;
 
     doc.fontSize(8).font("Helvetica-Bold").fillColor("#7a7870");
-    doc.text("DATE",        cols.date,     y);
-    doc.text("ORDER ID",    cols.orderId,  y);
-    doc.text("CUSTOMER",    cols.customer, y);
-    doc.text("PAYMENT",     cols.payment,  y);
-    doc.text("AMOUNT",      cols.amount,   y, { align: "right", width: 45 });
-    doc.text("STATUS",      cols.status,   y);
+    doc.text("DATE", cols.date, y);
+    doc.text("ORDER ID", cols.orderId, y);
+    doc.text("CUSTOMER", cols.customer, y);
+    doc.text("PAYMENT", cols.payment, y);
+    doc.text("AMOUNT", cols.amount, y, { align: "right", width: 45 });
+    doc.text("STATUS", cols.status, y);
 
     y += 14;
     doc.moveTo(40, y).lineTo(555, y).strokeColor("#e8e6e0").lineWidth(0.5).stroke();
@@ -56,10 +56,10 @@ export const exportLedger = async (req, res) => {
       const status = order.orderStatus || "—";
 
       doc.fontSize(8).font("Helvetica").fillColor("#1a1a18");
-      doc.text(dateStr,                    cols.date,     y, { width: 60 });
-      doc.text(`#${order.orderId}`,        cols.orderId,  y, { width: 105 });
-      doc.text(customerName.slice(0, 18),  cols.customer, y, { width: 120 });
-      doc.text(payMethod.slice(0, 12),     cols.payment,  y, { width: 110 });
+      doc.text(dateStr, cols.date, y, { width: 60 });
+      doc.text(`#${order.orderId}`, cols.orderId, y, { width: 105 });
+      doc.text(customerName.slice(0, 18), cols.customer, y, { width: 120 });
+      doc.text(payMethod.slice(0, 12), cols.payment, y, { width: 110 });
       doc.text(`Rs.${amount.toLocaleString("en-IN")}`, cols.amount, y, { align: "right", width: 45 });
       doc.fillColor("#2d7a4f").text(status.replace(/_/g, " "), cols.status, y, { width: 60 });
       doc.fillColor("#1a1a18");

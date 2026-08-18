@@ -42,7 +42,6 @@ passport.use(
                     if (referredBy) {
                         const referrer = await User.findOne({ referralCode: referredBy });
                         if (referrer) {
-                            // Reward The Referred User (new User) With 100rs
                             await creditWallet({
                                 userId: user._id,
                                 amount: 100,
@@ -50,7 +49,6 @@ passport.use(
                                 description: `Referral bonus for signing up with Google and code ${referredBy}`
                             });
 
-                            // Reward The Referrer (user Who Referred) With 100rs
                             await creditWallet({
                                 userId: referrer._id,
                                 amount: 100,
@@ -58,7 +56,6 @@ passport.use(
                                 description: `Referral reward for inviting ${user.fullName}`
                             });
 
-                            // Create Tracking Document For The Referrer To See Who Registered
                             await Referral.create({
                                 userId: referrer._id,
                                 referredUserId: user._id,

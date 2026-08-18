@@ -283,89 +283,72 @@
                 <h4 style="font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:700; color:#2c2c2c;">
                   Transaction History
                 </h4>
-                <% if (transactions && transactions.length > 0) { %>
+                <% if (transactions && transactions.length> 0) { %>
                   <a href="/wallet/transactions"
                     style="font-size:0.82rem; font-weight:600; color:#c49a2a; text-decoration:none;">
                     View Full Transaction
                   </a>
-                <% } %>
+                  <% } %>
               </div>
 
-              <%
-                function getSourceLabel(source) {
-                  switch (source) {
-                    case 'wallet_topup':   return 'Wallet Top-up';
-                    case 'order_payment':  return 'Order Payment';
-                    case 'order_cancel':   return 'Order Cancelled';
-                    case 'order_return':   return 'Order Refund';
-                    default:               return 'Transaction';
-                  }
-                }
+              <% function getSourceLabel(source) { switch (source) { case 'wallet_topup' : return 'Wallet Top-up' ;
+                case 'order_payment' : return 'Order Payment' ; case 'order_cancel' : return 'Order Cancelled' ;
+                case 'order_return' : return 'Order Refund' ; default: return 'Transaction' ; } } function
+                formatDateTime(date) { if (!date) return 'N/A' ; const d=new Date(date); if (isNaN(d.getTime()))
+                return 'N/A' ; // fallback if not a valid date const datePart=d.toLocaleDateString('en-US', {
+                month: 'short' , day: '2-digit' , year: 'numeric' }); const timePart=d.toLocaleTimeString('en-US', {
+                hour: 'numeric' , minute: '2-digit' , hour12: true }); return datePart + ', ' + timePart; } %>
 
-                function formatDateTime(date) {
-                  if (!date) return 'N/A';
-
-                  const d = new Date(date);
-                  if (isNaN(d.getTime())) return 'N/A'; // fallback if not a valid date
-
-                  const datePart = d.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: '2-digit',
-                    year: 'numeric'
-                  });
-
-                  const timePart = d.toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true
-                  });
-
-                  return datePart + ', ' + timePart;
-                }
-              %>
-
-              <div>
-                <% if (transactions && transactions.length > 0) { %>
-                  <% transactions.slice(0, 7).forEach(function(txn) { %>
-                    <div class="txn-row">
-                      <div style="display:flex; align-items:center; gap:14px;">
-                        <div class="txn-icon <%= txn.type === 'credit' ? 'credit' : 'debit' %>">
-                          <% if (txn.type==='credit' ) { %>
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
-                              viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M7 7l10 10M7 17V7h10" />
-                            </svg>
-                            <% } else { %>
+                <div>
+                  <% if (transactions && transactions.length> 0) { %>
+                    <% transactions.slice(0, 7).forEach(function(txn) { %>
+                      <div class="txn-row">
+                        <div style="display:flex; align-items:center; gap:14px;">
+                          <div class="txn-icon <%= txn.type === 'credit' ? 'credit' : 'debit' %>">
+                            <% if (txn.type==='credit' ) { %>
                               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 7L7 17M7 7h10v10" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 7l10 10M7 17V7h10" />
                               </svg>
-                              <% } %>
+                              <% } else { %>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                  viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 7L7 17M7 7h10v10" />
+                                </svg>
+                                <% } %>
+                          </div>
+                          <div>
+                            <div style="font-size:0.9rem; font-weight:600; color:#2c2c2c;">
+                              <%= txn.description || getSourceLabel(txn.source) %>
+                            </div>
+                            <div
+                              style="font-size:0.78rem; color:#999; margin-top:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                              <span class="txn-source-badge">
+                                <%= getSourceLabel(txn.source) %>
+                              </span>
+                              <span>
+                                <%= formatDateTime(txn.createdAt || txn.date) %> &nbsp;•&nbsp; <%= txn.transactionId ||
+                                    txn.txnId %>
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <div style="font-size:0.9rem; font-weight:600; color:#2c2c2c;">
-                            <%= txn.description || getSourceLabel(txn.source) %>
-                          </div>
-                          <div
-                            style="font-size:0.78rem; color:#999; margin-top:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                            <span class="txn-source-badge"><%= getSourceLabel(txn.source) %></span>
-                            <span><%= formatDateTime(txn.createdAt || txn.date) %> &nbsp;•&nbsp; <%= txn.transactionId || txn.txnId %></span>
-                          </div>
+                        <div
+                          style="font-size:0.95rem; font-weight:700; color:<%= txn.type === 'credit' ? '#1f9d4b' : '#2c2c2c' %>;">
+                          <%= txn.type==='credit' ? '+' : '-' %>₹<%= Number(txn.amount).toLocaleString('en-IN') %>
                         </div>
                       </div>
-                      <div
-                        style="font-size:0.95rem; font-weight:700; color:<%= txn.type === 'credit' ? '#1f9d4b' : '#2c2c2c' %>;">
-                        <%= txn.type==='credit' ? '+' : '-' %>₹<%= Number(txn.amount).toLocaleString('en-IN') %>
-                      </div>
-                    </div>
-                  <% }); %>
-                <% } else { %>
-                  <div style="text-align:center; padding:40px 0; color:#bbb;">
-                    <p style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:#888; margin-bottom:6px;">No transactions yet</p>
-                    <p style="font-size:0.82rem;">Your wallet activity will appear here once you add funds or make transactions.</p>
-                  </div>
-                <% } %>
-              </div>
+                      <% }); %>
+                        <% } else { %>
+                          <div style="text-align:center; padding:40px 0; color:#bbb;">
+                            <p
+                              style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:#888; margin-bottom:6px;">
+                              No transactions yet</p>
+                            <p style="font-size:0.82rem;">Your wallet activity will appear here once you add funds or
+                              make transactions.</p>
+                          </div>
+                          <% } %>
+                </div>
 
             </main>
         </div>
@@ -390,7 +373,8 @@
 
         <input id="amountInput" type="number" min="100" max="50000" step="1" class="field-input" placeholder="0.00"
           style="font-size:1.3rem; margin-bottom:6px;">
-        <span id="amountError" class="error-text" style="display:none; color:#d0483f; font-size:0.8rem; font-weight:500; margin-bottom:14px;"></span>
+        <span id="amountError" class="error-text"
+          style="display:none; color:#d0483f; font-size:0.8rem; font-weight:500; margin-bottom:14px;"></span>
 
         <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-bottom:20px;">
           <button type="button" class="quick-amount" onclick="setQuickAmount(100, this)">₹100</button>

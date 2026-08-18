@@ -3,23 +3,25 @@
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap');
 
   footer {
-    --f-cream:      #f9f5ef;
-    --f-gold:       #c8972a;
-    --f-gold-pale:  #f0ddb0;
-    --f-dark:       #1a1612;
-    --f-text:       #3a3228;
-    --f-muted:      #8c7f70;
-    --f-border:     #e8ddd0;
+    --f-cream: #f9f5ef;
+    --f-gold: #c8972a;
+    --f-gold-pale: #f0ddb0;
+    --f-dark: #1a1612;
+    --f-text: #3a3228;
+    --f-muted: #8c7f70;
+    --f-border: #e8ddd0;
 
-    background:  var(--f-cream);
-    border-top:  1px solid var(--f-border);
-    padding:     60px 60px 30px;
+    background: var(--f-cream);
+    border-top: 1px solid var(--f-border);
+    padding: 60px 60px 30px;
     font-family: 'Jost', sans-serif;
-    color:       var(--f-text);
-    box-sizing:  border-box;
+    color: var(--f-text);
+    box-sizing: border-box;
   }
 
-  footer *, footer *::before, footer *::after {
+  footer *,
+  footer *::before,
+  footer *::after {
     box-sizing: border-box;
   }
 
@@ -42,7 +44,11 @@
     display: inline-flex;
     margin-bottom: 14px;
   }
-  footer .footer-brand .footer-nav-logo:hover { opacity: 0.8; }
+
+  footer .footer-brand .footer-nav-logo:hover {
+    opacity: 0.8;
+  }
+
   footer .footer-brand p {
     font-size: 12.5px;
     color: var(--f-muted);
@@ -52,79 +58,166 @@
   }
 
   /* Socials */
-  footer .footer-socials { display: flex; gap: 12px; margin-top: 18px; }
+  footer .footer-socials {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
   footer .footer-social-icon {
-    width: 32px; height: 32px; border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     border: 1px solid var(--f-border);
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: border-color .2s, background .2s;
   }
+
   footer .footer-social-icon:hover {
     border-color: var(--f-gold);
     background: var(--f-gold-pale);
   }
+
   footer .footer-social-icon svg {
-    width: 14px; height: 14px;
-    stroke: var(--f-muted); fill: none; stroke-width: 1.5;
+    width: 14px;
+    height: 14px;
+    stroke: var(--f-muted);
+    fill: none;
+    stroke-width: 1.5;
   }
 
   /* Columns */
   footer .footer-col h4 {
-    font-size: 13px; font-weight: 500;
-    color: var(--f-dark); margin-bottom: 16px; margin-top: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--f-dark);
+    margin-bottom: 16px;
+    margin-top: 0;
   }
+
   footer .footer-col ul {
-    list-style: none; padding: 0; margin: 0;
-    display: flex; flex-direction: column; gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
+
   footer .footer-col ul li a {
-    font-size: 12.5px; color: var(--f-muted);
-    text-decoration: none; transition: color .2s;
+    font-size: 12.5px;
+    color: var(--f-muted);
+    text-decoration: none;
+    transition: color .2s;
   }
-  footer .footer-col ul li a:hover { color: var(--f-gold); }
+
+  footer .footer-col ul li a:hover {
+    color: var(--f-gold);
+  }
 
   /* Newsletter */
-  footer .newsletter-input-wrap { display: flex; margin-top: 6px; }
+  footer .newsletter-input-wrap {
+    display: flex;
+    margin-top: 6px;
+  }
+
   footer .newsletter-input-wrap input {
-    flex: 1; padding: 10px 14px; font-size: 12px;
-    border: 1px solid var(--f-border); border-radius: 8px 0 0 8px;
-    background: #fff; color: var(--f-text); outline: none;
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 12px;
+    border: 1px solid var(--f-border);
+    border-radius: 8px 0 0 8px;
+    background: #fff;
+    color: var(--f-text);
+    outline: none;
     font-family: 'Jost', sans-serif;
   }
-  footer .newsletter-input-wrap input::placeholder { color: var(--f-muted); }
+
+  footer .newsletter-input-wrap input::placeholder {
+    color: var(--f-muted);
+  }
+
   footer .newsletter-input-wrap button {
-    padding: 10px 18px; background: var(--f-gold); color: #fff;
-    border: none; border-radius: 0 8px 8px 0; font-size: 12px;
-    cursor: pointer; font-weight: 500;
+    padding: 10px 18px;
+    background: var(--f-gold);
+    color: #fff;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 500;
     font-family: 'Jost', sans-serif;
     transition: background .2s;
   }
-  footer .newsletter-input-wrap button:hover { background: #a87820; }
+
+  footer .newsletter-input-wrap button:hover {
+    background: #a87820;
+  }
 
   /* Bottom Bar */
   footer .footer-bottom {
-    border-top: 1px solid var(--f-border); padding-top: 20px;
-    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--f-border);
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  footer .footer-bottom p { font-size: 11.5px; color: var(--f-muted); margin: 0; }
-  footer .footer-bottom-links { display: flex; gap: 20px; }
+
+  footer .footer-bottom p {
+    font-size: 11.5px;
+    color: var(--f-muted);
+    margin: 0;
+  }
+
+  footer .footer-bottom-links {
+    display: flex;
+    gap: 20px;
+  }
+
   footer .footer-bottom-links a {
-    font-size: 11.5px; color: var(--f-muted); text-decoration: none;
+    font-size: 11.5px;
+    color: var(--f-muted);
+    text-decoration: none;
     transition: color .2s;
   }
-  footer .footer-bottom-links a:hover { color: var(--f-gold); }
+
+  footer .footer-bottom-links a:hover {
+    color: var(--f-gold);
+  }
 
   /* Responsive */
   @media (max-width: 1024px) {
-    footer { padding: 50px 40px 25px; }
-    footer .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    footer {
+      padding: 50px 40px 25px;
+    }
+
+    footer .footer-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
+
   @media (max-width: 600px) {
-    footer { padding: 40px 24px 20px; }
-    footer .footer-grid { grid-template-columns: 1fr; gap: 28px; }
-    footer .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
-    footer .footer-bottom-links { justify-content: center; }
+    footer {
+      padding: 40px 24px 20px;
+    }
+
+    footer .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    footer .footer-bottom {
+      flex-direction: column;
+      gap: 10px;
+      text-align: center;
+    }
+
+    footer .footer-bottom-links {
+      justify-content: center;
+    }
   }
 </style>
 
@@ -134,17 +227,33 @@
       <a class="footer-nav-logo" href="/">Elanora</a>
       <p>Crafting timeless elegance and radiant refinement for those who appreciate the finer things in life.</p>
       <div class="footer-socials">
-        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Facebook">
-          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon"
+          aria-label="Facebook">
+          <svg viewBox="0 0 24 24">
+            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+          </svg>
         </a>
-        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Instagram">
-          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#8c7f70"/></svg>
+        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon"
+          aria-label="Instagram">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="#8c7f70" />
+          </svg>
         </a>
-        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Twitter / X">
-          <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0016 2.5a4.5 4.5 0 00-4.5 4.5v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon"
+          aria-label="Twitter / X">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0016 2.5a4.5 4.5 0 00-4.5 4.5v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+          </svg>
         </a>
-        <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon"
+          aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24">
+            <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
         </a>
       </div>
     </div>
@@ -171,9 +280,10 @@
 
     <div class="footer-col">
       <h4>Newsletter</h4>
-      <p style="font-size:12px;color:#8c7f70;line-height:1.7;margin-bottom:12px;">Subscribe to receive updates, access to exclusive deals, and more.</p>
+      <p style="font-size:12px;color:#8c7f70;line-height:1.7;margin-bottom:12px;">Subscribe to receive updates, access
+        to exclusive deals, and more.</p>
       <div class="newsletter-input-wrap">
-        <input type="email" placeholder="Enter your email…"/>
+        <input type="email" placeholder="Enter your email…" />
         <button type="button">Subscribe</button>
       </div>
     </div>

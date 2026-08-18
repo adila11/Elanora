@@ -39,7 +39,7 @@ export const resetpassword = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
-                field: "old",         
+                field: "old",
                 message: "Old password is incorrect"
             });
         }
@@ -74,7 +74,7 @@ export const resetpassword = async (req, res) => {
         await user.save();
 
         req.flash("success", "Password updated successfully");
-        return res.json({ success: true });   
+        return res.json({ success: true });
 
     } catch (error) {
         res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });

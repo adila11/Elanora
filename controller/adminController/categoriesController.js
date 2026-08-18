@@ -208,7 +208,7 @@ export const deleteCategory = async (req, res) => {
         if (!req.session.admin) return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
 
         const deleted = await Category.findByIdAndDelete(req.params.id);
-        
+
         if (!deleted) return res.status(404).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
 
         return res.json({ message: MESSAGES.PRODUCT_DELETED_SUCCESSFULLY_1 });

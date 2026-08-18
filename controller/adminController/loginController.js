@@ -24,27 +24,27 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.render("admin/login", { 
-                error: MESSAGES.VALIDATION_ALL_FIELDS_REQUIRED 
+            return res.render("admin/login", {
+                error: MESSAGES.VALIDATION_ALL_FIELDS_REQUIRED
             });
         }
-        
+
         const admin = await Admin.findOne({ email });
-        
+
         if (!admin) {
-            return res.render("admin/login", { 
-                error: "Admin not found" 
+            return res.render("admin/login", {
+                error: "Admin not found"
             });
         }
-        
+
         const isMatch = await bcrypt.compare(password, admin.password);
-        if(!isMatch){
-            return res.render("admin/login", { 
-                error: "Admin password incorrect" 
+        if (!isMatch) {
+            return res.render("admin/login", {
+                error: "Admin password incorrect"
             });
         }
-      
-        req.session.admin=email;
+
+        req.session.admin = email;
 
         res.redirect("/admin/dashboard")
 
@@ -57,7 +57,7 @@ export const login = async (req, res) => {
 
 
 
-export const logout =async(req,res)=>{
+export const logout = async (req, res) => {
     try {
         delete req.session.admin
         return res.redirect("/admin")

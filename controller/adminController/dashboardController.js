@@ -3,7 +3,7 @@ import Product from "../../model/productSchema.js";
 import { User } from "../../model/userSchema.js";
 import { MESSAGES } from '../../constants/messages.js';
 
-const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function calcPercentChange(current, previous) {
   if (previous === 0) return current > 0 ? 100 : 0;

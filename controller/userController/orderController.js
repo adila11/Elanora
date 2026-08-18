@@ -93,7 +93,6 @@ export const getOrderDetail = async (req, res) => {
         res.render("user/order/orderDetail", { order: orderObj, user });
 
     } catch (error) {
-        // Invalid ObjectId format → treat as 404
         if (error.name === 'CastError') {
             return res.status(404).render("user/profile/pageNotFound");
         }
@@ -216,7 +215,7 @@ export const cancelSingleItem = async (req, res) => {
             });
         }
 
-        
+
 
         if (order.isCouponApplied && order.couponCode && item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
             const couponCheck = await revalidateCouponAgainstCart(order, [item._id]);
@@ -416,19 +415,15 @@ export const validateRetryPayment = async (req, res) => {
         const order = await Order.findOne({ _id: req.params.id, userId: user._id });
         if (!order) return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
 
-        // Must be a failed payment order
         if (order.paymentStatus !== 'failed') {
             return res.status(400).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_DOES_NOT });
         }
 
-        // Check if cancelled
         if (order.orderStatus === 'cancelled') {
             return res.status(400).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_CANCELLED });
         }
 
-        // Check if expired
         if (order.orderExpiresAt && new Date() > new Date(order.orderExpiresAt)) {
-            // Auto-cancel expired order and restore stock
             order.orderStatus = 'cancelled';
             order.cancelReason = 'Payment retry window expired';
             order.cancelledAt = new Date();
@@ -454,7 +449,6 @@ export const validateRetryPayment = async (req, res) => {
             });
         }
 
-        // Validate each item's product/variant still exists and is active
         const validationErrors = [];
 
         for (const item of order.items) {
@@ -480,8 +474,6 @@ export const validateRetryPayment = async (req, res) => {
                     validationErrors.push({ productName: item.productName, error: `${item.productName} (${item.variantName}) variant is inactive` });
                     continue;
                 }
-                // Stock was already deducted at order creation, so variant.stock reflects reserved state.
-                // Only flag if stock has gone negative (shouldn't normally happen).
                 if (variant.stock < 0) {
                     validationErrors.push({ productName: item.productName, error: `${item.productName} (${item.variantName}) is out of stock` });
                 }
@@ -539,7 +531,6 @@ export const retryPayment = async (req, res) => {
             return res.status(400).json({ success: false, message: "Payment retry window has expired" });
         }
 
-        // Create new Razorpay order for the same amount
         const amount = order.finalAmount * 100;
         const razorpayOrder = await razorpay.orders.create({
             amount,
@@ -547,7 +538,6 @@ export const retryPayment = async (req, res) => {
             receipt: `retry_${order._id}_${Date.now()}`
         });
 
-        // Update order with new Razorpay order ID and increment retry count
         order.razorpayOrderId = razorpayOrder.id;
         order.retryCount = (order.retryCount || 0) + 1;
         await order.save();
@@ -588,7 +578,6 @@ export const verifyRetryPayment = async (req, res) => {
             return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
         }
 
-        // Payment succeeded — update status
         order.paymentStatus = "paid";
         order.orderStatus = "pending";
         order.razorpayPaymentId = razorpay_payment_id;

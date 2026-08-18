@@ -76,8 +76,8 @@
 
             <!-- Wishlist -->
             <button onclick="location.href='/wishlist'" class="icon-btn relative" aria-label="Wishlist">
-              <svg class="w-5 h-5 text-text" fill="none" stroke="currentColor" stroke-width="1.6"
-                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-text" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" viewBox="0 0 24 24">
                 <path
                   d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78a5.5 5.5 0 000-7.78z" />
               </svg>
@@ -91,8 +91,8 @@
 
             <!-- Cart -->
             <button onclick="location.href='/cart'" class="icon-btn relative" aria-label="Cart">
-              <svg class="w-5 h-5 text-text" fill="none" stroke="currentColor" stroke-width="1.6"
-                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-text" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" viewBox="0 0 24 24">
                 <path d="M2.5 5H5.5L7 8M7 8H21L18 17H9Z" />
                 <circle cx="10" cy="19.3" r="1.5" />
                 <circle cx="17" cy="19.3" r="1.5" />
@@ -281,7 +281,7 @@
   }
 
   // Dynamic Cart Badge Helper
-  window.updateCartBadge = function(count) {
+  window.updateCartBadge = function (count) {
     const cartBtn = document.querySelector('button[aria-label="Cart"]');
     if (!cartBtn) return;
     let badge = document.getElementById('cart-badge');

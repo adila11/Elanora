@@ -10,13 +10,13 @@ export const checkPincode = async (req, res) => {
         }
 
         const response = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`);
-        
+
         if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
             return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_INVALID_PINCODE });
         }
 
         const result = response.data[0];
-        
+
         if (result.Status !== "Success" || !result.PostOffice || !Array.isArray(result.PostOffice) || result.PostOffice.length === 0) {
             return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_INVALID_PINCODE });
         }

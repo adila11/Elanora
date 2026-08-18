@@ -50,7 +50,6 @@ function getDateRange(query) {
 }
 
 
-// ── Helper: compute net final amount actually paid ───────────────────────
 const computeFinal = (o) => {
   const total = o.items?.reduce((s, it) => s + (it.total || 0), 0) || o.orderTotal;
   let refunded = 0;
@@ -74,21 +73,18 @@ async function buildReportData(query) {
 
   const orderSelectFields = "orderId createdAt deliveredAt updatedAt userId orderTotal discount deliveryCharge finalAmount paymentMethod paymentStatus orderStatus couponCode isCouponApplied items";
 
-  // 1. Online paid orders — money received when payment confirmed
   const onlineOrders = await Order.find({
     createdAt: { $gte: start, $lte: end },
     paymentMethod: { $in: ['razorpay', 'wallet'] },
     paymentStatus: 'paid',
   }).populate('userId', 'name email').select(orderSelectFields).lean();
 
-  // 2. COD orders — money received ONLY when delivered
   const codOrders = await Order.find({
     deliveredAt: { $gte: start, $lte: end },
     paymentMethod: 'cod',
     orderStatus: 'delivered',
   }).populate('userId', 'name email').select(orderSelectFields).lean();
 
-  // 3. Wallet refund credits (cancellation & return refunds)
   const refundTxs = await WalletTransaction.find({
     createdAt: { $gte: start, $lte: end },
     type: 'credit',
@@ -96,7 +92,6 @@ async function buildReportData(query) {
     status: 'success',
   }).populate('userId', 'name email').populate('orderId', 'orderId').lean();
 
-  // 4. Referral bonus wallet credits
   const referralTxs = await WalletTransaction.find({
     createdAt: { $gte: start, $lte: end },
     type: 'credit',
@@ -104,7 +99,6 @@ async function buildReportData(query) {
     status: 'success',
   }).populate('userId', 'name email').lean();
 
-  // ── Previous period for deltas ──────────────────────────────────────────
   const prevOnlineOrders = await Order.find({
     createdAt: { $gte: prevStart, $lte: prevEnd },
     paymentMethod: { $in: ['razorpay', 'wallet'] },
@@ -124,7 +118,6 @@ async function buildReportData(query) {
     status: 'success',
   }).lean();
 
-  // ── Current Period Totals ────────────────────────────────────────────────
   const totalRevenue = Math.round(
     onlineOrders.reduce((s, o) => s + computeFinal(o), 0) +
     codOrders.reduce((s, o) => s + computeFinal(o), 0)
@@ -141,7 +134,6 @@ async function buildReportData(query) {
     codOrders.filter(o => o.isCouponApplied).reduce((s, o) => s + (o.discount || 0), 0)
   );
 
-  // ── Previous Period Totals ───────────────────────────────────────────────
   const prevTotalRevenue = Math.round(
     prevOnlineOrders.reduce((s, o) => s + computeFinal(o), 0) +
     prevCodOrders.reduce((s, o) => s + computeFinal(o), 0)
@@ -163,7 +155,6 @@ async function buildReportData(query) {
   const refundDelta = pctDelta(totalRefunded, prevTotalRefunded);
   const discountDelta = pctDelta(totalDiscount, prevTotalDiscount);
 
-  // ── Chart series ────────────────────────────────────────────────────────
   const revenueMap = {};
   const ordersMap = {};
 
@@ -183,7 +174,6 @@ async function buildReportData(query) {
   const revenueSeries = chartLabels.map(k => revenueMap[k] || 0);
   const ordersSeries = chartLabels.map(k => ordersMap[k] || 0);
 
-  // ── Build unified transaction rows ────────────────────────────────────────
   const transactionRows = [];
 
   onlineOrders.forEach(o => {
@@ -262,7 +252,6 @@ async function buildReportData(query) {
     });
   });
 
-  // Sort newest first
   transactionRows.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return {
@@ -396,7 +385,6 @@ export const exportSalesReportPDF = async (req, res, next) => {
     const doc = new PDFDocument({ margin: 40, size: "A4" });
     doc.pipe(res);
 
-    // ── Title ─────────────────────────────────────────────────────────────────
     doc.fontSize(20).fillColor("#1a1a18").font("Helvetica-Bold")
       .text("Elanora – Sales Report", { align: "center" });
     doc.moveDown(0.3);
@@ -407,7 +395,6 @@ export const exportSalesReportPDF = async (req, res, next) => {
       );
     doc.moveDown(1.2);
 
-    // ── Summary ───────────────────────────────────────────────────────────────
     doc.fontSize(12).fillColor("#1a1a18").font("Helvetica-Bold").text("Summary");
     doc.moveDown(0.3);
 
@@ -427,7 +414,6 @@ export const exportSalesReportPDF = async (req, res, next) => {
 
     summaryRows.forEach(([label, value], idx) => {
       const rowY = doc.y;
-      // Alternating stripe
       if (idx % 2 === 0) {
         doc.save()
           .rect(SUM_LABEL_X - 4, rowY - 2, 519 - SUM_LABEL_X, 18)
@@ -441,11 +427,9 @@ export const exportSalesReportPDF = async (req, res, next) => {
 
     doc.moveDown(1.2);
 
-    // ── Transactions Table ────────────────────────────────────────────────────
     doc.fontSize(12).fillColor("#1a1a18").font("Helvetica-Bold").text("Transactions");
     doc.moveDown(0.5);
 
-    // A4 usable width = 515 (595 − 40 left − 40 right)
     const PAGE_LEFT = 40;
     const PAGE_WIDTH = 515;
     const PAGE_BREAK = 760;
@@ -462,7 +446,6 @@ export const exportSalesReportPDF = async (req, res, next) => {
       { label: "Status", width: 86 },
     ];
 
-    // Assign absolute X start per column
     let xCursor = PAGE_LEFT;
     cols.forEach(c => { c.x = xCursor; xCursor += c.width; });
 
@@ -480,7 +463,6 @@ export const exportSalesReportPDF = async (req, res, next) => {
     doc.font("Helvetica").fontSize(7.5).fillColor("#1a1a18");
 
     data.transactionRows.slice(0, 200).forEach((row, idx) => {
-      // Page break guard
       if (doc.y + ROW_H > PAGE_BREAK) {
         doc.addPage();
         doc.font("Helvetica").fontSize(7.5);
@@ -490,7 +472,6 @@ export const exportSalesReportPDF = async (req, res, next) => {
 
       const rowY = doc.y;
 
-      // Alternating stripe
       if (idx % 2 === 0) {
         doc.save().rect(PAGE_LEFT, rowY, PAGE_WIDTH, ROW_H).fill("#f5f4f0").restore();
       }

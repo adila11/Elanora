@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Address - Elanora</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: 'DM Sans', sans-serif;
@@ -61,411 +70,421 @@
       gap: 10px;
       font-size: 0.95rem;
     }
-    .success-msg { 
-      background: #ecfdf5; 
-      color: #0f766e; 
-      border: 1px solid #5eead4; 
+
+    .success-msg {
+      background: #ecfdf5;
+      color: #0f766e;
+      border: 1px solid #5eead4;
     }
-    .error-msg { 
-      background: #fef2f2; 
-      color: #b91c1c; 
-      border: 1px solid #fecaca; 
+
+    .error-msg {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
     }
+
     .readonly-field {
       background-color: #f3f3f3 !important;
       cursor: not-allowed;
     }
   </style>
 </head>
+
 <body>
 
   <%- include('partials/user/header') %>
 
-  <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
+    <div style="max-width:1200px; margin:0 auto; padding:90px 24px 80px;">
 
-    <%- include('partials/user/profileBanner', { user }) %>
+      <%- include('partials/user/profileBanner', { user }) %>
 
-    <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
+        <div style="display:grid; grid-template-columns:230px 1fr; gap:24px;">
 
-      <%- include('partials/user/profileSidebar', { activePage: 'addresses' }) %>
+          <%- include('partials/user/profileSidebar', { activePage: 'addresses' }) %>
 
-      <!-- Main Content -->
-      <main style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04); max-width: 600px;">
+            <!-- Main Content -->
+            <main
+              style="background:#fff; border-radius:18px; padding:40px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04); max-width: 600px;">
 
-        <div class="mb-8">
-          <a href="/addresses" class="text-amber-700 hover:text-amber-800 flex items-center gap-2 text-sm font-medium mb-6">
-            ← Back to Saved Addresses
-          </a>
-          <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.75rem; font-weight:700; color:#2c2c2c;">
-            Edit Address
-          </h2>
-        </div>
+              <div class="mb-8">
+                <a href="/addresses"
+                  class="text-amber-700 hover:text-amber-800 flex items-center gap-2 text-sm font-medium mb-6">
+                  ← Back to Saved Addresses
+                </a>
+                <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.75rem; font-weight:700; color:#2c2c2c;">
+                  Edit Address
+                </h2>
+              </div>
 
 
 
-        <form id="addressForm" novalidate>
-          <input type="hidden" id="addressId" value="<%= address ? address._id : '' %>">
+              <form id="addressForm" novalidate>
+                <input type="hidden" id="addressId" value="<%= address ? address._id : '' %>">
 
-          <div class="space-y-6">
+                <div class="space-y-6">
 
-            <!-- Address Type -->
-            <div>
-              <label class="field-label">Address Type</label>
-              <select id="addressType" class="field-input">
-                <option value="">Select Address Type</option>
-                <option value="Home" <%= address && address.type === 'Home' ? 'selected' : '' %>>🏠 Home</option>
-                <option value="Office" <%= address && address.type === 'Office' ? 'selected' : '' %>>🏢 Office</option>
-                <option value="Other" <%= address && address.type === 'Other' ? 'selected' : '' %>>📍 Other</option>
-              </select>
-              <span id="typeError" class="error-text">Please select an address type</span>
-            </div>
+                  <!-- Address Type -->
+                  <div>
+                    <label class="field-label">Address Type</label>
+                    <select id="addressType" class="field-input">
+                      <option value="">Select Address Type</option>
+                      <option value="Home" <%=address && address.type==='Home' ? 'selected' : '' %>>🏠 Home</option>
+                      <option value="Office" <%=address && address.type==='Office' ? 'selected' : '' %>>🏢 Office
+                      </option>
+                      <option value="Other" <%=address && address.type==='Other' ? 'selected' : '' %>>📍 Other</option>
+                    </select>
+                    <span id="typeError" class="error-text">Please select an address type</span>
+                  </div>
 
-            <!-- Full Name -->
-            <div>
-              <label class="field-label">Full Name</label>
-              <input type="text" id="fullName" class="field-input" 
-                     value="<%= address ? address.fullName : '' %>" placeholder="Enter full name" maxlength="40">
-              <span id="nameError" class="error-text">Full name must be at least 3 characters</span>
-            </div>
+                  <!-- Full Name -->
+                  <div>
+                    <label class="field-label">Full Name</label>
+                    <input type="text" id="fullName" class="field-input" value="<%= address ? address.fullName : '' %>"
+                      placeholder="Enter full name" maxlength="40">
+                    <span id="nameError" class="error-text">Full name must be at least 3 characters</span>
+                  </div>
 
-            <!-- Phone Number -->
-            <div>
-              <label class="field-label">Phone Number</label>
-              <input type="tel" id="phone" class="field-input" maxlength="10" 
-                     value="<%= address ? address.phone : '' %>" placeholder="9876543210">
-              <span id="phoneError" class="error-text">Please enter a valid 10-digit Indian mobile number (starting with 6-9)</span>
-            </div>
+                  <!-- Phone Number -->
+                  <div>
+                    <label class="field-label">Phone Number</label>
+                    <input type="tel" id="phone" class="field-input" maxlength="10"
+                      value="<%= address ? address.phone : '' %>" placeholder="9876543210">
+                    <span id="phoneError" class="error-text">Please enter a valid 10-digit Indian mobile number
+                      (starting with 6-9)</span>
+                  </div>
 
-            <!-- Address Line -->
-            <div>
-              <label class="field-label">Address Line</label>
-              <textarea id="addressLine" rows="3" class="field-input resize-y" placeholder="House no, Street, Area" maxlength="100">
+                  <!-- Address Line -->
+                  <div>
+                    <label class="field-label">Address Line</label>
+                    <textarea id="addressLine" rows="3" class="field-input resize-y"
+                      placeholder="House no, Street, Area" maxlength="100">
 <%= address ? address.addressLine : '' %>
               </textarea>
-              <span id="addressError" class="error-text">Address line must be at least 10 characters</span>
-            </div>
+                    <span id="addressError" class="error-text">Address line must be at least 10 characters</span>
+                  </div>
 
-            <!-- City & Pincode -->
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="field-label">City</label>
-                <input type="text" id="city" class="field-input" 
-                       value="<%= address ? address.city : '' %>" placeholder="City" maxlength="20">
-                <span id="cityError" class="error-text">City name is required</span>
-              </div>
-              <div>
-                <label class="field-label">Pincode</label>
-                <input type="text" id="pincode" maxlength="6" class="field-input" 
-                       value="<%= address ? address.pincode : '' %>" placeholder="673001">
-                <span id="pincodeError" class="error-text">Pincode must be exactly 6 digits</span>
-              </div>
-            </div>
+                  <!-- City & Pincode -->
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="field-label">City</label>
+                      <input type="text" id="city" class="field-input" value="<%= address ? address.city : '' %>"
+                        placeholder="City" maxlength="20">
+                      <span id="cityError" class="error-text">City name is required</span>
+                    </div>
+                    <div>
+                      <label class="field-label">Pincode</label>
+                      <input type="text" id="pincode" maxlength="6" class="field-input"
+                        value="<%= address ? address.pincode : '' %>" placeholder="673001">
+                      <span id="pincodeError" class="error-text">Pincode must be exactly 6 digits</span>
+                    </div>
+                  </div>
 
-            <!-- District & State -->
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="field-label">District</label>
-                <input type="text" id="district" class="field-input readonly-field" 
-                       value="<%= address ? address.district : '' %>" placeholder="District" readonly required tabindex="-1">
-                <span id="districtError" class="error-text">District is required</span>
-              </div>
-              <div>
-                <label class="field-label">State</label>
-                <input type="text" id="state" class="field-input readonly-field" 
-                       value="<%= address ? address.state : '' %>" placeholder="State" readonly required tabindex="-1">
-                <span id="stateError" class="error-text">State is required</span>
-              </div>
-            </div>
+                  <!-- District & State -->
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="field-label">District</label>
+                      <input type="text" id="district" class="field-input readonly-field"
+                        value="<%= address ? address.district : '' %>" placeholder="District" readonly required
+                        tabindex="-1">
+                      <span id="districtError" class="error-text">District is required</span>
+                    </div>
+                    <div>
+                      <label class="field-label">State</label>
+                      <input type="text" id="state" class="field-input readonly-field"
+                        value="<%= address ? address.state : '' %>" placeholder="State" readonly required tabindex="-1">
+                      <span id="stateError" class="error-text">State is required</span>
+                    </div>
+                  </div>
 
-          </div>
+                </div>
 
-          <div class="flex gap-4 mt-10">
-            <a href="/addresses" 
-               class="btn-outline flex-1 py-3 text-center rounded-xl font-medium">Cancel</a>
-            <button type="button" onclick="updateAddress()" 
-                    class="btn-gold flex-1 py-3 rounded-xl font-medium" id="saveBtn">
-              Update Address
-            </button>
-          </div>
-        </form>
+                <div class="flex gap-4 mt-10">
+                  <a href="/addresses" class="btn-outline flex-1 py-3 text-center rounded-xl font-medium">Cancel</a>
+                  <button type="button" onclick="updateAddress()" class="btn-gold flex-1 py-3 rounded-xl font-medium"
+                    id="saveBtn">
+                    Update Address
+                  </button>
+                </div>
+              </form>
 
-      </main>
+            </main>
+        </div>
     </div>
-  </div>
 
-  <%- include('partials/user/footer') %>
+    <%- include('partials/user/footer') %>
 
-  <script>
-    // Show Success Message
-    function showPageSuccess(message) {
-      if (typeof window.showToast === 'function') {
-        window.showToast(message, 'success');
-      } else {
-        alert(message);
-      }
-    }
-
-    // Show Error Message
-    function showPageError(message) {
-      if (typeof window.showToast === 'function') {
-        window.showToast(message, 'error');
-      } else {
-        alert(message);
-      }
-    }
-
-    function clearMessages() {
-      // Handled By Sweetalert2
-    }
-
-    // Clear All Field Errors
-    function clearFieldErrors() {
-      const errors = document.querySelectorAll('.error-text');
-      errors.forEach(err => err.style.display = 'none');
-
-      const inputs = document.querySelectorAll('.field-input');
-      inputs.forEach(input => input.classList.remove('error'));
-    }
-
-    // Restrict phone input to max 10 numeric digits
-    document.getElementById('phone').addEventListener('input', function () {
-      let cleaned = this.value.replace(/\D/g, '');
-      if (cleaned.length > 10) {
-        cleaned = cleaned.slice(0, 10);
-      }
-      if (this.value !== cleaned) {
-        this.value = cleaned;
-      }
-    });
-
-    // Restrict fullName input to alphabets only and max 40 chars
-    document.getElementById('fullName').addEventListener('input', function () {
-      let cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
-      if (cleaned.length > 40) cleaned = cleaned.slice(0, 40);
-      if (this.value !== cleaned) this.value = cleaned;
-    });
-
-    // Restrict addressLine input to max 100 chars
-    document.getElementById('addressLine').addEventListener('input', function () {
-      if (this.value.length > 100) this.value = this.value.slice(0, 100);
-    });
-
-    // Restrict city input to alphabets only and max 20 chars
-    document.getElementById('city').addEventListener('input', function () {
-      let cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
-      if (cleaned.length > 20) cleaned = cleaned.slice(0, 20);
-      if (this.value !== cleaned) this.value = cleaned;
-    });
-
-    // Mark Field As Error
-    function markError(fieldId, errorId, message) {
-      const input = document.getElementById(fieldId);
-      const errorEl = document.getElementById(errorId);
-      
-      input.classList.add('error');
-      errorEl.textContent = message;
-      errorEl.style.display = 'block';
-    }
-
-    // Main Validation Function
-    function validateForm() {
-      clearFieldErrors();
-      let isValid = true;
-
-      // Address Type
-      const addressType = document.getElementById('addressType').value;
-      if (!addressType) {
-        markError('addressType', 'typeError', 'Please select an address type');
-        isValid = false;
-      }
-
-      // Full Name
-      const fullName = document.getElementById('fullName').value.trim();
-      if (fullName.length < 3) {
-        markError('fullName', 'nameError', 'Full name must be at least 3 characters');
-        isValid = false;
-      } else if (fullName.length > 40) {
-        markError('fullName', 'nameError', 'Full name cannot exceed 40 characters');
-        isValid = false;
-      } else if (!/^[A-Za-z\s]+$/.test(fullName)) {
-        markError('fullName', 'nameError', 'Full name must contain only alphabets');
-        isValid = false;
-      }
-
-      // Phone Number (indian)
-      const phone = document.getElementById('phone').value.trim();
-      if (!/^[6-9]\d{9}$/.test(phone)) {
-        markError('phone', 'phoneError', 'Please enter a valid 10-digit Indian mobile number (starting with 6-9)');
-        isValid = false;
-      }
-
-      // Address Line
-      const addressLine = document.getElementById('addressLine').value.trim();
-      if (addressLine.length < 10) {
-        markError('addressLine', 'addressError', 'Please enter a complete address (minimum 10 characters)');
-        isValid = false;
-      } else if (addressLine.length > 100) {
-        markError('addressLine', 'addressError', 'Address line cannot exceed 100 characters');
-        isValid = false;
-      }
-
-      // City
-      const city = document.getElementById('city').value.trim();
-      if (city.length < 2) {
-        markError('city', 'cityError', 'City name is required');
-        isValid = false;
-      } else if (city.length > 20) {
-        markError('city', 'cityError', 'City name cannot exceed 20 characters');
-        isValid = false;
-      } else if (!/^[A-Za-z\s]+$/.test(city)) {
-        markError('city', 'cityError', 'City must contain only alphabets');
-        isValid = false;
-      }
-
-      // Pincode
-      const pincode = document.getElementById('pincode').value.trim();
-      if (!/^\d{6}$/.test(pincode)) {
-        markError('pincode', 'pincodeError', 'Pincode must be exactly 6 digits');
-        isValid = false;
-      }
-
-      // District
-      const district = document.getElementById('district').value.trim();
-      if (district.length < 2) {
-        markError('district', 'districtError', 'District is required');
-        isValid = false;
-      }
-
-      // State
-      const state = document.getElementById('state').value.trim();
-      if (state.length < 2) {
-        markError('state', 'stateError', 'State is required');
-        isValid = false;
-      }
-
-      return isValid;
-    }
-
-    // Update Address Function
-    async function updateAddress() {
-      if (!validateForm()) {
-        return;
-      }
-
-      const addressId = document.getElementById('addressId').value.trim();
-      if (!addressId) {
-        showPageError("Address ID is missing. Please go back and try again.");
-        return;
-      }
-
-      const addressData = {
-        type: document.getElementById('addressType').value,
-        fullName: document.getElementById('fullName').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        addressLine: document.getElementById('addressLine').value.trim(),
-        city: document.getElementById('city').value.trim(),
-        district: document.getElementById('district').value.trim(),
-        pincode: document.getElementById('pincode').value.trim(),
-        state: document.getElementById('state').value.trim()
-      };
-
-      const saveBtn = document.getElementById('saveBtn');
-      const originalText = saveBtn.textContent;
-
-      saveBtn.disabled = true;
-      saveBtn.textContent = "Updating...";
-
-      clearMessages();
-
-      try {
-        const response = await fetch(`/addresses/edit/${addressId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(addressData)
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          showPageSuccess(result.message || "Address updated successfully!");
-          setTimeout(() => {
-            window.location.href = '/addresses';
-          }, 1500);
-        } else {
-          // Handle Backend Validation Errors
-          if (result.errors && Array.isArray(result.errors)) {
-            showPageError(result.errors.join(" • "));
+      <script>
+        // Show Success Message
+        function showPageSuccess(message) {
+          if (typeof window.showToast === 'function') {
+            window.showToast(message, 'success');
           } else {
-            showPageError(result.message || "Failed to update address. Please try again.");
+            alert(message);
           }
         }
-      } catch (error) {
-        showPageError("Network error. Please check your connection and try again.");
-      } finally {
-        saveBtn.disabled = false;
-        saveBtn.textContent = originalText;
-      }
-    }
 
-    // Optional: Real-time Validation On Blur
-    document.addEventListener('DOMContentLoaded', function() {
-      const inputs = document.querySelectorAll('.field-input');
-      inputs.forEach(input => {
-        input.addEventListener('blur', () => {
-          if (input.id !== 'pincode' && input.id !== 'district' && input.id !== 'state') {
-            validateForm();
+        // Show Error Message
+        function showPageError(message) {
+          if (typeof window.showToast === 'function') {
+            window.showToast(message, 'error');
+          } else {
+            alert(message);
+          }
+        }
+
+        function clearMessages() {
+          // Handled By Sweetalert2
+        }
+
+        // Clear All Field Errors
+        function clearFieldErrors() {
+          const errors = document.querySelectorAll('.error-text');
+          errors.forEach(err => err.style.display = 'none');
+
+          const inputs = document.querySelectorAll('.field-input');
+          inputs.forEach(input => input.classList.remove('error'));
+        }
+
+        // Restrict phone input to max 10 numeric digits
+        document.getElementById('phone').addEventListener('input', function () {
+          let cleaned = this.value.replace(/\D/g, '');
+          if (cleaned.length > 10) {
+            cleaned = cleaned.slice(0, 10);
+          }
+          if (this.value !== cleaned) {
+            this.value = cleaned;
           }
         });
-      });
-    });
 
-    let lastCheckedPincode = "";
-    async function checkPincodeAutofill() {
-      const pincodeInput = document.getElementById('pincode');
-      const pincode = pincodeInput.value.trim();
-      if (pincode.length !== 6 || !/^\d{6}$/.test(pincode)) {
-        return;
-      }
-      if (pincode === lastCheckedPincode) {
-        return;
-      }
-      lastCheckedPincode = pincode;
+        // Restrict fullName input to alphabets only and max 40 chars
+        document.getElementById('fullName').addEventListener('input', function () {
+          let cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+          if (cleaned.length > 40) cleaned = cleaned.slice(0, 40);
+          if (this.value !== cleaned) this.value = cleaned;
+        });
 
-      try {
-        const res = await fetch('/check-pincode/' + pincode);
-        const data = await res.json();
-        if (res.ok && data.success) {
-          document.getElementById('district').value = data.data.district;
-          document.getElementById('state').value = data.data.state;
-          pincodeInput.classList.remove('error');
-          document.getElementById('pincodeError').style.display = 'none';
-          document.getElementById('district').classList.remove('error');
-          document.getElementById('districtError').style.display = 'none';
-          document.getElementById('state').classList.remove('error');
-          document.getElementById('stateError').style.display = 'none';
-        } else {
-          showPageError(data.message || "Invalid pincode");
-          document.getElementById('district').value = '';
-          document.getElementById('state').value = '';
-          markError('pincode', 'pincodeError', data.message || 'Invalid pincode');
+        // Restrict addressLine input to max 100 chars
+        document.getElementById('addressLine').addEventListener('input', function () {
+          if (this.value.length > 100) this.value = this.value.slice(0, 100);
+        });
+
+        // Restrict city input to alphabets only and max 20 chars
+        document.getElementById('city').addEventListener('input', function () {
+          let cleaned = this.value.replace(/[^A-Za-z\s]/g, '');
+          if (cleaned.length > 20) cleaned = cleaned.slice(0, 20);
+          if (this.value !== cleaned) this.value = cleaned;
+        });
+
+        // Mark Field As Error
+        function markError(fieldId, errorId, message) {
+          const input = document.getElementById(fieldId);
+          const errorEl = document.getElementById(errorId);
+
+          input.classList.add('error');
+          errorEl.textContent = message;
+          errorEl.style.display = 'block';
         }
-      } catch (err) {
-        showPageError("Failed to validate pincode");
-        document.getElementById('district').value = '';
-        document.getElementById('state').value = '';
-      }
-    }
 
-    document.getElementById('pincode').addEventListener('input', (e) => {
-      if (e.target.value.trim().length === 6) {
-        checkPincodeAutofill();
-      }
-    });
+        // Main Validation Function
+        function validateForm() {
+          clearFieldErrors();
+          let isValid = true;
 
-    document.getElementById('pincode').addEventListener('blur', () => {
-      checkPincodeAutofill();
-    });
-  </script>
+          // Address Type
+          const addressType = document.getElementById('addressType').value;
+          if (!addressType) {
+            markError('addressType', 'typeError', 'Please select an address type');
+            isValid = false;
+          }
+
+          // Full Name
+          const fullName = document.getElementById('fullName').value.trim();
+          if (fullName.length < 3) {
+            markError('fullName', 'nameError', 'Full name must be at least 3 characters');
+            isValid = false;
+          } else if (fullName.length > 40) {
+            markError('fullName', 'nameError', 'Full name cannot exceed 40 characters');
+            isValid = false;
+          } else if (!/^[A-Za-z\s]+$/.test(fullName)) {
+            markError('fullName', 'nameError', 'Full name must contain only alphabets');
+            isValid = false;
+          }
+
+          // Phone Number (indian)
+          const phone = document.getElementById('phone').value.trim();
+          if (!/^[6-9]\d{9}$/.test(phone)) {
+            markError('phone', 'phoneError', 'Please enter a valid 10-digit Indian mobile number (starting with 6-9)');
+            isValid = false;
+          }
+
+          // Address Line
+          const addressLine = document.getElementById('addressLine').value.trim();
+          if (addressLine.length < 10) {
+            markError('addressLine', 'addressError', 'Please enter a complete address (minimum 10 characters)');
+            isValid = false;
+          } else if (addressLine.length > 100) {
+            markError('addressLine', 'addressError', 'Address line cannot exceed 100 characters');
+            isValid = false;
+          }
+
+          // City
+          const city = document.getElementById('city').value.trim();
+          if (city.length < 2) {
+            markError('city', 'cityError', 'City name is required');
+            isValid = false;
+          } else if (city.length > 20) {
+            markError('city', 'cityError', 'City name cannot exceed 20 characters');
+            isValid = false;
+          } else if (!/^[A-Za-z\s]+$/.test(city)) {
+            markError('city', 'cityError', 'City must contain only alphabets');
+            isValid = false;
+          }
+
+          // Pincode
+          const pincode = document.getElementById('pincode').value.trim();
+          if (!/^\d{6}$/.test(pincode)) {
+            markError('pincode', 'pincodeError', 'Pincode must be exactly 6 digits');
+            isValid = false;
+          }
+
+          // District
+          const district = document.getElementById('district').value.trim();
+          if (district.length < 2) {
+            markError('district', 'districtError', 'District is required');
+            isValid = false;
+          }
+
+          // State
+          const state = document.getElementById('state').value.trim();
+          if (state.length < 2) {
+            markError('state', 'stateError', 'State is required');
+            isValid = false;
+          }
+
+          return isValid;
+        }
+
+        // Update Address Function
+        async function updateAddress() {
+          if (!validateForm()) {
+            return;
+          }
+
+          const addressId = document.getElementById('addressId').value.trim();
+          if (!addressId) {
+            showPageError("Address ID is missing. Please go back and try again.");
+            return;
+          }
+
+          const addressData = {
+            type: document.getElementById('addressType').value,
+            fullName: document.getElementById('fullName').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            addressLine: document.getElementById('addressLine').value.trim(),
+            city: document.getElementById('city').value.trim(),
+            district: document.getElementById('district').value.trim(),
+            pincode: document.getElementById('pincode').value.trim(),
+            state: document.getElementById('state').value.trim()
+          };
+
+          const saveBtn = document.getElementById('saveBtn');
+          const originalText = saveBtn.textContent;
+
+          saveBtn.disabled = true;
+          saveBtn.textContent = "Updating...";
+
+          clearMessages();
+
+          try {
+            const response = await fetch(`/addresses/edit/${addressId}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(addressData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              showPageSuccess(result.message || "Address updated successfully!");
+              setTimeout(() => {
+                window.location.href = '/addresses';
+              }, 1500);
+            } else {
+              // Handle Backend Validation Errors
+              if (result.errors && Array.isArray(result.errors)) {
+                showPageError(result.errors.join(" • "));
+              } else {
+                showPageError(result.message || "Failed to update address. Please try again.");
+              }
+            }
+          } catch (error) {
+            showPageError("Network error. Please check your connection and try again.");
+          } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText;
+          }
+        }
+
+        // Optional: Real-time Validation On Blur
+        document.addEventListener('DOMContentLoaded', function () {
+          const inputs = document.querySelectorAll('.field-input');
+          inputs.forEach(input => {
+            input.addEventListener('blur', () => {
+              if (input.id !== 'pincode' && input.id !== 'district' && input.id !== 'state') {
+                validateForm();
+              }
+            });
+          });
+        });
+
+        let lastCheckedPincode = "";
+        async function checkPincodeAutofill() {
+          const pincodeInput = document.getElementById('pincode');
+          const pincode = pincodeInput.value.trim();
+          if (pincode.length !== 6 || !/^\d{6}$/.test(pincode)) {
+            return;
+          }
+          if (pincode === lastCheckedPincode) {
+            return;
+          }
+          lastCheckedPincode = pincode;
+
+          try {
+            const res = await fetch('/check-pincode/' + pincode);
+            const data = await res.json();
+            if (res.ok && data.success) {
+              document.getElementById('district').value = data.data.district;
+              document.getElementById('state').value = data.data.state;
+              pincodeInput.classList.remove('error');
+              document.getElementById('pincodeError').style.display = 'none';
+              document.getElementById('district').classList.remove('error');
+              document.getElementById('districtError').style.display = 'none';
+              document.getElementById('state').classList.remove('error');
+              document.getElementById('stateError').style.display = 'none';
+            } else {
+              showPageError(data.message || "Invalid pincode");
+              document.getElementById('district').value = '';
+              document.getElementById('state').value = '';
+              markError('pincode', 'pincodeError', data.message || 'Invalid pincode');
+            }
+          } catch (err) {
+            showPageError("Failed to validate pincode");
+            document.getElementById('district').value = '';
+            document.getElementById('state').value = '';
+          }
+        }
+
+        document.getElementById('pincode').addEventListener('input', (e) => {
+          if (e.target.value.trim().length === 6) {
+            checkPincodeAutofill();
+          }
+        });
+
+        document.getElementById('pincode').addEventListener('blur', () => {
+          checkPincodeAutofill();
+        });
+      </script>
 
 </body>
+
 </html>

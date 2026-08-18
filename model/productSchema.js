@@ -80,4 +80,4 @@ const productSchema = new mongoose.Schema({
 
 const Products = mongoose.model("Product", productSchema);
 
-export  default Products ; 
+export default Products; 

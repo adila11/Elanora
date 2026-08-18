@@ -78,7 +78,7 @@ export const loadWalletTransactions = async (req, res) => {
         const totalPages = Math.ceil(totalTransactions / limit) || 1;
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
-        
+
         const transactions = allTransactions.slice(startIndex, endIndex);
 
         const totalCredits = allTransactions
@@ -182,7 +182,7 @@ export const verifyWalletPayment = async (req, res) => {
             });
         }
 
-       
+
         const body = `${razorpay_order_id}|${razorpay_payment_id}`;
 
         const expectedSignature = crypto
@@ -197,7 +197,7 @@ export const verifyWalletPayment = async (req, res) => {
             });
         }
 
-    
+
         const existingTransaction = await WalletTransaction.findOne({
             transactionId: razorpay_payment_id
         });
@@ -209,8 +209,8 @@ export const verifyWalletPayment = async (req, res) => {
             });
         }
 
-        
-        const user = await User.findOne({email: req.session.user});
+
+        const user = await User.findOne({ email: req.session.user });
 
         if (!user) {
             return res.status(404).json({
@@ -219,7 +219,7 @@ export const verifyWalletPayment = async (req, res) => {
             });
         }
 
-        
+
         await creditWallet({
             userId: user._id,
             amount: Number(amount),

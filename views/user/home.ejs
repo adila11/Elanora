@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Elanora – Luxury Jewelry</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --cream: #f9f5ef;
@@ -21,7 +30,9 @@
       --radius: 12px;
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       font-family: 'Jost', sans-serif;
@@ -33,176 +44,467 @@
 
     /* HERO */
     .hero {
-      display: grid; grid-template-columns: 1fr 1fr;
-      min-height: 540px; background: var(--cream);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 540px;
+      background: var(--cream);
       overflow: hidden;
     }
+
     .hero-content {
       padding: 80px 60px;
-      display: flex; flex-direction: column; justify-content: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
+
     .hero-content h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(42px, 5vw, 60px); font-weight: 400; line-height: 1.15;
-      color: var(--dark); margin-bottom: 20px;
+      font-size: clamp(42px, 5vw, 60px);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--dark);
+      margin-bottom: 20px;
     }
-    .hero-content h1 span { color: var(--gold); font-style: italic; }
+
+    .hero-content h1 span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
     .hero-content p {
-      font-size: 13px; color: var(--muted); line-height: 1.8; max-width: 320px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 320px;
       margin-bottom: 32px;
     }
-    .hero-bottom { display: flex; align-items: center; gap: 20px; }
+
+    .hero-bottom {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
     .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 26px; background: var(--gold); color: #fff;
-      border: none; border-radius: 8px; font-size: 13px; font-weight: 500;
-      cursor: pointer; transition: background .2s; text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 26px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s;
+      text-decoration: none;
     }
-    .btn-primary:hover { background: #a87820; }
-    .hero-avatars { display: flex; align-items: center; gap: 8px; }
-    .avatar-stack { display: flex; }
+
+    .btn-primary:hover {
+      background: #a87820;
+    }
+
+    .hero-avatars {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avatar-stack {
+      display: flex;
+    }
+
     .avatar-stack img {
-      width: 32px; height: 32px; border-radius: 50%;
-      border: 2px solid var(--warm-white); margin-left: -8px; object-fit: cover;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--warm-white);
+      margin-left: -8px;
+      object-fit: cover;
     }
-    .avatar-stack img:first-child { margin-left: 0; }
-    .hero-count { font-size: 12px; color: var(--muted); }
-    .hero-count strong { color: var(--text); font-weight: 500; }
+
+    .avatar-stack img:first-child {
+      margin-left: 0;
+    }
+
+    .hero-count {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .hero-count strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
     .hero-image {
-      position: relative; overflow: hidden;
+      position: relative;
+      overflow: hidden;
       background: #e8ddd0;
     }
+
     .hero-image img {
-      width: 100%; height: 100%; object-fit: cover;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
+
     .hero-badge {
-      position: absolute; bottom: 40px; left: -20px;
-      background: #fff; border-radius: 10px;
-      padding: 10px 14px; display: flex; align-items: center; gap: 10px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      position: absolute;
+      bottom: 40px;
+      left: -20px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
       animation: floatBadge 3s ease-in-out infinite;
     }
+
     @keyframes floatBadge {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
     }
-    .badge-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-    .badge-text { font-size: 11px; }
-    .badge-text strong { display: block; font-weight: 500; color: var(--dark); }
-    .badge-text span { color: var(--muted); }
+
+    .badge-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .badge-text {
+      font-size: 11px;
+    }
+
+    .badge-text strong {
+      display: block;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .badge-text span {
+      color: var(--muted);
+    }
 
     /* FEATURES */
     .features {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 0; border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-bottom: 1px solid var(--border);
     }
+
     .feature {
-      padding: 40px 30px; text-align: center;
+      padding: 40px 30px;
+      text-align: center;
       border-right: 1px solid var(--border);
     }
-    .feature:last-child { border-right: none; }
-    .feature-icon {
-      width: 40px; height: 40px; margin: 0 auto 14px;
-      background: var(--gold-pale); border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
+
+    .feature:last-child {
+      border-right: none;
     }
-    .feature-icon svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
-    .feature h3 { font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--dark); }
-    .feature p { font-size: 11.5px; color: var(--muted); line-height: 1.6; }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 14px;
+      background: var(--gold-pale);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feature-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .feature h3 {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--dark);
+    }
+
+    .feature p {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
 
     /* ABOUT */
     .about {
-      display: grid; grid-template-columns: 1fr 1fr;
-      align-items: center; gap: 60px;
-      padding: 100px 60px; background: var(--warm-white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 60px;
+      padding: 100px 60px;
+      background: var(--warm-white);
     }
-    .about-image { border-radius: var(--radius); overflow: hidden; }
-    .about-image img { width: 100%; height: 500px; object-fit: cover; border-radius: var(--radius); display: block; }
-    .about-content { position: relative; }
+
+    .about-image {
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      display: block;
+    }
+
+    .about-content {
+      position: relative;
+    }
+
     .about-content h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(34px, 4vw, 48px); font-weight: 400; line-height: 1.2;
-      margin-bottom: 24px; color: var(--dark);
+      font-size: clamp(34px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: var(--dark);
     }
+
     .about-content h2 em {
-      color: var(--gold); font-style: normal;
-      background: var(--gold-pale); padding: 0 8px; border-radius: 4px;
+      color: var(--gold);
+      font-style: normal;
+      background: var(--gold-pale);
+      padding: 0 8px;
+      border-radius: 4px;
     }
-    .about-content p { font-size: 13px; color: var(--muted); line-height: 1.9; margin-bottom: 16px; }
+
+    .about-content p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+
     .btn-outline {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 11px 24px; border: 1px solid var(--gold); border-radius: 8px;
-      font-size: 13px; color: var(--gold); background: transparent;
-      cursor: pointer; text-decoration: none; transition: all .2s; margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--gold);
+      background: transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s;
+      margin-top: 12px;
     }
-    .btn-outline:hover { background: var(--gold); color: #fff; }
+
+    .btn-outline:hover {
+      background: var(--gold);
+      color: #fff;
+    }
+
     .about-badge {
-      position: absolute; bottom: -20px; right: 0;
-      width: 100px; height: 100px; border-radius: 50%; overflow: hidden;
+      position: absolute;
+      bottom: -20px;
+      right: 0;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
       border: 4px solid var(--warm-white);
-      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
     }
-    .about-badge img { width: 100%; height: 100%; object-fit: cover; }
+
+    .about-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
     /* COLLECTION */
-    .collection { padding: 80px 60px; background: var(--cream); }
+    .collection {
+      padding: 80px 60px;
+      background: var(--cream);
+    }
+
     .section-header {
-      display: flex; align-items: flex-end; justify-content: space-between;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
       margin-bottom: 40px;
     }
+
     .section-header h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 36px; font-weight: 400; color: var(--dark);
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--dark);
     }
-    .section-header p { font-size: 12.5px; color: var(--muted); max-width: 320px; line-height: 1.7; }
+
+    .section-header p {
+      font-size: 12.5px;
+      color: var(--muted);
+      max-width: 320px;
+      line-height: 1.7;
+    }
+
     .btn-see-all {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 13px; color: var(--gold); background: transparent;
-      border: 1px solid var(--gold); border-radius: 8px;
-      padding: 9px 20px; cursor: pointer; text-decoration: none; transition: all .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--gold);
+      background: transparent;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 9px 20px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s;
       white-space: nowrap;
     }
-    .btn-see-all:hover { background: var(--gold); color: #fff; }
-    .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+    .btn-see-all:hover {
+      background: var(--gold);
+      color: #fff;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
     .product-card {
-      background: #fff; border-radius: var(--radius); overflow: hidden;
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
       border: 1px solid var(--border);
       transition: transform .3s, box-shadow .3s;
     }
-    .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-    .product-card img {
-      width: 100%; height: 240px; object-fit: cover;
-      display: block; transition: transform .4s;
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
     }
-    .product-card:hover img { transform: scale(1.04); }
-    .product-info { padding: 18px 20px; }
-    .product-info h3 { font-size: 14px; font-weight: 500; color: var(--dark); margin-bottom: 6px; }
-    .product-info .price { font-size: 13px; color: var(--gold); font-weight: 500; }
+
+    .product-card img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s;
+    }
+
+    .product-card:hover img {
+      transform: scale(1.04);
+    }
+
+    .product-info {
+      padding: 18px 20px;
+    }
+
+    .product-info h3 {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .product-info .price {
+      font-size: 13px;
+      color: var(--gold);
+      font-weight: 500;
+    }
 
     /* CATEGORY */
     .category {
       margin: 0 60px 80px;
-      background: var(--cream); border-radius: 20px;
-      display: grid; grid-template-columns: 1fr 1.4fr;
-      overflow: hidden; align-items: center;
+      background: var(--cream);
+      border-radius: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      overflow: hidden;
+      align-items: center;
     }
-    .category-image img { width: 100%; height: 360px; object-fit: cover; display: block; }
-    .category-content { padding: 60px 50px; }
+
+    .category-image img {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .category-content {
+      padding: 60px 50px;
+    }
+
     .category-content h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 36px; font-weight: 400; margin-bottom: 14px; color: var(--dark);
+      font-size: 36px;
+      font-weight: 400;
+      margin-bottom: 14px;
+      color: var(--dark);
     }
-    .category-content p { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 30px; }
-    .category-types { display: flex; gap: 28px; }
-    .type-item { text-align: center; cursor: pointer; }
+
+    .category-content p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    .category-types {
+      display: flex;
+      gap: 28px;
+    }
+
+    .type-item {
+      text-align: center;
+      cursor: pointer;
+    }
+
     .type-thumb {
-      width: 70px; height: 70px; border-radius: 50%; overflow: hidden;
-      border: 2px solid var(--border); margin: 0 auto 8px;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--border);
+      margin: 0 auto 8px;
       transition: border-color .2s;
     }
-    .type-item:hover .type-thumb { border-color: var(--gold); }
-    .type-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .type-item span { font-size: 12px; color: var(--muted); }
+
+    .type-item:hover .type-thumb {
+      border-color: var(--gold);
+    }
+
+    .type-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .type-item span {
+      font-size: 12px;
+      color: var(--muted);
+    }
 
     /* FOOTER */
     footer {
@@ -210,61 +512,182 @@
       border-top: 1px solid var(--border);
       padding: 60px 60px 30px;
     }
+
     .footer-grid {
-      display: grid; grid-template-columns: 2fr 1fr 1.2fr 1.6fr;
-      gap: 40px; margin-bottom: 40px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1.2fr 1.6fr;
+      gap: 40px;
+      margin-bottom: 40px;
     }
-    .footer-brand .nav-logo { margin-bottom: 14px; display: inline-flex; }
-    .footer-brand p { font-size: 12.5px; color: var(--muted); line-height: 1.8; max-width: 220px; }
-    .footer-socials { display: flex; gap: 12px; margin-top: 18px; }
+
+    .footer-brand .nav-logo {
+      margin-bottom: 14px;
+      display: inline-flex;
+    }
+
+    .footer-brand p {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 220px;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
     .social-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: border-color .2s, background .2s;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
     }
-    .social-icon:hover { border-color: var(--gold); background: var(--gold-pale); }
-    .social-icon svg { width: 14px; height: 14px; stroke: var(--muted); fill: none; stroke-width: 1.5; }
-    .footer-col h4 { font-size: 13px; font-weight: 500; color: var(--dark); margin-bottom: 16px; }
-    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-col ul li a { font-size: 12.5px; color: var(--muted); text-decoration: none; transition: color .2s; }
-    .footer-col ul li a:hover { color: var(--gold); }
-    .newsletter-input-wrap { display: flex; margin-top: 6px; }
+
+    .social-icon:hover {
+      border-color: var(--gold);
+      background: var(--gold-pale);
+    }
+
+    .social-icon svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .footer-col h4 {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col ul li a {
+      font-size: 12.5px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--gold);
+    }
+
+    .newsletter-input-wrap {
+      display: flex;
+      margin-top: 6px;
+    }
+
     .newsletter-input-wrap input {
-      flex: 1; padding: 10px 14px; font-size: 12px;
-      border: 1px solid var(--border); border-radius: 8px 0 0 8px;
-      background: #fff; color: var(--text); outline: none;
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px 0 0 8px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
     }
-    .newsletter-input-wrap input::placeholder { color: var(--muted); }
+
+    .newsletter-input-wrap input::placeholder {
+      color: var(--muted);
+    }
+
     .newsletter-input-wrap button {
-      padding: 10px 18px; background: var(--gold); color: #fff;
-      border: none; border-radius: 0 8px 8px 0; font-size: 12px;
-      cursor: pointer; font-weight: 500; transition: background .2s;
+      padding: 10px 18px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 0 8px 8px 0;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background .2s;
     }
-    .newsletter-input-wrap button:hover { background: #a87820; }
+
+    .newsletter-input-wrap button:hover {
+      background: #a87820;
+    }
+
     .footer-bottom {
-      border-top: 1px solid var(--border); padding-top: 20px;
-      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .footer-bottom p { font-size: 11.5px; color: var(--muted); }
-    .footer-bottom-links { display: flex; gap: 20px; }
-    .footer-bottom-links a { font-size: 11.5px; color: var(--muted); text-decoration: none; }
-    .footer-bottom-links a:hover { color: var(--gold); }
+
+    .footer-bottom p {
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 11.5px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--gold);
+    }
 
     /* ANIMATIONS */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    .hero-content { animation: fadeUp .8s ease both; }
-    .hero-image { animation: fadeUp .8s .2s ease both; }
+
+    .hero-content {
+      animation: fadeUp .8s ease both;
+    }
+
+    .hero-image {
+      animation: fadeUp .8s .2s ease both;
+    }
 
     /* PLACEHOLDER IMAGE FALLBACK */
     .img-placeholder {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       background: linear-gradient(135deg, #e8d8c0 0%, #d4c0a0 100%);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .img-placeholder span { color: var(--muted); font-size: 13px; opacity: .6; }
+
+    .img-placeholder span {
+      color: var(--muted);
+      font-size: 13px;
+      opacity: .6;
+    }
 
     /* RESPONSIVE (only Additions – No Original Styles Were Changed) */
     @media (max-width: 1024px) {
@@ -272,33 +695,42 @@
         grid-template-columns: 1fr;
         min-height: auto;
       }
+
       .hero-content {
         padding: 60px 40px;
       }
+
       .about {
         grid-template-columns: 1fr;
         gap: 40px;
         padding: 80px 40px;
       }
+
       .about-image img {
         height: 400px;
       }
+
       .collection {
         padding: 60px 40px;
       }
+
       .products-grid {
         grid-template-columns: repeat(2, 1fr);
       }
+
       .category {
         margin: 0 40px 60px;
         grid-template-columns: 1fr;
       }
+
       .category-image img {
         height: 300px;
       }
+
       .footer-grid {
         grid-template-columns: repeat(2, 1fr);
       }
+
       .section-header {
         flex-direction: column;
         align-items: flex-start;
@@ -310,30 +742,39 @@
       .features {
         grid-template-columns: repeat(2, 1fr);
       }
+
       .products-grid {
         grid-template-columns: 1fr;
       }
+
       .footer-grid {
         grid-template-columns: 1fr;
       }
+
       .hero-content {
         padding: 50px 30px;
       }
+
       .about {
         padding: 60px 30px;
       }
+
       .collection {
         padding: 50px 30px;
       }
+
       .category {
         margin: 0 30px 50px;
       }
+
       .category-content {
         padding: 40px 30px;
       }
+
       .category-types {
         gap: 20px;
       }
+
       .type-thumb {
         width: 64px;
         height: 64px;
@@ -344,27 +785,35 @@
       .features {
         grid-template-columns: 1fr;
       }
+
       .hero-content {
         padding: 40px 20px;
       }
+
       .hero-content h1 {
         font-size: clamp(32px, 8vw, 48px);
       }
+
       .about {
         padding: 50px 20px;
       }
+
       .collection {
         padding: 40px 20px;
       }
+
       .category {
         margin: 0 20px 40px;
       }
+
       .category-content {
         padding: 30px 20px;
       }
+
       .footer {
         padding: 50px 20px 25px;
       }
+
       .hero-bottom {
         flex-direction: column;
         align-items: flex-start;
@@ -373,153 +822,183 @@
     }
   </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav>
-  <%- include('partials/user/header') %>
-</nav>
+  <!-- NAV -->
+  <nav>
+    <%- include('partials/user/header') %>
+  </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>Our <span>Luxury</span><br>Collections</h1>
-    <p>Elanora Jewelry Store. Discover our exquisite selection of handcrafted jewelry, designed to add a touch of refined refinement to your everyday elegance.</p>
-    <div class="hero-bottom">
-      <a href="/shop" class="btn-primary">
-        Let's Get Started
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
-      <div class="hero-avatars">
-        <div class="avatar-stack">
-          <img src="https://i.pravatar.cc/32?img=1" alt="">
-          <img src="https://i.pravatar.cc/32?img=2" alt="">
-          <img src="https://i.pravatar.cc/32?img=3" alt="">
-        </div>
-        <div class="hero-count">
-          <strong>230K+</strong><br>Happy Clients
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="hero-image">
-    <img src="images/home/Mainpic.jpeg" alt="Model wearing luxury jewelry" onerror="this.parentElement.innerHTML='<div class=img-placeholder><span>Hero Image</span></div>'"/>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<div class="features">
-  <div class="feature">
-    <div class="feature-icon">
-      <svg viewBox="0 0 24 24"><path d="M5 12h14M5 12l4-4M5 12l4 4"/></svg>
-    </div>
-    <h3>Free Shipping</h3>
-    <p>On all orders over ₹1500 across all Elanora worldwide.</p>
-  </div>
-  <div class="feature">
-    <div class="feature-icon">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
-    </div>
-    <h3>Exclusive Design</h3>
-    <p>Handcrafted pieces perfect for every occasion and style.</p>
-  </div>
-  <div class="feature">
-    <div class="feature-icon">
-      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2M8 7V5a2 2 0 014 0"/></svg>
-    </div>
-    <h3>Good Packaging</h3>
-    <p>Elegant gift-ready boxes perfect for gifting.</p>
-  </div>
-  <div class="feature">
-    <div class="feature-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    </div>
-    <h3>Highest Quality</h3>
-    <p>Certified materials ensuring authentic fine jewellery.</p>
-  </div>
-</div>
-
-<!-- ABOUT -->
-<section class="about">
-  <div class="about-image">
-    <img src="images/home/Mainpic2.jpeg" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:500px><span>About Image</span></div>'"/>
-  </div>
-  <div class="about-content">
-    <h2>The Art Of<br><em>Radiant</em> Refinement</h2>
-    <p>Every piece in our collection is a testament to extraordinary craftsmanship and timeless design. We source only the finest materials, ensuring each creation not only captures the light but also the essence of the wearer.</p>
-    <p>From delicate everyday essentials to breathtaking statement pieces, discover jewellery that celebrates life's most precious moments with unparalleled elegance.</p>
-    <a href="/shop" class="btn-outline">Learn More</a>
-    <div class="about-badge">
-      <img src="images/home/Mainpic4.jpeg" alt="Jewelry detail" onerror="this.style.display='none'"/>
-    </div>
-  </div>
-</section>
-
-<!-- COLLECTION -->
-<section class="collection">
-  <div class="section-header">
-    <div>
-      <h2>Our Collection</h2>
-      <p>Elanora is a meticulously curated selection of fine jewellery, crafted to elevate your everyday style and celebrate special occasions.</p>
-    </div>
-    <a href="/shop" class="btn-see-all">See More →</a>
-  </div>
-  <div class="products-grid">
-    <% if (products && products.length > 0) { %>
-      <% products.forEach(p => { %>
-        <% 
-           const firstVariant = p.variants && p.variants.length > 0 ? p.variants[0] : null;
-           const imageUrl = firstVariant && firstVariant.images && firstVariant.images.length > 0 
-                           ? firstVariant.images[0].url 
-                           : 'https://via.placeholder.com/400';
-           const price = p.discountPrice || p.basePrice;
-        %>
-        <div class="product-card" onclick="location.href='/product/<%= p._id %>'" style="cursor:pointer">
-          <img src="<%= imageUrl %>" alt="<%= p.name %>" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:240px><span>Product</span></div>'"/>
-          <div class="product-info">
-            <h3><%= p.name %></h3>
-            <div class="price">₹<%= price.toLocaleString('en-IN') %></div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Our <span>Luxury</span><br>Collections</h1>
+      <p>Elanora Jewelry Store. Discover our exquisite selection of handcrafted jewelry, designed to add a touch of
+        refined refinement to your everyday elegance.</p>
+      <div class="hero-bottom">
+        <a href="/shop" class="btn-primary">
+          Let's Get Started
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+        <div class="hero-avatars">
+          <div class="avatar-stack">
+            <img src="https://i.pravatar.cc/32?img=1" alt="">
+            <img src="https://i.pravatar.cc/32?img=2" alt="">
+            <img src="https://i.pravatar.cc/32?img=3" alt="">
+          </div>
+          <div class="hero-count">
+            <strong>230K+</strong><br>Happy Clients
           </div>
         </div>
-      <% }) %>
-    <% } else { %>
-      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--muted);">
-        <p>Stay tuned for our latest collections!</p>
       </div>
-    <% } %>
+    </div>
+    <div class="hero-image">
+      <img src="images/home/Mainpic.jpeg" alt="Model wearing luxury jewelry"
+        onerror="this.parentElement.innerHTML='<div class=img-placeholder><span>Hero Image</span></div>'" />
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 12h14M5 12l4-4M5 12l4 4" />
+        </svg>
+      </div>
+      <h3>Free Shipping</h3>
+      <p>On all orders over ₹1500 across all Elanora worldwide.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 8v4l3 3" />
+        </svg>
+      </div>
+      <h3>Exclusive Design</h3>
+      <p>Handcrafted pieces perfect for every occasion and style.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24">
+          <rect x="2" y="7" width="20" height="14" rx="2" />
+          <path d="M16 7V5a2 2 0 00-4 0v2M8 7V5a2 2 0 014 0" />
+        </svg>
+      </div>
+      <h3>Good Packaging</h3>
+      <p>Elegant gift-ready boxes perfect for gifting.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      </div>
+      <h3>Highest Quality</h3>
+      <p>Certified materials ensuring authentic fine jewellery.</p>
+    </div>
   </div>
-</section>
- 
-<!-- CATEGORY CHOOSER -->
-<div class="category">
-  <div class="category-image">
-    <img src="images/home/Mainpic3.jpeg" alt="Jewelry model" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:360px><span>Category Image</span></div>'"/>
-  </div>
-  <div class="category-content">
-    <h2>Choose The Type!</h2>
-    <p>Find the perfect piece that speaks to your style. Browse our collection by category to discover your next jewel.</p>
-    <div class="category-types">
-      <% if (categories && categories.length > 0) { %>
-        <% categories.forEach(cat => { %>
-          <div class="type-item" onclick="location.href='/shop?category=<%= cat._id %>'" style="cursor:pointer">
-            <div class="type-thumb">
-              <div class="img-placeholder" style="background: var(--gold-pale); border: none; width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <span style="font-size: 14px; opacity: 1; color: var(--gold); font-weight: 600;"><%= cat.name.substring(0, 1) %></span>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <div class="about-image">
+      <img src="images/home/Mainpic2.jpeg"
+        onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:500px><span>About Image</span></div>'" />
+    </div>
+    <div class="about-content">
+      <h2>The Art Of<br><em>Radiant</em> Refinement</h2>
+      <p>Every piece in our collection is a testament to extraordinary craftsmanship and timeless design. We source only
+        the finest materials, ensuring each creation not only captures the light but also the essence of the wearer.</p>
+      <p>From delicate everyday essentials to breathtaking statement pieces, discover jewellery that celebrates life's
+        most precious moments with unparalleled elegance.</p>
+      <a href="/shop" class="btn-outline">Learn More</a>
+      <div class="about-badge">
+        <img src="images/home/Mainpic4.jpeg" alt="Jewelry detail" onerror="this.style.display='none'" />
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLECTION -->
+  <section class="collection">
+    <div class="section-header">
+      <div>
+        <h2>Our Collection</h2>
+        <p>Elanora is a meticulously curated selection of fine jewellery, crafted to elevate your everyday style and
+          celebrate special occasions.</p>
+      </div>
+      <a href="/shop" class="btn-see-all">See More →</a>
+    </div>
+    <div class="products-grid">
+      <% if (products && products.length> 0) { %>
+        <% products.forEach(p=> { %>
+          <% const firstVariant=p.variants && p.variants.length> 0 ? p.variants[0] : null;
+            const imageUrl = firstVariant && firstVariant.images && firstVariant.images.length > 0
+            ? firstVariant.images[0].url
+            : 'https://via.placeholder.com/400';
+            const price = p.discountPrice || p.basePrice;
+            %>
+            <div class="product-card" onclick="location.href='/product/<%= p._id %>'" style="cursor:pointer">
+              <img src="<%= imageUrl %>" alt="<%= p.name %>"
+                onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:240px><span>Product</span></div>'" />
+              <div class="product-info">
+                <h3>
+                  <%= p.name %>
+                </h3>
+                <div class="price">₹<%= price.toLocaleString('en-IN') %>
+                </div>
               </div>
             </div>
-            <span><%= cat.name %></span>
-          </div>
-        <% }) %>
-      <% } %>
+            <% }) %>
+              <% } else { %>
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--muted);">
+                  <p>Stay tuned for our latest collections!</p>
+                </div>
+                <% } %>
+    </div>
+  </section>
+
+  <!-- CATEGORY CHOOSER -->
+  <div class="category">
+    <div class="category-image">
+      <img src="images/home/Mainpic3.jpeg" alt="Jewelry model"
+        onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:360px><span>Category Image</span></div>'" />
+    </div>
+    <div class="category-content">
+      <h2>Choose The Type!</h2>
+      <p>Find the perfect piece that speaks to your style. Browse our collection by category to discover your next
+        jewel.</p>
+      <div class="category-types">
+        <% if (categories && categories.length> 0) { %>
+          <% categories.forEach(cat=> { %>
+            <div class="type-item" onclick="location.href='/shop?category=<%= cat._id %>'" style="cursor:pointer">
+              <div class="type-thumb">
+                <div class="img-placeholder"
+                  style="background: var(--gold-pale); border: none; width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                  <span style="font-size: 14px; opacity: 1; color: var(--gold); font-weight: 600;">
+                    <%= cat.name.substring(0, 1) %>
+                  </span>
+                </div>
+              </div>
+              <span>
+                <%= cat.name %>
+              </span>
+            </div>
+            <% }) %>
+              <% } %>
+      </div>
     </div>
   </div>
-</div>
 
-<%- include('partials/user/footer') %>
+  <%- include('partials/user/footer') %>
 
-<script>
-</script>
+    <script>
+    </script>
 </body>
+
 </html>

@@ -27,14 +27,14 @@ const categorySchema = new mongoose.Schema(
     },
 
     offer: {
-        name: String,
-        discountType: {
-            type: String,
-            enum: ["percentage", "flat"]
-        },
-        discountValue: Number,
-        startDate: Date,
-        endDate: Date
+      name: String,
+      discountType: {
+        type: String,
+        enum: ["percentage", "flat"]
+      },
+      discountValue: Number,
+      startDate: Date,
+      endDate: Date
     },
 
     discountPercentage: {

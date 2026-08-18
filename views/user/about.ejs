@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About Us – Elanora Luxury Jewelry</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --cream: #f9f5ef;
@@ -21,7 +30,9 @@
       --radius: 12px;
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       font-family: 'Jost', sans-serif;
@@ -41,128 +52,274 @@
       overflow: hidden;
       position: relative;
     }
+
     .page-hero::after {
       content: '';
       position: absolute;
-      right: 0; top: 0; bottom: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
       width: 50%;
       background: linear-gradient(135deg, #e8d8c0 0%, #d4c0a0 100%);
       z-index: 0;
     }
+
     .page-hero-content {
-      position: relative; z-index: 1;
+      position: relative;
+      z-index: 1;
       animation: fadeUp .8s ease both;
     }
+
     .page-hero-breadcrumb {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 12px; color: var(--muted); margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 20px;
     }
-    .page-hero-breadcrumb span { color: var(--gold); }
-    .page-hero-breadcrumb svg { width: 12px; height: 12px; stroke: var(--muted); fill: none; stroke-width: 2; }
+
+    .page-hero-breadcrumb span {
+      color: var(--gold);
+    }
+
+    .page-hero-breadcrumb svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 2;
+    }
+
     .page-hero h1 {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(42px, 5vw, 62px);
-      font-weight: 400; line-height: 1.15;
-      color: var(--dark); margin-bottom: 20px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--dark);
+      margin-bottom: 20px;
     }
-    .page-hero h1 span { color: var(--gold); font-style: italic; }
+
+    .page-hero h1 span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
     .page-hero p {
-      font-size: 13px; color: var(--muted); line-height: 1.9;
-      max-width: 420px; margin-bottom: 32px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 420px;
+      margin-bottom: 32px;
     }
+
     .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 26px; background: var(--gold); color: #fff;
-      border: none; border-radius: 8px; font-size: 13px; font-weight: 500;
-      cursor: pointer; transition: background .2s; text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 26px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s;
+      text-decoration: none;
     }
-    .btn-primary:hover { background: #a87820; }
+
+    .btn-primary:hover {
+      background: #a87820;
+    }
+
     .btn-outline {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 11px 24px; border: 1px solid var(--gold); border-radius: 8px;
-      font-size: 13px; color: var(--gold); background: transparent;
-      cursor: pointer; text-decoration: none; transition: all .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--gold);
+      background: transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s;
     }
-    .btn-outline:hover { background: var(--gold); color: #fff; }
+
+    .btn-outline:hover {
+      background: var(--gold);
+      color: #fff;
+    }
 
     .page-hero-image {
-      position: relative; z-index: 1;
+      position: relative;
+      z-index: 1;
       animation: fadeUp .8s .2s ease both;
     }
+
     .page-hero-image img {
-      width: 100%; height: 460px; object-fit: cover;
+      width: 100%;
+      height: 460px;
+      object-fit: cover;
       border-radius: var(--radius);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
     }
+
     .hero-float-card {
-      position: absolute; bottom: -20px; left: -30px;
-      background: #fff; border-radius: 12px;
+      position: absolute;
+      bottom: -20px;
+      left: -30px;
+      background: #fff;
+      border-radius: 12px;
       padding: 16px 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
-      display: flex; align-items: center; gap: 14px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 14px;
       animation: floatBadge 3s ease-in-out infinite;
     }
+
     @keyframes floatBadge {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
     }
+
     .hero-float-icon {
-      width: 44px; height: 44px; border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
       background: var(--gold-pale);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .hero-float-icon svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
-    .hero-float-text strong { display: block; font-size: 14px; font-weight: 500; color: var(--dark); }
-    .hero-float-text span { font-size: 11.5px; color: var(--muted); }
+
+    .hero-float-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .hero-float-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .hero-float-text span {
+      font-size: 11.5px;
+      color: var(--muted);
+    }
 
     /* STATS */
     .stats {
-      display: grid; grid-template-columns: repeat(4, 1fr);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
       background: var(--dark);
     }
+
     .stat-item {
-      padding: 44px 30px; text-align: center;
-      border-right: 1px solid rgba(255,255,255,0.08);
+      padding: 44px 30px;
+      text-align: center;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .stat-item:last-child { border-right: none; }
+
+    .stat-item:last-child {
+      border-right: none;
+    }
+
     .stat-number {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 44px; font-weight: 400;
-      color: var(--gold); line-height: 1;
+      font-size: 44px;
+      font-weight: 400;
+      color: var(--gold);
+      line-height: 1;
       margin-bottom: 8px;
     }
-    .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: .04em; text-transform: uppercase; }
+
+    .stat-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
 
     /* STORY */
     .story {
-      display: grid; grid-template-columns: 1fr 1fr;
-      align-items: center; gap: 80px;
-      padding: 100px 60px; background: var(--warm-white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 80px;
+      padding: 100px 60px;
+      background: var(--warm-white);
     }
+
     .story-content h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(34px, 4vw, 48px); font-weight: 400;
-      line-height: 1.2; margin-bottom: 24px; color: var(--dark);
+      font-size: clamp(34px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: var(--dark);
     }
+
     .story-content h2 em {
-      color: var(--gold); font-style: normal;
-      background: var(--gold-pale); padding: 0 8px; border-radius: 4px;
+      color: var(--gold);
+      font-style: normal;
+      background: var(--gold-pale);
+      padding: 0 8px;
+      border-radius: 4px;
     }
-    .story-content p { font-size: 13px; color: var(--muted); line-height: 1.9; margin-bottom: 16px; }
-    .story-image { position: relative; }
+
+    .story-content p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+
+    .story-image {
+      position: relative;
+    }
+
     .story-image img {
-      width: 100%; height: 520px; object-fit: cover;
-      border-radius: var(--radius); display: block;
+      width: 100%;
+      height: 520px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      display: block;
     }
+
     .story-accent {
-      position: absolute; top: -20px; right: -20px;
-      width: 120px; height: 120px; border-radius: var(--radius);
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 120px;
+      height: 120px;
+      border-radius: var(--radius);
       background: var(--gold-pale);
       border: 4px solid var(--warm-white);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-family: 'Cormorant Garamond', serif;
-      font-size: 13px; color: var(--gold); text-align: center;
-      line-height: 1.5; padding: 12px;
+      font-size: 13px;
+      color: var(--gold);
+      text-align: center;
+      line-height: 1.5;
+      padding: 12px;
     }
 
     /* MISSION VISION */
@@ -170,375 +327,708 @@
       padding: 80px 60px;
       background: var(--cream);
     }
+
     .section-label {
       display: inline-block;
-      font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 14px;
-      padding: 4px 12px; background: var(--gold-pale); border-radius: 20px;
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+      padding: 4px 12px;
+      background: var(--gold-pale);
+      border-radius: 20px;
     }
+
     .mv-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 30px; margin-top: 50px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 50px;
     }
+
     .mv-card {
-      background: #fff; border-radius: var(--radius);
+      background: #fff;
+      border-radius: var(--radius);
       border: 1px solid var(--border);
       padding: 44px 40px;
       transition: box-shadow .3s;
     }
-    .mv-card:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.08); }
+
+    .mv-card:hover {
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    }
+
     .mv-card-icon {
-      width: 52px; height: 52px; border-radius: 14px;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
       background: var(--gold-pale);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 22px;
     }
-    .mv-card-icon svg { width: 24px; height: 24px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+
+    .mv-card-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
     .mv-card h3 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 26px; font-weight: 400; color: var(--dark);
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--dark);
       margin-bottom: 14px;
     }
-    .mv-card p { font-size: 13px; color: var(--muted); line-height: 1.9; }
+
+    .mv-card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
 
     /* VALUES */
-    .values { padding: 80px 60px; background: var(--warm-white); }
-    .section-header {
-      text-align: center; margin-bottom: 50px;
+    .values {
+      padding: 80px 60px;
+      background: var(--warm-white);
     }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
     .section-header h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(34px, 4vw, 44px); font-weight: 400;
-      color: var(--dark); margin-bottom: 14px;
+      font-size: clamp(34px, 4vw, 44px);
+      font-weight: 400;
+      color: var(--dark);
+      margin-bottom: 14px;
     }
-    .section-header p { font-size: 13px; color: var(--muted); max-width: 480px; margin: 0 auto; line-height: 1.8; }
+
+    .section-header p {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
     .values-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
     }
+
     .value-card {
-      padding: 36px 30px; border-radius: var(--radius);
-      border: 1px solid var(--border); background: var(--cream);
+      padding: 36px 30px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--cream);
       text-align: center;
       transition: transform .3s, box-shadow .3s;
     }
-    .value-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.08); }
+
+    .value-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    }
+
     .value-icon {
-      width: 56px; height: 56px; border-radius: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
       background: var(--gold-pale);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin: 0 auto 20px;
     }
-    .value-icon svg { width: 24px; height: 24px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
-    .value-card h3 { font-size: 15px; font-weight: 500; color: var(--dark); margin-bottom: 10px; }
-    .value-card p { font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+
+    .value-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .value-card h3 {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .value-card p {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
 
     /* TEAM */
-    .team { padding: 80px 60px; background: var(--cream); }
-    .team-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 28px; margin-top: 50px;
+    .team {
+      padding: 80px 60px;
+      background: var(--cream);
     }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 50px;
+    }
+
     .team-card {
-      border-radius: var(--radius); overflow: hidden;
-      border: 1px solid var(--border); background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #fff;
       transition: transform .3s, box-shadow .3s;
     }
-    .team-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-    .team-card img {
-      width: 100%; height: 300px; object-fit: cover;
-      display: block; transition: transform .4s;
+
+    .team-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
     }
-    .team-card:hover img { transform: scale(1.04); }
-    .team-info { padding: 22px 24px; }
-    .team-info h3 { font-size: 15px; font-weight: 500; color: var(--dark); margin-bottom: 4px; }
-    .team-info span { font-size: 12px; color: var(--gold); }
-    .team-info p { font-size: 12.5px; color: var(--muted); line-height: 1.7; margin-top: 10px; }
+
+    .team-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s;
+    }
+
+    .team-card:hover img {
+      transform: scale(1.04);
+    }
+
+    .team-info {
+      padding: 22px 24px;
+    }
+
+    .team-info h3 {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .team-info span {
+      font-size: 12px;
+      color: var(--gold);
+    }
+
+    .team-info p {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 10px;
+    }
 
     /* CTA */
     .cta {
       margin: 0 60px 80px;
-      background: var(--dark); border-radius: 20px;
+      background: var(--dark);
+      border-radius: 20px;
       padding: 80px 60px;
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 40px;
     }
+
     .cta-content h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(32px, 4vw, 44px); font-weight: 400;
-      color: #fff; margin-bottom: 14px;
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 14px;
     }
-    .cta-content h2 span { color: var(--gold); font-style: italic; }
-    .cta-content p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.8; max-width: 420px; }
-    .cta-actions { display: flex; gap: 14px; flex-shrink: 0; }
+
+    .cta-content h2 span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .cta-content p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.8;
+      max-width: 420px;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
     .btn-gold {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 28px; background: var(--gold); color: #fff;
-      border: none; border-radius: 8px; font-size: 13px; font-weight: 500;
-      cursor: pointer; text-decoration: none; transition: background .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s;
     }
-    .btn-gold:hover { background: #a87820; }
+
+    .btn-gold:hover {
+      background: #a87820;
+    }
+
     .btn-ghost {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 28px; border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px; font-size: 13px; color: rgba(255,255,255,0.8);
-      background: transparent; cursor: pointer; text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      background: transparent;
+      cursor: pointer;
+      text-decoration: none;
       transition: all .2s;
     }
-    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    .btn-ghost:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
 
     /* ANIMATIONS */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* IMG PLACEHOLDER */
     .img-placeholder {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       background: linear-gradient(135deg, #e8d8c0 0%, #d4c0a0 100%);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .img-placeholder span { color: var(--muted); font-size: 13px; opacity: .6; }
+
+    .img-placeholder span {
+      color: var(--muted);
+      font-size: 13px;
+      opacity: .6;
+    }
 
     /* RESPONSIVE */
     @media (max-width: 1024px) {
-      .page-hero { grid-template-columns: 1fr; padding: 80px 40px 60px; }
-      .page-hero::after { display: none; }
-      .page-hero-image img { height: 360px; }
-      .stats { grid-template-columns: repeat(2, 1fr); }
-      .stat-item { border-right: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); }
-      .stat-item:nth-child(2n) { border-right: none; }
-      .story { grid-template-columns: 1fr; gap: 40px; padding: 80px 40px; }
-      .mission-vision { padding: 60px 40px; }
-      .mv-grid { grid-template-columns: 1fr; }
-      .values { padding: 60px 40px; }
-      .values-grid { grid-template-columns: repeat(2, 1fr); }
-      .team { padding: 60px 40px; }
-      .team-grid { grid-template-columns: repeat(2, 1fr); }
-      .cta { margin: 0 40px 60px; padding: 60px 40px; flex-direction: column; }
+      .page-hero {
+        grid-template-columns: 1fr;
+        padding: 80px 40px 60px;
+      }
+
+      .page-hero::after {
+        display: none;
+      }
+
+      .page-hero-image img {
+        height: 360px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-item {
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .stat-item:nth-child(2n) {
+        border-right: none;
+      }
+
+      .story {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 80px 40px;
+      }
+
+      .mission-vision {
+        padding: 60px 40px;
+      }
+
+      .mv-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .values {
+        padding: 60px 40px;
+      }
+
+      .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .team {
+        padding: 60px 40px;
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cta {
+        margin: 0 40px 60px;
+        padding: 60px 40px;
+        flex-direction: column;
+      }
     }
+
     @media (max-width: 768px) {
-      .page-hero { padding: 60px 30px 50px; }
-      .story { padding: 60px 30px; }
-      .mission-vision, .values, .team { padding: 50px 30px; }
-      .values-grid { grid-template-columns: 1fr; }
-      .team-grid { grid-template-columns: 1fr; }
-      .cta { margin: 0 30px 50px; padding: 50px 30px; }
-      .cta-actions { flex-direction: column; width: 100%; }
+      .page-hero {
+        padding: 60px 30px 50px;
+      }
+
+      .story {
+        padding: 60px 30px;
+      }
+
+      .mission-vision,
+      .values,
+      .team {
+        padding: 50px 30px;
+      }
+
+      .values-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta {
+        margin: 0 30px 50px;
+        padding: 50px 30px;
+      }
+
+      .cta-actions {
+        flex-direction: column;
+        width: 100%;
+      }
     }
+
     @media (max-width: 480px) {
-      .page-hero { padding: 50px 20px 40px; }
-      .story { padding: 50px 20px; }
-      .mission-vision, .values, .team { padding: 40px 20px; }
-      .cta { margin: 0 20px 40px; padding: 40px 20px; }
-      .stats { grid-template-columns: 1fr 1fr; }
+      .page-hero {
+        padding: 50px 20px 40px;
+      }
+
+      .story {
+        padding: 50px 20px;
+      }
+
+      .mission-vision,
+      .values,
+      .team {
+        padding: 40px 20px;
+      }
+
+      .cta {
+        margin: 0 20px 40px;
+        padding: 40px 20px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<nav>
-  <%- include('partials/user/header') %>
-</nav>
+  <nav>
+    <%- include('partials/user/header') %>
+  </nav>
 
-<!-- HERO -->
-<section class="page-hero">
-  <div class="page-hero-content">
-    <div class="page-hero-breadcrumb">
-      <a href="/" style="color:var(--muted);text-decoration:none;">Home</a>
-      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      <span>About Us</span>
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="page-hero-content">
+      <div class="page-hero-breadcrumb">
+        <a href="/" style="color:var(--muted);text-decoration:none;">Home</a>
+        <svg viewBox="0 0 24 24">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+        <span>About Us</span>
+      </div>
+      <h1>Crafting <span>Timeless</span><br>Beauty Since 2015</h1>
+      <p>Born from a passion for extraordinary craftsmanship, Elanora is a celebration of fine jewellery that speaks to
+        the soul. Every piece tells a story of artistry, heritage, and refined elegance.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;">
+        <a href="/shop" class="btn-primary">
+          Explore Collection
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+        <a href="/contact" class="btn-outline">Contact Us</a>
+      </div>
     </div>
-    <h1>Crafting <span>Timeless</span><br>Beauty Since 2015</h1>
-    <p>Born from a passion for extraordinary craftsmanship, Elanora is a celebration of fine jewellery that speaks to the soul. Every piece tells a story of artistry, heritage, and refined elegance.</p>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;">
-      <a href="/shop" class="btn-primary">
-        Explore Collection
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    <div class="page-hero-image">
+      <img src="images/home/Submain pic 1.jpeg" alt="Elanora jewelry model"
+        onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:460px><span>About Hero</span></div>'" />
+      <div class="hero-float-card">
+        <div class="hero-float-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <div class="hero-float-text">
+          <strong>Certified Authentic</strong>
+          <span>Hallmark Guaranteed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-item">
+      <div class="stat-number">10+</div>
+      <div class="stat-label">Years of Craftsmanship</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">230K</div>
+      <div class="stat-label">Happy Clients</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">500+</div>
+      <div class="stat-label">Unique Designs</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">18</div>
+      <div class="stat-label">Countries Served</div>
+    </div>
+  </div>
+
+  <!-- STORY -->
+  <section class="story">
+    <div class="story-image">
+      <img src="images/home/Submain pic 2.jpeg" alt="Our story"
+        onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:520px;border-radius:12px><span>Story Image</span></div>'" />
+      <div class="story-accent">Est.<br>2015<br>India</div>
+    </div>
+    <div class="story-content">
+      <span class="section-label">Our Story</span>
+      <h2>A Legacy of<br><em>Artistry</em> & Passion</h2>
+      <p>Elanora was founded in 2015 with a singular vision — to bring the world's finest jewellery to those who
+        appreciate beauty in its purest form. What began as a small atelier in the heart of India has grown into a
+        beloved brand trusted by over 230,000 clients worldwide.</p>
+      <p>Every piece in our collection is meticulously handcrafted by master artisans who have spent decades perfecting
+        their craft. We source only the most responsibly obtained precious metals and gemstones, ensuring that your
+        jewellery is as ethical as it is beautiful.</p>
+      <p>From the first sketch to the final polish, we obsess over every detail — because we believe that true luxury
+        lies in the things you cannot see.</p>
+      <a href="/shop" class="btn-outline" style="margin-top:8px;">Discover Our Collections</a>
+    </div>
+  </section>
+
+  <!-- MISSION & VISION -->
+  <section class="mission-vision">
+    <div style="text-align:center;margin-bottom:10px;">
+      <span class="section-label">What Drives Us</span>
+      <h2
+        style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,44px);font-weight:400;color:var(--dark);margin-top:10px;">
+        Our Mission &amp; Vision</h2>
+      <p style="font-size:13px;color:var(--muted);max-width:480px;margin:12px auto 0;line-height:1.8;">Two pillars that
+        guide every creation, every interaction, and every decision we make.</p>
+    </div>
+    <div class="mv-grid">
+      <div class="mv-card">
+        <div class="mv-card-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+          </svg>
+        </div>
+        <h3>Our Mission</h3>
+        <p>To craft jewellery of uncompromising quality that transcends trends — pieces that become heirlooms, passed
+          down through generations as symbols of love, milestones, and unforgettable memories. We are committed to
+          making fine jewellery accessible without sacrificing an ounce of artistry.</p>
+      </div>
+      <div class="mv-card">
+        <div class="mv-card-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+        <h3>Our Vision</h3>
+        <p>To be the most trusted and beloved fine jewellery brand in the world — a name synonymous with radiant
+          elegance, ethical sourcing, and extraordinary craftsmanship. We envision a world where every woman wears
+          jewellery that tells her unique story.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="values">
+    <div class="section-header">
+      <span class="section-label">Why Choose Elanora</span>
+      <h2>The Elanora Difference</h2>
+      <p>Six pillars that set us apart and define the Elanora promise to every client we serve.</p>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <h3>Certified Authenticity</h3>
+        <p>Every piece comes with a hallmark certificate ensuring genuine precious metals and conflict-free gemstones.
+        </p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </div>
+        <h3>Handcrafted with Love</h3>
+        <p>Master artisans with decades of experience craft each piece by hand, ensuring unmatched quality and
+          character.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+        </div>
+        <h3>Ethically Sourced</h3>
+        <p>We partner only with suppliers who meet our rigorous ethical and environmental standards — beauty without
+          compromise.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="1" y="3" width="15" height="13" rx="2" />
+            <path d="M16 8h5l3 3v5h-8V8z" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
+          </svg>
+        </div>
+        <h3>Nationwide Delivery</h3>
+        <p>Free, insured shipping on orders over ₹1500 with real-time tracking and elegant gift-ready packaging.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>
+        </div>
+        <h3>Dedicated Support</h3>
+        <p>Our jewellery experts are available 7 days a week to assist with styling advice, sizing, and after-care.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
+          </svg>
+        </div>
+        <h3>Lifetime Craftsmanship</h3>
+        <p>We stand behind our work with a lifetime craftsmanship warranty — because great jewellery should last
+          forever.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="team">
+    <div class="section-header">
+      <span class="section-label">The People Behind Elanora</span>
+      <h2>Meet Our Artisans</h2>
+      <p>The talented hands and creative minds who bring every Elanora design to life.</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <img src="images/home/Artist 1.png" alt="Elanora Grace"
+          onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:300px><span>Artisan</span></div>'" />
+        <div class="team-info">
+          <h3>Elanora Grace</h3>
+          <span>Founder & Chief Designer</span>
+          <p>With 15 years of experience in fine jewellery design, Elanora leads every collection with an eye for
+            timeless beauty.</p>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="images/home/Artist 2.png" alt="Eva Grace"
+          onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:300px><span>Artisan</span></div>'" />
+        <div class="team-info">
+          <h3>Eva Grace</h3>
+          <span>Master Goldsmith</span>
+          <p>A third-generation goldsmith, Eva's hands have shaped over 10,000 pieces, each one a testament to a
+            lifetime of mastery.</p>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="images/home/Artist 3.png" alt="Nyla Maria"
+          onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:300px><span>Artisan</span></div>'" />
+        <div class="team-info">
+          <h3>Nyla Maria</h3>
+          <span>Gemologist & Quality Lead</span>
+          <p>GIA-certified gemologist ensuring every stone meets our exacting standards for cut, clarity, colour, and
+            ethical sourcing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="cta-content">
+      <h2>Begin Your <span>Elanora</span> Story</h2>
+      <p>Explore our curated collections and find the piece that speaks to you — or let us create something entirely
+        bespoke, just for you.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="/shop" class="btn-gold">
+        Shop Now
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
       </a>
-      <a href="/contact" class="btn-outline">Contact Us</a>
+      <a href="/contact" class="btn-ghost">Contact Us</a>
     </div>
   </div>
-  <div class="page-hero-image">
-    <img src="images/home/Submain pic 1.jpeg" alt="Elanora jewelry model" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:460px><span>About Hero</span></div>'"/>
-    <div class="hero-float-card">
-      <div class="hero-float-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      <div class="hero-float-text">
-        <strong>Certified Authentic</strong>
-        <span>Hallmark Guaranteed</span>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stat-item">
-    <div class="stat-number">10+</div>
-    <div class="stat-label">Years of Craftsmanship</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-number">230K</div>
-    <div class="stat-label">Happy Clients</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-number">500+</div>
-    <div class="stat-label">Unique Designs</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-number">18</div>
-    <div class="stat-label">Countries Served</div>
-  </div>
-</div>
-
-<!-- STORY -->
-<section class="story">
-  <div class="story-image">
-    <img src="images/home/Submain pic 2.jpeg" alt="Our story" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:520px;border-radius:12px><span>Story Image</span></div>'"/>
-    <div class="story-accent">Est.<br>2015<br>India</div>
-  </div>
-  <div class="story-content">
-    <span class="section-label">Our Story</span>
-    <h2>A Legacy of<br><em>Artistry</em> & Passion</h2>
-    <p>Elanora was founded in 2015 with a singular vision — to bring the world's finest jewellery to those who appreciate beauty in its purest form. What began as a small atelier in the heart of India has grown into a beloved brand trusted by over 230,000 clients worldwide.</p>
-    <p>Every piece in our collection is meticulously handcrafted by master artisans who have spent decades perfecting their craft. We source only the most responsibly obtained precious metals and gemstones, ensuring that your jewellery is as ethical as it is beautiful.</p>
-    <p>From the first sketch to the final polish, we obsess over every detail — because we believe that true luxury lies in the things you cannot see.</p>
-    <a href="/shop" class="btn-outline" style="margin-top:8px;">Discover Our Collections</a>
-  </div>
-</section>
-
-<!-- MISSION & VISION -->
-<section class="mission-vision">
-  <div style="text-align:center;margin-bottom:10px;">
-    <span class="section-label">What Drives Us</span>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,44px);font-weight:400;color:var(--dark);margin-top:10px;">Our Mission &amp; Vision</h2>
-    <p style="font-size:13px;color:var(--muted);max-width:480px;margin:12px auto 0;line-height:1.8;">Two pillars that guide every creation, every interaction, and every decision we make.</p>
-  </div>
-  <div class="mv-grid">
-    <div class="mv-card">
-      <div class="mv-card-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-      </div>
-      <h3>Our Mission</h3>
-      <p>To craft jewellery of uncompromising quality that transcends trends — pieces that become heirlooms, passed down through generations as symbols of love, milestones, and unforgettable memories. We are committed to making fine jewellery accessible without sacrificing an ounce of artistry.</p>
-    </div>
-    <div class="mv-card">
-      <div class="mv-card-icon">
-        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      </div>
-      <h3>Our Vision</h3>
-      <p>To be the most trusted and beloved fine jewellery brand in the world — a name synonymous with radiant elegance, ethical sourcing, and extraordinary craftsmanship. We envision a world where every woman wears jewellery that tells her unique story.</p>
-    </div>
-  </div>
-</section>
-
-<!-- VALUES -->
-<section class="values">
-  <div class="section-header">
-    <span class="section-label">Why Choose Elanora</span>
-    <h2>The Elanora Difference</h2>
-    <p>Six pillars that set us apart and define the Elanora promise to every client we serve.</p>
-  </div>
-  <div class="values-grid">
-    <div class="value-card">
-      <div class="value-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      <h3>Certified Authenticity</h3>
-      <p>Every piece comes with a hallmark certificate ensuring genuine precious metals and conflict-free gemstones.</p>
-    </div>
-    <div class="value-card">
-      <div class="value-icon">
-        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      </div>
-      <h3>Handcrafted with Love</h3>
-      <p>Master artisans with decades of experience craft each piece by hand, ensuring unmatched quality and character.</p>
-    </div>
-    <div class="value-card">
-      <div class="value-icon">
-        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      </div>
-      <h3>Ethically Sourced</h3>
-      <p>We partner only with suppliers who meet our rigorous ethical and environmental standards — beauty without compromise.</p>
-    </div>
-    <div class="value-card">
-      <div class="value-icon">
-        <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h5l3 3v5h-8V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-      </div>
-      <h3>Nationwide Delivery</h3>
-      <p>Free, insured shipping on orders over ₹1500 with real-time tracking and elegant gift-ready packaging.</p>
-    </div>
-    <div class="value-card">
-      <div class="value-icon">
-        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      </div>
-      <h3>Dedicated Support</h3>
-      <p>Our jewellery experts are available 7 days a week to assist with styling advice, sizing, and after-care.</p>
-    </div>
-    <div class="value-card">
-      <div class="value-icon">
-        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-      </div>
-      <h3>Lifetime Craftsmanship</h3>
-      <p>We stand behind our work with a lifetime craftsmanship warranty — because great jewellery should last forever.</p>
-    </div>
-  </div>
-</section>
-
-<!-- TEAM -->
-<section class="team">
-  <div class="section-header">
-    <span class="section-label">The People Behind Elanora</span>
-    <h2>Meet Our Artisans</h2>
-    <p>The talented hands and creative minds who bring every Elanora design to life.</p>
-  </div>
-  <div class="team-grid">
-    <div class="team-card">
-      <img src="images/home/Artist 1.png" alt="Elanora Grace" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:300px><span>Artisan</span></div>'"/>
-      <div class="team-info">
-        <h3>Elanora Grace</h3>
-        <span>Founder & Chief Designer</span>
-        <p>With 15 years of experience in fine jewellery design, Elanora leads every collection with an eye for timeless beauty.</p>
-      </div>
-    </div>
-    <div class="team-card">
-      <img src="images/home/Artist 2.png" alt="Eva Grace" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:300px><span>Artisan</span></div>'"/>
-      <div class="team-info">
-        <h3>Eva Grace</h3>
-        <span>Master Goldsmith</span>
-        <p>A third-generation goldsmith, Eva's hands have shaped over 10,000 pieces, each one a testament to a lifetime of mastery.</p>
-      </div>
-    </div>
-    <div class="team-card">
-      <img src="images/home/Artist 3.png" alt="Nyla Maria" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:300px><span>Artisan</span></div>'"/>
-      <div class="team-info">
-        <h3>Nyla Maria</h3>
-        <span>Gemologist & Quality Lead</span>
-        <p>GIA-certified gemologist ensuring every stone meets our exacting standards for cut, clarity, colour, and ethical sourcing.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<div class="cta">
-  <div class="cta-content">
-    <h2>Begin Your <span>Elanora</span> Story</h2>
-    <p>Explore our curated collections and find the piece that speaks to you — or let us create something entirely bespoke, just for you.</p>
-  </div>
-  <div class="cta-actions">
-    <a href="/shop" class="btn-gold">
-      Shop Now
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-    <a href="/contact" class="btn-ghost">Contact Us</a>
-  </div>
-</div>
-
-<%- include('partials/user/footer') %>
+  <%- include('partials/user/footer') %>
 
 </body>
+
 </html>

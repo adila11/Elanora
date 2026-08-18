@@ -13,7 +13,7 @@ export const loadAddress = async (req, res) => {
         const addresses = await Address.find({
             user: user._id,
             isDelete: false
-        }).sort({ isDefault: -1, createdAt: -1 });   
+        }).sort({ isDefault: -1, createdAt: -1 });
 
         res.render("user/address/address", {
             user,
@@ -50,14 +50,14 @@ export const addAddress = async (req, res) => {
             return res.status(401).json({ message: MESSAGES.USER_NOT_FOUND });
         }
 
-        const { 
-            type, 
-            fullName, 
-            phone, 
-            addressLine, 
-            city, 
+        const {
+            type,
+            fullName,
+            phone,
+            addressLine,
+            city,
             district,
-            state, 
+            state,
             pincode,
             isDefault
         } = req.body;
@@ -107,20 +107,20 @@ export const addAddress = async (req, res) => {
         }
 
         if (errors.length > 0) {
-            return res.status(400).json({ 
-                message: MESSAGES.OTHER_VALIDATION_FAILED, 
-                errors 
+            return res.status(400).json({
+                message: MESSAGES.OTHER_VALIDATION_FAILED,
+                errors
             });
         }
 
-        const addressCount = await Address.countDocuments({ 
-            user: user._id, 
-            isDelete: false 
+        const addressCount = await Address.countDocuments({
+            user: user._id,
+            isDelete: false
         });
 
         if (addressCount >= 5) {
-            return res.status(400).json({ 
-                message: "You can save a maximum of 5 addresses only." 
+            return res.status(400).json({
+                message: "You can save a maximum of 5 addresses only."
             });
         }
 
@@ -149,14 +149,14 @@ export const addAddress = async (req, res) => {
 
         await newAddress.save();
 
-        res.status(201).json({ 
-            message: "Address added successfully!", 
-            address: newAddress 
+        res.status(201).json({
+            message: "Address added successfully!",
+            address: newAddress
         });
 
     } catch (error) {
-        res.status(500).json({ 
-            message: MESSAGES.SERVER_SOMETHING_WENT_WRONG_PLEASE 
+        res.status(500).json({
+            message: MESSAGES.SERVER_SOMETHING_WENT_WRONG_PLEASE
         });
     }
 };
@@ -200,14 +200,14 @@ export const editAddress = async (req, res) => {
         }
 
         const { id } = req.params;
-        const { 
-            type, 
-            fullName, 
-            phone, 
-            addressLine, 
-            city, 
+        const {
+            type,
+            fullName,
+            phone,
+            addressLine,
+            city,
             district,
-            state, 
+            state,
             pincode,
             isDefault
         } = req.body;
@@ -267,9 +267,9 @@ export const editAddress = async (req, res) => {
         }
 
         if (errors.length > 0) {
-            return res.status(400).json({ 
-                message: MESSAGES.OTHER_VALIDATION_FAILED, 
-                errors 
+            return res.status(400).json({
+                message: MESSAGES.OTHER_VALIDATION_FAILED,
+                errors
             });
         }
 
@@ -298,8 +298,8 @@ export const editAddress = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ 
-            message: MESSAGES.SERVER_SOMETHING_WENT_WRONG_PLEASE 
+        res.status(500).json({
+            message: MESSAGES.SERVER_SOMETHING_WENT_WRONG_PLEASE
         });
     }
 };
@@ -346,9 +346,9 @@ export const deleteAddress = async (req, res) => {
             return res.status(400).json({ message: "Invalid address ID" });
         }
 
-        const address = await Address.findOne({ 
-            _id: id, 
-            user: user._id   
+        const address = await Address.findOne({
+            _id: id,
+            user: user._id
         });
 
         if (!address) {
@@ -358,9 +358,9 @@ export const deleteAddress = async (req, res) => {
         address.isDelete = true;
         await address.save();
 
-        return res.json({ 
+        return res.json({
             message: "Address deleted successfully",
-            success: true 
+            success: true
         });
 
     } catch (error) {

@@ -1,56 +1,55 @@
-<%
-  const displayName = (user.firstName && user.lastName)
-    ? user.firstName + ' ' + user.lastName
-    : (user.fullName ? user.fullName.toUpperCase() : 'User');
+<% const displayName=(user.firstName && user.lastName) ? user.firstName + ' ' + user.lastName : (user.fullName ?
+  user.fullName.toUpperCase() : 'User' ); const memberYear=user.createdAt ? new Date(user.createdAt).getFullYear() : new
+  Date().getFullYear(); // Consistent profile icon path (same logic as your main profile page) const
+  profileIconPath=user.profileIcon ? (user.profileIcon.startsWith('http') ? user.profileIcon :
+  (user.profileIcon.startsWith('/') ? user.profileIcon : '/' + user.profileIcon.replace('public/', '' ))) : '' ; //
+  Generate initials for SVG fallback const bannerInitials=(user.fullName || 'U' ).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  const svgFallback = `data:image/svg+xml,${encodeURIComponent(' <svg xmlns="http://www.w3.org/2000/svg" width="88"
+  height="88">
+  <rect width="88" height="88" rx="44" fill="%23c49a2a" /><text x="50%" y="54%" dominant-baseline="middle"
+    text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="32" font-weight="600">' +
+    bannerInitials + '</text></svg>')}`;
+  %>
 
-  const memberYear = user.createdAt ? new Date(user.createdAt).getFullYear() : new Date().getFullYear();
+  <div
+    style="background:#fff; border-radius:18px; padding:24px 32px; display:flex; align-items:center; gap:24px; margin-bottom:28px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
 
-  // Consistent profile icon path (same logic as your main profile page)
-  const profileIconPath = user.profileIcon 
-    ? (user.profileIcon.startsWith('http') ? user.profileIcon : (user.profileIcon.startsWith('/') ? user.profileIcon : '/' + user.profileIcon.replace('public/', '')))
-    : '';
-
-  // Generate initials for SVG fallback
-  const bannerInitials = (user.fullName || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-  const svgFallback = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="88" height="88"><rect width="88" height="88" rx="44" fill="%23c49a2a"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="32" font-weight="600">' + bannerInitials + '</text></svg>')}`;
-%>
-
-<div style="background:#fff; border-radius:18px; padding:24px 32px; display:flex; align-items:center; gap:24px; margin-bottom:28px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-
-  <!-- Profile Icon / Image - Now Consistent With Main Profile -->
-  <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; flex-shrink:0; border:3px solid #f5edd8;">
-    <img 
-      src="<%= profileIconPath || svgFallback %>" 
-      alt="<%= displayName %>"
-      style="width:100%; height:100%; object-fit:cover;"
-      onerror="this.onerror=null; this.src='<%= svgFallback %>';"
-    >
-  </div>
-
-  <div style="flex:1; min-width:0;">
-    <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.75rem; font-weight:700; color:#2c2c2c; margin-bottom:3px;">
-      <%= displayName %>
-    </h2>
-    <p style="font-size:0.85rem; color:#aaa; margin-bottom:12px;"><%= user.email %></p>
-
-    <div style="display:flex; flex-wrap:wrap; gap:8px;">
-      <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:600; padding:6px 14px; border-radius:20px; background:#f5edd8; color:#c49a2a;">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M20 21a8 8 0 10-16 0"/>
-          <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.75" fill="none"/>
-        </svg>
-        Member since <%= memberYear %>
-      </span>
-
-      <% if (typeof user.walletBalance !== 'undefined' && user.walletBalance !== null) { %>
-      <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:600; padding:6px 14px; border-radius:20px; background:#f5edd8; color:#c49a2a;">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-        </svg>
-        Balance: ₹<%= user.walletBalance.toLocaleString('en-IN') %>
-      </span>
-      <% } %>
+    <!-- Profile Icon / Image - Now Consistent With Main Profile -->
+    <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; flex-shrink:0; border:3px solid #f5edd8;">
+      <img src="<%= profileIconPath || svgFallback %>" alt="<%= displayName %>"
+        style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.src='<%= svgFallback %>';">
     </div>
-  </div>
 
-</div>
+    <div style="flex:1; min-width:0;">
+      <h2
+        style="font-family:'Cormorant Garamond',serif; font-size:1.75rem; font-weight:700; color:#2c2c2c; margin-bottom:3px;">
+        <%= displayName %>
+      </h2>
+      <p style="font-size:0.85rem; color:#aaa; margin-bottom:12px;">
+        <%= user.email %>
+      </p>
+
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <span
+          style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:600; padding:6px 14px; border-radius:20px; background:#f5edd8; color:#c49a2a;">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20 21a8 8 0 10-16 0" />
+            <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.75" fill="none" />
+          </svg>
+          Member since <%= memberYear %>
+        </span>
+
+        <% if (typeof user.walletBalance !=='undefined' && user.walletBalance !==null) { %>
+          <span
+            style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:600; padding:6px 14px; border-radius:20px; background:#f5edd8; color:#c49a2a;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+            Balance: ₹<%= user.walletBalance.toLocaleString('en-IN') %>
+          </span>
+          <% } %>
+      </div>
+    </div>
+
+  </div>

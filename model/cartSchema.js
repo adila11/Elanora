@@ -28,7 +28,7 @@ const cartItemSchema = new mongoose.Schema({
     required: true
   }
 
-}); 
+});
 
 
 const cartSchema = new mongoose.Schema({
@@ -36,7 +36,7 @@ const cartSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
-    unique: true 
+    unique: true
   },
 
   items: [cartItemSchema]

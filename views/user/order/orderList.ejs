@@ -498,102 +498,101 @@
       opacity: 0.35;
     }
 
-    .status-badge.processing{
-    background:#EBF3FD;
-    color:#5B9BD5;
-    border:1px solid #C5DCEF;
-}
+    .status-badge.processing {
+      background: #EBF3FD;
+      color: #5B9BD5;
+      border: 1px solid #C5DCEF;
+    }
 
-.status-badge.return_requested{
-    background:#FFF8E6;
-    color:#D68910;
-    border:1px solid #F5D38A;
-}
+    .status-badge.return_requested {
+      background: #FFF8E6;
+      color: #D68910;
+      border: 1px solid #F5D38A;
+    }
 
-.status-badge.return_rejected{
-    background:#FDF0EE;
-    color:#C0392B;
-    border:1px solid #E8B4B0;
-}
+    .status-badge.return_rejected {
+      background: #FDF0EE;
+      color: #C0392B;
+      border: 1px solid #E8B4B0;
+    }
 
-.status-badge.payment_failed{
-    background:#FDF0EE;
-    color:#C0392B;
-    border:1px solid #E8B4B0;
-}
+    .status-badge.payment_failed {
+      background: #FDF0EE;
+      color: #C0392B;
+      border: 1px solid #E8B4B0;
+    }
 
-/* RETRY PAYMENT BTN */
-.retry-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 6px 14px;
-    background: #c49a2a;
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
+    /* RETRY PAYMENT BTN */
+    .retry-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      background: #c49a2a;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
 
-.retry-btn:hover {
-    background: #a87820;
-    transform: scale(1.02);
-}
+    .retry-btn:hover {
+      background: #a87820;
+      transform: scale(1.02);
+    }
 
-.retry-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
+    .retry-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
 
-.retry-btn svg {
-    width: 14px;
-    height: 14px;
-}
+    .retry-btn svg {
+      width: 14px;
+      height: 14px;
+    }
 
-/* VALIDATION ERROR MODAL */
-.validation-modal {
-    background: #fff;
-    border-radius: 18px;
-    padding: 36px;
-    width: 100%;
-    max-width: 480px;
-    box-shadow: 0 20px 60px rgba(44, 31, 14, 0.15);
-    animation: modalIn 0.22s ease both;
-    position: relative;
-}
+    /* VALIDATION ERROR MODAL */
+    .validation-modal {
+      background: #fff;
+      border-radius: 18px;
+      padding: 36px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 20px 60px rgba(44, 31, 14, 0.15);
+      animation: modalIn 0.22s ease both;
+      position: relative;
+    }
 
-.validation-error-list {
-    border: 1px solid #E8B4B0;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 16px 0;
-}
+    .validation-error-list {
+      border: 1px solid #E8B4B0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
 
-.validation-error-item {
-    padding: 12px 16px;
-    font-size: 0.85rem;
-    color: #C0392B;
-    border-bottom: 1px solid #E8B4B0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+    .validation-error-item {
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #C0392B;
+      border-bottom: 1px solid #E8B4B0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-.validation-error-item:last-child {
-    border-bottom: none;
-}
+    .validation-error-item:last-child {
+      border-bottom: none;
+    }
 
-.validation-error-item svg {
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-}
-
+    .validation-error-item svg {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+    }
   </style>
 </head>
 
@@ -617,15 +616,16 @@
                 <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#2c2c2c;">
                   Order History
                 </h3>
-                <% if (orders && orders.length > 0) { %>
+                <% if (orders && orders.length> 0) { %>
                   <div class="search-wrap">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <circle cx="11" cy="11" r="8" />
                       <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                    <input type="text" id="searchInput" placeholder="Search by order # or item…" oninput="filterOrders()">
+                    <input type="text" id="searchInput" placeholder="Search by order # or item…"
+                      oninput="filterOrders()">
                   </div>
-                <% } %>
+                  <% } %>
               </div>
 
               <div id="orderList">
@@ -654,27 +654,28 @@
                         </div>
 
                         <div class="order-actions">
-                          <% if (order.paymentStatus === 'failed') { %>
+                          <% if (order.paymentStatus==='failed' ) { %>
                             <span class="status-badge payment_failed">Payment Failed</span>
-                            <button class="retry-btn" id="retryBtn-<%= order._id %>" onclick='initiateRetryPayment("<%= order._id %>")' data-order-id="<%= order._id %>">
+                            <button class="retry-btn" id="retryBtn-<%= order._id %>"
+                              onclick='initiateRetryPayment("<%= order._id %>")' data-order-id="<%= order._id %>">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                 <polyline points="23 4 23 10 17 10" />
                                 <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
                               </svg>
                               Retry Payment
                             </button>
-                          <% } else { %>
-                            <span class="status-badge <%= order.orderStatus || 'pending' %>">
-                              <%= String(order.orderStatus || 'pending' ).replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %>
+                            <% } else { %>
+                              <span class="status-badge <%= order.orderStatus || 'pending' %>">
+                                <%= String(order.orderStatus || 'pending' ).replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %>
                             </span>
 
-                            <% if (order.orderStatus === 'pending' || order.orderStatus==='processing' ) { %>
-                              <button class="cancel-order-btn"
-                                onclick='openCancelModal("<%= order._id %>", <%- JSON.stringify(order.items) %>)'>
-                                Cancel
-                              </button>
-                            <% } %>
-                          <% } %>
+                            <% if (order.orderStatus === ' pending' || order.orderStatus==='processing' ) { %>
+                                  <button class="cancel-order-btn"
+                                    onclick='openCancelModal("<%= order._id %>", <%- JSON.stringify(order.items) %>)'>
+                                    Cancel
+                                  </button>
+                                  <% } %>
+                                    <% } %>
                         </div>
                       </div>
 
@@ -830,7 +831,8 @@
         <div class="cancel-items-list" id="cancelItemsList"></div>
 
         <label class="reason-label">
-          Reason <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;">(optional, max 100 characters)</span>
+          Reason <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb;">(optional, max 100
+            characters)</span>
         </label>
         <textarea id="cancelReason" maxlength="100" placeholder="Tell us why you're cancelling…"></textarea>
 
@@ -858,18 +860,22 @@
             <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
         </div>
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:#2c2c2c;margin-bottom:6px;">Cannot Retry Payment</h3>
-        <p class="modal-sub" style="font-size:0.82rem;color:#aaa;margin-bottom:16px;line-height:1.5;">The following items have issues that prevent payment retry:</p>
+        <h3
+          style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:#2c2c2c;margin-bottom:6px;">
+          Cannot Retry Payment</h3>
+        <p class="modal-sub" style="font-size:0.82rem;color:#aaa;margin-bottom:16px;line-height:1.5;">The following
+          items have issues that prevent payment retry:</p>
         <div class="validation-error-list" id="validationErrorList"></div>
         <div style="margin-top:20px;">
-          <button class="btn-keep" onclick="closeValidationModal()" style="width:100%;padding:11px;background:#f7f3ec;border:1px solid #e8e0d0;border-radius:30px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;color:#888;cursor:pointer;">Close</button>
+          <button class="btn-keep" onclick="closeValidationModal()"
+            style="width:100%;padding:11px;background:#f7f3ec;border:1px solid #e8e0d0;border-radius:30px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;color:#888;cursor:pointer;">Close</button>
         </div>
       </div>
     </div>
 
     <%- include('partials/user/footer') %>
 
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
       <script>
         // Search
@@ -1033,7 +1039,7 @@
               description: "Retry Payment",
               order_id: retryData.orderId,
               theme: { color: "#c49a2a" },
-              handler: async function(rpResponse) {
+              handler: async function (rpResponse) {
                 try {
                   const verifyRes = await fetch(`/orders/${orderId}/verify-retry`, {
                     method: 'POST',
@@ -1062,14 +1068,14 @@
                 }
               },
               modal: {
-                ondismiss: function() {
+                ondismiss: function () {
                   // Payment modal closed without completing — mark as failed again
                   fetch('/payment-failed', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
                     body: JSON.stringify({ internalOrderId: orderId })
-                  }).catch(() => {});
+                  }).catch(() => { });
                   btn.disabled = false;
                   btn.innerHTML = originalHtml;
                 }
@@ -1078,13 +1084,13 @@
 
             const rzp = new Razorpay(options);
 
-            rzp.on('payment.failed', function(resp) {
+            rzp.on('payment.failed', function (resp) {
               fetch('/payment-failed', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ internalOrderId: orderId })
-              }).catch(() => {});
+              }).catch(() => { });
               if (typeof window.showToast === 'function') window.showToast(resp.error?.description || 'Payment failed. You can try again.', 'error');
               btn.disabled = false;
               btn.innerHTML = originalHtml;

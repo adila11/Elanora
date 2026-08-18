@@ -9,14 +9,14 @@
     justify-content: space-between;
     padding: 16px 28px;
     height: 72px;
-}
+  }
 
   .page-title {
     font-size: 30px;
     font-weight: 600;
     color: #1F1F1F;
     font-family: "DM Serif Display", serif;
-}
+  }
 
   .search-wrap {
     flex: 1;
@@ -154,11 +154,13 @@
 </style>
 
 <header class="topbar">
-  <div class="page-title"><%= locals.title || 'Dashboard' %></div>
+  <div class="page-title">
+    <%= locals.title || 'Dashboard' %>
+  </div>
 
 
   <div class="topbar-right">
-   
+
     <!-- User Profile -->
     <div class="user-pill" id="userProfile">
       <div class="avatar">EA</div>
@@ -166,8 +168,9 @@
         <div class="user-name">Elanora Admin</div>
         <div class="user-role">Store Manager</div>
       </div>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9"/>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9" />
       </svg>
     </div>
   </div>

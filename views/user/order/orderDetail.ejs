@@ -973,10 +973,25 @@
       border-bottom: 2px solid #e8e6e0;
     }
 
-    .invoice-item-status.cancelled { background: #fcecea; color: #c0392b; }
-    .invoice-item-status.returned { background: #eef0fd; color: #5b52e8; }
-    .invoice-item-status.return_requested { background: #fff4e0; color: #c47a10; }
-    .invoice-item-status.return_rejected { background: #fcecea; color: #c0392b; }
+    .invoice-item-status.cancelled {
+      background: #fcecea;
+      color: #c0392b;
+    }
+
+    .invoice-item-status.returned {
+      background: #eef0fd;
+      color: #5b52e8;
+    }
+
+    .invoice-item-status.return_requested {
+      background: #fff4e0;
+      color: #c47a10;
+    }
+
+    .invoice-item-status.return_rejected {
+      background: #fcecea;
+      color: #c0392b;
+    }
 
     .invoice-item-name {
       font-weight: 500;
@@ -1057,10 +1072,10 @@
                 ═══════════════════════════════════════════════════ */ const orderStatusLabel={ pending: 'Pending' ,
                 processing: 'Processing' , shipped: 'Shipped' , out_for_delivery: 'Out for Delivery' ,
                 delivered: 'Delivered' , cancelled: 'Cancelled' , partially_cancelled: 'Partially Cancelled' ,
-                returned: 'Returned' , partially_returned: 'Partially Returned' , payment_failed: 'Payment Failed' , }; const itemStatusLabel={
-                active: 'Active' , cancelled: 'Cancelled' , returned: 'Returned' , }; const returnStatusLabel={
-                pending: 'Return Requested' , approved: 'Returned' , rejected: 'Return Rejected' , }; /*
-                ═══════════════════════════════════════════════════ DERIVE EFFECTIVE ORDER STATUS FROM ITEMS
+                returned: 'Returned' , partially_returned: 'Partially Returned' , payment_failed: 'Payment Failed' , };
+                const itemStatusLabel={ active: 'Active' , cancelled: 'Cancelled' , returned: 'Returned' , }; const
+                returnStatusLabel={ pending: 'Return Requested' , approved: 'Returned' , rejected: 'Return Rejected' ,
+                }; /* ═══════════════════════════════════════════════════ DERIVE EFFECTIVE ORDER STATUS FROM ITEMS
                 ═══════════════════════════════════════════════════ The DB `orderStatus` drives the forward-progress
                 steps. We compute an overlay status for cancel / return badges and tracker extra steps.
                 ═══════════════════════════════════════════════════ */ const os=order.orderStatus; /* ── Cancellation
@@ -1201,20 +1216,22 @@
                                   Phone: <%= order.shippingAddress.phone %>
                       </span>
                     </div>
-                    <% if (order.paymentStatus === 'failed') { %>
+                    <% if (order.paymentStatus==='failed' ) { %>
                       <span class="status-badge payment_failed">Payment Failed</span>
-                      <button class="retry-btn-detail" id="retryBtnDetail" onclick='initiateRetryPaymentDetail("<%= order._id %>")'>
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <button class="retry-btn-detail" id="retryBtnDetail"
+                        onclick='initiateRetryPaymentDetail("<%= order._id %>")'>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                          stroke-width="2.5">
                           <polyline points="23 4 23 10 17 10" />
                           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
                         </svg>
                         Retry Payment
                       </button>
-                    <% } else { %>
-                      <span class="status-badge <%= orderBadgeClass %>">
-                        <%= orderStatusLabel[displayStatus] || displayStatus %>
-                      </span>
-                    <% } %>
+                      <% } else { %>
+                        <span class="status-badge <%= orderBadgeClass %>">
+                          <%= orderStatusLabel[displayStatus] || displayStatus %>
+                        </span>
+                        <% } %>
                   </div>
 
                   <!-- ORDER TRACKER -->
@@ -1370,29 +1387,30 @@
                         } else {
                         /* Active item — show contextual status label & buttons */
                         if (os === 'delivered') {
-                          badgeClass = 'item-active-delivered';
-                          badgeText = 'Delivered';
+                        badgeClass = 'item-active-delivered';
+                        badgeText = 'Delivered';
                         } else if (os === 'shipped') {
-                          badgeClass = 'item-active-progress';
-                          badgeText = 'Shipped';
+                        badgeClass = 'item-active-progress';
+                        badgeText = 'Shipped';
                         } else if (os === 'out_for_delivery') {
-                          badgeClass = 'item-active-progress';
-                          badgeText = 'Out for Delivery';
+                        badgeClass = 'item-active-progress';
+                        badgeText = 'Out for Delivery';
                         } else if (os === 'processing') {
-                          badgeClass = 'item-active-progress';
-                          badgeText = 'Processing';
+                        badgeClass = 'item-active-progress';
+                        badgeText = 'Processing';
                         } else {
-                          badgeClass = 'item-active-progress';
-                          badgeText = 'Order Placed';
+                        badgeClass = 'item-active-progress';
+                        badgeText = 'Order Placed';
                         }
 
                         /* Cancel button: strictly BEFORE shipment only */
-                        if (['pending', 'processing'].includes(os) && !['shipped', 'out_for_delivery', 'delivered', 'cancelled', 'returned'].includes(item.itemStatus)) {
-                          showCancelItemBtn = true;
+                        if (['pending', 'processing'].includes(os) && !['shipped', 'out_for_delivery', 'delivered',
+                        'cancelled', 'returned'].includes(item.itemStatus)) {
+                        showCancelItemBtn = true;
                         }
                         /* Return button: only after delivery */
                         if (os === 'delivered') {
-                          showReturnItemBtn = true;
+                        showReturnItemBtn = true;
                         }
                         }
                         %>
@@ -1683,7 +1701,8 @@
           <p style="font-size:0.82rem;color:#aaa;margin-bottom:18px;">This will cancel all items in your order. This
             action cannot be undone.</p>
           <label class="modal-label">Reason <span
-              style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;">(optional, max 100 characters)</span></label>
+              style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;">(optional, max 100
+              characters)</span></label>
           <textarea class="modal-textarea" id="fullCancelReason" maxlength="100"
             placeholder="Tell us why you're cancelling…"></textarea>
           <div class="modal-actions">
@@ -1713,7 +1732,8 @@
             </div>
           </div>
           <label class="modal-label">Reason <span
-              style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;">(optional, max 100 characters)</span></label>
+              style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;">(optional, max 100
+              characters)</span></label>
           <textarea class="modal-textarea" id="partialCancelReason" maxlength="100"
             placeholder="Tell us why you're cancelling this item…"></textarea>
           <div class="modal-actions">
@@ -2029,7 +2049,7 @@
               description: "Retry Payment",
               order_id: retryData.orderId,
               theme: { color: "#c49a2a" },
-              handler: async function(rpResponse) {
+              handler: async function (rpResponse) {
                 try {
                   const verifyRes = await fetch(`/orders/${orderId}/verify-retry`, {
                     method: 'POST',
@@ -2058,13 +2078,13 @@
                 }
               },
               modal: {
-                ondismiss: function() {
+                ondismiss: function () {
                   fetch('/payment-failed', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
                     body: JSON.stringify({ internalOrderId: orderId })
-                  }).catch(() => {});
+                  }).catch(() => { });
                   btn.disabled = false;
                   btn.innerHTML = originalHtml;
                 }
@@ -2073,13 +2093,13 @@
 
             const rzp = new Razorpay(options);
 
-            rzp.on('payment.failed', function(resp) {
+            rzp.on('payment.failed', function (resp) {
               fetch('/payment-failed', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ internalOrderId: orderId })
-              }).catch(() => {});
+              }).catch(() => { });
               if (typeof window.showToast === 'function') window.showToast(resp.error?.description || 'Payment failed. You can try again.', 'error');
               btn.disabled = false;
               btn.innerHTML = originalHtml;
@@ -2122,10 +2142,10 @@
                 <%= order.paymentMethod.toUpperCase() %>
               </div>
               <div class="invoice-meta-row" style="text-transform: capitalize;"><strong>Order Status:</strong>
-                <%= String(order.orderStatus || 'pending').replace(/_/g, ' ') %>
+                <%= String(order.orderStatus || 'pending' ).replace(/_/g, ' ' ) %>
               </div>
               <div class="invoice-meta-row" style="text-transform: capitalize;"><strong>Payment Status:</strong>
-                <%= (order.orderStatus === 'delivered' || order.paymentStatus === 'paid') ? 'Paid' : order.paymentStatus %>
+                <%= (order.orderStatus==='delivered' || order.paymentStatus==='paid' ) ? 'Paid' : order.paymentStatus %>
               </div>
             </div>
           </div>
@@ -2171,31 +2191,15 @@
             </thead>
             <tbody>
               <% order.items.forEach(item=> { %>
-                <%
-                  const rrStatus = item.returnRequest ? item.returnRequest.status : null;
-                  let _iStatus = 'delivered';
-                  let _iLabel = 'Delivered';
-
-                  if (item.itemStatus === 'cancelled') {
-                    _iStatus = 'cancelled';
-                    _iLabel = 'Cancelled';
-                  } else if (item.itemStatus === 'returned' || rrStatus === 'approved') {
-                    _iStatus = 'returned';
-                    _iLabel = 'Returned';
-                  } else if (item.itemStatus === 'return_requested' || rrStatus === 'pending') {
-                    _iStatus = 'return_requested';
-                    _iLabel = 'Return Requested';
-                  } else if (item.itemStatus === 'return_rejected' || rrStatus === 'rejected') {
-                    _iStatus = 'return_rejected';
-                    _iLabel = 'Return Rejected';
-                  } else if (item.itemStatus && item.itemStatus !== 'active') {
-                    _iStatus = item.itemStatus;
-                    _iLabel = item.itemStatus.replace(/_/g, ' ');
-                  } else if (order.orderStatus) {
-                    _iStatus = order.orderStatus;
-                    _iLabel = order.orderStatus.replace(/_/g, ' ');
-                  }
-                %>
+                <% const rrStatus=item.returnRequest ? item.returnRequest.status : null; let _iStatus='delivered' ; let
+                  _iLabel='Delivered' ; if (item.itemStatus==='cancelled' ) { _iStatus='cancelled' ; _iLabel='Cancelled'
+                  ; } else if (item.itemStatus==='returned' || rrStatus==='approved' ) { _iStatus='returned' ;
+                  _iLabel='Returned' ; } else if (item.itemStatus==='return_requested' || rrStatus==='pending' ) {
+                  _iStatus='return_requested' ; _iLabel='Return Requested' ; } else if
+                  (item.itemStatus==='return_rejected' || rrStatus==='rejected' ) { _iStatus='return_rejected' ;
+                  _iLabel='Return Rejected' ; } else if (item.itemStatus && item.itemStatus !=='active' ) {
+                  _iStatus=item.itemStatus; _iLabel=item.itemStatus.replace(/_/g, ' ' ); } else if (order.orderStatus) {
+                  _iStatus=order.orderStatus; _iLabel=order.orderStatus.replace(/_/g, ' ' ); } %>
                   <tr>
                     <td>
                       <div class="invoice-item-name">

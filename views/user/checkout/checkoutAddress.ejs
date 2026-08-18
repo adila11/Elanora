@@ -1108,7 +1108,8 @@
                 style="<%= index > 0 ? 'margin-top: 16px;' : '' %>" data-id="<%= addr._id %>"
                 data-type="<%= addr.type %>" data-fullname="<%= addr.fullName %>" data-phone="<%= addr.phone %>"
                 data-addressline="<%= addr.addressLine %>" data-city="<%= addr.city %>" data-state="<%= addr.state %>"
-                data-pincode="<%= addr.pincode %>" data-district="<%= addr.district %>" data-isdefault="<%= addr.isDefault %>" >
+                data-pincode="<%= addr.pincode %>" data-district="<%= addr.district %>"
+                data-isdefault="<%= addr.isDefault %>">
                 <div class="address-radio"></div>
                 <div class="address-info">
                   <div class="address-name">
@@ -1117,10 +1118,12 @@
                       </span>
                   </div>
                   <div class="address-detail">
-                    <div class="address-line-text" title="<%= addr.addressLine %>"><%= addr.addressLine %></div>
+                    <div class="address-line-text" title="<%= addr.addressLine %>">
+                      <%= addr.addressLine %>
+                    </div>
                     <%= addr.city %>, <%= addr.state %>, <%= addr.pincode %><br />
-                    India<br />
-                    +91 <%= addr.phone %>
+                          India<br />
+                          +91 <%= addr.phone %>
                   </div>
                 </div>
                 <button class="edit-addr-btn" title="Edit address" aria-label="Edit address">
@@ -1285,9 +1288,10 @@
 
               <div class="form-group full">
                 <label class="form-label" for="fullName">Full Name <span>*</span></label>
-                <input class="form-input" type="text" id="fullName" placeholder="Enter your full name"
-                  maxlength="40" autocomplete="name" />
-                <span class="form-error" id="fullNameErr">Please enter a valid full name (alphabets only, 3 to 40 characters).</span>
+                <input class="form-input" type="text" id="fullName" placeholder="Enter your full name" maxlength="40"
+                  autocomplete="name" />
+                <span class="form-error" id="fullNameErr">Please enter a valid full name (alphabets only, 3 to 40
+                  characters).</span>
               </div>
 
               <div class="form-group full">
@@ -1308,7 +1312,8 @@
               <div class="form-group">
                 <label class="form-label" for="city">City <span>*</span></label>
                 <input class="form-input" type="text" id="city" placeholder="City" maxlength="20">
-                <span class="form-error" id="cityErr">Please enter a valid city (alphabets only, max 20 characters).</span>
+                <span class="form-error" id="cityErr">Please enter a valid city (alphabets only, max 20
+                  characters).</span>
               </div>
 
 
@@ -1603,7 +1608,7 @@
             state: document.getElementById('state').value,
             pincode: document.getElementById('pincode').value.trim(),
             isDefault: isDefault,
-        };
+          };
 
           var isEdit = editId !== null;
           var url = isEdit ? ('/addresses/edit/' + editId) : '/addresses/add';

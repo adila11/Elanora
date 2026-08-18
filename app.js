@@ -8,10 +8,10 @@ import userRouter from './routers/userRoute.js';
 import nocache from 'nocache';
 import flash from 'connect-flash';
 import MongoStore from 'connect-mongo';
-import passport from'./config/passport.js' ;
+import passport from './config/passport.js';
 import cartCountMiddleware from "./middleware/cartCount.js";
 
-dotenv.config(); 
+dotenv.config();
 
 const app = express();
 connectDB();
@@ -62,4 +62,4 @@ app.set("view engine", "ejs");
 app.set("views", [path.join(process.cwd(), "views")]);
 
 app.listen(process.env.PORT, () => {
-}) ;
+});

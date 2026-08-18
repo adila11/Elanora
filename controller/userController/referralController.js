@@ -1,5 +1,5 @@
 import Referral from "../../model/referralSchema.js";
-import {User} from "../../model/userSchema.js";
+import { User } from "../../model/userSchema.js";
 import generateReferralCode from "../../utils/generateReferralCode.js";
 
 export const loadReferralPage = async (req, res) => {
@@ -8,7 +8,7 @@ export const loadReferralPage = async (req, res) => {
 
         const email = req.session.user;
 
-        const user = await User.findOne({email:email});
+        const user = await User.findOne({ email: email });
         if (!user) {
             return res.redirect("/login");
         }
@@ -28,10 +28,10 @@ export const loadReferralPage = async (req, res) => {
             await user.save();
         }
 
-        const userId = user._id ;
+        const userId = user._id;
 
-        const referrals = await Referral.find({userId})
-                .populate("referredUserId");
+        const referrals = await Referral.find({ userId })
+            .populate("referredUserId");
 
         const friendsInvited = referrals.length;
 

@@ -55,7 +55,7 @@ const loadHome = async (req, res) => {
         }
 
         return res.render("user/home", {
-            products:activeProducts,
+            products: activeProducts,
             categories,
             cartLength
         });

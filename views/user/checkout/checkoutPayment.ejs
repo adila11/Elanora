@@ -1310,17 +1310,17 @@
 
         let appliedCoupon = null;
         <% if (typeof couponCode !== 'undefined' && couponCode) { %>
-        appliedCoupon = {
+          appliedCoupon = {
             code: "<%= couponCode %>",
-            discount: <%= discountAmount %>,
-            desc: "<%= discountType === 'percentage' ? discountValue + '% off' : '₹' + discountValue + ' off' %>"
-        };
-        // Ensure UI updates on load
-        window.addEventListener('DOMContentLoaded', () => {
+              discount: <%= discountAmount %>,
+                desc: "<%= discountType === 'percentage' ? discountValue + '% off' : '₹' + discountValue + ' off' %>"
+          };
+          // Ensure UI updates on load
+          window.addEventListener('DOMContentLoaded', () => {
             updateSummary();
-        });
+          });
         <% } %>
-        let selectedMethod = 'cod';
+          let selectedMethod = 'cod';
 
         const rawSub = document.getElementById('subtotalValue').textContent.replace(/[^0-9.]/g, '');
         const BASE_PRICE = parseFloat(rawSub) || 0;
@@ -1502,7 +1502,7 @@
         document.getElementById('removePromo').addEventListener('click', async function () {
           try {
             await fetch('/remove-coupon', { method: 'POST', credentials: 'include' });
-          } catch(e) {  }
+          } catch (e) { }
           appliedCoupon = null;
           updateSummary();
           showToast('Coupon removed.', 'success');

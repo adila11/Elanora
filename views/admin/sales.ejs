@@ -338,6 +338,7 @@
     table.tx-table tbody tr.row-refund {
       background: #fff8f8;
     }
+
     table.tx-table tbody tr.row-refund:hover {
       background: var(--red-bg);
     }
@@ -346,6 +347,7 @@
     table.tx-table tbody tr.row-referral {
       background: #f7f6ff;
     }
+
     table.tx-table tbody tr.row-referral:hover {
       background: #eef0fd;
     }
@@ -412,8 +414,15 @@
       color: #7b3bbd;
     }
 
-    .amount-refund { color: var(--red); font-weight: 600; }
-    .amount-referral { color: #7b3bbd; font-weight: 600; }
+    .amount-refund {
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    .amount-referral {
+      color: #7b3bbd;
+      font-weight: 600;
+    }
 
     .empty-row td {
       text-align: center;
@@ -443,440 +452,478 @@
 
   <%- include('partials/admin/sidebar') %>
 
-  <div class="main">
-    <%- include('partials/admin/header') %>
+    <div class="main">
+      <%- include('partials/admin/header') %>
 
-    <div class="page-content">
+        <div class="page-content">
 
-      <div class="reports-toolbar">
-        <div class="section-title">Sales Reports</div>
-        <div style="display:flex; align-items:center; gap:14px;">
-          <div class="range-tabs" id="rangeTabs">
-            <button class="range-tab" data-range="today">Today</button>
-            <button class="range-tab" data-range="7d">7D</button>
-            <button class="range-tab" data-range="30d">30D</button>
-            <button class="range-tab" data-range="1y">1Y</button>
-            <button class="range-tab" data-range="custom">Custom</button>
-          </div>
-          <div class="download-wrap">
-            <button class="btn-download" id="btnDownloadToggle">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 3v12" />
-                <path d="M7 10l5 5 5-5" />
-                <path d="M5 21h14" />
-              </svg>
-              Download
-            </button>
-            <div class="download-menu" id="downloadMenu">
-              <a href="#" id="downloadExcel">Download Excel</a>
-              <a href="#" id="downloadPdf">Download PDF</a>
+          <div class="reports-toolbar">
+            <div class="section-title">Sales Reports</div>
+            <div style="display:flex; align-items:center; gap:14px;">
+              <div class="range-tabs" id="rangeTabs">
+                <button class="range-tab" data-range="today">Today</button>
+                <button class="range-tab" data-range="7d">7D</button>
+                <button class="range-tab" data-range="30d">30D</button>
+                <button class="range-tab" data-range="1y">1Y</button>
+                <button class="range-tab" data-range="custom">Custom</button>
+              </div>
+              <div class="download-wrap">
+                <button class="btn-download" id="btnDownloadToggle">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3v12" />
+                    <path d="M7 10l5 5 5-5" />
+                    <path d="M5 21h14" />
+                  </svg>
+                  Download
+                </button>
+                <div class="download-menu" id="downloadMenu">
+                  <a href="#" id="downloadExcel">Download Excel</a>
+                  <a href="#" id="downloadPdf">Download PDF</a>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Custom Range Picker -->
-      <div class="custom-range-bar <%= currentRange === 'custom' ? 'visible' : '' %>" id="customRangeBar">
-        <label style="font-size:13px; color:var(--muted);">From</label>
-        <input type="date" id="customStart" value="<%= startDate %>" />
-        <label style="font-size:13px; color:var(--muted);">To</label>
-        <input type="date" id="customEnd" value="<%= endDate %>" />
-        <button id="applyCustomRange" type="button">Apply</button>
-        <button id="clearCustomRange" class="btn-clear-custom" type="button">Clear</button>
-        <span id="dateError" style="font-size:12.5px; color:var(--red); display:none; margin-left:4px;"></span>
-      </div>
+          <!-- Custom Range Picker -->
+          <div class="custom-range-bar <%= currentRange === 'custom' ? 'visible' : '' %>" id="customRangeBar">
+            <label style="font-size:13px; color:var(--muted);">From</label>
+            <input type="date" id="customStart" value="<%= startDate %>" />
+            <label style="font-size:13px; color:var(--muted);">To</label>
+            <input type="date" id="customEnd" value="<%= endDate %>" />
+            <button id="applyCustomRange" type="button">Apply</button>
+            <button id="clearCustomRange" class="btn-clear-custom" type="button">Clear</button>
+            <span id="dateError" style="font-size:12.5px; color:var(--red); display:none; margin-left:4px;"></span>
+          </div>
 
-      <!-- Stat Cards -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total Revenue</div>
-          <div class="stat-value">₹<%= totalRevenue.toLocaleString('en-IN') %></div>
-          <div class="stat-delta <%= revenueDelta >= 0 ? 'up' : 'down' %>">
-            <%= revenueDelta >= 0 ? '+' : '' %><%= revenueDelta %>% from last period
+          <!-- Stat Cards -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Revenue</div>
+              <div class="stat-value">₹<%= totalRevenue.toLocaleString('en-IN') %>
+              </div>
+              <div class="stat-delta <%= revenueDelta >= 0 ? 'up' : 'down' %>">
+                <%= revenueDelta>= 0 ? '+' : '' %><%= revenueDelta %>% from last period
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Total Orders</div>
+              <div class="stat-value">
+                <%= totalOrders.toLocaleString('en-IN') %>
+              </div>
+              <div class="stat-delta <%= ordersDelta >= 0 ? 'up' : 'down' %>">
+                <%= ordersDelta>= 0 ? '+' : '' %><%= ordersDelta %>% from last period
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Total Refunded</div>
+              <div class="stat-value">₹<%= totalRefunded.toLocaleString('en-IN') %>
+              </div>
+              <div class="stat-delta <%= refundDelta <= 0 ? 'up' : 'down' %>">
+                <%= refundDelta>= 0 ? '+' : '' %><%= refundDelta %>% from last period
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Discount / Coupon Deductions</div>
+              <div class="stat-value">₹<%= totalDiscount.toLocaleString('en-IN') %>
+              </div>
+              <div class="stat-delta <%= discountDelta >= 0 ? 'up' : 'down' %>">
+                <%= discountDelta>= 0 ? '+' : '' %><%= discountDelta %>% from last period · ₹<%=
+                      couponDiscount.toLocaleString('en-IN') %> via coupons
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Total Orders</div>
-          <div class="stat-value"><%= totalOrders.toLocaleString('en-IN') %></div>
-          <div class="stat-delta <%= ordersDelta >= 0 ? 'up' : 'down' %>">
-            <%= ordersDelta >= 0 ? '+' : '' %><%= ordersDelta %>% from last period
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Total Refunded</div>
-          <div class="stat-value">₹<%= totalRefunded.toLocaleString('en-IN') %></div>
-          <div class="stat-delta <%= refundDelta <= 0 ? 'up' : 'down' %>">
-            <%= refundDelta >= 0 ? '+' : '' %><%= refundDelta %>% from last period
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Discount / Coupon Deductions</div>
-          <div class="stat-value">₹<%= totalDiscount.toLocaleString('en-IN') %></div>
-          <div class="stat-delta <%= discountDelta >= 0 ? 'up' : 'down' %>">
-            <%= discountDelta >= 0 ? '+' : '' %><%= discountDelta %>% from last period · ₹<%= couponDiscount.toLocaleString('en-IN') %> via coupons
-          </div>
-        </div>
-      </div>
 
-      <!-- Charts -->
-      <div class="charts-grid">
-        <div class="chart-card">
-          <div class="chart-card-title">Revenue Trend</div>
-          <div class="chart-wrap">
-            <canvas id="revenueChart"></canvas>
+          <!-- Charts -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-card-title">Revenue Trend</div>
+              <div class="chart-wrap">
+                <canvas id="revenueChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-card-title">Orders Volume</div>
+              <div class="chart-wrap">
+                <canvas id="ordersChart"></canvas>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-card-title">Orders Volume</div>
-          <div class="chart-wrap">
-            <canvas id="ordersChart"></canvas>
-          </div>
-        </div>
-      </div>
 
-      <!-- Transactions Table -->
-      <div class="table-card">
-        <div class="table-card-header">
-          <div class="table-card-title">Transactions</div>
-          <div style="font-size:12.5px; color:var(--muted);"><%= transactions.length %> entries on this page</div>
-        </div>
-        <div class="table-scroll">
-          <table class="tx-table">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Date</th>
-                <th>Customer</th>
-                <th>Items</th>
-                <th>Order Total</th>
-                <th>Discount</th>
-                <th>Coupon</th>
-                <th>Delivery</th>
-                <th>Final Amount</th>
-                <th>Payment</th>
-                <th>Payment Status</th>
-                <th>Order Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if (transactions.length === 0) { %>
-                <tr class="empty-row">
-                  <td colspan="12">No transactions found for this date range.</td>
-                </tr>
-              <% } else { %>
-                <% transactions.forEach(function(tx) { %>
-                  <tr class="row-<%= tx.txType %>">
-                    <td>
-                      <% if (tx.txType !== 'order') { %>
-                        <span class="type-label <%= tx.txType %>"><%= tx.refundLabel %></span>
-                        <% if (tx.orderId && tx.orderId !== '—') { %>
-                          <span style="font-size:11.5px; color:var(--muted); display:block;">Ref: <%= tx.orderId %></span>
-                        <% } %>
-                      <% } else { %>
-                        <%= tx.orderId %>
-                      <% } %>
-                    </td>
-                    <td><%= new Date(tx.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %></td>
-                    <td><%= tx.customer %></td>
-                    <td><%= tx.itemsCount %></td>
-                    <td>
-                      <% if (tx.txType === 'order') { %>
-                        ₹<%= tx.orderTotal.toLocaleString('en-IN') %>
-                      <% } else { %>
-                        —
-                      <% } %>
-                    </td>
-                    <td>
-                      <% if (tx.txType === 'order') { %>
-                        ₹<%= tx.discount.toLocaleString('en-IN') %>
-                      <% } else { %>
-                        —
-                      <% } %>
-                    </td>
-                    <td><%= tx.coupon %></td>
-                    <td>
-                      <% if (tx.txType === 'order') { %>
-                        ₹<%= tx.deliveryCharge.toLocaleString('en-IN') %>
-                      <% } else { %>
-                        —
-                      <% } %>
-                    </td>
-                    <td class="<%= tx.txType !== 'order' ? 'amount-' + tx.txType : '' %>">
-                      <% if (tx.txType !== 'order') { %>−<% } %>₹<%= tx.finalAmount.toLocaleString('en-IN') %>
-                    </td>
-                    <td style="text-transform:uppercase; font-size:12px;"><%= tx.paymentMethod %></td>
-                    <td><span class="badge <%= tx.paymentStatus %>"><%= tx.paymentStatus %></span></td>
-                    <td><span class="badge <%= tx.orderStatus %>"><%= tx.orderStatus.replace(/_/g, ' ') %></span></td>
+          <!-- Transactions Table -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <div class="table-card-title">Transactions</div>
+              <div style="font-size:12.5px; color:var(--muted);">
+                <%= transactions.length %> entries on this page
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="tx-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Order Total</th>
+                    <th>Discount</th>
+                    <th>Coupon</th>
+                    <th>Delivery</th>
+                    <th>Final Amount</th>
+                    <th>Payment</th>
+                    <th>Payment Status</th>
+                    <th>Order Status</th>
                   </tr>
-                <% }) %>
-              <% } %>
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody>
+                  <% if (transactions.length===0) { %>
+                    <tr class="empty-row">
+                      <td colspan="12">No transactions found for this date range.</td>
+                    </tr>
+                    <% } else { %>
+                      <% transactions.forEach(function(tx) { %>
+                        <tr class="row-<%= tx.txType %>">
+                          <td>
+                            <% if (tx.txType !=='order' ) { %>
+                              <span class="type-label <%= tx.txType %>">
+                                <%= tx.refundLabel %>
+                              </span>
+                              <% if (tx.orderId && tx.orderId !=='—' ) { %>
+                                <span style="font-size:11.5px; color:var(--muted); display:block;">Ref: <%= tx.orderId
+                                    %></span>
+                                <% } %>
+                                  <% } else { %>
+                                    <%= tx.orderId %>
+                                      <% } %>
+                          </td>
+                          <td>
+                            <%= new Date(tx.date).toLocaleDateString('en-IN', { day: '2-digit' , month: 'short' ,
+                              year: 'numeric' }) %>
+                          </td>
+                          <td>
+                            <%= tx.customer %>
+                          </td>
+                          <td>
+                            <%= tx.itemsCount %>
+                          </td>
+                          <td>
+                            <% if (tx.txType==='order' ) { %>
+                              ₹<%= tx.orderTotal.toLocaleString('en-IN') %>
+                                <% } else { %>
+                                  —
+                                  <% } %>
+                          </td>
+                          <td>
+                            <% if (tx.txType==='order' ) { %>
+                              ₹<%= tx.discount.toLocaleString('en-IN') %>
+                                <% } else { %>
+                                  —
+                                  <% } %>
+                          </td>
+                          <td>
+                            <%= tx.coupon %>
+                          </td>
+                          <td>
+                            <% if (tx.txType==='order' ) { %>
+                              ₹<%= tx.deliveryCharge.toLocaleString('en-IN') %>
+                                <% } else { %>
+                                  —
+                                  <% } %>
+                          </td>
+                          <td class="<%= tx.txType !== 'order' ? 'amount-' + tx.txType : '' %>">
+                            <% if (tx.txType !=='order' ) { %>−<% } %>₹<%= tx.finalAmount.toLocaleString('en-IN') %>
+                          </td>
+                          <td style="text-transform:uppercase; font-size:12px;">
+                            <%= tx.paymentMethod %>
+                          </td>
+                          <td><span class="badge <%= tx.paymentStatus %>">
+                              <%= tx.paymentStatus %>
+                            </span></td>
+                          <td><span class="badge <%= tx.orderStatus %>">
+                              <%= tx.orderStatus.replace(/_/g, ' ' ) %>
+                            </span></td>
+                        </tr>
+                        <% }) %>
+                          <% } %>
+                </tbody>
+              </table>
+            </div>
 
-        <!-- Pagination -->
-        <% if (totalPages > 1) { %>
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border);">
-            <div style="font-size: 13.5px; color: var(--muted);">
-              Showing page <strong><%= currentPage %></strong> of <strong><%= totalPages %></strong>
-            </div>
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <%
-                const getPageUrl = (p) => {
-                  const params = new URLSearchParams();
-                  if (currentRange) params.set('range', currentRange);
-                  if (startDate) params.set('startDate', startDate);
-                  if (endDate) params.set('endDate', endDate);
-                  params.set('page', p);
-                  return '?' + params.toString();
-                };
-              %>
-              <% if (currentPage > 1) { %>
-                <a href="<%= getPageUrl(currentPage - 1) %>" class="range-tab" style="text-decoration: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; display: inline-block;">Previous</a>
+            <!-- Pagination -->
+            <% if (totalPages> 1) { %>
+              <div
+                style="display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border);">
+                <div style="font-size: 13.5px; color: var(--muted);">
+                  Showing page <strong>
+                    <%= currentPage %>
+                  </strong> of <strong>
+                    <%= totalPages %>
+                  </strong>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <% const getPageUrl=(p)=> {
+                    const params = new URLSearchParams();
+                    if (currentRange) params.set('range', currentRange);
+                    if (startDate) params.set('startDate', startDate);
+                    if (endDate) params.set('endDate', endDate);
+                    params.set('page', p);
+                    return '?' + params.toString();
+                    };
+                    %>
+                    <% if (currentPage> 1) { %>
+                      <a href="<%= getPageUrl(currentPage - 1) %>" class="range-tab"
+                        style="text-decoration: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; display: inline-block;">Previous</a>
+                      <% } %>
+                        <% for (let i=1; i <=totalPages; i++) { %>
+                          <% if (i===currentPage) { %>
+                            <span class="range-tab active"
+                              style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--accent); display: inline-block;">
+                              <%= i %>
+                            </span>
+                            <% } else { %>
+                              <a href="<%= getPageUrl(i) %>" class="range-tab"
+                                style="text-decoration: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; display: inline-block;">
+                                <%= i %>
+                              </a>
+                              <% } %>
+                                <% } %>
+                                  <% if (currentPage < totalPages) { %>
+                                    <a href="<%= getPageUrl(currentPage + 1) %>" class="range-tab"
+                                      style="text-decoration: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; display: inline-block;">Next</a>
+                                    <% } %>
+                </div>
+              </div>
               <% } %>
-              <% for (let i = 1; i <= totalPages; i++) { %>
-                <% if (i === currentPage) { %>
-                  <span class="range-tab active" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--accent); display: inline-block;"><%= i %></span>
-                <% } else { %>
-                  <a href="<%= getPageUrl(i) %>" class="range-tab" style="text-decoration: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; display: inline-block;"><%= i %></a>
-                <% } %>
-              <% } %>
-              <% if (currentPage < totalPages) { %>
-                <a href="<%= getPageUrl(currentPage + 1) %>" class="range-tab" style="text-decoration: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; display: inline-block;">Next</a>
-              <% } %>
-            </div>
           </div>
-        <% } %>
-      </div>
 
+        </div>
     </div>
-  </div>
 
-  <script>
-    const chartLabels = <%- JSON.stringify(chartLabels) %>;
-    const revenueSeries = <%- JSON.stringify(revenueSeries) %>;
-    const ordersSeries = <%- JSON.stringify(ordersSeries) %>;
-    const currentRange = <%- JSON.stringify(currentRange) %>;
+    <script>
+      const chartLabels = <% - JSON.stringify(chartLabels) %>;
+      const revenueSeries = <% - JSON.stringify(revenueSeries) %>;
+      const ordersSeries = <% - JSON.stringify(ordersSeries) %>;
+      const currentRange = <% - JSON.stringify(currentRange) %>;
 
-    // Revenue Trend (area / line)
-    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-    const revenueGradient = revenueCtx.createLinearGradient(0, 0, 0, 280);
-    revenueGradient.addColorStop(0, 'rgba(200, 169, 110, 0.35)');
-    revenueGradient.addColorStop(1, 'rgba(200, 169, 110, 0)');
+      // Revenue Trend (area / line)
+      const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+      const revenueGradient = revenueCtx.createLinearGradient(0, 0, 0, 280);
+      revenueGradient.addColorStop(0, 'rgba(200, 169, 110, 0.35)');
+      revenueGradient.addColorStop(1, 'rgba(200, 169, 110, 0)');
 
-    new Chart(revenueCtx, {
-      type: 'line',
-      data: {
-        labels: chartLabels,
-        datasets: [{
-          label: 'Revenue',
-          data: revenueSeries,
-          borderColor: '#c8a96e',
-          backgroundColor: revenueGradient,
-          borderWidth: 2.5,
-          fill: true,
-          tension: 0.45,
-          pointRadius: 0,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: '#c8a96e',
-          pointHoverBorderColor: '#fff',
-          pointHoverBorderWidth: 2
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: '#1a1a18',
-            padding: 10,
-            cornerRadius: 8,
-            displayColors: false,
-            callbacks: {
-              label: (ctx) => '₹' + ctx.parsed.y.toLocaleString('en-IN')
-            }
-          }
+      new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+          labels: chartLabels,
+          datasets: [{
+            label: 'Revenue',
+            data: revenueSeries,
+            borderColor: '#c8a96e',
+            backgroundColor: revenueGradient,
+            borderWidth: 2.5,
+            fill: true,
+            tension: 0.45,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: '#c8a96e',
+            pointHoverBorderColor: '#fff',
+            pointHoverBorderWidth: 2
+          }]
         },
-        scales: {
-          x: {
-            grid: { display: false },
-            border: { display: false },
-            ticks: { color: '#7a7870', font: { family: 'DM Sans', size: 12 } }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1a1a18',
+              padding: 10,
+              cornerRadius: 8,
+              displayColors: false,
+              callbacks: {
+                label: (ctx) => '₹' + ctx.parsed.y.toLocaleString('en-IN')
+              }
+            }
           },
-          y: {
-            grid: { color: '#e8e6e0', drawTicks: false },
-            border: { display: false },
-            ticks: {
-              color: '#7a7870',
-              font: { family: 'DM Sans', size: 12 },
-              callback: (v) => '₹' + (v >= 1000 ? (v / 1000) + 'k' : v)
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: { color: '#7a7870', font: { family: 'DM Sans', size: 12 } }
+            },
+            y: {
+              grid: { color: '#e8e6e0', drawTicks: false },
+              border: { display: false },
+              ticks: {
+                color: '#7a7870',
+                font: { family: 'DM Sans', size: 12 },
+                callback: (v) => '₹' + (v >= 1000 ? (v / 1000) + 'k' : v)
+              }
             }
           }
         }
-      }
-    });
+      });
 
-    // Orders Volume (bar)
-    const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-    new Chart(ordersCtx, {
-      type: 'bar',
-      data: {
-        labels: chartLabels,
-        datasets: [{
-          label: 'Orders',
-          data: ordersSeries,
-          backgroundColor: '#5b52e8',
-          borderRadius: 6,
-          maxBarThickness: 42
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: '#1a1a18',
-            padding: 10,
-            cornerRadius: 8,
-            displayColors: false
-          }
+      // Orders Volume (bar)
+      const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+      new Chart(ordersCtx, {
+        type: 'bar',
+        data: {
+          labels: chartLabels,
+          datasets: [{
+            label: 'Orders',
+            data: ordersSeries,
+            backgroundColor: '#5b52e8',
+            borderRadius: 6,
+            maxBarThickness: 42
+          }]
         },
-        scales: {
-          x: {
-            grid: { display: false },
-            border: { display: false },
-            ticks: { color: '#7a7870', font: { family: 'DM Sans', size: 12 } }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1a1a18',
+              padding: 10,
+              cornerRadius: 8,
+              displayColors: false
+            }
           },
-          y: {
-            grid: { color: '#e8e6e0', drawTicks: false },
-            border: { display: false },
-            ticks: { color: '#7a7870', font: { family: 'DM Sans', size: 12 } }
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: { color: '#7a7870', font: { family: 'DM Sans', size: 12 } }
+            },
+            y: {
+              grid: { color: '#e8e6e0', drawTicks: false },
+              border: { display: false },
+              ticks: { color: '#7a7870', font: { family: 'DM Sans', size: 12 } }
+            }
           }
         }
+      });
+
+      // ── Date helpers ──────────────────────────────────────────────────────
+      function todayStr() {
+        const d = new Date();
+        return d.toISOString().slice(0, 10);
       }
-    });
 
-    // ── Date helpers ──────────────────────────────────────────────────────
-    function todayStr() {
-      const d = new Date();
-      return d.toISOString().slice(0, 10);
-    }
+      const customStart = document.getElementById('customStart');
+      const customEnd = document.getElementById('customEnd');
+      const dateError = document.getElementById('dateError');
 
-    const customStart = document.getElementById('customStart');
-    const customEnd   = document.getElementById('customEnd');
-    const dateError   = document.getElementById('dateError');
+      customStart.max = todayStr();
+      customEnd.max = todayStr();
 
-    customStart.max = todayStr();
-    customEnd.max   = todayStr();
+      customStart.addEventListener('change', function () {
+        customEnd.min = this.value || '';
+        if (customEnd.value && customEnd.value < this.value) {
+          customEnd.value = '';
+        }
+        dateError.style.display = 'none';
+      });
 
-    customStart.addEventListener('change', function () {
-      customEnd.min = this.value || '';
-      if (customEnd.value && customEnd.value < this.value) {
+      customEnd.addEventListener('change', function () {
+        dateError.style.display = 'none';
+      });
+
+      // ── Range Tabs ────────────────────────────────────────────────────────
+      const rangeTabs = document.getElementById('rangeTabs');
+      const customRangeBar = document.getElementById('customRangeBar');
+
+      document.querySelectorAll('.range-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.range === currentRange);
+      });
+
+      rangeTabs.addEventListener('click', function (e) {
+        const btn = e.target.closest('.range-tab');
+        if (!btn) return;
+        document.querySelectorAll('.range-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        const range = btn.dataset.range;
+
+        if (range === 'custom') {
+          customRangeBar.classList.add('visible');
+          return;
+        }
+        customRangeBar.classList.remove('visible');
+        location.href = `?range=${range}`;
+      });
+
+      // ── Apply Custom Range ────────────────────────────────────────────────
+      document.getElementById('applyCustomRange').addEventListener('click', function () {
+        const from = customStart.value;
+        const to = customEnd.value;
+        const today = todayStr();
+
+        dateError.style.display = 'none';
+
+        if (!from || !to) {
+          dateError.textContent = 'Please select both From and To dates.';
+          dateError.style.display = 'inline';
+          return;
+        }
+        if (from > today) {
+          dateError.textContent = 'From date cannot be in the future.';
+          dateError.style.display = 'inline';
+          return;
+        }
+        if (to > today) {
+          dateError.textContent = 'To date cannot be in the future.';
+          dateError.style.display = 'inline';
+          return;
+        }
+        if (to < from) {
+          dateError.textContent = '"To" date must be on or after the "From" date.';
+          dateError.style.display = 'inline';
+          return;
+        }
+
+        location.href = `?range=custom&startDate=${from}&endDate=${to}`;
+      });
+
+      document.getElementById('clearCustomRange').addEventListener('click', function () {
+        customStart.value = '';
         customEnd.value = '';
-      }
-      dateError.style.display = 'none';
-    });
+        customEnd.min = '';
+        dateError.style.display = 'none';
 
-    customEnd.addEventListener('change', function () {
-      dateError.style.display = 'none';
-    });
+        if (currentRange === 'custom') {
+          location.href = '/admin/sales-reports';
+        }
+      });
 
-    // ── Range Tabs ────────────────────────────────────────────────────────
-    const rangeTabs    = document.getElementById('rangeTabs');
-    const customRangeBar = document.getElementById('customRangeBar');
-
-    document.querySelectorAll('.range-tab').forEach(t => {
-      t.classList.toggle('active', t.dataset.range === currentRange);
-    });
-
-    rangeTabs.addEventListener('click', function (e) {
-      const btn = e.target.closest('.range-tab');
-      if (!btn) return;
-      document.querySelectorAll('.range-tab').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-      const range = btn.dataset.range;
-
-      if (range === 'custom') {
-        customRangeBar.classList.add('visible');
-        return;
-      }
-      customRangeBar.classList.remove('visible');
-      location.href = `?range=${range}`;
-    });
-
-    // ── Apply Custom Range ────────────────────────────────────────────────
-    document.getElementById('applyCustomRange').addEventListener('click', function () {
-      const from  = customStart.value;
-      const to    = customEnd.value;
-      const today = todayStr();
-
-      dateError.style.display = 'none';
-
-      if (!from || !to) {
-        dateError.textContent = 'Please select both From and To dates.';
-        dateError.style.display = 'inline';
-        return;
-      }
-      if (from > today) {
-        dateError.textContent = 'From date cannot be in the future.';
-        dateError.style.display = 'inline';
-        return;
-      }
-      if (to > today) {
-        dateError.textContent = 'To date cannot be in the future.';
-        dateError.style.display = 'inline';
-        return;
-      }
-      if (to < from) {
-        dateError.textContent = '"To" date must be on or after the "From" date.';
-        dateError.style.display = 'inline';
-        return;
+      if (customStart.value) {
+        customEnd.min = customStart.value;
       }
 
-      location.href = `?range=custom&startDate=${from}&endDate=${to}`;
-    });
+      // Download Dropdown
+      const btnDownloadToggle = document.getElementById('btnDownloadToggle');
+      const downloadMenu = document.getElementById('downloadMenu');
 
-    document.getElementById('clearCustomRange').addEventListener('click', function () {
-      customStart.value = '';
-      customEnd.value = '';
-      customEnd.min = '';
-      dateError.style.display = 'none';
+      btnDownloadToggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        downloadMenu.classList.toggle('open');
+      });
+      document.addEventListener('click', () => downloadMenu.classList.remove('open'));
 
-      if (currentRange === 'custom') {
-        location.href = '/admin/sales-reports';
+      function currentQueryString() {
+        return new URLSearchParams(location.search).toString();
       }
-    });
 
-    if (customStart.value) {
-      customEnd.min = customStart.value;
-    }
+      document.getElementById('downloadExcel').addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = `/admin/sales-reports/export?${currentQueryString()}`;
+      });
 
-    // Download Dropdown
-    const btnDownloadToggle = document.getElementById('btnDownloadToggle');
-    const downloadMenu = document.getElementById('downloadMenu');
-
-    btnDownloadToggle.addEventListener('click', function (e) {
-      e.stopPropagation();
-      downloadMenu.classList.toggle('open');
-    });
-    document.addEventListener('click', () => downloadMenu.classList.remove('open'));
-
-    function currentQueryString() {
-      return new URLSearchParams(location.search).toString();
-    }
-
-    document.getElementById('downloadExcel').addEventListener('click', function (e) {
-      e.preventDefault();
-      window.location.href = `/admin/sales-reports/export?${currentQueryString()}`;
-    });
-
-    document.getElementById('downloadPdf').addEventListener('click', function (e) {
-      e.preventDefault();
-      window.location.href = `/admin/sales-reports/export/pdf?${currentQueryString()}`;
-    });
-  </script>
+      document.getElementById('downloadPdf').addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = `/admin/sales-reports/export/pdf?${currentQueryString()}`;
+      });
+    </script>
 </body>
 
 </html>

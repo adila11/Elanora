@@ -58,9 +58,18 @@
             transition: color 0.2s;
         }
 
-        .breadcrumb a:hover { color: var(--gold); }
-        .breadcrumb span { color: var(--text-dark); }
-        .breadcrumb svg { width: 12px; height: 12px; }
+        .breadcrumb a:hover {
+            color: var(--gold);
+        }
+
+        .breadcrumb span {
+            color: var(--text-dark);
+        }
+
+        .breadcrumb svg {
+            width: 12px;
+            height: 12px;
+        }
 
         /* PRODUCT SECTION */
         .product-section {
@@ -113,13 +122,15 @@
             height: 120px;
             pointer-events: none;
             display: none;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
             background-repeat: no-repeat;
             z-index: 10;
             transform: translate(-50%, -50%);
         }
 
-        .main-img-wrap:hover .magnifier-glass { display: block; }
+        .main-img-wrap:hover .magnifier-glass {
+            display: block;
+        }
 
         .wishlist-main {
             position: absolute;
@@ -139,9 +150,17 @@
             z-index: 11;
         }
 
-        .wishlist-main:hover { color: #e05050; }
-        .wishlist-main.liked { color: #e05050; }
-        .wishlist-main.liked svg { fill: #e05050; }
+        .wishlist-main:hover {
+            color: #e05050;
+        }
+
+        .wishlist-main.liked {
+            color: #e05050;
+        }
+
+        .wishlist-main.liked svg {
+            fill: #e05050;
+        }
 
         .thumbnails {
             display: flex;
@@ -160,7 +179,9 @@
             flex-shrink: 0;
         }
 
-        .thumb.active { border-color: var(--gold); }
+        .thumb.active {
+            border-color: var(--gold);
+        }
 
         .thumb img {
             width: 100%;
@@ -199,7 +220,9 @@
             transition: color 0.2s;
         }
 
-        .share-btn:hover { color: var(--gold); }
+        .share-btn:hover {
+            color: var(--gold);
+        }
 
         .rating-row {
             display: flex;
@@ -208,11 +231,24 @@
             margin-bottom: 14px;
         }
 
-        .stars { display: flex; gap: 2px; }
-        .star { color: var(--gold); font-size: 0.9rem; }
-        .star.empty { color: var(--border); }
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
 
-        .rating-text { font-size: 0.82rem; color: var(--text-light); }
+        .star {
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+
+        .star.empty {
+            color: var(--border);
+        }
+
+        .rating-text {
+            font-size: 0.82rem;
+            color: var(--text-light);
+        }
 
         .price {
             font-family: 'Cormorant Garamond', serif;
@@ -267,7 +303,10 @@
             transform: scale(1.1);
         }
 
-        .color-name { font-size: 0.75rem; color: var(--text-light); }
+        .color-name {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
 
         .qty-label {
             font-size: 0.78rem;
@@ -299,10 +338,23 @@
             justify-content: center;
         }
 
-        .qty-btn:first-child { border-radius: 8px 0 0 8px; }
-        .qty-btn:last-child { border-radius: 0 8px 8px 0; }
-        .qty-btn:hover { background: var(--gold-pale); color: var(--gold); }
-        .qty-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .qty-btn:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .qty-btn:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .qty-btn:hover {
+            background: var(--gold-pale);
+            color: var(--gold);
+        }
+
+        .qty-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
 
         .qty-display {
             width: 48px;
@@ -357,12 +409,20 @@
             transition: background 0.2s, transform 0.15s;
         }
 
-        .btn-cart:hover { background: var(--gold-light); transform: scale(1.01); }
+        .btn-cart:hover {
+            background: var(--gold-light);
+            transform: scale(1.01);
+        }
+
         .btn-cart.in-cart {
             background: var(--text-mid);
             cursor: default;
         }
-        .btn-cart.in-cart:hover { background: var(--text-mid); transform: none; }
+
+        .btn-cart.in-cart:hover {
+            background: var(--text-mid);
+            transform: none;
+        }
 
         .btn-wish {
             flex: 1;
@@ -383,13 +443,19 @@
             transition: all 0.2s;
         }
 
-        .btn-wish:hover { background: var(--gold-pale); }
+        .btn-wish:hover {
+            background: var(--gold-pale);
+        }
+
         .btn-wish.in-wishlist {
             background: #fde8e8;
             color: #c0392b;
             border-color: #c0392b;
         }
-        .btn-wish.in-wishlist:hover { background: #fbd5d5; }
+
+        .btn-wish.in-wishlist:hover {
+            background: #fbd5d5;
+        }
 
         .perks {
             display: flex;
@@ -406,7 +472,11 @@
             padding: 12px;
         }
 
-        .perk svg { flex-shrink: 0; color: var(--gold); margin-top: 2px; }
+        .perk svg {
+            flex-shrink: 0;
+            color: var(--gold);
+            margin-top: 2px;
+        }
 
         .perk-text strong {
             display: block;
@@ -415,7 +485,10 @@
             color: var(--text-dark);
         }
 
-        .perk-text span { font-size: 0.75rem; color: var(--text-light); }
+        .perk-text span {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
 
         /* TABS */
         .tabs-section {
@@ -451,10 +524,17 @@
             font-weight: 500;
         }
 
-        .tab-btn:hover { color: var(--text-dark); }
+        .tab-btn:hover {
+            color: var(--text-dark);
+        }
 
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
 
         .product-details-content h3 {
             font-family: 'Cormorant Garamond', serif;
@@ -471,7 +551,10 @@
             margin-bottom: 14px;
         }
 
-        .feature-list { list-style: none; margin-top: 8px; }
+        .feature-list {
+            list-style: none;
+            margin-top: 8px;
+        }
 
         .feature-list li {
             display: flex;
@@ -483,11 +566,21 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .feature-list li:last-child { border-bottom: none; }
-        .feature-list li svg { color: var(--gold); flex-shrink: 0; }
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li svg {
+            color: var(--gold);
+            flex-shrink: 0;
+        }
 
         /* Reviews */
-        .reviews-grid { display: flex; flex-direction: column; gap: 18px; }
+        .reviews-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
 
         .review-card {
             background: var(--card-bg);
@@ -516,9 +609,22 @@
             font-weight: 500;
         }
 
-        .reviewer-name { font-size: 0.9rem; font-weight: 500; color: var(--text-dark); }
-        .reviewer-date { font-size: 0.75rem; color: var(--text-light); }
-        .review-text { font-size: 0.85rem; color: var(--text-mid); line-height: 1.7; }
+        .reviewer-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .reviewer-date {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .review-text {
+            font-size: 0.85rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+        }
 
         /* YOU MAY ALSO LIKE */
         .related-section {
@@ -527,7 +633,10 @@
             padding: 0 24px;
         }
 
-        .section-heading { text-align: center; margin-bottom: 6px; }
+        .section-heading {
+            text-align: center;
+            margin-bottom: 6px;
+        }
 
         .section-heading h2 {
             font-family: 'Cormorant Garamond', serif;
@@ -576,7 +685,9 @@
             transition: transform 0.4s;
         }
 
-        .related-card:hover .r-img-wrap img { transform: scale(1.05); }
+        .related-card:hover .r-img-wrap img {
+            transform: scale(1.05);
+        }
 
         .r-wish {
             position: absolute;
@@ -595,9 +706,14 @@
             transition: color 0.2s;
         }
 
-        .r-wish:hover { color: #e05050; }
+        .r-wish:hover {
+            color: #e05050;
+        }
 
-        .r-body { padding: 12px 14px 14px; text-align: center; }
+        .r-body {
+            padding: 12px 14px 14px;
+            text-align: center;
+        }
 
         .r-category {
             font-size: 0.7rem;
@@ -640,7 +756,6 @@
             border: 1px solid #f5c6cb;
             color: #721c24;
         }
-
     </style>
 </head>
 
@@ -648,604 +763,664 @@
 
     <%- include('partials/user/header') %>
 
-    <!-- BREADCRUMB -->
-    <div class="breadcrumb">
-        <a href="/">Home</a>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="9 18 15 12 9 6" />
-        </svg>
-        <a href="/shop">Shop</a>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="9 18 15 12 9 6" />
-        </svg>
-        <span><%= product.name %></span>
-    </div>
+        <!-- BREADCRUMB -->
+        <div class="breadcrumb">
+            <a href="/">Home</a>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6" />
+            </svg>
+            <a href="/shop">Shop</a>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6" />
+            </svg>
+            <span>
+                <%= product.name %>
+            </span>
+        </div>
 
-    <!-- PRODUCT DETAIL -->
-    <section class="product-section">
-        <div class="product-card-wrap">
+        <!-- PRODUCT DETAIL -->
+        <section class="product-section">
+            <div class="product-card-wrap">
 
-            <%
-                const firstVariant = product.variants.length > 0 ? product.variants[0] : null;
-                const initialImages = firstVariant ? firstVariant.images.map(img => img.url) : ['https://via.placeholder.com/600'];
-                const initialImg = initialImages[0];
-                const variantsJson = JSON.stringify(product.variants.map(v => ({
+                <% const firstVariant=product.variants.length> 0 ? product.variants[0] : null;
+                    const initialImages = firstVariant ? firstVariant.images.map(img => img.url) :
+                    ['https://via.placeholder.com/600'];
+                    const initialImg = initialImages[0];
+                    const variantsJson = JSON.stringify(product.variants.map(v => ({
                     id: v._id.toString(),
                     color: v.color,
                     stock: v.stock,
                     images: v.images.map(i => i.url)
-                })));
-            %>
+                    })));
+                    %>
 
-            <!-- LEFT: Images -->
-            <div class="img-col">
-                <div class="main-img-wrap" id="mainImgWrap">
-                    <img id="mainImg" src="<%= initialImg %>" alt="<%= product.name %>" />
-                    <div class="magnifier-glass" id="magnifierGlass"></div>
-                    <button class="wishlist-main" id="wishBtnImg" title="Toggle Wishlist" onclick="toggleWishlist(event)">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="thumbnails" id="thumbnailsRow">
-                    <% initialImages.forEach((imgUrl, idx) => { %>
-                        <div class="thumb <%= idx === 0 ? 'active' : '' %>" onclick="switchImg(this, '<%= imgUrl %>')">
-                            <img src="<%= imgUrl %>" alt="" />
-                        </div>
-                    <% }) %>
-                </div>
-            </div>
-
-            <!-- RIGHT: Info -->
-            <div class="info-col">
-                <div class="rating-row">
-                    <div class="stars">
-                        <span class="star">★</span><span class="star">★</span><span class="star">★</span>
-                        <span class="star">★</span><span class="star empty">★</span>
-                    </div>
-                    <span class="rating-text">New Arrival</span>
-                </div>
-
-                <div class="info-top">
-                    <h1 class="product-name"><%= product.name %></h1>
-                    <button class="share-btn" title="Share">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="price-section" style="display:flex; align-items:baseline; gap:12px; margin-bottom:12px;">
-                    <span class="price" style="font-size:24px; font-weight:600;">₹<%= (product.discountPrice || product.basePrice).toLocaleString('en-IN') %></span>
-                    <% if (product.discountPrice && product.discountPrice < product.basePrice) { %>
-                        <span class="original-price" style="text-decoration:line-through; color:var(--muted); font-size:16px;">₹<%= product.basePrice.toLocaleString('en-IN') %></span>
-                        <% if (typeof offerActive !== 'undefined' && offerActive && typeof offerName !== 'undefined' && offerName) { %>
-                            <span class="offer-tag" style="background:var(--accent-light); color:#8a6a2f; font-size:12px; font-weight:600; padding:4px 8px; border-radius:12px; margin-left:4px;">
-                                <%= offerName %> (<%= offerDiscountValue %><%= offerDiscountType === 'flat' ? '₹' : '%' %> OFF)
-                            </span>
-                        <% } %>
-                    <% } %>
-                </div>
-
-                <p class="description"><%= product.description %></p>
-
-                <div class="option-label">Available Colors</div>
-                <div class="color-options" id="colorOptions">
-                    <% product.variants.forEach((v, idx) => { %>
-                        <div class="color-opt <%= idx === 0 ? 'active' : '' %>"
-                            onclick="selectVariant('<%= v._id %>', '<%= v.color %>', this)">
-                            <div class="color-swatch"
-                                style="background: <%= v.color.toLowerCase() === 'gold' ? '#c9a84c' : (v.color.toLowerCase() === 'silver' ? '#a8a8a8' : v.color) %>">
-                            </div>
-                            <span class="color-name"><%= v.color %></span>
-                        </div>
-                    <% }) %>
-                </div>
-
-                <div class="qty-label">Quantity</div>
-                <div class="qty-row">
-                    <button class="qty-btn" id="qtyMinus" onclick="changeQty(-1)">−</button>
-                    <div class="qty-display" id="qtyDisplay">1</div>
-                    <button class="qty-btn" id="qtyPlus" onclick="changeQty(1)">+</button>
-                </div>
-                <p class="qty-note">Maximum 10 items per order</p>
-
-                <!-- STOCK BADGE -->
-                <div id="stockBarWrap" class="stock-bar-wrap" style="display: none;">
-                    <span id="stockBarText"></span>
-                </div>
-
-                <div class="divider-line"></div>
-
-                <div class="cta-row">
-                    <button class="btn-cart" id="addCartBtn" onclick="addToCart()">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                        </svg>
-                        Add to Cart
-                    </button>
-                    <button class="btn-wish" id="wishlistBtn" onclick="toggleWishlist()">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                        </svg>
-                        Add to Wishlist
-                    </button>
-                </div>
-
-                <div class="perks">
-                    <div class="perk">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <rect x="1" y="3" width="15" height="13" rx="2" />
-                            <path d="M16 8h4l3 5v3h-7V8z" />
-                            <circle cx="5.5" cy="18.5" r="2.5" />
-                            <circle cx="18.5" cy="18.5" r="2.5" />
-                        </svg>
-                        <div class="perk-text">
-                            <strong>Free Shipping</strong>
-                            <span>On orders over ₹150</span>
-                        </div>
-                    </div>
-                    <div class="perk">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                        </svg>
-                        <div class="perk-text">
-                            <strong>Lifetime Warranty</strong>
-                            <span>Authenticity guaranteed</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- TABS -->
-    <section class="tabs-section">
-        <div class="tab-nav">
-            <button class="tab-btn active" onclick="switchTab(this,'desc')">Description</button>
-            <button class="tab-btn" onclick="switchTab(this,'reviews')">Reviews (24)</button>
-        </div>
-
-        <div id="desc" class="tab-panel active">
-            <div class="product-details-content">
-                <h3>Product Details</h3>
-                <p>A modern blend of elegance and minimalism, the Gold Geometric Ring features a sleek, structured
-                    design inspired by contemporary geometry. Crafted with a polished gold finish, this ring adds a
-                    refined touch to any outfit.</p>
-                <p>Its clean lines and timeless style make it perfect for both everyday wear and special occasions.
-                    Lightweight, stylish, and effortlessly chic — it's a must-have piece for those who appreciate modern luxury.</p>
-                <ul class="feature-list">
-                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>Brilliant-cut diamond</li>
-                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>18K white gold setting</li>
-                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>Conflict-free certified</li>
-                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>Comes with authentication certificate</li>
-                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>Complimentary ring sizing</li>
-                </ul>
-            </div>
-        </div>
-
-        <div id="reviews" class="tab-panel">
-            <div class="reviews-grid">
-                <div class="review-card">
-                    <div class="reviewer">
-                        <div class="avatar">P</div>
-                        <div>
-                            <div class="reviewer-name">Priya S.</div>
-                            <div class="reviewer-date">March 2026</div>
-                        </div>
-                        <div class="stars" style="margin-left:auto"><span class="star" style="font-size:0.8rem">★★★★★</span></div>
-                    </div>
-                    <p class="review-text">Absolutely stunning ring! The geometric design is so unique and the gold finish looks exactly like the photos. Gets so many compliments.</p>
-                </div>
-                <div class="review-card">
-                    <div class="reviewer">
-                        <div class="avatar">A</div>
-                        <div>
-                            <div class="reviewer-name">Ananya R.</div>
-                            <div class="reviewer-date">February 2026</div>
-                        </div>
-                        <div class="stars" style="margin-left:auto"><span class="star" style="font-size:0.8rem">★★★★★</span></div>
-                    </div>
-                    <p class="review-text">Beautifully crafted and arrived in lovely packaging. Perfect for both casual and formal wear. Very happy with this purchase!</p>
-                </div>
-                <div class="review-card">
-                    <div class="reviewer">
-                        <div class="avatar">M</div>
-                        <div>
-                            <div class="reviewer-name">Meera K.</div>
-                            <div class="reviewer-date">January 2026</div>
-                        </div>
-                        <div class="stars" style="margin-left:auto"><span class="star" style="font-size:0.8rem">★★★★<span style="color:var(--border)">★</span></span></div>
-                    </div>
-                    <p class="review-text">Great quality ring, slightly larger than expected but fits well. The design is elegant and modern. Would recommend!</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- YOU MAY ALSO LIKE -->
-    <section class="related-section">
-        <div class="section-heading">
-            <h2>You May Also Like</h2>
-        </div>
-        <p class="section-sub">Handpicked pieces that complement your style</p>
-        <div class="related-grid">
-            <% if (relatedProducts && relatedProducts.length > 0) { %>
-                <% relatedProducts.forEach(rp => { %>
-                    <% const rFirstVariant = rp.variants && rp.variants.length > 0 ? rp.variants[0] : null;
-                       const rImageUrl = rFirstVariant && rFirstVariant.images && rFirstVariant.images.length > 0
-                           ? rFirstVariant.images[0].url
-                           : 'https://via.placeholder.com/400'; %>
-                    <div class="related-card" onclick="location.href='/product/<%= rp._id %>'" style="cursor:pointer">
-                        <div class="r-img-wrap">
-                            <img src="<%= rImageUrl %>" alt="<%= rp.name %>" />
-                            <button class="r-wish" onclick="event.stopPropagation();">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    <!-- LEFT: Images -->
+                    <div class="img-col">
+                        <div class="main-img-wrap" id="mainImgWrap">
+                            <img id="mainImg" src="<%= initialImg %>" alt="<%= product.name %>" />
+                            <div class="magnifier-glass" id="magnifierGlass"></div>
+                            <button class="wishlist-main" id="wishBtnImg" title="Toggle Wishlist"
+                                onclick="toggleWishlist(event)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                                 </svg>
                             </button>
                         </div>
-                        <div class="r-body">
-                            <div class="r-category"><%= rp.category?.name || 'Uncategorized' %></div>
-                            <div class="r-name"><%= rp.name %></div>
-                            <div class="r-price">₹<%= (rp.discountPrice || rp.basePrice).toLocaleString('en-IN') %></div>
+                        <div class="thumbnails" id="thumbnailsRow">
+                            <% initialImages.forEach((imgUrl, idx)=> { %>
+                                <div class="thumb <%= idx === 0 ? 'active' : '' %>"
+                                    onclick="switchImg(this, '<%= imgUrl %>')">
+                                    <img src="<%= imgUrl %>" alt="" />
+                                </div>
+                                <% }) %>
                         </div>
                     </div>
-                <% }) %>
-            <% } else { %>
-                <p style="grid-column: 1 / -1; text-align: center; color: var(--text-light);">Explore our other collections for more inspirations.</p>
-            <% } %>
-        </div>
-    </section>
 
-    <%- include('partials/user/footer') %>
+                    <!-- RIGHT: Info -->
+                    <div class="info-col">
+                        <div class="rating-row">
+                            <div class="stars">
+                                <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                                <span class="star">★</span><span class="star empty">★</span>
+                            </div>
+                            <span class="rating-text">New Arrival</span>
+                        </div>
 
-    <%- include('partials/user/modal') %>
+                        <div class="info-top">
+                            <h1 class="product-name">
+                                <%= product.name %>
+                            </h1>
+                            <button class="share-btn" title="Share">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="18" cy="5" r="3" />
+                                    <circle cx="6" cy="12" r="3" />
+                                    <circle cx="18" cy="19" r="3" />
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                                </svg>
+                            </button>
+                        </div>
 
-    <script>
-        // DATA
-        const allVariants = <%- variantsJson %>;
-        const productId   = '<%= product._id %>';
+                        <div class="price-section"
+                            style="display:flex; align-items:baseline; gap:12px; margin-bottom:12px;">
+                            <span class="price" style="font-size:24px; font-weight:600;">₹<%= (product.discountPrice ||
+                                    product.basePrice).toLocaleString('en-IN') %></span>
+                            <% if (product.discountPrice && product.discountPrice < product.basePrice) { %>
+                                <span class="original-price"
+                                    style="text-decoration:line-through; color:var(--muted); font-size:16px;">₹<%=
+                                        product.basePrice.toLocaleString('en-IN') %></span>
+                                <% if (typeof offerActive !=='undefined' && offerActive && typeof offerName
+                                    !=='undefined' && offerName) { %>
+                                    <span class="offer-tag"
+                                        style="background:var(--accent-light); color:#8a6a2f; font-size:12px; font-weight:600; padding:4px 8px; border-radius:12px; margin-left:4px;">
+                                        <%= offerName %> (<%= offerDiscountValue %>
+                                                <%= offerDiscountType==='flat' ? '₹' : '%' %> OFF)
+                                    </span>
+                                    <% } %>
+                                        <% } %>
+                        </div>
 
-        let selectedVariantId = allVariants.length > 0 ? allVariants[0].id : '';
-        let qty = 1;
-        const QTY_MAX = 10;
+                        <p class="description">
+                            <%= product.description %>
+                        </p>
 
-        // Track State
-        let inCart     = false;
-        let inWishlist = <%= typeof inWishlist !== 'undefined' ? inWishlist : false %>;
+                        <div class="option-label">Available Colors</div>
+                        <div class="color-options" id="colorOptions">
+                            <% product.variants.forEach((v, idx)=> { %>
+                                <div class="color-opt <%= idx === 0 ? 'active' : '' %>"
+                                    onclick="selectVariant('<%= v._id %>', '<%= v.color %>', this)">
+                                    <div class="color-swatch"
+                                        style="background: <%= v.color.toLowerCase() === 'gold' ? '#c9a84c' : (v.color.toLowerCase() === 'silver' ? '#a8a8a8' : v.color) %>">
+                                    </div>
+                                    <span class="color-name">
+                                        <%= v.color %>
+                                    </span>
+                                </div>
+                                <% }) %>
+                        </div>
 
-        // Stock UI Handler
-        function updateStockUI(variant) {
-            const stockWrap = document.getElementById('stockBarWrap');
-            const stockText = document.getElementById('stockBarText');
-            const addCartBtn = document.getElementById('addCartBtn');
+                        <div class="qty-label">Quantity</div>
+                        <div class="qty-row">
+                            <button class="qty-btn" id="qtyMinus" onclick="changeQty(-1)">−</button>
+                            <div class="qty-display" id="qtyDisplay">1</div>
+                            <button class="qty-btn" id="qtyPlus" onclick="changeQty(1)">+</button>
+                        </div>
+                        <p class="qty-note">Maximum 10 items per order</p>
 
-            if (!variant || !stockWrap) return;
+                        <!-- STOCK BADGE -->
+                        <div id="stockBarWrap" class="stock-bar-wrap" style="display: none;">
+                            <span id="stockBarText"></span>
+                        </div>
 
-            const stock = Number(variant.stock || 0);
+                        <div class="divider-line"></div>
 
-            if (stock <= 0) {
-                stockWrap.style.display = 'inline-flex';
-                stockWrap.className = 'stock-bar-wrap out-of-stock';
-                stockText.innerHTML = `Out of Stock`;
-                if (addCartBtn) {
-                    addCartBtn.disabled = true;
-                    addCartBtn.style.opacity = '0.5';
-                    addCartBtn.style.cursor = 'not-allowed';
-                }
-            } else if (stock < 5) {
-                stockWrap.style.display = 'inline-flex';
-                stockWrap.className = 'stock-bar-wrap limited';
-                stockText.innerHTML = `Only ${stock} left`;
-                if (addCartBtn) {
-                    addCartBtn.disabled = false;
-                    addCartBtn.style.opacity = '1';
-                    addCartBtn.style.cursor = 'pointer';
-                }
-            } else {
-                stockWrap.style.display = 'none';
-                if (addCartBtn) {
-                    addCartBtn.disabled = false;
-                    addCartBtn.style.opacity = '1';
-                    addCartBtn.style.cursor = 'pointer';
-                }
-            }
-        }
+                        <div class="cta-row">
+                            <button class="btn-cart" id="addCartBtn" onclick="addToCart()">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="9" cy="21" r="1" />
+                                    <circle cx="20" cy="21" r="1" />
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                                </svg>
+                                Add to Cart
+                            </button>
+                            <button class="btn-wish" id="wishlistBtn" onclick="toggleWishlist()">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                </svg>
+                                Add to Wishlist
+                            </button>
+                        </div>
 
-        // Initialize UI State On Page Load
-        document.addEventListener('DOMContentLoaded', () => {
-            if (inWishlist) updateWishlistUI();
-            if (allVariants.length > 0) updateStockUI(allVariants[0]);
-        });
+                        <div class="perks">
+                            <div class="perk">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.8">
+                                    <rect x="1" y="3" width="15" height="13" rx="2" />
+                                    <path d="M16 8h4l3 5v3h-7V8z" />
+                                    <circle cx="5.5" cy="18.5" r="2.5" />
+                                    <circle cx="18.5" cy="18.5" r="2.5" />
+                                </svg>
+                                <div class="perk-text">
+                                    <strong>Free Shipping</strong>
+                                    <span>On orders over ₹150</span>
+                                </div>
+                            </div>
+                            <div class="perk">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.8">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                </svg>
+                                <div class="perk-text">
+                                    <strong>Lifetime Warranty</strong>
+                                    <span>Authenticity guaranteed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        // VARIANT SELECTION & IMAGE GALLERY
-        function selectVariant(id, color, el) {
-            selectedVariantId = id;
-            document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
-            el.classList.add('active');
+            </div>
+        </section>
 
-            // Show Only This Variant's Images
-            const variant = allVariants.find(v => v.id === id);
-            if (!variant) return;
-            const images = variant.images.length > 0 ? variant.images : ['https://via.placeholder.com/600'];
+        <!-- TABS -->
+        <section class="tabs-section">
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab(this,'desc')">Description</button>
+                <button class="tab-btn" onclick="switchTab(this,'reviews')">Reviews (24)</button>
+            </div>
 
-            // Update Main Image
-            document.getElementById('mainImg').src = images[0];
-            updateMagnifierSrc(images[0]);
+            <div id="desc" class="tab-panel active">
+                <div class="product-details-content">
+                    <h3>Product Details</h3>
+                    <p>A modern blend of elegance and minimalism, the Gold Geometric Ring features a sleek, structured
+                        design inspired by contemporary geometry. Crafted with a polished gold finish, this ring adds a
+                        refined touch to any outfit.</p>
+                    <p>Its clean lines and timeless style make it perfect for both everyday wear and special occasions.
+                        Lightweight, stylish, and effortlessly chic — it's a must-have piece for those who appreciate
+                        modern luxury.</p>
+                    <ul class="feature-list">
+                        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>Brilliant-cut diamond</li>
+                        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>18K white gold setting</li>
+                        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>Conflict-free certified</li>
+                        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>Comes with authentication certificate</li>
+                        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>Complimentary ring sizing</li>
+                    </ul>
+                </div>
+            </div>
 
-            // Rebuild Thumbnails
-            const row = document.getElementById('thumbnailsRow');
-            row.innerHTML = '';
-            images.forEach((url, idx) => {
-                const div = document.createElement('div');
-                div.className = 'thumb' + (idx === 0 ? ' active' : '');
-                div.onclick = function() { switchImg(this, url); };
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = '';
-                div.appendChild(img);
-                row.appendChild(div);
-            });
+            <div id="reviews" class="tab-panel">
+                <div class="reviews-grid">
+                    <div class="review-card">
+                        <div class="reviewer">
+                            <div class="avatar">P</div>
+                            <div>
+                                <div class="reviewer-name">Priya S.</div>
+                                <div class="reviewer-date">March 2026</div>
+                            </div>
+                            <div class="stars" style="margin-left:auto"><span class="star"
+                                    style="font-size:0.8rem">★★★★★</span></div>
+                        </div>
+                        <p class="review-text">Absolutely stunning ring! The geometric design is so unique and the gold
+                            finish looks exactly like the photos. Gets so many compliments.</p>
+                    </div>
+                    <div class="review-card">
+                        <div class="reviewer">
+                            <div class="avatar">A</div>
+                            <div>
+                                <div class="reviewer-name">Ananya R.</div>
+                                <div class="reviewer-date">February 2026</div>
+                            </div>
+                            <div class="stars" style="margin-left:auto"><span class="star"
+                                    style="font-size:0.8rem">★★★★★</span></div>
+                        </div>
+                        <p class="review-text">Beautifully crafted and arrived in lovely packaging. Perfect for both
+                            casual and formal wear. Very happy with this purchase!</p>
+                    </div>
+                    <div class="review-card">
+                        <div class="reviewer">
+                            <div class="avatar">M</div>
+                            <div>
+                                <div class="reviewer-name">Meera K.</div>
+                                <div class="reviewer-date">January 2026</div>
+                            </div>
+                            <div class="stars" style="margin-left:auto"><span class="star"
+                                    style="font-size:0.8rem">★★★★<span style="color:var(--border)">★</span></span></div>
+                        </div>
+                        <p class="review-text">Great quality ring, slightly larger than expected but fits well. The
+                            design is elegant and modern. Would recommend!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            // Reset Cart/wishlist Button States For New Variant
-            inCart     = false;
-            inWishlist = false;
-            resetCartBtn();
-            resetWishBtn();
-            updateStockUI(variant);
-        }
+        <!-- YOU MAY ALSO LIKE -->
+        <section class="related-section">
+            <div class="section-heading">
+                <h2>You May Also Like</h2>
+            </div>
+            <p class="section-sub">Handpicked pieces that complement your style</p>
+            <div class="related-grid">
+                <% if (relatedProducts && relatedProducts.length> 0) { %>
+                    <% relatedProducts.forEach(rp=> { %>
+                        <% const rFirstVariant=rp.variants && rp.variants.length> 0 ? rp.variants[0] : null;
+                            const rImageUrl = rFirstVariant && rFirstVariant.images && rFirstVariant.images.length > 0
+                            ? rFirstVariant.images[0].url
+                            : 'https://via.placeholder.com/400'; %>
+                            <div class="related-card" onclick="location.href='/product/<%= rp._id %>'"
+                                style="cursor:pointer">
+                                <div class="r-img-wrap">
+                                    <img src="<%= rImageUrl %>" alt="<%= rp.name %>" />
+                                    <button class="r-wish" onclick="event.stopPropagation();">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="r-body">
+                                    <div class="r-category">
+                                        <%= rp.category?.name || 'Uncategorized' %>
+                                    </div>
+                                    <div class="r-name">
+                                        <%= rp.name %>
+                                    </div>
+                                    <div class="r-price">₹<%= (rp.discountPrice || rp.basePrice).toLocaleString('en-IN')
+                                            %>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                                <% } else { %>
+                                    <p style="grid-column: 1 / -1; text-align: center; color: var(--text-light);">
+                                        Explore our other collections for more inspirations.</p>
+                                    <% } %>
+            </div>
+        </section>
 
-        function switchImg(thumb, src) {
-            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-            thumb.classList.add('active');
-            document.getElementById('mainImg').src = src;
-            updateMagnifierSrc(src);
-        }
+        <%- include('partials/user/footer') %>
 
-        // MAGNIFIER
-        const ZOOM = 2.5;
-        let currentImgSrc = document.getElementById('mainImg').src;
+            <%- include('partials/user/modal') %>
 
-        function updateMagnifierSrc(src) { currentImgSrc = src; }
+                <script>
+                    // DATA
+                    const allVariants = <% - variantsJson %>;
+                    const productId = '<%= product._id %>';
 
-        document.getElementById('mainImgWrap').addEventListener('mousemove', function(e) {
-            const wrap  = this;
-            const glass = document.getElementById('magnifierGlass');
-            const rect  = wrap.getBoundingClientRect();
-            const x     = e.clientX - rect.left;
-            const y     = e.clientY - rect.top;
-            const gW    = glass.offsetWidth;
-            const gH    = glass.offsetHeight;
+                    let selectedVariantId = allVariants.length > 0 ? allVariants[0].id : '';
+                    let qty = 1;
+                    const QTY_MAX = 10;
 
-            // Clamp
-            const cx = Math.max(gW/2, Math.min(x, rect.width  - gW/2));
-            const cy = Math.max(gH/2, Math.min(y, rect.height - gH/2));
+                    // Track State
+                    let inCart = false;
+                    let inWishlist = <%= typeof inWishlist !== 'undefined' ? inWishlist : false %>;
 
-            glass.style.left = cx + 'px';
-            glass.style.top  = cy + 'px';
+                    // Stock UI Handler
+                    function updateStockUI(variant) {
+                        const stockWrap = document.getElementById('stockBarWrap');
+                        const stockText = document.getElementById('stockBarText');
+                        const addCartBtn = document.getElementById('addCartBtn');
 
-            // Background Position
-            const bgX = -(cx * ZOOM - gW / 2);
-            const bgY = -(cy * ZOOM - gH / 2);
+                        if (!variant || !stockWrap) return;
 
-            glass.style.backgroundImage    = `url('${currentImgSrc}')`;
-            glass.style.backgroundSize     = `${rect.width * ZOOM}px ${rect.height * ZOOM}px`;
-            glass.style.backgroundPosition = `${bgX}px ${bgY}px`;
-        });
+                        const stock = Number(variant.stock || 0);
 
-        document.getElementById('mainImgWrap').addEventListener('mouseleave', function() {
-            document.getElementById('magnifierGlass').style.display = 'none';
-        });
-
-        document.getElementById('mainImgWrap').addEventListener('mouseenter', function() {
-            document.getElementById('magnifierGlass').style.display = 'block';
-        });
-
-        // QUANTITY
-        function changeQty(d) {
-            const next = qty + d;
-            if (next < 1) return;
-            if (next > QTY_MAX) {
-                showModal('info',
-                    'Quantity Limit Reached',
-                    `You can add a maximum of <strong>${QTY_MAX} items</strong> per order.`,
-                    [{ label: 'Got it', primary: true, action: 'closeModal()' }]
-                );
-                return;
-            }
-            qty = next;
-            document.getElementById('qtyDisplay').textContent = qty;
-            document.getElementById('qtyMinus').disabled = qty <= 1;
-            document.getElementById('qtyPlus').disabled  = qty >= QTY_MAX;
-        }
-
-        // ADD TO CART
-        async function addToCart() {
-            if (inCart) {
-                showModal('info',
-                    'Already in Cart',
-                    'This item is already in your cart. Visit your cart to update the quantity or proceed to checkout.',
-                    [
-                        { label: 'View Cart',     primary: true,  action: "location.href='/cart'" },
-                        { label: 'Continue Shopping', primary: false, action: 'closeModal()' }
-                    ]
-                );
-                return;
-            }
-
-            try {
-                const res  = await fetch('/add-to-cart', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ productId, variantId: selectedVariantId, qty })
-                });
-
-                if (res.status === 401) {
-                    showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your cart.', [
-                        { label: 'Cancel', primary: false, action: 'closeModal()' },
-                        { label: 'Login', primary: true, action: "window.location.href='/login'" }
-                    ]);
-                    return;
-                }
-
-                const data = await res.json();
-
-                if (data.success) {
-                    inCart = true;
-                    const btn = document.getElementById('addCartBtn');
-                    btn.classList.add('in-cart');
-                    btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Already in Cart`;
-
-                    if (data.cartCount !== undefined && typeof window.updateCartBadge === 'function') {
-                        window.updateCartBadge(data.cartCount);
+                        if (stock <= 0) {
+                            stockWrap.style.display = 'inline-flex';
+                            stockWrap.className = 'stock-bar-wrap out-of-stock';
+                            stockText.innerHTML = `Out of Stock`;
+                            if (addCartBtn) {
+                                addCartBtn.disabled = true;
+                                addCartBtn.style.opacity = '0.5';
+                                addCartBtn.style.cursor = 'not-allowed';
+                            }
+                        } else if (stock < 5) {
+                            stockWrap.style.display = 'inline-flex';
+                            stockWrap.className = 'stock-bar-wrap limited';
+                            stockText.innerHTML = `Only ${stock} left`;
+                            if (addCartBtn) {
+                                addCartBtn.disabled = false;
+                                addCartBtn.style.opacity = '1';
+                                addCartBtn.style.cursor = 'pointer';
+                            }
+                        } else {
+                            stockWrap.style.display = 'none';
+                            if (addCartBtn) {
+                                addCartBtn.disabled = false;
+                                addCartBtn.style.opacity = '1';
+                                addCartBtn.style.cursor = 'pointer';
+                            }
+                        }
                     }
 
-                    if (inWishlist) {
+                    // Initialize UI State On Page Load
+                    document.addEventListener('DOMContentLoaded', () => {
+                        if (inWishlist) updateWishlistUI();
+                        if (allVariants.length > 0) updateStockUI(allVariants[0]);
+                    });
+
+                    // VARIANT SELECTION & IMAGE GALLERY
+                    function selectVariant(id, color, el) {
+                        selectedVariantId = id;
+                        document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
+                        el.classList.add('active');
+
+                        // Show Only This Variant's Images
+                        const variant = allVariants.find(v => v.id === id);
+                        if (!variant) return;
+                        const images = variant.images.length > 0 ? variant.images : ['https://via.placeholder.com/600'];
+
+                        // Update Main Image
+                        document.getElementById('mainImg').src = images[0];
+                        updateMagnifierSrc(images[0]);
+
+                        // Rebuild Thumbnails
+                        const row = document.getElementById('thumbnailsRow');
+                        row.innerHTML = '';
+                        images.forEach((url, idx) => {
+                            const div = document.createElement('div');
+                            div.className = 'thumb' + (idx === 0 ? ' active' : '');
+                            div.onclick = function () { switchImg(this, url); };
+                            const img = document.createElement('img');
+                            img.src = url;
+                            img.alt = '';
+                            div.appendChild(img);
+                            row.appendChild(div);
+                        });
+
+                        // Reset Cart/wishlist Button States For New Variant
+                        inCart = false;
                         inWishlist = false;
-                        updateWishlistUI();
+                        resetCartBtn();
+                        resetWishBtn();
+                        updateStockUI(variant);
                     }
 
-                    showModal('success',
-                        'Added to Cart!',
-                        'The item has been added to your cart successfully.',
-                        [
-                            { label: 'View Cart',      primary: true,  action: "location.href='/cart'" },
-                            { label: 'Continue Shopping', primary: false, action: 'closeModal()' }
-                        ]
-                    );
-                } else if (data.notLoggedIn || data.message === 'Please login first') {
-                    showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your cart.', [
-                        { label: 'Cancel', primary: false, action: 'closeModal()' },
-                        { label: 'Login', primary: true, action: "window.location.href='/login'" }
-                    ]);
-                } else {
-                    const msg = data.message || 'Unable to add item to cart. Please try again.';
-                    showModal('error', 'Could Not Add to Cart', msg,
-                        [{ label: 'Close', primary: true, action: 'closeModal()' }]
-                    );
-                }
-            } catch (err) {
-                showModal('error', 'Something Went Wrong',
-                    'A network error occurred. Please check your connection and try again.',
-                    [{ label: 'Close', primary: true, action: 'closeModal()' }]
-                );
-            }
-        }
-
-        // TOGGLE WISHLIST
-        async function toggleWishlist(e) {
-            if (e) e.stopPropagation();
-
-            const endpoint = inWishlist ? '/remove-from-wishlist' : '/add-to-wishlist';
-
-            try {
-                const res  = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ productId, variantId: selectedVariantId })
-                });
-
-                if (res.status === 401) {
-                    showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your wishlist.', [
-                        { label: 'Cancel', primary: false, action: 'closeModal()' },
-                        { label: 'Login', primary: true, action: "window.location.href='/login'" }
-                    ]);
-                    return;
-                }
-
-                const data = await res.json();
-
-                if (data.success) {
-                    inWishlist = !inWishlist;
-                    updateWishlistUI();
-
-                    if (inWishlist) {
-                        showModal('success',
-                            'Added to Wishlist',
-                            'This item has been saved to your wishlist.',
-                            [
-                                { label: 'View Wishlist',     primary: true,  action: "location.href='/wishlist'" },
-                                { label: 'Continue Shopping', primary: false, action: 'closeModal()' }
-                            ]
-                        );
-                    } else {
-                        showModal('info',
-                            'Removed from Wishlist',
-                            'This item has been removed from your wishlist.',
-                            [{ label: 'OK', primary: true, action: 'closeModal()' }]
-                        );
+                    function switchImg(thumb, src) {
+                        document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                        thumb.classList.add('active');
+                        document.getElementById('mainImg').src = src;
+                        updateMagnifierSrc(src);
                     }
-                } else if (data.notLoggedIn || data.message === 'Please login first') {
-                    showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your wishlist.', [
-                        { label: 'Cancel', primary: false, action: 'closeModal()' },
-                        { label: 'Login', primary: true, action: "window.location.href='/login'" }
-                    ]);
-                } else {
-                    const msg = data.message || 'Unable to update wishlist. Please try again.';
-                    showModal('error', 'Wishlist Error', msg,
-                        [{ label: 'Close', primary: true, action: 'closeModal()' }]
-                    );
-                }
-            } catch (err) {
-                showModal('error', 'Something Went Wrong',
-                    'A network error occurred. Please try again.',
-                    [{ label: 'Close', primary: true, action: 'closeModal()' }]
-                );
-            }
-        }
 
-        function updateWishlistUI() {
-            const btn    = document.getElementById('wishlistBtn');
-            const imgBtn = document.getElementById('wishBtnImg');
-            const heartSVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="${inWishlist ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
-            const heartSVGSm = `<svg width="16" height="16" viewBox="0 0 24 24" fill="${inWishlist ? '#e05050' : 'none'}" stroke="${inWishlist ? '#e05050' : 'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+                    // MAGNIFIER
+                    const ZOOM = 2.5;
+                    let currentImgSrc = document.getElementById('mainImg').src;
 
-            if (inWishlist) {
-                btn.classList.add('in-wishlist');
-                btn.innerHTML = heartSVG + ' Remove from Wishlist';
-                imgBtn.classList.add('liked');
-            } else {
-                btn.classList.remove('in-wishlist');
-                btn.innerHTML = heartSVG + ' Add to Wishlist';
-                imgBtn.classList.remove('liked');
-            }
-            imgBtn.innerHTML = heartSVGSm;
-        }
+                    function updateMagnifierSrc(src) { currentImgSrc = src; }
 
-        function resetCartBtn() {
-            const btn = document.getElementById('addCartBtn');
-            btn.classList.remove('in-cart');
-            btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Add to Cart`;
-        }
+                    document.getElementById('mainImgWrap').addEventListener('mousemove', function (e) {
+                        const wrap = this;
+                        const glass = document.getElementById('magnifierGlass');
+                        const rect = wrap.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        const gW = glass.offsetWidth;
+                        const gH = glass.offsetHeight;
 
-        function resetWishBtn() {
-            const btn    = document.getElementById('wishlistBtn');
-            const imgBtn = document.getElementById('wishBtnImg');
-            btn.classList.remove('in-wishlist');
-            btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Add to Wishlist`;
-            imgBtn.classList.remove('liked');
-            imgBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
-        }
+                        // Clamp
+                        const cx = Math.max(gW / 2, Math.min(x, rect.width - gW / 2));
+                        const cy = Math.max(gH / 2, Math.min(y, rect.height - gH / 2));
+
+                        glass.style.left = cx + 'px';
+                        glass.style.top = cy + 'px';
+
+                        // Background Position
+                        const bgX = -(cx * ZOOM - gW / 2);
+                        const bgY = -(cy * ZOOM - gH / 2);
+
+                        glass.style.backgroundImage = `url('${currentImgSrc}')`;
+                        glass.style.backgroundSize = `${rect.width * ZOOM}px ${rect.height * ZOOM}px`;
+                        glass.style.backgroundPosition = `${bgX}px ${bgY}px`;
+                    });
+
+                    document.getElementById('mainImgWrap').addEventListener('mouseleave', function () {
+                        document.getElementById('magnifierGlass').style.display = 'none';
+                    });
+
+                    document.getElementById('mainImgWrap').addEventListener('mouseenter', function () {
+                        document.getElementById('magnifierGlass').style.display = 'block';
+                    });
+
+                    // QUANTITY
+                    function changeQty(d) {
+                        const next = qty + d;
+                        if (next < 1) return;
+                        if (next > QTY_MAX) {
+                            showModal('info',
+                                'Quantity Limit Reached',
+                                `You can add a maximum of <strong>${QTY_MAX} items</strong> per order.`,
+                                [{ label: 'Got it', primary: true, action: 'closeModal()' }]
+                            );
+                            return;
+                        }
+                        qty = next;
+                        document.getElementById('qtyDisplay').textContent = qty;
+                        document.getElementById('qtyMinus').disabled = qty <= 1;
+                        document.getElementById('qtyPlus').disabled = qty >= QTY_MAX;
+                    }
+
+                    // ADD TO CART
+                    async function addToCart() {
+                        if (inCart) {
+                            showModal('info',
+                                'Already in Cart',
+                                'This item is already in your cart. Visit your cart to update the quantity or proceed to checkout.',
+                                [
+                                    { label: 'View Cart', primary: true, action: "location.href='/cart'" },
+                                    { label: 'Continue Shopping', primary: false, action: 'closeModal()' }
+                                ]
+                            );
+                            return;
+                        }
+
+                        try {
+                            const res = await fetch('/add-to-cart', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ productId, variantId: selectedVariantId, qty })
+                            });
+
+                            if (res.status === 401) {
+                                showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your cart.', [
+                                    { label: 'Cancel', primary: false, action: 'closeModal()' },
+                                    { label: 'Login', primary: true, action: "window.location.href='/login'" }
+                                ]);
+                                return;
+                            }
+
+                            const data = await res.json();
+
+                            if (data.success) {
+                                inCart = true;
+                                const btn = document.getElementById('addCartBtn');
+                                btn.classList.add('in-cart');
+                                btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Already in Cart`;
+
+                                if (data.cartCount !== undefined && typeof window.updateCartBadge === 'function') {
+                                    window.updateCartBadge(data.cartCount);
+                                }
+
+                                if (inWishlist) {
+                                    inWishlist = false;
+                                    updateWishlistUI();
+                                }
+
+                                showModal('success',
+                                    'Added to Cart!',
+                                    'The item has been added to your cart successfully.',
+                                    [
+                                        { label: 'View Cart', primary: true, action: "location.href='/cart'" },
+                                        { label: 'Continue Shopping', primary: false, action: 'closeModal()' }
+                                    ]
+                                );
+                            } else if (data.notLoggedIn || data.message === 'Please login first') {
+                                showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your cart.', [
+                                    { label: 'Cancel', primary: false, action: 'closeModal()' },
+                                    { label: 'Login', primary: true, action: "window.location.href='/login'" }
+                                ]);
+                            } else {
+                                const msg = data.message || 'Unable to add item to cart. Please try again.';
+                                showModal('error', 'Could Not Add to Cart', msg,
+                                    [{ label: 'Close', primary: true, action: 'closeModal()' }]
+                                );
+                            }
+                        } catch (err) {
+                            showModal('error', 'Something Went Wrong',
+                                'A network error occurred. Please check your connection and try again.',
+                                [{ label: 'Close', primary: true, action: 'closeModal()' }]
+                            );
+                        }
+                    }
+
+                    // TOGGLE WISHLIST
+                    async function toggleWishlist(e) {
+                        if (e) e.stopPropagation();
+
+                        const endpoint = inWishlist ? '/remove-from-wishlist' : '/add-to-wishlist';
+
+                        try {
+                            const res = await fetch(endpoint, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ productId, variantId: selectedVariantId })
+                            });
+
+                            if (res.status === 401) {
+                                showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your wishlist.', [
+                                    { label: 'Cancel', primary: false, action: 'closeModal()' },
+                                    { label: 'Login', primary: true, action: "window.location.href='/login'" }
+                                ]);
+                                return;
+                            }
+
+                            const data = await res.json();
+
+                            if (data.success) {
+                                inWishlist = !inWishlist;
+                                updateWishlistUI();
+
+                                if (inWishlist) {
+                                    showModal('success',
+                                        'Added to Wishlist',
+                                        'This item has been saved to your wishlist.',
+                                        [
+                                            { label: 'View Wishlist', primary: true, action: "location.href='/wishlist'" },
+                                            { label: 'Continue Shopping', primary: false, action: 'closeModal()' }
+                                        ]
+                                    );
+                                } else {
+                                    showModal('info',
+                                        'Removed from Wishlist',
+                                        'This item has been removed from your wishlist.',
+                                        [{ label: 'OK', primary: true, action: 'closeModal()' }]
+                                    );
+                                }
+                            } else if (data.notLoggedIn || data.message === 'Please login first') {
+                                showModal('info', 'Login Required', 'You are not logged in. Please log in to add items to your wishlist.', [
+                                    { label: 'Cancel', primary: false, action: 'closeModal()' },
+                                    { label: 'Login', primary: true, action: "window.location.href='/login'" }
+                                ]);
+                            } else {
+                                const msg = data.message || 'Unable to update wishlist. Please try again.';
+                                showModal('error', 'Wishlist Error', msg,
+                                    [{ label: 'Close', primary: true, action: 'closeModal()' }]
+                                );
+                            }
+                        } catch (err) {
+                            showModal('error', 'Something Went Wrong',
+                                'A network error occurred. Please try again.',
+                                [{ label: 'Close', primary: true, action: 'closeModal()' }]
+                            );
+                        }
+                    }
+
+                    function updateWishlistUI() {
+                        const btn = document.getElementById('wishlistBtn');
+                        const imgBtn = document.getElementById('wishBtnImg');
+                        const heartSVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="${inWishlist ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+                        const heartSVGSm = `<svg width="16" height="16" viewBox="0 0 24 24" fill="${inWishlist ? '#e05050' : 'none'}" stroke="${inWishlist ? '#e05050' : 'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+
+                        if (inWishlist) {
+                            btn.classList.add('in-wishlist');
+                            btn.innerHTML = heartSVG + ' Remove from Wishlist';
+                            imgBtn.classList.add('liked');
+                        } else {
+                            btn.classList.remove('in-wishlist');
+                            btn.innerHTML = heartSVG + ' Add to Wishlist';
+                            imgBtn.classList.remove('liked');
+                        }
+                        imgBtn.innerHTML = heartSVGSm;
+                    }
+
+                    function resetCartBtn() {
+                        const btn = document.getElementById('addCartBtn');
+                        btn.classList.remove('in-cart');
+                        btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Add to Cart`;
+                    }
+
+                    function resetWishBtn() {
+                        const btn = document.getElementById('wishlistBtn');
+                        const imgBtn = document.getElementById('wishBtnImg');
+                        btn.classList.remove('in-wishlist');
+                        btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Add to Wishlist`;
+                        imgBtn.classList.remove('liked');
+                        imgBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+                    }
 
 
 
-        // TABS
-        function switchTab(btn, id) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById(id).classList.add('active');
-        }
+                    // TABS
+                    function switchTab(btn, id) {
+                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                        btn.classList.add('active');
+                        document.getElementById(id).classList.add('active');
+                    }
 
-        // Init Magnifier Src
-        updateMagnifierSrc(document.getElementById('mainImg').src);
-    </script>
+                    // Init Magnifier Src
+                    updateMagnifierSrc(document.getElementById('mainImg').src);
+                </script>
 </body>
 
 </html>

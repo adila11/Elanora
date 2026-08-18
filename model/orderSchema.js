@@ -63,7 +63,7 @@ const orderItemSchema = new mongoose.Schema({
             'returned',
             'return_rejected'
         ],
-      default: 'pending'
+        default: 'pending'
     },
 
     cancelReason: String,

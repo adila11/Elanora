@@ -10,8 +10,8 @@ export const loadUserManagement = async (req, res) => {
             page = 1,
             limit = 10,
             search = '',
-            status = 'all',        
-            sort = 'newest' 
+            status = 'all',
+            sort = 'newest'
         } = req.query;
 
         const pageNum = parseInt(page);
@@ -46,7 +46,7 @@ export const loadUserManagement = async (req, res) => {
             .sort(sortOption)
             .skip((pageNum - 1) * limitNum)
             .limit(limitNum)
-            .lean(); 
+            .lean();
 
         res.render("admin/customers", {
             title: "Customers",
@@ -75,9 +75,9 @@ export const blockUser = async (req, res) => {
         const { isBlocked } = req.body;
 
         if (!id || typeof isBlocked !== 'boolean') {
-            return res.status(400).json({ 
-                success: false, 
-                message: "Missing id or isBlocked (must be boolean)" 
+            return res.status(400).json({
+                success: false,
+                message: "Missing id or isBlocked (must be boolean)"
             });
         }
 

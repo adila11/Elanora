@@ -18,16 +18,16 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: false, 
+      required: false,
     },
 
     googleId: {
-      type: String, 
+      type: String,
     },
 
     isGoogleUser: {
       type: Boolean,
-      default: false, 
+      default: false,
     },
 
     phone: {
@@ -88,7 +88,7 @@ const userOtpSchema = new mongoose.Schema({
   },
 });
 
-userOtpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 300 }); 
+userOtpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 300 });
 
 const User = mongoose.model("User", userSchema);
 const UserOtp = mongoose.model("UserOtp", userOtpSchema);

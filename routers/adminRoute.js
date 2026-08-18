@@ -8,7 +8,6 @@ import { loadCategories, addCategory, editCategory, toggleCategory, deleteCatego
 import { getOrdersPage, updateOrderStatus, getOrderDetail } from "../controller/adminController/orderController.js"
 import { approveReturn, getReturnsPage, rejectReturn } from "../controller/adminController/returnController.js"
 import { createCoupon, deleteCoupon, loadCoupons, updateCoupon } from "../controller/adminController/couponController.js"
-
 import upload from "../config/multerCloudinary.js"
 import { getSalesReportPage, exportSalesReportExcel, exportSalesReportPDF } from "../controller/adminController/salesController.js"
 import { adminAuth } from "../middleware/adminAuth.js"

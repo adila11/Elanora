@@ -1,13 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
 const addressSchema = new mongoose.Schema({
-    user:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
 
-    type:{
+    type: {
         type: String,
         enum: ["Home", "Office", "Other"],
         default: "Home"
@@ -22,7 +22,7 @@ const addressSchema = new mongoose.Schema({
     phone: {
         type: String,
         required: true,
-        match: /^[6-9]\d{9}$/  
+        match: /^[6-9]\d{9}$/
     },
 
     addressLine: {
@@ -51,19 +51,19 @@ const addressSchema = new mongoose.Schema({
     pincode: {
         type: String,
         required: true,
-        match: /^\d{6}$/  
+        match: /^\d{6}$/
     },
 
     isDefault: {
         type: Boolean,
         default: false
     },
-    isDelete:{
-        type:Boolean,
-        default:false
+    isDelete: {
+        type: Boolean,
+        default: false
     }
 })
 
 const Address = mongoose.model("Address", addressSchema)
 
-export default Address ;
+export default Address;

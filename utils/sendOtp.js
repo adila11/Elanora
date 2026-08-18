@@ -10,7 +10,7 @@ const sentOtp = async (email, purpose = "verification") => {
         const newOtp = new UserOtp({
             email,
             otp,
-            purpose, 
+            purpose,
             expiresAt: Date.now() + 5 * 60 * 1000
         });
 

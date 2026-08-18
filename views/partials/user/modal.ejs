@@ -4,13 +4,15 @@
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.45);
+        background: rgba(0, 0, 0, 0.45);
         z-index: 9999;
         align-items: center;
         justify-content: center;
     }
 
-    .modal-overlay.open { display: flex; }
+    .modal-overlay.open {
+        display: flex;
+    }
 
     .modal-box {
         background: #ffffff;
@@ -25,8 +27,15 @@
     }
 
     @keyframes modalIn {
-        from { transform: translateY(20px); opacity: 0; }
-        to   { transform: translateY(0);    opacity: 1; }
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
     }
 
     .modal-icon {
@@ -39,9 +48,20 @@
         margin: 0 auto 16px;
     }
 
-    .modal-icon.success { background: #edf7ed; color: #2e7d32; }
-    .modal-icon.error   { background: #fdecea; color: #c62828; }
-    .modal-icon.info    { background: #f0e0bb; color: #b8892a; }
+    .modal-icon.success {
+        background: #edf7ed;
+        color: #2e7d32;
+    }
+
+    .modal-icon.error {
+        background: #fdecea;
+        color: #c62828;
+    }
+
+    .modal-icon.info {
+        background: #f0e0bb;
+        color: #b8892a;
+    }
 
     .modal-title {
         font-family: 'Cormorant Garamond', serif;
@@ -77,7 +97,9 @@
         transition: background 0.2s;
     }
 
-    .modal-btn-primary:hover { background: #d4a843; }
+    .modal-btn-primary:hover {
+        background: #d4a843;
+    }
 
     .modal-btn-secondary {
         background: transparent;
@@ -91,7 +113,10 @@
         transition: all 0.2s;
     }
 
-    .modal-btn-secondary:hover { border-color: #b8892a; color: #b8892a; }
+    .modal-btn-secondary:hover {
+        border-color: #b8892a;
+        color: #b8892a;
+    }
 
     .modal-close {
         position: absolute;
@@ -105,7 +130,9 @@
         line-height: 1;
     }
 
-    .modal-close:hover { color: #1c1a17; }
+    .modal-close:hover {
+        color: #1c1a17;
+    }
 </style>
 
 <div class="modal-overlay" id="customModalOverlay">
@@ -121,26 +148,26 @@
 <script>
     const CUSTOM_MODAL_ICONS = {
         success: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`,
-        error:   `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
-        info:    `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+        error: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
+        info: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
     };
 
     function showModal(type, title, message, actions) {
-        const iconEl    = document.getElementById('customModalIcon');
-        const titleEl   = document.getElementById('customModalTitle');
-        const msgEl     = document.getElementById('customModalMessage');
+        const iconEl = document.getElementById('customModalIcon');
+        const titleEl = document.getElementById('customModalTitle');
+        const msgEl = document.getElementById('customModalMessage');
         const actionsEl = document.getElementById('customModalActions');
 
-        iconEl.className    = 'modal-icon ' + type;
-        iconEl.innerHTML    = CUSTOM_MODAL_ICONS[type] || CUSTOM_MODAL_ICONS.info;
+        iconEl.className = 'modal-icon ' + type;
+        iconEl.innerHTML = CUSTOM_MODAL_ICONS[type] || CUSTOM_MODAL_ICONS.info;
         titleEl.textContent = title;
-        msgEl.innerHTML     = message;
+        msgEl.innerHTML = message;
 
         actionsEl.innerHTML = '';
         if (!actions || actions.length === 0) {
             actions = [{ label: 'Close', primary: true, action: 'closeModal()' }];
         }
-        
+
         actions.forEach(a => {
             const btn = document.createElement('button');
             btn.className = a.primary ? 'modal-btn-primary' : 'modal-btn-secondary';
@@ -157,7 +184,7 @@
     }
 
     // Close On Overlay Click
-    document.getElementById('customModalOverlay').addEventListener('click', function(e) {
+    document.getElementById('customModalOverlay').addEventListener('click', function (e) {
         if (e.target === this) closeModal();
     });
 </script>

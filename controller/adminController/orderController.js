@@ -15,12 +15,12 @@ export const getOrdersPage = async (req, res) => {
             sortOrder = "desc"
         } = req.query;
 
-        const pageNum  = parseInt(page);
+        const pageNum = parseInt(page);
         const limitNum = parseInt(limit);
 
         let query = {};
 
-        if (status)  query.orderStatus   = status;
+        if (status) query.orderStatus = status;
         if (payment) query.paymentStatus = payment.toLowerCase();
 
         if (search) {
@@ -30,19 +30,19 @@ export const getOrdersPage = async (req, res) => {
             const userIds = matchingUsers.map(u => u._id);
             query.$or = [
                 { orderId: { $regex: search, $options: 'i' } },
-                { userId:  { $in: userIds } }
+                { userId: { $in: userIds } }
             ];
         }
 
         let sortOption = {};
-        if      (sortField === 'id')       sortOption = { orderId:     sortOrder === 'asc' ? 1 : -1 };
-        else if (sortField === 'amount')   sortOption = { finalAmount: sortOrder === 'asc' ? 1 : -1 };
-        else if (sortField === 'date')     sortOption = { createdAt:   sortOrder === 'asc' ? 1 : -1 };
-        else if (sortField === 'customer') sortOption = { userId:      sortOrder === 'asc' ? 1 : -1 };
-        else                               sortOption = { createdAt: -1 };
+        if (sortField === 'id') sortOption = { orderId: sortOrder === 'asc' ? 1 : -1 };
+        else if (sortField === 'amount') sortOption = { finalAmount: sortOrder === 'asc' ? 1 : -1 };
+        else if (sortField === 'date') sortOption = { createdAt: sortOrder === 'asc' ? 1 : -1 };
+        else if (sortField === 'customer') sortOption = { userId: sortOrder === 'asc' ? 1 : -1 };
+        else sortOption = { createdAt: -1 };
 
         const totalOrders = await Order.countDocuments(query);
-        const totalPages  = Math.ceil(totalOrders / limitNum);
+        const totalPages = Math.ceil(totalOrders / limitNum);
 
         const dbOrders = await Order.find(query)
             .populate("userId", "fullName email")
@@ -52,42 +52,42 @@ export const getOrdersPage = async (req, res) => {
             .lean();
 
         const orders = dbOrders.map(order => ({
-            id:       order.orderId,
+            id: order.orderId,
             customer: order.userId?.fullName || "Unknown User",
-            amount:   order.finalAmount,
-            payment:  capitalize(order.paymentStatus),
-            status:   formatOrderStatus(order.orderStatus),
-            date:     order.createdAt,
-            phone:    order.shippingAddress?.phone || "N/A",
-            address:  `${order.shippingAddress?.addressLine || ""}, ${order.shippingAddress?.city || ""}, ${order.shippingAddress?.state || ""}`,
-            items:    order.items?.map(item => ({
-                name:  item.productName || "Product",
-                qty:   item.qty,
+            amount: order.finalAmount,
+            payment: capitalize(order.paymentStatus),
+            status: formatOrderStatus(order.orderStatus),
+            date: order.createdAt,
+            phone: order.shippingAddress?.phone || "N/A",
+            address: `${order.shippingAddress?.addressLine || ""}, ${order.shippingAddress?.city || ""}, ${order.shippingAddress?.state || ""}`,
+            items: order.items?.map(item => ({
+                name: item.productName || "Product",
+                qty: item.qty,
                 price: item.price
             })) || []
         }));
 
         const statusSelectClass = (s) => {
             switch (s) {
-                case 'Pending':         return 'pending';
-                case 'Processing':      return 'processing';
-                case 'Shipped':         return 'shipped';
-                case 'Out for Delivery':return 'out';
-                case 'Delivered':       return 'delivered';
-                case 'Cancelled':       return 'cancelled';
-                case 'Returned':        return 'returned';
-                default:                return 'pending';
+                case 'Pending': return 'pending';
+                case 'Processing': return 'processing';
+                case 'Shipped': return 'shipped';
+                case 'Out for Delivery': return 'out';
+                case 'Delivered': return 'delivered';
+                case 'Cancelled': return 'cancelled';
+                case 'Returned': return 'returned';
+                default: return 'pending';
             }
         };
 
         res.render("admin/orderList", {
             orders,
-            currentStatus:  status,
+            currentStatus: status,
             currentPayment: payment,
             search,
             totalOrders,
             currentPage: pageNum,
-            limit:       limitNum,
+            limit: limitNum,
             totalPages,
             sortField,
             sortOrder,
@@ -108,57 +108,57 @@ function capitalize(text) {
 
 function formatOrderStatus(status) {
     const statusMap = {
-        pending:          'Pending',
-        processing:       'Processing',
-        shipped:          'Shipped',
+        pending: 'Pending',
+        processing: 'Processing',
+        shipped: 'Shipped',
         out_for_delivery: 'Out for Delivery',
-        delivered:        'Delivered',
-        cancelled:        'Cancelled',
-        returned:         'Returned'
+        delivered: 'Delivered',
+        cancelled: 'Cancelled',
+        returned: 'Returned'
     };
     return statusMap[status] || 'Pending';
 }
 
 const STATUS_MAP = {
-    'Pending':          'pending',
-    'Processing':       'processing',
-    'Shipped':          'shipped',
+    'Pending': 'pending',
+    'Processing': 'processing',
+    'Shipped': 'shipped',
     'Out for Delivery': 'out_for_delivery',
-    'Delivered':        'delivered',
-    'Cancelled':        'cancelled',
-    'Returned':         'returned',
+    'Delivered': 'delivered',
+    'Cancelled': 'cancelled',
+    'Returned': 'returned',
 
-    pending:          'pending',
-    processing:       'processing',
-    shipped:          'shipped',
+    pending: 'pending',
+    processing: 'processing',
+    shipped: 'shipped',
     out_for_delivery: 'out_for_delivery',
-    delivered:        'delivered',
-    cancelled:        'cancelled',
-    returned:         'returned'
+    delivered: 'delivered',
+    cancelled: 'cancelled',
+    returned: 'returned'
 };
 
 const ALLOWED_TRANSITIONS = {
-    pending:          ['processing','shipped','out_for_delivery','delivered','cancelled','returned'],
-    processing:       ['shipped','out_for_delivery','delivered','cancelled','returned'],
-    shipped:          ['out_for_delivery','delivered','cancelled','returned'],
-    out_for_delivery: ['delivered','cancelled','returned'],
-    delivered:        [],
-    cancelled:        [],
-    returned:         []
+    pending: ['processing', 'shipped', 'out_for_delivery', 'delivered', 'cancelled', 'returned'],
+    processing: ['shipped', 'out_for_delivery', 'delivered', 'cancelled', 'returned'],
+    shipped: ['out_for_delivery', 'delivered', 'cancelled', 'returned'],
+    out_for_delivery: ['delivered', 'cancelled', 'returned'],
+    delivered: [],
+    cancelled: [],
+    returned: []
 };
 
 
 export const updateOrderStatus = async (req, res) => {
     try {
         const { orderId } = req.params;
-        const { status }  = req.body;
+        const { status } = req.body;
 
         const existingOrder = await Order.findOne({ orderId });
         if (!existingOrder) {
             return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
         }
 
-        if (['delivered','cancelled','returned'].includes(existingOrder.orderStatus)) {
+        if (['delivered', 'cancelled', 'returned'].includes(existingOrder.orderStatus)) {
             return res.status(400).json({
                 success: false,
                 message: "Status cannot be changed after the order has been delivered, cancelled, or returned."
@@ -181,7 +181,7 @@ export const updateOrderStatus = async (req, res) => {
         existingOrder.orderStatus = dbStatus;
 
         if (dbStatus === 'delivered') {
-            existingOrder.deliveredAt  = new Date();
+            existingOrder.deliveredAt = new Date();
             existingOrder.paymentStatus = 'paid';
             for (let item of existingOrder.items) {
                 if (item.itemStatus !== 'cancelled' && item.itemStatus !== 'returned') {
@@ -236,7 +236,7 @@ export const updateOrderStatus = async (req, res) => {
 
 export const updateItemStatus = async (req, res) => {
     try {
-        const { orderId }        = req.params;
+        const { orderId } = req.params;
         const { itemId, status } = req.body;
 
         const existingOrder = await Order.findOne({ orderId });
@@ -256,7 +256,7 @@ export const updateItemStatus = async (req, res) => {
             ? item.itemStatus
             : (existingOrder.orderStatus || 'pending');
 
-        if (['delivered','cancelled','returned'].includes(currentItemStatus)) {
+        if (['delivered', 'cancelled', 'returned'].includes(currentItemStatus)) {
             return res.status(400).json({
                 success: false,
                 message: "Item status is final and cannot be changed."
@@ -299,7 +299,7 @@ export const updateItemStatus = async (req, res) => {
             i => i.itemStatus !== "cancelled" && i.itemStatus !== "returned"
         );
         if (activeItems.length === 0) {
-            existingOrder.orderStatus = dbStatus; 
+            existingOrder.orderStatus = dbStatus;
             const originalSubtotal = existingOrder.items.reduce((sum, item) => sum + item.total, 0);
             existingOrder.orderTotal = originalSubtotal;
             existingOrder.finalAmount = originalSubtotal + (existingOrder.deliveryCharge || 0) - (existingOrder.discount || 0);

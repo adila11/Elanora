@@ -14,7 +14,7 @@
   });
 
   // Reusable Function For Frontend Fetch/ajax Requests
-  window.showToast = function(message, type = 'success') {
+  window.showToast = function (message, type = 'success') {
     Toast.fire({
       icon: type,
       title: message
@@ -22,7 +22,7 @@
   };
 
   // Automatically Trigger Toasts For Server-side Flash Messages
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function () {
     <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
       Toast.fire({
         icon: 'success',

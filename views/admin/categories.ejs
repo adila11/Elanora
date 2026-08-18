@@ -255,110 +255,159 @@
       border-color: var(--red);
     }
 
-  /* OFFER COLUMN */
-  .offer-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--accent-light);
-    color: #8a6a2f;
-    padding: 5px 8px 5px 12px;
-    border-radius: 20px;
-    font-size: 12.5px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    border: 1px solid transparent;
-  }
-  .offer-badge:hover { border-color: var(--accent); }
+    /* OFFER COLUMN */
+    .offer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-light);
+      color: #8a6a2f;
+      padding: 5px 8px 5px 12px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+    }
 
-  .offer-remove-btn {
-    width: 18px; height: 18px;
-    border: none;
-    background: rgba(0,0,0,0.08);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #8a6a2f;
-    padding: 0;
-    flex-shrink: 0;
-    transition: all 0.15s;
-  }
-  .offer-remove-btn:hover { background: var(--red); color: white; }
-  .offer-remove-btn svg { width: 10px; height: 10px; display: block; }
+    .offer-badge:hover {
+      border-color: var(--accent);
+    }
 
-  .offer-add-btn {
-    width: 30px; height: 30px;
-    border: 1px dashed var(--border);
-    background: transparent;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--muted);
-    transition: all 0.15s;
-  }
-  .offer-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+    .offer-remove-btn {
+      width: 18px;
+      height: 18px;
+      border: none;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #8a6a2f;
+      padding: 0;
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
 
-  /* OFFER MODAL */
-  .modal-box {
-    background: var(--card);
-    width: 100%;
-    max-width: 480px;
-    border-radius: var(--radius);
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-  }
-  .modal-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 22px 24px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .modal-head h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
-  .modal-head p { font-size: 13px; color: var(--muted); }
-  .modal-close-btn {
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 20px;
-    line-height: 1;
-    padding: 4px;
-  }
-  .modal-close-btn:hover { color: var(--text); }
+    .offer-remove-btn:hover {
+      background: var(--red);
+      color: white;
+    }
 
-  .modal-body { padding: 22px 24px; }
-  .form-group { margin-bottom: 18px; }
+    .offer-remove-btn svg {
+      width: 10px;
+      height: 10px;
+      display: block;
+    }
 
-  .form-input, .form-select {
-    width: 100%;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    font-size: 13.5px;
-    font-family: inherit;
-    outline: none;
-    color: var(--text);
-  }
-  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+    .offer-add-btn {
+      width: 30px;
+      height: 30px;
+      border: 1px dashed var(--border);
+      background: transparent;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
 
-  .input-suffix-wrap { position: relative; }
-  .input-suffix-wrap .form-input { padding-right: 34px; }
-  .input-suffix {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 13px;
-    color: var(--muted);
-  }
+    .offer-add-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    /* OFFER MODAL */
+    .modal-box {
+      background: var(--card);
+      width: 100%;
+      max-width: 480px;
+      border-radius: var(--radius);
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 22px 24px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-head h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .modal-head p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .modal-close-btn {
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .modal-close-btn:hover {
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 22px 24px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-family: inherit;
+      outline: none;
+      color: var(--text);
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--accent);
+    }
+
+    .input-suffix-wrap {
+      position: relative;
+    }
+
+    .input-suffix-wrap .form-input {
+      padding-right: 34px;
+    }
+
+    .input-suffix {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: var(--muted);
+    }
 
     /* Modal */
     .modal-overlay {
@@ -479,9 +528,13 @@
 
     /* Table Colour Dot */
     .cat-color-dot {
-      width: 18px; height: 18px; border-radius: 50%;
-      border: 1px solid rgba(0,0,0,0.1); display: inline-block;
-      vertical-align: middle; flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
     }
 
     .modal-footer {
@@ -639,27 +692,34 @@
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-              <input type="text" id="catSearch" class="search-input" placeholder="Search categories..." value="<%= search %>">
-              <button type="button" id="clearSearchBtn" class="clear-search-btn <%= search ? 'visible' : '' %>" onclick="clearSearch()" title="Clear search">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              <input type="text" id="catSearch" class="search-input" placeholder="Search categories..."
+                value="<%= search %>">
+              <button type="button" id="clearSearchBtn" class="clear-search-btn <%= search ? 'visible' : '' %>"
+                onclick="clearSearch()" title="Clear search">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
               </button>
             </div>
-          <div class="filter-wrap">
-            <select id="statusFilter" class="search-input" style="padding-left:14px; max-width:150px;" onchange="applyFilters()">
-              <option value="all" <%= status === 'all' ? 'selected' : '' %>>All Status</option>
-              <option value="active" <%= status === 'active' ? 'selected' : '' %>>Active Only</option>
-              <option value="inactive" <%= status === 'inactive' ? 'selected' : '' %>>Inactive Only</option>
-            </select>
+            <div class="filter-wrap">
+              <select id="statusFilter" class="search-input" style="padding-left:14px; max-width:150px;"
+                onchange="applyFilters()">
+                <option value="all" <%=status==='all' ? 'selected' : '' %>>All Status</option>
+                <option value="active" <%=status==='active' ? 'selected' : '' %>>Active Only</option>
+                <option value="inactive" <%=status==='inactive' ? 'selected' : '' %>>Inactive Only</option>
+              </select>
+            </div>
+            <div class="sort-wrap">
+              <select id="catSort" class="search-input" style="padding-left:14px; max-width:180px;"
+                onchange="applyFilters()">
+                <option value="newest" <%=sort==='newest' ? 'selected' : '' %>>Newest First</option>
+                <option value="name-asc" <%=sort==='name-asc' ? 'selected' : '' %>>Name: A-Z</option>
+                <option value="name-desc" <%=sort==='name-desc' ? 'selected' : '' %>>Name: Z-A</option>
+                <option value="oldest" <%=sort==='oldest' ? 'selected' : '' %>>Oldest First</option>
+              </select>
+            </div>
           </div>
-          <div class="sort-wrap">
-            <select id="catSort" class="search-input" style="padding-left:14px; max-width:180px;" onchange="applyFilters()">
-              <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Newest First</option>
-              <option value="name-asc" <%= sort === 'name-asc' ? 'selected' : '' %>>Name: A-Z</option>
-              <option value="name-desc" <%= sort === 'name-desc' ? 'selected' : '' %>>Name: Z-A</option>
-              <option value="oldest" <%= sort === 'oldest' ? 'selected' : '' %>>Oldest First</option>
-            </select>
-          </div>
-        </div>
 
           <div class="table-card">
             <table>
@@ -673,12 +733,15 @@
                 </tr>
               </thead>
               <tbody id="catTableBody">
-                <% if (categories && categories.length > 0) { %>
-                  <% categories.forEach(c => { %>
+                <% if (categories && categories.length> 0) { %>
+                  <% categories.forEach(c=> { %>
                     <tr>
-                      <td><strong><%= c.name %></strong></td>
+                      <td><strong>
+                          <%= c.name %>
+                        </strong></td>
                       <td style="color:var(--muted);max-width:220px;">
-                        <%= c.description ? (c.description.substring(0, 70) + (c.description.length > 70 ? '…' : '')) : 'No description' %>
+                        <%= c.description ? (c.description.substring(0, 70) + (c.description.length> 70 ? '…' : '')) :
+                          'No description' %>
                       </td>
                       <td>
                         <span class="status-pill <%= c.isActive ? 'status-active' : 'status-inactive' %>">
@@ -686,76 +749,91 @@
                         </span>
                       </td>
                       <td>
-                        <% const hasOffer = c.offer && c.offer.discountValue; %>
-                        <% const offerStartStr = hasOffer && c.offer.startDate ? new Date(c.offer.startDate).toISOString().split('T')[0] : ''; %>
-                        <% const offerEndStr = hasOffer && c.offer.endDate ? new Date(c.offer.endDate).toISOString().split('T')[0] : ''; %>
-                        <% if (hasOffer) { %>
-                          <div class="offer-badge"
-                               data-id="<%= c._id %>"
-                               data-name="<%= c.offer.name || '' %>"
-                               data-type="<%= c.offer.discountType || 'percentage' %>"
-                               data-value="<%= c.offer.discountValue %>"
-                               data-start="<%= offerStartStr %>"
-                               data-end="<%= offerEndStr %>"
-                               title="Click to edit offer"
-                               onclick="editOfferFromBadge(this)">
-                            <span><%= c.offer.discountValue %><%= c.offer.discountType === 'flat' ? '₹' : '%' %> Off</span>
-                            <button type="button" class="offer-remove-btn" title="Remove Offer" onclick="event.stopPropagation(); removeOffer('<%= c._id %>')">
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
-                              </svg>
-                            </button>
-                          </div>
-                        <% } else { %>
-                          <button type="button" class="offer-add-btn" title="Add Offer" onclick="openOfferModal('<%= c._id %>')">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                            </svg>
-                          </button>
-                        <% } %>
+                        <% const hasOffer=c.offer && c.offer.discountValue; %>
+                          <% const offerStartStr=hasOffer && c.offer.startDate ? new
+                            Date(c.offer.startDate).toISOString().split('T')[0] : '' ; %>
+                            <% const offerEndStr=hasOffer && c.offer.endDate ? new
+                              Date(c.offer.endDate).toISOString().split('T')[0] : '' ; %>
+                              <% if (hasOffer) { %>
+                                <div class="offer-badge" data-id="<%= c._id %>" data-name="<%= c.offer.name || '' %>"
+                                  data-type="<%= c.offer.discountType || 'percentage' %>"
+                                  data-value="<%= c.offer.discountValue %>" data-start="<%= offerStartStr %>"
+                                  data-end="<%= offerEndStr %>" title="Click to edit offer"
+                                  onclick="editOfferFromBadge(this)">
+                                  <span>
+                                    <%= c.offer.discountValue %>
+                                      <%= c.offer.discountType==='flat' ? '₹' : '%' %> Off
+                                  </span>
+                                  <button type="button" class="offer-remove-btn" title="Remove Offer"
+                                    onclick="event.stopPropagation(); removeOffer('<%= c._id %>')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                  </button>
+                                </div>
+                                <% } else { %>
+                                  <button type="button" class="offer-add-btn" title="Add Offer"
+                                    onclick="openOfferModal('<%= c._id %>')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                      stroke-width="2.2">
+                                      <line x1="12" y1="5" x2="12" y2="19" />
+                                      <line x1="5" y1="12" x2="19" y2="12" />
+                                    </svg>
+                                  </button>
+                                  <% } %>
                       </td>
                       <td>
                         <div class="actions-cell">
                           <button class="action-btn" title="Edit" onclick="editCategory('<%= c._id %>')">✏️</button>
-                          <button class="action-btn <%= c.isActive ? 'danger' : '' %>" title="<%= c.isActive ? 'Unlist' : 'List' %>" onclick="toggleCategory('<%= c._id %>', <%= c.isActive %>)">🗑</button>
+                          <button class="action-btn <%= c.isActive ? 'danger' : '' %>"
+                            title="<%= c.isActive ? 'Unlist' : 'List' %>"
+                            onclick="toggleCategory('<%= c._id %>', <%= c.isActive %>)">🗑</button>
                         </div>
                       </td>
                     </tr>
-                  <% }) %>
-                <% } else { %>
-                  <tr><td colspan="5" style="text-align:center; padding:60px; color:var(--muted);">No categories found.</td></tr>
-                <% } %>
+                    <% }) %>
+                      <% } else { %>
+                        <tr>
+                          <td colspan="5" style="text-align:center; padding:60px; color:var(--muted);">No categories
+                            found.</td>
+                        </tr>
+                        <% } %>
               </tbody>
             </table>
           </div>
 
           <!-- PAGINATION -->
-          <% if (totalPages > 1) { %>
-          <div style="padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border);">
-            <div style="font-size: 13.5px; color: var(--muted);">
-              Showing <%= (currentPage - 1) * limit + 1 %> to <%= Math.min(currentPage * limit, totalCategories) %> of <%= totalCategories %> categories
-            </div>
-            <div style="display: flex; gap: 8px;">
-              <a href="?page=<%= currentPage - 1 %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>" 
-                 class="action-btn <%= currentPage <= 1 ? 'disabled' : '' %>" style="width: auto; padding: 0 12px; text-decoration: none; <%= currentPage <= 1 ? 'pointer-events: none; opacity: 0.5;' : '' %>">
-                ← Previous
-              </a>
-              <% for(let i = 1; i <= totalPages; i++) { %>
-                <a href="?page=<%= i %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>" 
-                   class="action-btn <%= i === currentPage ? 'active' : '' %>" 
-                   style="width: 34px; text-decoration: none; <%= i === currentPage ? 'background: var(--accent); color: white; border-color: var(--accent);' : '' %>">
-                  <%= i %>
+          <% if (totalPages> 1) { %>
+            <div
+              style="padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border);">
+              <div style="font-size: 13.5px; color: var(--muted);">
+                Showing <%= (currentPage - 1) * limit + 1 %> to <%= Math.min(currentPage * limit, totalCategories) %> of
+                    <%= totalCategories %> categories
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <a href="?page=<%= currentPage - 1 %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                  class="action-btn <%= currentPage <= 1 ? 'disabled' : '' %>"
+                  style="width: auto; padding: 0 12px; text-decoration: none; <%= currentPage <= 1 ? 'pointer-events: none; opacity: 0.5;' : '' %>">
+                  ← Previous
                 </a>
-              <% } %>
-              <a href="?page=<%= currentPage + 1 %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>" 
-                 class="action-btn <%= currentPage >= totalPages ? 'disabled' : '' %>" style="width: auto; padding: 0 12px; text-decoration: none; <%= currentPage >= totalPages ? 'pointer-events: none; opacity: 0.5;' : '' %>">
-                Next →
-              </a>
+                <% for(let i=1; i <=totalPages; i++) { %>
+                  <a href="?page=<%= i %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                    class="action-btn <%= i === currentPage ? 'active' : '' %>"
+                    style="width: 34px; text-decoration: none; <%= i === currentPage ? 'background: var(--accent); color: white; border-color: var(--accent);' : '' %>">
+                    <%= i %>
+                  </a>
+                  <% } %>
+                    <a href="?page=<%= currentPage + 1 %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                      class="action-btn <%= currentPage >= totalPages ? 'disabled' : '' %>"
+                      style="width: auto; padding: 0 12px; text-decoration: none; <%= currentPage >= totalPages ? 'pointer-events: none; opacity: 0.5;' : '' %>">
+                      Next →
+                    </a>
+              </div>
             </div>
-          </div>
-          <% } %>
+            <% } %>
         </div>
-        </div>
+    </div>
     </div>
 
     <!-- Add / Edit Modal -->
@@ -841,7 +919,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-      let categories = <%- JSON.stringify(categories || []) %>;
+      let categories = <% - JSON.stringify(categories || []) %>;
       let editingId = null;
 
       // Debounced Search — matches Customers page pattern
@@ -1071,7 +1149,7 @@
       function editOfferFromBadge(badgeEl) {
         const catId = badgeEl.getAttribute('data-id');
         currentOfferCategoryId = catId;
-        
+
         const name = badgeEl.getAttribute('data-name');
         const type = badgeEl.getAttribute('data-type');
         const val = badgeEl.getAttribute('data-value');
@@ -1084,7 +1162,7 @@
         document.getElementById('discountValue').value = val;
         document.getElementById('startDate').value = start;
         document.getElementById('endDate').value = end;
-        
+
         updateDiscountSuffix();
         document.getElementById('offerModalOverlay').style.display = 'flex';
       }

@@ -59,7 +59,7 @@ export const editProfile = async (req, res) => {
             });
         }
 
-        const user = await User.findOne({ email: userEmail });   
+        const user = await User.findOne({ email: userEmail });
         if (!user) {
             return res.status(404).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
         }
@@ -82,8 +82,8 @@ export const editProfile = async (req, res) => {
         }
 
         if (req.file) {
-            user.profileIcon = req.file.secure_url || req.file.url || req.file.path;           
-            user.cloudinaryId = req.file.public_id || req.file.filename;      
+            user.profileIcon = req.file.secure_url || req.file.url || req.file.path;
+            user.cloudinaryId = req.file.public_id || req.file.filename;
             updated = true;
         }
 
@@ -106,7 +106,7 @@ export const editProfile = async (req, res) => {
                 phone: user.phone,
                 profileIcon: user.profileIcon
             },
-            redirect:"/profile"
+            redirect: "/profile"
         });
 
     } catch (error) {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,7 +56,7 @@
             max-width: 440px;
             padding: 45px 35px;
             border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
             text-align: center;
         }
 
@@ -154,255 +155,254 @@
         .resend-link:hover {
             color: #A67C3D;
         }
-
-
     </style>
 </head>
 
 <body>
 
-<div class="content-wrapper">
-    <div class="otp-card">
-        <div class="logo-box"> Elanora</div>
+    <div class="content-wrapper">
+        <div class="otp-card">
+            <div class="logo-box"> Elanora</div>
 
-        <h1>Verify Your Email</h1>
-        <p class="instructions">
-            We've sent a 6-digit code to<br>
-            <span class="user-email">as***@gmail.com</span>
-        </p>
+            <h1>Verify Your Email</h1>
+            <p class="instructions">
+                We've sent a 6-digit code to<br>
+                <span class="user-email">as***@gmail.com</span>
+            </p>
 
-        <form method="POST" action="/signup-verification">
+            <form method="POST" action="/signup-verification">
 
-            <!-- Hidden Otp -->
-            <input type="hidden" name="otp" id="otp">
+                <!-- Hidden Otp -->
+                <input type="hidden" name="otp" id="otp">
 
-            <div class="otp-inputs">
-                <input type="text" class="otp-field" maxlength="1">
-                <input type="text" class="otp-field" maxlength="1">
-                <input type="text" class="otp-field" maxlength="1">
-                <input type="text" class="otp-field" maxlength="1">
-                <input type="text" class="otp-field" maxlength="1">
-                <input type="text" class="otp-field" maxlength="1">
+                <div class="otp-inputs">
+                    <input type="text" class="otp-field" maxlength="1">
+                    <input type="text" class="otp-field" maxlength="1">
+                    <input type="text" class="otp-field" maxlength="1">
+                    <input type="text" class="otp-field" maxlength="1">
+                    <input type="text" class="otp-field" maxlength="1">
+                    <input type="text" class="otp-field" maxlength="1">
+                </div>
+
+                <button type="submit" class="btn-verify">Verify →</button>
+            </form>
+
+            <div class="resend-text">
+                Didn't receive the code? Resend in <span class="timer">25s</span>
             </div>
 
-            <button type="submit" class="btn-verify">Verify →</button>
-        </form>
-
-        <div class="resend-text">
-            Didn't receive the code? Resend in <span class="timer">25s</span>
+            <a href="#" class="wrong-email">Wrong email? Contact us</a>
         </div>
-
-        <a href="#" class="wrong-email">Wrong email? Contact us</a>
     </div>
-</div>
 
-<%- include('../../../partials/user/footer') %>
+    <%- include('../../../partials/user/footer') %>
 
-<!-- ✅ SCRIPT -->
-<script>
-    const inputs = document.querySelectorAll(".otp-field");
-    const form = document.querySelector("form");
-    const hiddenOtp = document.getElementById("otp");
-    const resendText = document.querySelector(".resend-text");
-    let timerInterval = null;
-    let timeLeft = 25;
-    const TIMER_DURATION = 25;
+        <!-- ✅ SCRIPT -->
+        <script>
+            const inputs = document.querySelectorAll(".otp-field");
+            const form = document.querySelector("form");
+            const hiddenOtp = document.getElementById("otp");
+            const resendText = document.querySelector(".resend-text");
+            let timerInterval = null;
+            let timeLeft = 25;
+            const TIMER_DURATION = 25;
 
-    // OTP Input Handling
-    inputs.forEach((input, index) => {
-        // Only Numbers
-        input.addEventListener("input", (e) => {
-            input.value = input.value.replace(/[^0-9]/g, "");
+            // OTP Input Handling
+            inputs.forEach((input, index) => {
+                // Only Numbers
+                input.addEventListener("input", (e) => {
+                    input.value = input.value.replace(/[^0-9]/g, "");
 
-            if (input.value && inputs[index + 1]) {
-                inputs[index + 1].focus();
-            }
-            checkOtpComplete();
-        });
-
-        // Backspace Move
-        input.addEventListener("keydown", (e) => {
-            if (e.key === "Backspace" && !input.value && inputs[index - 1]) {
-                inputs[index - 1].focus();
-            }
-            // Delay so value is cleared before we check
-            setTimeout(checkOtpComplete, 0);
-        });
-
-        // Paste Support - distribute pasted digits across fields
-        input.addEventListener("paste", (e) => {
-            e.preventDefault();
-            const pastedData = (e.clipboardData || window.clipboardData).getData("text");
-            const digits = pastedData.replace(/[^0-9]/g, "").slice(0, 6);
-
-            if (digits.length > 0) {
-                digits.split("").forEach((digit, i) => {
-                    if (inputs[i]) {
-                        inputs[i].value = digit;
+                    if (input.value && inputs[index + 1]) {
+                        inputs[index + 1].focus();
                     }
+                    checkOtpComplete();
                 });
 
-                // Focus last filled field or the next empty one
-                const focusIndex = Math.min(digits.length, inputs.length) - 1;
-                inputs[focusIndex].focus();
-                checkOtpComplete();
+                // Backspace Move
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Backspace" && !input.value && inputs[index - 1]) {
+                        inputs[index - 1].focus();
+                    }
+                    // Delay so value is cleared before we check
+                    setTimeout(checkOtpComplete, 0);
+                });
+
+                // Paste Support - distribute pasted digits across fields
+                input.addEventListener("paste", (e) => {
+                    e.preventDefault();
+                    const pastedData = (e.clipboardData || window.clipboardData).getData("text");
+                    const digits = pastedData.replace(/[^0-9]/g, "").slice(0, 6);
+
+                    if (digits.length > 0) {
+                        digits.split("").forEach((digit, i) => {
+                            if (inputs[i]) {
+                                inputs[i].value = digit;
+                            }
+                        });
+
+                        // Focus last filled field or the next empty one
+                        const focusIndex = Math.min(digits.length, inputs.length) - 1;
+                        inputs[focusIndex].focus();
+                        checkOtpComplete();
+                    }
+                });
+            });
+
+            // Light up verify button when all 6 digits are filled
+            const verifyBtn = document.querySelector('.btn-verify');
+            function checkOtpComplete() {
+                const allFilled = Array.from(inputs).every(i => i.value.trim() !== '');
+                verifyBtn.classList.toggle('ready', allFilled);
             }
-        });
-    });
 
-    // Light up verify button when all 6 digits are filled
-    const verifyBtn = document.querySelector('.btn-verify');
-    function checkOtpComplete() {
-        const allFilled = Array.from(inputs).every(i => i.value.trim() !== '');
-        verifyBtn.classList.toggle('ready', allFilled);
-    }
+            // Form Submit - Combine OTP
+            form.addEventListener("submit", (e) => {
+                let otp = "";
 
-    // Form Submit - Combine OTP
-    form.addEventListener("submit", (e) => {
-        let otp = "";
+                inputs.forEach(input => {
+                    otp += input.value;
+                });
 
-        inputs.forEach(input => {
-            otp += input.value;
-        });
-
-        if (otp.length !== 6) {
-            e.preventDefault();
-            if (typeof window.showToast === 'function') {
-                window.showToast("Enter full 6-digit OTP", "error");
-            } else {
-                alert("Enter full 6-digit OTP");
-            }
-            return;
-        }
-
-        hiddenOtp.value = otp;
-    });
-
-    // TIMER + RESEND FUNCTIONALITY
-    function updateResendUI() {
-        if (timeLeft > 0) {
-            resendText.innerHTML = `Didn't receive the code? Resend in <span class="timer">${timeLeft}s</span>`;
-        } else {
-            resendText.innerHTML = `Didn't receive the code? <span class="resend-link" id="resend-btn">Resend OTP</span>`;
-            
-            const resendBtn = document.getElementById("resend-btn");
-            if (resendBtn) {
-                resendBtn.addEventListener("click", handleResend);
-            }
-        }
-    }
-
-    function startTimer(fresh = true) {
-        // Clear Any Existing Interval
-        if (timerInterval) {
-            clearInterval(timerInterval);
-        }
-
-        if (fresh) {
-            // Store the timestamp when the timer was first started
-            sessionStorage.setItem('signupOtpTimerStart', Date.now().toString());
-            timeLeft = TIMER_DURATION;
-        } else {
-            // Calculate remaining time based on the original start time
-            const startTime = parseInt(sessionStorage.getItem('signupOtpTimerStart') || '0', 10);
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            timeLeft = Math.max(TIMER_DURATION - elapsed, 0);
-        }
-
-        if (timeLeft <= 0) {
-            // Timer already expired — show resend link immediately
-            resendText.innerHTML = `Didn't receive the code? <span class="resend-link" id="resend-btn">Resend OTP</span>`;
-            const resendBtn = document.getElementById("resend-btn");
-            if (resendBtn) resendBtn.addEventListener("click", handleResend);
-            return;
-        }
-
-        updateResendUI();
-
-        timerInterval = setInterval(() => {
-            timeLeft--;
-            updateResendUI();
-
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-        }, 1000);
-    }
-
-    function handleResend(e) {
-        if (e) e.preventDefault();
-
-        // Show Loading State
-        resendText.innerHTML = `Sending new OTP...`;
-        
-        // Call Backend To Resend OTP
-        fetch('/resend-otp', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            credentials: 'same-origin'
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                if (typeof window.showToast === 'function') {
-                    window.showToast("New OTP has been sent to your email!", "success");
-                } else {
-                    alert("New OTP has been sent to your email!");
+                if (otp.length !== 6) {
+                    e.preventDefault();
+                    if (typeof window.showToast === 'function') {
+                        window.showToast("Enter full 6-digit OTP", "error");
+                    } else {
+                        alert("Enter full 6-digit OTP");
+                    }
+                    return;
                 }
-                
-                // Restart The 25-second Cooldown (fresh=true — new OTP was sent)
-                startTimer(true);
-            } else {
-                const errorMsg = data.message || "Failed to resend OTP. Please try again.";
-                if (typeof window.showToast === 'function') {
-                    window.showToast(errorMsg, "error");
+
+                hiddenOtp.value = otp;
+            });
+
+            // TIMER + RESEND FUNCTIONALITY
+            function updateResendUI() {
+                if (timeLeft > 0) {
+                    resendText.innerHTML = `Didn't receive the code? Resend in <span class="timer">${timeLeft}s</span>`;
                 } else {
-                    alert(errorMsg);
+                    resendText.innerHTML = `Didn't receive the code? <span class="resend-link" id="resend-btn">Resend OTP</span>`;
+
+                    const resendBtn = document.getElementById("resend-btn");
+                    if (resendBtn) {
+                        resendBtn.addEventListener("click", handleResend);
+                    }
                 }
-                // Restore UI
+            }
+
+            function startTimer(fresh = true) {
+                // Clear Any Existing Interval
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+
+                if (fresh) {
+                    // Store the timestamp when the timer was first started
+                    sessionStorage.setItem('signupOtpTimerStart', Date.now().toString());
+                    timeLeft = TIMER_DURATION;
+                } else {
+                    // Calculate remaining time based on the original start time
+                    const startTime = parseInt(sessionStorage.getItem('signupOtpTimerStart') || '0', 10);
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    timeLeft = Math.max(TIMER_DURATION - elapsed, 0);
+                }
+
+                if (timeLeft <= 0) {
+                    // Timer already expired — show resend link immediately
+                    resendText.innerHTML = `Didn't receive the code? <span class="resend-link" id="resend-btn">Resend OTP</span>`;
+                    const resendBtn = document.getElementById("resend-btn");
+                    if (resendBtn) resendBtn.addEventListener("click", handleResend);
+                    return;
+                }
+
                 updateResendUI();
-            }
-        })
-        .catch(error => {
-            console.error("Resend OTP error:", error);
-            if (typeof window.showToast === 'function') {
-                window.showToast("Something went wrong. Please try again later.", "error");
-            } else {
-                alert("Something went wrong. Please try again later.");
-            }
-            // Restore The Resend Button
-            updateResendUI();
-        });
-    }
 
-    // Start The Countdown Timer Immediately When Page Loads
-    window.addEventListener("load", () => {
-        // If there's no stored timer start, this is a fresh visit — start fresh.
-        // If there is one, resume from wherever the timer left off (e.g. after invalid OTP).
-        const hasExistingTimer = sessionStorage.getItem('signupOtpTimerStart') !== null;
-        startTimer(!hasExistingTimer);
-    });
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateResendUI();
 
-    // Bonus: Allow Pressing Enter In OTP Fields To Submit
-    inputs.forEach((input, index) => {
-        input.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                form.dispatchEvent(new Event("submit"));
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                    }
+                }, 1000);
             }
-        });
-    });
-</script>
 
-<%- include('../../../partials/user/flash') %>
+            function handleResend(e) {
+                if (e) e.preventDefault();
+
+                // Show Loading State
+                resendText.innerHTML = `Sending new OTP...`;
+
+                // Call Backend To Resend OTP
+                fetch('/resend-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            if (typeof window.showToast === 'function') {
+                                window.showToast("New OTP has been sent to your email!", "success");
+                            } else {
+                                alert("New OTP has been sent to your email!");
+                            }
+
+                            // Restart The 25-second Cooldown (fresh=true — new OTP was sent)
+                            startTimer(true);
+                        } else {
+                            const errorMsg = data.message || "Failed to resend OTP. Please try again.";
+                            if (typeof window.showToast === 'function') {
+                                window.showToast(errorMsg, "error");
+                            } else {
+                                alert(errorMsg);
+                            }
+                            // Restore UI
+                            updateResendUI();
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Resend OTP error:", error);
+                        if (typeof window.showToast === 'function') {
+                            window.showToast("Something went wrong. Please try again later.", "error");
+                        } else {
+                            alert("Something went wrong. Please try again later.");
+                        }
+                        // Restore The Resend Button
+                        updateResendUI();
+                    });
+            }
+
+            // Start The Countdown Timer Immediately When Page Loads
+            window.addEventListener("load", () => {
+                // If there's no stored timer start, this is a fresh visit — start fresh.
+                // If there is one, resume from wherever the timer left off (e.g. after invalid OTP).
+                const hasExistingTimer = sessionStorage.getItem('signupOtpTimerStart') !== null;
+                startTimer(!hasExistingTimer);
+            });
+
+            // Bonus: Allow Pressing Enter In OTP Fields To Submit
+            inputs.forEach((input, index) => {
+                input.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        form.dispatchEvent(new Event("submit"));
+                    }
+                });
+            });
+        </script>
+
+        <%- include('../../../partials/user/flash') %>
 </body>
+
 </html>

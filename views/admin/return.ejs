@@ -35,7 +35,9 @@
       --yellow-bg: #fdf6e3;
     }
 
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -96,7 +98,9 @@
       transition: border 0.18s;
     }
 
-    .search-returns input:focus { border-color: var(--accent); }
+    .search-returns input:focus {
+      border-color: var(--accent);
+    }
 
     .search-returns svg {
       position: absolute;
@@ -115,7 +119,9 @@
       overflow: hidden;
     }
 
-    .table-wrap { overflow-x: auto; }
+    .table-wrap {
+      overflow-x: auto;
+    }
 
     /* TABS */
     .tabs {
@@ -136,7 +142,9 @@
       user-select: none;
     }
 
-    .tab:hover { color: var(--accent); }
+    .tab:hover {
+      color: var(--accent);
+    }
 
     .tab.active {
       color: var(--accent);
@@ -172,8 +180,13 @@
       transition: background 0.14s;
     }
 
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: var(--accent-light); }
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: var(--accent-light);
+    }
 
     td {
       padding: 14px 16px;
@@ -189,7 +202,10 @@
       margin-bottom: 2px;
     }
 
-    .customer-name { font-size: 12.5px; color: var(--text-muted); }
+    .customer-name {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
 
     .product-name {
       font-weight: 500;
@@ -198,9 +214,20 @@
       margin-bottom: 2px;
     }
 
-    .product-reason { font-size: 12px; color: var(--text-muted); }
-    .product-reason span { color: var(--text-secondary); margin-right: 4px; }
-    .date-cell { color: var(--text-muted); font-size: 13px; }
+    .product-reason {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .product-reason span {
+      color: var(--text-secondary);
+      margin-right: 4px;
+    }
+
+    .date-cell {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
 
     /* BADGES */
     .badge {
@@ -222,9 +249,20 @@
       background: currentColor;
     }
 
-    .badge-pending  { background: var(--yellow-bg); color: var(--yellow); }
-    .badge-approved { background: var(--green-bg);  color: var(--green);  }
-    .badge-rejected { background: var(--red-bg);    color: var(--red);    }
+    .badge-pending {
+      background: var(--yellow-bg);
+      color: var(--yellow);
+    }
+
+    .badge-approved {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .badge-rejected {
+      background: var(--red-bg);
+      color: var(--red);
+    }
 
     /* ACTIONS */
     .action-btn {
@@ -250,7 +288,10 @@
       color: var(--accent);
     }
 
-    .action-btn svg { width: 13px; height: 13px; }
+    .action-btn svg {
+      width: 13px;
+      height: 13px;
+    }
 
     .processed-text {
       font-size: 12.5px;
@@ -317,7 +358,11 @@
       cursor: not-allowed;
     }
 
-    .page-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .page-btn svg {
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
+    }
 
     .page-dots {
       font-size: 13px;
@@ -338,7 +383,9 @@
       backdrop-filter: blur(3px);
     }
 
-    .modal-overlay.open { display: flex; }
+    .modal-overlay.open {
+      display: flex;
+    }
 
     /* MODAL */
     .modal {
@@ -352,8 +399,15 @@
     }
 
     @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to   { transform: translateY(0);    opacity: 1; }
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     .modal-header {
@@ -454,7 +508,9 @@
       border-top: 1px solid var(--border);
     }
 
-    .btn-approve, .btn-reject, .btn-cancel {
+    .btn-approve,
+    .btn-reject,
+    .btn-cancel {
       flex: 1;
       padding: 11px;
       border-radius: var(--radius-sm);
@@ -470,18 +526,39 @@
       transition: opacity 0.15s, transform 0.1s;
     }
 
-    .btn-approve:hover, .btn-reject:hover, .btn-cancel:hover { opacity: 0.88; }
-    .btn-approve:active, .btn-reject:active, .btn-cancel:active { transform: scale(0.97); }
+    .btn-approve:hover,
+    .btn-reject:hover,
+    .btn-cancel:hover {
+      opacity: 0.88;
+    }
 
-    .btn-approve { background: var(--green); color: white; }
-    .btn-reject  { background: var(--red);   color: white; }
-    .btn-cancel  {
+    .btn-approve:active,
+    .btn-reject:active,
+    .btn-cancel:active {
+      transform: scale(0.97);
+    }
+
+    .btn-approve {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-reject {
+      background: var(--red);
+      color: white;
+    }
+
+    .btn-cancel {
       background: #f5f4f0;
       color: var(--text-muted);
       border: 1.5px solid var(--border);
       opacity: 1 !important;
     }
-    .btn-cancel:hover { background: #ebe9e3; opacity: 1 !important; }
+
+    .btn-cancel:hover {
+      background: #ebe9e3;
+      opacity: 1 !important;
+    }
 
     /* REJECTION MODAL SPECIFICS */
     .warning-banner {
@@ -502,7 +579,11 @@
       margin-top: 1px;
     }
 
-    .warning-banner p { font-size: 13px; color: #7a2020; line-height: 1.55; }
+    .warning-banner p {
+      font-size: 13px;
+      color: #7a2020;
+      line-height: 1.55;
+    }
 
     .field-label {
       font-size: 12px;
@@ -536,8 +617,13 @@
       line-height: 1.5;
     }
 
-    .remark-textarea:focus { border-color: var(--red); }
-    .remark-textarea::placeholder { color: #b0ada6; }
+    .remark-textarea:focus {
+      border-color: var(--red);
+    }
+
+    .remark-textarea::placeholder {
+      color: #b0ada6;
+    }
 
     .char-count {
       font-size: 11.5px;
@@ -565,9 +651,18 @@
       pointer-events: none;
     }
 
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .toast.error   { background: var(--red);  }
-    .toast.success { background: var(--green); }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.error {
+      background: var(--red);
+    }
+
+    .toast.success {
+      background: var(--green);
+    }
   </style>
 </head>
 
@@ -575,380 +670,390 @@
 
   <%- include('partials/admin/sidebar') %>
 
-  <div class="main">
+    <div class="main">
 
-    <%- include('partials/admin/header') %>
+      <%- include('partials/admin/header') %>
 
-    <div class="content">
-      <div class="page-header">
-        <h2>Returns &amp; Refunds</h2>
-        <div class="search-returns">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          <input type="text" id="searchInp" placeholder="Search returns…">
-        </div>
-      </div>
-
-      <div class="table-card">
-        <!-- TABS -->
-        <div class="tabs">
-          <div class="tab active" onclick="filterTab(this,'all')">All</div>
-          <div class="tab"        onclick="filterTab(this,'pending')">Pending</div>
-          <div class="tab"        onclick="filterTab(this,'approved')">Approved</div>
-          <div class="tab"        onclick="filterTab(this,'rejected')">Rejected</div>
-        </div>
-
-        <!-- TABLE -->
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Order &amp; Customer</th>
-                <th>Product &amp; Reason</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th style="text-align:right">Action</th>
-              </tr>
-            </thead>
-            <tbody id="table-body">
-              <% returns.forEach((r, idx) => { %>
-              <tr data-status="<%= r.status %>" data-idx="<%= idx %>" data-return-id="<%= r._id %>" data-price="₹<%= r.price %>">
-                <td>
-                  <span class="order-link"><%= r.orderId %></span>
-                  <span class="customer-name"><%= r.customerName %></span>
-                </td>
-                <td>
-                  <span class="product-name"><%= r.product %></span>
-                  <span class="product-reason"><span>Reason:</span><%= r.reason %></span>
-                </td>
-                <td class="date-cell">
-                  <%= new Date(r.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
-                </td>
-                <td>
-                  <span class="badge badge-<%= r.status %>">
-                    <%= r.status.charAt(0).toUpperCase() + r.status.slice(1) %>
-                  </span>
-                </td>
-                <td style="text-align:right">
-                  <% if (r.status === 'pending') { %>
-                  <button class="action-btn" onclick="openModal(<%= idx %>)">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                      <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                    </svg>
-                    View
-                  </button>
-                  <% } else { %>
-                  <span class="processed-text">Processed</span>
-                  <% } %>
-                </td>
-              </tr>
-              <% }) %>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- PAGINATION -->
-        <% if (pagination.totalPages > 1) { %>
-        <div class="pagination-bar">
-          <span class="pagination-info">
-            Showing
-            <%= ((pagination.currentPage - 1) * pagination.limit) + 1 %>–<%= Math.min(pagination.currentPage * pagination.limit, pagination.totalCount) %>
-            of <%= pagination.totalCount %> returns
-          </span>
-          <div class="pagination-controls">
-
-            <!-- Prev -->
-            <% if (pagination.hasPrev) { %>
-            <a href="/admin/returns?page=<%= pagination.prevPage %>&limit=<%= pagination.limit %>" class="page-btn">
-              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <polyline points="15 18 9 12 15 6"/>
+        <div class="content">
+          <div class="page-header">
+            <h2>Returns &amp; Refunds</h2>
+            <div class="search-returns">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-            </a>
-            <% } else { %>
-            <button class="page-btn" disabled>
-              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <polyline points="15 18 9 12 15 6"/>
-              </svg>
-            </button>
-            <% } %>
+              <input type="text" id="searchInp" placeholder="Search returns…">
+            </div>
+          </div>
 
-            <!-- Page Numbers -->
-            <%
-              const cur   = pagination.currentPage;
-              const total = pagination.totalPages;
-              let pages   = [];
+          <div class="table-card">
+            <!-- TABS -->
+            <div class="tabs">
+              <div class="tab active" onclick="filterTab(this,'all')">All</div>
+              <div class="tab" onclick="filterTab(this,'pending')">Pending</div>
+              <div class="tab" onclick="filterTab(this,'approved')">Approved</div>
+              <div class="tab" onclick="filterTab(this,'rejected')">Rejected</div>
+            </div>
 
-              if (total <= 7) {
-                for (let i = 1; i <= total; i++) pages.push(i);
-              } else {
-                pages.push(1);
-                if (cur > 3) pages.push('…');
-                const start = Math.max(2, cur - 1);
-                const end   = Math.min(total - 1, cur + 1);
-                for (let i = start; i <= end; i++) pages.push(i);
-                if (cur < total - 2) pages.push('…');
-                pages.push(total);
-              }
-            %>
+            <!-- TABLE -->
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order &amp; Customer</th>
+                    <th>Product &amp; Reason</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th style="text-align:right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="table-body">
+                  <% returns.forEach((r, idx)=> { %>
+                    <tr data-status="<%= r.status %>" data-idx="<%= idx %>" data-return-id="<%= r._id %>"
+                      data-price="₹<%= r.price %>">
+                      <td>
+                        <span class="order-link">
+                          <%= r.orderId %>
+                        </span>
+                        <span class="customer-name">
+                          <%= r.customerName %>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="product-name">
+                          <%= r.product %>
+                        </span>
+                        <span class="product-reason"><span>Reason:</span>
+                          <%= r.reason %>
+                        </span>
+                      </td>
+                      <td class="date-cell">
+                        <%= new Date(r.date).toLocaleDateString('en-IN', { day: 'numeric' , month: 'short' ,
+                          year: 'numeric' }) %>
+                      </td>
+                      <td>
+                        <span class="badge badge-<%= r.status %>">
+                          <%= r.status.charAt(0).toUpperCase() + r.status.slice(1) %>
+                        </span>
+                      </td>
+                      <td style="text-align:right">
+                        <% if (r.status==='pending' ) { %>
+                          <button class="action-btn" onclick="openModal(<%= idx %>)">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View
+                          </button>
+                          <% } else { %>
+                            <span class="processed-text">Processed</span>
+                            <% } %>
+                      </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+              </table>
+            </div>
 
-            <% pages.forEach(p => { %>
-              <% if (p === '…') { %>
-                <span class="page-dots">…</span>
-              <% } else if (p === cur) { %>
-                <button class="page-btn active"><%= p %></button>
-              <% } else { %>
-                <a href="/admin/returns?page=<%= p %>&limit=<%= pagination.limit %>" class="page-btn"><%= p %></a>
+            <!-- PAGINATION -->
+            <% if (pagination.totalPages> 1) { %>
+              <div class="pagination-bar">
+                <span class="pagination-info">
+                  Showing
+                  <%= ((pagination.currentPage - 1) * pagination.limit) + 1 %>–<%= Math.min(pagination.currentPage *
+                      pagination.limit, pagination.totalCount) %>
+                      of <%= pagination.totalCount %> returns
+                </span>
+                <div class="pagination-controls">
+
+                  <!-- Prev -->
+                  <% if (pagination.hasPrev) { %>
+                    <a href="/admin/returns?page=<%= pagination.prevPage %>&limit=<%= pagination.limit %>"
+                      class="page-btn">
+                      <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                    </a>
+                    <% } else { %>
+                      <button class="page-btn" disabled>
+                        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                          <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                      </button>
+                      <% } %>
+
+                        <!-- Page Numbers -->
+                        <% const cur=pagination.currentPage; const total=pagination.totalPages; let pages=[]; if (total
+                          <=7) { for (let i=1; i <=total; i++) pages.push(i); } else { pages.push(1); if (cur> 3)
+                          pages.push('…');
+                          const start = Math.max(2, cur - 1);
+                          const end = Math.min(total - 1, cur + 1);
+                          for (let i = start; i <= end; i++) pages.push(i); if (cur < total - 2) pages.push('…');
+                            pages.push(total); } %>
+
+                            <% pages.forEach(p=> { %>
+                              <% if (p==='…' ) { %>
+                                <span class="page-dots">…</span>
+                                <% } else if (p===cur) { %>
+                                  <button class="page-btn active">
+                                    <%= p %>
+                                  </button>
+                                  <% } else { %>
+                                    <a href="/admin/returns?page=<%= p %>&limit=<%= pagination.limit %>"
+                                      class="page-btn">
+                                      <%= p %>
+                                    </a>
+                                    <% } %>
+                                      <% }) %>
+
+                                        <!-- Next -->
+                                        <% if (pagination.hasNext) { %>
+                                          <a href="/admin/returns?page=<%= pagination.nextPage %>&limit=<%= pagination.limit %>"
+                                            class="page-btn">
+                                            <svg fill="none" stroke="currentColor" stroke-width="2.2"
+                                              viewBox="0 0 24 24">
+                                              <polyline points="9 18 15 12 9 6" />
+                                            </svg>
+                                          </a>
+                                          <% } else { %>
+                                            <button class="page-btn" disabled>
+                                              <svg fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <polyline points="9 18 15 12 9 6" />
+                                              </svg>
+                                            </button>
+                                            <% } %>
+
+                </div>
+              </div>
               <% } %>
-            <% }) %>
-
-            <!-- Next -->
-            <% if (pagination.hasNext) { %>
-            <a href="/admin/returns?page=<%= pagination.nextPage %>&limit=<%= pagination.limit %>" class="page-btn">
-              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <polyline points="9 18 15 12 9 6"/>
-              </svg>
-            </a>
-            <% } else { %>
-            <button class="page-btn" disabled>
-              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <polyline points="9 18 15 12 9 6"/>
-              </svg>
-            </button>
-            <% } %>
+                <!-- END PAGINATION -->
 
           </div>
         </div>
-        <% } %>
-        <!-- END PAGINATION -->
+    </div>
 
+    <!-- REVIEW MODAL -->
+    <div class="modal-overlay" id="returnModal" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-header">
+          <div>
+            <div class="modal-tag">Return Details</div>
+            <div class="modal-title" id="modal-order"></div>
+          </div>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="detail-row">
+            <span class="detail-label">Product</span>
+            <span class="detail-value" id="modal-product"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Total Amount</span>
+            <span class="detail-value price" id="modal-price"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Return Reason</span>
+            <span class="detail-value reason" id="modal-reason"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Customer</span>
+            <span class="detail-value" id="modal-customer"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Date Filed</span>
+            <span class="detail-value" id="modal-date"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-approve" onclick="handleApprove()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            Approve
+          </button>
+          <button class="btn-reject" onclick="openRejectModal()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            Reject
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- REVIEW MODAL -->
-  <div class="modal-overlay" id="returnModal" onclick="if(event.target===this) closeModal()">
-    <div class="modal">
-      <div class="modal-header">
-        <div>
-          <div class="modal-tag">Return Details</div>
-          <div class="modal-title" id="modal-order"></div>
+    <!-- REJECTION MODAL -->
+    <div class="modal-overlay" id="rejectModal" onclick="if(event.target===this) closeRejectModal()">
+      <div class="modal">
+        <div class="modal-header">
+          <div>
+            <div class="modal-tag">Reject Return</div>
+            <div class="modal-title" id="reject-modal-order"></div>
+          </div>
+          <button class="modal-close" onclick="closeRejectModal()">✕</button>
         </div>
-        <button class="modal-close" onclick="closeModal()">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="detail-row">
-          <span class="detail-label">Product</span>
-          <span class="detail-value" id="modal-product"></span>
+        <div class="modal-body">
+          <div class="warning-banner">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <p>This action cannot be undone. The customer will be notified that their return request has been rejected.
+            </p>
+          </div>
+          <div>
+            <div class="field-label">Reason for rejection <span>(optional)</span></div>
+            <textarea id="rejectRemark" class="remark-textarea" maxlength="300"
+              placeholder="e.g. Item shows signs of use beyond the return policy period…"
+              oninput="document.getElementById('rejectCharCount').textContent = this.value.length + '/300'"></textarea>
+            <div class="char-count" id="rejectCharCount">0/300</div>
+          </div>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">Total Amount</span>
-          <span class="detail-value price" id="modal-price"></span>
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeRejectModal()">Cancel</button>
+          <button class="btn-reject" onclick="submitRejection()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            Confirm Reject
+          </button>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">Return Reason</span>
-          <span class="detail-value reason" id="modal-reason"></span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Customer</span>
-          <span class="detail-value" id="modal-customer"></span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Date Filed</span>
-          <span class="detail-value" id="modal-date"></span>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-approve" onclick="handleApprove()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          Approve
-        </button>
-        <button class="btn-reject" onclick="openRejectModal()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-          Reject
-        </button>
       </div>
     </div>
-  </div>
 
-  <!-- REJECTION MODAL -->
-  <div class="modal-overlay" id="rejectModal" onclick="if(event.target===this) closeRejectModal()">
-    <div class="modal">
-      <div class="modal-header">
-        <div>
-          <div class="modal-tag">Reject Return</div>
-          <div class="modal-title" id="reject-modal-order"></div>
-        </div>
-        <button class="modal-close" onclick="closeRejectModal()">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="warning-banner">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8"  x2="12"    y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          <p>This action cannot be undone. The customer will be notified that their return request has been rejected.</p>
-        </div>
-        <div>
-          <div class="field-label">Reason for rejection <span>(optional)</span></div>
-          <textarea
-            id="rejectRemark"
-            class="remark-textarea"
-            maxlength="300"
-            placeholder="e.g. Item shows signs of use beyond the return policy period…"
-            oninput="document.getElementById('rejectCharCount').textContent = this.value.length + '/300'"
-          ></textarea>
-          <div class="char-count" id="rejectCharCount">0/300</div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-cancel" onclick="closeRejectModal()">Cancel</button>
-        <button class="btn-reject" onclick="submitRejection()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-          Confirm Reject
-        </button>
-      </div>
-    </div>
-  </div>
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
 
-  <!-- TOAST -->
-  <div class="toast" id="toast"></div>
+    <script>
+      let currentIdx = null;
+      let currentFilter = 'all';
 
-  <script>
-    let currentIdx    = null;
-    let currentFilter = 'all';
-
-    /* TABS & SEARCH */
-    function filterTab(el, filter) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
-      currentFilter = filter;
-      applyVisibility();
-    }
-
-    // Debounced Search — matches Customers page pattern
-    let debounceTimer;
-    document.getElementById('searchInp').addEventListener('input', function () {
-      clearTimeout(debounceTimer);
-      const val = this.value.toLowerCase();
-      debounceTimer = setTimeout(() => applyVisibility(val), 700);
-    });
-
-    function filterSearch(val) { applyVisibility(val.toLowerCase()); }
-
-    function applyVisibility(search = '') {
-      document.querySelectorAll('#table-body tr').forEach(row => {
-        const statusMatch = currentFilter === 'all' || row.dataset.status === currentFilter;
-        const searchMatch = !search || row.textContent.toLowerCase().includes(search);
-        row.style.display = statusMatch && searchMatch ? '' : 'none';
-      });
-    }
-
-    /* REVIEW MODAL */
-    function openModal(idx) {
-      currentIdx = idx;
-      const row   = getRow(idx);
-      const cells = row.querySelectorAll('td');
-
-      const orderId  = cells[0].querySelector('.order-link').textContent.trim();
-      const customer = cells[0].querySelector('.customer-name').textContent.trim();
-      const product  = cells[1].querySelector('.product-name').textContent.trim();
-      const reason   = cells[1].querySelector('.product-reason').textContent.replace('Reason:', '').trim();
-      const date     = cells[2].textContent.trim();
-
-      document.getElementById('modal-order').textContent    = orderId + ' — ' + customer;
-      document.getElementById('modal-product').textContent  = product;
-      document.getElementById('modal-price').textContent    = row.dataset.price || '—';
-      document.getElementById('modal-reason').textContent   = reason;
-      document.getElementById('modal-customer').textContent = customer;
-      document.getElementById('modal-date').textContent     = date;
-
-      document.getElementById('returnModal').classList.add('open');
-    }
-
-    function closeModal() {
-      document.getElementById('returnModal').classList.remove('open');
-      currentIdx = null;
-    }
-
-    /* REJECTION MODAL */
-    function openRejectModal() {
-      const row   = getRow(currentIdx);
-      const cells = row.querySelectorAll('td');
-      const orderId  = cells[0].querySelector('.order-link').textContent.trim();
-      const customer = cells[0].querySelector('.customer-name').textContent.trim();
-
-      document.getElementById('reject-modal-order').textContent = orderId + ' — ' + customer;
-      document.getElementById('rejectRemark').value             = '';
-      document.getElementById('rejectCharCount').textContent    = '0/300';
-
-      document.getElementById('returnModal').classList.remove('open');
-      document.getElementById('rejectModal').classList.add('open');
-    }
-
-    function closeRejectModal() {
-      document.getElementById('rejectModal').classList.remove('open');
-      currentIdx = null;
-    }
-
-    async function submitRejection() {
-      const row         = getRow(currentIdx);
-      const adminRemark = document.getElementById('rejectRemark').value.trim();
-      const success     = await sendAction(row.dataset.returnId, 'rejected', adminRemark);
-      if (success) { closeRejectModal(); location.reload(); }
-    }
-
-    /* APPROVE */
-    async function handleApprove() {
-      if (currentIdx === null) return;
-      const row     = getRow(currentIdx);
-      const success = await sendAction(row.dataset.returnId, 'approved', '');
-      if (success) { closeModal(); location.reload(); }
-    }
-
-    /* API CALL */
-    async function sendAction(returnId, action, adminRemark) {
-      const url = action === 'approved'
-        ? `/admin/returns/${returnId}/approve`
-        : `/admin/returns/${returnId}/reject`;
-      try {
-        const response = await fetch(url, {
-          method:  'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ adminRemark })
-        });
-        const data = await response.json();
-        if (data.success) return true;
-        showToast(data.message || 'Something went wrong', 'error');
-        return false;
-      } catch (err) {
-        showToast('Network error — please try again', 'error');
-        return false;
+      /* TABS & SEARCH */
+      function filterTab(el, filter) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        currentFilter = filter;
+        applyVisibility();
       }
-    }
 
-    /* HELPERS */
-    function getRow(idx) {
-      return [...document.querySelectorAll('#table-body tr')].find(r => +r.dataset.idx === idx);
-    }
+      // Debounced Search — matches Customers page pattern
+      let debounceTimer;
+      document.getElementById('searchInp').addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        const val = this.value.toLowerCase();
+        debounceTimer = setTimeout(() => applyVisibility(val), 700);
+      });
 
-    function showToast(msg, type = 'error') {
-      const toast    = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.className   = 'toast ' + type;
-      requestAnimationFrame(() => toast.classList.add('show'));
-      setTimeout(() => toast.classList.remove('show'), 3500);
-    }
-  </script>
+      function filterSearch(val) { applyVisibility(val.toLowerCase()); }
+
+      function applyVisibility(search = '') {
+        document.querySelectorAll('#table-body tr').forEach(row => {
+          const statusMatch = currentFilter === 'all' || row.dataset.status === currentFilter;
+          const searchMatch = !search || row.textContent.toLowerCase().includes(search);
+          row.style.display = statusMatch && searchMatch ? '' : 'none';
+        });
+      }
+
+      /* REVIEW MODAL */
+      function openModal(idx) {
+        currentIdx = idx;
+        const row = getRow(idx);
+        const cells = row.querySelectorAll('td');
+
+        const orderId = cells[0].querySelector('.order-link').textContent.trim();
+        const customer = cells[0].querySelector('.customer-name').textContent.trim();
+        const product = cells[1].querySelector('.product-name').textContent.trim();
+        const reason = cells[1].querySelector('.product-reason').textContent.replace('Reason:', '').trim();
+        const date = cells[2].textContent.trim();
+
+        document.getElementById('modal-order').textContent = orderId + ' — ' + customer;
+        document.getElementById('modal-product').textContent = product;
+        document.getElementById('modal-price').textContent = row.dataset.price || '—';
+        document.getElementById('modal-reason').textContent = reason;
+        document.getElementById('modal-customer').textContent = customer;
+        document.getElementById('modal-date').textContent = date;
+
+        document.getElementById('returnModal').classList.add('open');
+      }
+
+      function closeModal() {
+        document.getElementById('returnModal').classList.remove('open');
+        currentIdx = null;
+      }
+
+      /* REJECTION MODAL */
+      function openRejectModal() {
+        const row = getRow(currentIdx);
+        const cells = row.querySelectorAll('td');
+        const orderId = cells[0].querySelector('.order-link').textContent.trim();
+        const customer = cells[0].querySelector('.customer-name').textContent.trim();
+
+        document.getElementById('reject-modal-order').textContent = orderId + ' — ' + customer;
+        document.getElementById('rejectRemark').value = '';
+        document.getElementById('rejectCharCount').textContent = '0/300';
+
+        document.getElementById('returnModal').classList.remove('open');
+        document.getElementById('rejectModal').classList.add('open');
+      }
+
+      function closeRejectModal() {
+        document.getElementById('rejectModal').classList.remove('open');
+        currentIdx = null;
+      }
+
+      async function submitRejection() {
+        const row = getRow(currentIdx);
+        const adminRemark = document.getElementById('rejectRemark').value.trim();
+        const success = await sendAction(row.dataset.returnId, 'rejected', adminRemark);
+        if (success) { closeRejectModal(); location.reload(); }
+      }
+
+      /* APPROVE */
+      async function handleApprove() {
+        if (currentIdx === null) return;
+        const row = getRow(currentIdx);
+        const success = await sendAction(row.dataset.returnId, 'approved', '');
+        if (success) { closeModal(); location.reload(); }
+      }
+
+      /* API CALL */
+      async function sendAction(returnId, action, adminRemark) {
+        const url = action === 'approved'
+          ? `/admin/returns/${returnId}/approve`
+          : `/admin/returns/${returnId}/reject`;
+        try {
+          const response = await fetch(url, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ adminRemark })
+          });
+          const data = await response.json();
+          if (data.success) return true;
+          showToast(data.message || 'Something went wrong', 'error');
+          return false;
+        } catch (err) {
+          showToast('Network error — please try again', 'error');
+          return false;
+        }
+      }
+
+      /* HELPERS */
+      function getRow(idx) {
+        return [...document.querySelectorAll('#table-body tr')].find(r => +r.dataset.idx === idx);
+      }
+
+      function showToast(msg, type = 'error') {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.className = 'toast ' + type;
+        requestAnimationFrame(() => toast.classList.add('show'));
+        setTimeout(() => toast.classList.remove('show'), 3500);
+      }
+    </script>
 </body>
 
 </html>

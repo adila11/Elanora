@@ -503,16 +503,19 @@
                             </p>
 
                             <% if (isUnlistedOrInactive) { %>
-                              <p style="color: var(--red); font-size: 0.75rem; font-weight: 500; margin-bottom: 6px; text-transform: lowercase;">
+                              <p
+                                style="color: var(--red); font-size: 0.75rem; font-weight: 500; margin-bottom: 6px; text-transform: lowercase;">
                                 item unavailable</p>
                               <% } else if (isZeroStock) { %>
-                                <p style="color: var(--red); font-size: 0.75rem; font-weight: 500; margin-bottom: 6px; text-transform: lowercase;">
+                                <p
+                                  style="color: var(--red); font-size: 0.75rem; font-weight: 500; margin-bottom: 6px; text-transform: lowercase;">
                                   out of stock</p>
-                              <% } else if (variant && (variant.stock <= 5 || variant.stock < item.qty)) { %>
-                                <p style="color: #d35400; font-size: 0.75rem; font-weight: 400; margin-bottom: 6px; text-transform: lowercase;">
-                                  only <%= variant.stock %> left in stock
-                                </p>
-                              <% } %>
+                                <% } else if (variant && (variant.stock <=5 || variant.stock < item.qty)) { %>
+                                  <p
+                                    style="color: #d35400; font-size: 0.75rem; font-weight: 400; margin-bottom: 6px; text-transform: lowercase;">
+                                    only <%= variant.stock %> left in stock
+                                  </p>
+                                  <% } %>
 
                                     <button class="remove-btn"
                                       onclick="confirmRemoveItem(this, '<%= product._id %>', '<%= item.variantId %>')">

@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact Us – Elanora Luxury Jewelry</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --cream: #f9f5ef;
@@ -21,7 +30,9 @@
       --radius: 12px;
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       font-family: 'Jost', sans-serif;
@@ -39,576 +50,1083 @@
       overflow: hidden;
       animation: fadeUp .8s ease both;
     }
+
     .page-hero::before {
       content: '';
       position: absolute;
-      top: -60px; left: 50%; transform: translateX(-50%);
-      width: 600px; height: 600px; border-radius: 50%;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
       background: radial-gradient(circle, var(--gold-pale) 0%, transparent 70%);
-      opacity: .4; pointer-events: none;
+      opacity: .4;
+      pointer-events: none;
     }
+
     .page-hero-breadcrumb {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 12px; color: var(--muted); margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 20px;
     }
-    .page-hero-breadcrumb span { color: var(--gold); }
-    .page-hero-breadcrumb svg { width: 12px; height: 12px; stroke: var(--muted); fill: none; stroke-width: 2; }
+
+    .page-hero-breadcrumb span {
+      color: var(--gold);
+    }
+
+    .page-hero-breadcrumb svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 2;
+    }
+
     .page-hero h1 {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(42px, 5vw, 64px);
-      font-weight: 400; line-height: 1.15;
-      color: var(--dark); margin-bottom: 16px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--dark);
+      margin-bottom: 16px;
     }
-    .page-hero h1 span { color: var(--gold); font-style: italic; }
+
+    .page-hero h1 span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
     .page-hero p {
-      font-size: 13px; color: var(--muted); line-height: 1.9;
-      max-width: 480px; margin: 0 auto;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 480px;
+      margin: 0 auto;
     }
 
     /* CONTACT CARDS */
     .contact-cards {
-      display: grid; grid-template-columns: repeat(3, 1fr);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       padding: 70px 60px;
       background: var(--warm-white);
     }
+
     .contact-card {
-      background: var(--cream); border-radius: var(--radius);
+      background: var(--cream);
+      border-radius: var(--radius);
       border: 1px solid var(--border);
-      padding: 40px 30px; text-align: center;
+      padding: 40px 30px;
+      text-align: center;
       transition: transform .3s, box-shadow .3s;
     }
-    .contact-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.08); }
+
+    .contact-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    }
+
     .contact-card-icon {
-      width: 56px; height: 56px; border-radius: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
       background: var(--gold-pale);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin: 0 auto 20px;
     }
-    .contact-card-icon svg { width: 24px; height: 24px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
-    .contact-card h3 { font-size: 15px; font-weight: 500; color: var(--dark); margin-bottom: 10px; }
-    .contact-card p { font-size: 12.5px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+
+    .contact-card-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .contact-card h3 {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .contact-card p {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
     .contact-card a {
-      font-size: 13px; color: var(--gold); text-decoration: none;
-      font-weight: 500; transition: color .2s;
+      font-size: 13px;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
       display: block;
     }
-    .contact-card a:hover { color: #a87820; }
+
+    .contact-card a:hover {
+      color: #a87820;
+    }
 
     /* MAIN CONTACT SECTION */
     .contact-main {
-      display: grid; grid-template-columns: 1fr 1.4fr;
-      gap: 60px; align-items: start;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 60px;
+      align-items: start;
       padding: 0 60px 100px;
     }
 
     /* CONTACT INFO SIDEBAR */
     .contact-info-sidebar {
-      position: sticky; top: 30px;
+      position: sticky;
+      top: 30px;
     }
+
     .section-label {
       display: inline-block;
-      font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 14px;
-      padding: 4px 12px; background: var(--gold-pale); border-radius: 20px;
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+      padding: 4px 12px;
+      background: var(--gold-pale);
+      border-radius: 20px;
     }
+
     .contact-info-sidebar h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(30px, 3vw, 40px); font-weight: 400;
-      color: var(--dark); line-height: 1.2; margin-bottom: 16px;
+      font-size: clamp(30px, 3vw, 40px);
+      font-weight: 400;
+      color: var(--dark);
+      line-height: 1.2;
+      margin-bottom: 16px;
     }
+
     .contact-info-sidebar h2 em {
-      color: var(--gold); font-style: normal;
-      background: var(--gold-pale); padding: 0 8px; border-radius: 4px;
+      color: var(--gold);
+      font-style: normal;
+      background: var(--gold-pale);
+      padding: 0 8px;
+      border-radius: 4px;
     }
-    .contact-info-sidebar p { font-size: 13px; color: var(--muted); line-height: 1.9; margin-bottom: 32px; }
 
-    .info-items { display: flex; flex-direction: column; gap: 18px; margin-bottom: 36px; }
+    .contact-info-sidebar p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 32px;
+    }
+
+    .info-items {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 36px;
+    }
+
     .info-item {
-      display: flex; align-items: flex-start; gap: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
     }
-    .info-item-icon {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: var(--gold-pale); flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .info-item-icon svg { width: 18px; height: 18px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
-    .info-item-text strong { display: block; font-size: 13px; font-weight: 500; color: var(--dark); margin-bottom: 2px; }
-    .info-item-text span { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
 
-    .social-links { display: flex; gap: 10px; }
-    .social-btn {
-      width: 38px; height: 38px; border-radius: 10px;
-      border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: border-color .2s, background .2s; text-decoration: none;
+    .info-item-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--gold-pale);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .social-btn:hover { border-color: var(--gold); background: var(--gold-pale); }
-    .social-btn svg { width: 16px; height: 16px; stroke: var(--muted); fill: none; stroke-width: 1.5; }
+
+    .info-item-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .info-item-text strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+
+    .info-item-text span {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .social-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      text-decoration: none;
+    }
+
+    .social-btn:hover {
+      border-color: var(--gold);
+      background: var(--gold-pale);
+    }
+
+    .social-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 1.5;
+    }
 
     /* FORM */
     .contact-form-wrap {
-      background: var(--cream); border-radius: var(--radius);
+      background: var(--cream);
+      border-radius: var(--radius);
       border: 1px solid var(--border);
       padding: 48px 44px;
     }
+
     .contact-form-wrap h3 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 26px; font-weight: 400; color: var(--dark);
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--dark);
       margin-bottom: 6px;
     }
-    .contact-form-wrap > p { font-size: 12.5px; color: var(--muted); margin-bottom: 32px; }
 
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
-    .form-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
-    .form-group label { font-size: 12px; font-weight: 500; color: var(--text); letter-spacing: .02em; }
+    .contact-form-wrap>p {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: .02em;
+    }
+
     .form-group input,
     .form-group select,
     .form-group textarea {
       padding: 11px 14px;
       border: 1px solid var(--border);
       border-radius: 8px;
-      background: #fff; color: var(--text);
-      font-family: 'Jost', sans-serif; font-size: 13px;
-      outline: none; transition: border-color .2s, box-shadow .2s;
+      background: #fff;
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
       width: 100%;
     }
+
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200,151,42,0.1);
+      box-shadow: 0 0 0 3px rgba(200, 151, 42, 0.1);
     }
-    .form-group input::placeholder,
-    .form-group textarea::placeholder { color: var(--muted); }
-    .form-group textarea { resize: vertical; min-height: 130px; }
-    .form-group select { appearance: none; cursor: pointer; }
 
-    .form-consent { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 24px; }
-    .form-consent input[type="checkbox"] {
-      width: 16px; height: 16px; border-radius: 4px; cursor: pointer;
-      accent-color: var(--gold); margin-top: 2px; flex-shrink: 0;
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--muted);
     }
-    .form-consent label { font-size: 12px; color: var(--muted); line-height: 1.7; cursor: pointer; }
-    .form-consent label a { color: var(--gold); text-decoration: none; }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
+
+    .form-group select {
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .form-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .form-consent input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      accent-color: var(--gold);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .form-consent label {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+      cursor: pointer;
+    }
+
+    .form-consent label a {
+      color: var(--gold);
+      text-decoration: none;
+    }
 
     .btn-submit {
-      width: 100%; padding: 14px;
-      background: var(--gold); color: #fff;
-      border: none; border-radius: 8px;
-      font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 500;
-      cursor: pointer; transition: background .2s;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%;
+      padding: 14px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Jost', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .btn-submit:hover { background: #a87820; }
+
+    .btn-submit:hover {
+      background: #a87820;
+    }
 
     .form-success {
-      display: none; text-align: center; padding: 24px 0;
+      display: none;
+      text-align: center;
+      padding: 24px 0;
     }
+
     .form-success .success-icon {
-      width: 56px; height: 56px; border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
       background: var(--gold-pale);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin: 0 auto 16px;
     }
-    .form-success .success-icon svg { width: 28px; height: 28px; stroke: var(--gold); fill: none; stroke-width: 2; }
-    .form-success h4 { font-size: 18px; font-weight: 500; color: var(--dark); margin-bottom: 8px; }
-    .form-success p { font-size: 13px; color: var(--muted); }
+
+    .form-success .success-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .form-success h4 {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .form-success p {
+      font-size: 13px;
+      color: var(--muted);
+    }
 
     /* FAQ */
-    .faq { padding: 80px 60px; background: var(--cream); }
-    .faq-header { text-align: center; margin-bottom: 50px; }
+    .faq {
+      padding: 80px 60px;
+      background: var(--cream);
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
     .faq-header h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(32px, 4vw, 44px); font-weight: 400;
-      color: var(--dark); margin-top: 10px; margin-bottom: 12px;
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 400;
+      color: var(--dark);
+      margin-top: 10px;
+      margin-bottom: 12px;
     }
-    .faq-header p { font-size: 13px; color: var(--muted); max-width: 460px; margin: 0 auto; line-height: 1.8; }
 
-    .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .faq-header p {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 460px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
     .faq-item {
-      background: #fff; border-radius: var(--radius);
+      background: #fff;
+      border-radius: var(--radius);
       border: 1px solid var(--border);
       overflow: hidden;
     }
+
     .faq-question {
       padding: 20px 22px;
-      display: flex; justify-content: space-between; align-items: center;
-      cursor: pointer; font-size: 14px; font-weight: 500; color: var(--dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--dark);
       gap: 12px;
     }
+
     .faq-question svg {
-      width: 18px; height: 18px; stroke: var(--gold);
-      fill: none; stroke-width: 2; flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 2;
+      flex-shrink: 0;
       transition: transform .3s;
     }
-    .faq-item.open .faq-question svg { transform: rotate(45deg); }
+
+    .faq-item.open .faq-question svg {
+      transform: rotate(45deg);
+    }
+
     .faq-answer {
-      max-height: 0; overflow: hidden;
+      max-height: 0;
+      overflow: hidden;
       transition: max-height .35s ease, padding .35s ease;
-      font-size: 12.5px; color: var(--muted); line-height: 1.8;
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.8;
       padding: 0 22px;
     }
+
     .faq-item.open .faq-answer {
-      max-height: 300px; padding: 0 22px 20px;
+      max-height: 300px;
+      padding: 0 22px 20px;
     }
 
     /* STORE VISIT */
     .store-visit {
       margin: 0 60px 80px;
-      background: var(--dark); border-radius: 20px;
-      display: grid; grid-template-columns: 1fr 1fr;
-      overflow: hidden; align-items: center;
+      background: var(--dark);
+      border-radius: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      align-items: center;
     }
+
     .store-image img {
-      width: 100%; height: 380px; object-fit: cover;
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
       display: block;
     }
-    .store-content { padding: 60px 50px; }
+
+    .store-content {
+      padding: 60px 50px;
+    }
+
     .store-content h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(30px, 3.5vw, 42px); font-weight: 400;
-      color: #fff; margin-bottom: 16px; line-height: 1.2;
+      font-size: clamp(30px, 3.5vw, 42px);
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 16px;
+      line-height: 1.2;
     }
-    .store-content h2 span { color: var(--gold); font-style: italic; }
-    .store-content p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.9; margin-bottom: 28px; }
-    .store-hours { margin-bottom: 28px; }
+
+    .store-content h2 span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .store-content p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.9;
+      margin-bottom: 28px;
+    }
+
+    .store-hours {
+      margin-bottom: 28px;
+    }
+
     .store-hour-row {
-      display: flex; justify-content: space-between;
-      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       font-size: 12.5px;
     }
-    .store-hour-row:last-child { border-bottom: none; }
-    .store-hour-row span:first-child { color: rgba(255,255,255,0.5); }
-    .store-hour-row span:last-child { color: var(--gold-light); font-weight: 500; }
-    .btn-gold {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 28px; background: var(--gold); color: #fff;
-      border: none; border-radius: 8px; font-size: 13px; font-weight: 500;
-      cursor: pointer; text-decoration: none; transition: background .2s;
+
+    .store-hour-row:last-child {
+      border-bottom: none;
     }
-    .btn-gold:hover { background: #a87820; }
+
+    .store-hour-row span:first-child {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .store-hour-row span:last-child {
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s;
+    }
+
+    .btn-gold:hover {
+      background: #a87820;
+    }
 
     /* ANIMATIONS */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* IMG PLACEHOLDER */
     .img-placeholder {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       background: linear-gradient(135deg, #e8d8c0 0%, #d4c0a0 100%);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .img-placeholder span { color: var(--muted); font-size: 13px; opacity: .6; }
+
+    .img-placeholder span {
+      color: var(--muted);
+      font-size: 13px;
+      opacity: .6;
+    }
 
     /* RESPONSIVE */
     @media (max-width: 1024px) {
-      .page-hero { padding: 80px 40px 60px; }
-      .contact-cards { padding: 60px 40px; grid-template-columns: 1fr; }
-      .contact-main { grid-template-columns: 1fr; padding: 0 40px 80px; }
-      .contact-info-sidebar { position: static; }
-      .faq { padding: 60px 40px; }
-      .faq-grid { grid-template-columns: 1fr; }
-      .store-visit { margin: 0 40px 60px; grid-template-columns: 1fr; }
-      .store-image img { height: 280px; }
-      .store-content { padding: 50px 40px; }
+      .page-hero {
+        padding: 80px 40px 60px;
+      }
+
+      .contact-cards {
+        padding: 60px 40px;
+        grid-template-columns: 1fr;
+      }
+
+      .contact-main {
+        grid-template-columns: 1fr;
+        padding: 0 40px 80px;
+      }
+
+      .contact-info-sidebar {
+        position: static;
+      }
+
+      .faq {
+        padding: 60px 40px;
+      }
+
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .store-visit {
+        margin: 0 40px 60px;
+        grid-template-columns: 1fr;
+      }
+
+      .store-image img {
+        height: 280px;
+      }
+
+      .store-content {
+        padding: 50px 40px;
+      }
     }
+
     @media (max-width: 768px) {
-      .page-hero { padding: 60px 30px 50px; }
-      .contact-cards { padding: 50px 30px; }
-      .contact-main { padding: 0 30px 60px; }
-      .contact-form-wrap { padding: 36px 28px; }
-      .form-row { grid-template-columns: 1fr; }
-      .faq { padding: 50px 30px; }
-      .store-visit { margin: 0 30px 50px; }
-      .store-content { padding: 40px 30px; }
+      .page-hero {
+        padding: 60px 30px 50px;
+      }
+
+      .contact-cards {
+        padding: 50px 30px;
+      }
+
+      .contact-main {
+        padding: 0 30px 60px;
+      }
+
+      .contact-form-wrap {
+        padding: 36px 28px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .faq {
+        padding: 50px 30px;
+      }
+
+      .store-visit {
+        margin: 0 30px 50px;
+      }
+
+      .store-content {
+        padding: 40px 30px;
+      }
     }
+
     @media (max-width: 480px) {
-      .page-hero { padding: 50px 20px 40px; }
-      .contact-cards { padding: 40px 20px; }
-      .contact-main { padding: 0 20px 50px; }
-      .contact-form-wrap { padding: 28px 20px; }
-      .faq { padding: 40px 20px; }
-      .store-visit { margin: 0 20px 40px; }
-      .store-content { padding: 32px 20px; }
+      .page-hero {
+        padding: 50px 20px 40px;
+      }
+
+      .contact-cards {
+        padding: 40px 20px;
+      }
+
+      .contact-main {
+        padding: 0 20px 50px;
+      }
+
+      .contact-form-wrap {
+        padding: 28px 20px;
+      }
+
+      .faq {
+        padding: 40px 20px;
+      }
+
+      .store-visit {
+        margin: 0 20px 40px;
+      }
+
+      .store-content {
+        padding: 32px 20px;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<nav>
-  <%- include('partials/user/header') %>
-</nav>
+  <nav>
+    <%- include('partials/user/header') %>
+  </nav>
 
-<!-- HERO -->
-<section class="page-hero">
-  <div class="page-hero-breadcrumb">
-    <a href="/" style="color:var(--muted);text-decoration:none;">Home</a>
-    <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-    <span>Contact Us</span>
-  </div>
-  <h1>We'd Love To <span>Hear</span><br>From You</h1>
-  <p>Whether you have a question about our collections, need styling advice, or want to create something bespoke — our team is here, ready to help.</p>
-</section>
-
-<!-- CONTACT CARDS -->
-<div class="contact-cards">
-  <div class="contact-card">
-    <div class="contact-card-icon">
-      <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/></svg>
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="page-hero-breadcrumb">
+      <a href="/" style="color:var(--muted);text-decoration:none;">Home</a>
+      <svg viewBox="0 0 24 24">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+      <span>Contact Us</span>
     </div>
-    <h3>Call Us</h3>
-    <p>Speak directly with our jewellery experts, Monday to Saturday, 10am – 7pm IST.</p>
-    <a href="tel:+918001234567">+91 800 123 4567</a>
-    <a href="tel:+918001234568">+91 800 123 4568</a>
-  </div>
-  <div class="contact-card">
-    <div class="contact-card-icon">
-      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    <h1>We'd Love To <span>Hear</span><br>From You</h1>
+    <p>Whether you have a question about our collections, need styling advice, or want to create something bespoke — our
+      team is here, ready to help.</p>
+  </section>
+
+  <!-- CONTACT CARDS -->
+  <div class="contact-cards">
+    <div class="contact-card">
+      <div class="contact-card-icon">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" />
+        </svg>
+      </div>
+      <h3>Call Us</h3>
+      <p>Speak directly with our jewellery experts, Monday to Saturday, 10am – 7pm IST.</p>
+      <a href="tel:+918001234567">+91 800 123 4567</a>
+      <a href="tel:+918001234568">+91 800 123 4568</a>
     </div>
-    <h3>Email Us</h3>
-    <p>Send us your enquiry and we'll respond within one business day with personalised assistance.</p>
-    <a href="mailto:hello@elanora.in">hello@elanora.in</a>
-    <a href="mailto:support@elanora.in">support@elanora.in</a>
-  </div>
-  <div class="contact-card">
-    <div class="contact-card-icon">
-      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    <div class="contact-card">
+      <div class="contact-card-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+          <polyline points="22,6 12,13 2,6" />
+        </svg>
+      </div>
+      <h3>Email Us</h3>
+      <p>Send us your enquiry and we'll respond within one business day with personalised assistance.</p>
+      <a href="mailto:hello@elanora.in">hello@elanora.in</a>
+      <a href="mailto:support@elanora.in">support@elanora.in</a>
     </div>
-    <h3>Visit Our Store</h3>
-    <p>Experience our full collection in person at our flagship boutique in Kochi, Kerala.</p>
-    <a href="https://maps.google.com" target="_blank" rel="noopener">Get Directions →</a>
-    <a href="#store" style="color:var(--muted);font-weight:400;">View Store Hours</a>
+    <div class="contact-card">
+      <div class="contact-card-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+      </div>
+      <h3>Visit Our Store</h3>
+      <p>Experience our full collection in person at our flagship boutique in Kochi, Kerala.</p>
+      <a href="https://maps.google.com" target="_blank" rel="noopener">Get Directions →</a>
+      <a href="#store" style="color:var(--muted);font-weight:400;">View Store Hours</a>
+    </div>
   </div>
-</div>
 
-<!-- MAIN CONTACT SECTION -->
-<div class="contact-main">
+  <!-- MAIN CONTACT SECTION -->
+  <div class="contact-main">
 
-  <!-- SIDEBAR INFO -->
-  <div class="contact-info-sidebar">
-    <span class="section-label">Get In Touch</span>
-    <h2>Let's Start a<br><em>Conversation</em></h2>
-    <p>Every great piece of jewellery begins with a conversation. Tell us about the occasion, the person, or the feeling you'd like to capture — and we'll create something truly unforgettable.</p>
+    <!-- SIDEBAR INFO -->
+    <div class="contact-info-sidebar">
+      <span class="section-label">Get In Touch</span>
+      <h2>Let's Start a<br><em>Conversation</em></h2>
+      <p>Every great piece of jewellery begins with a conversation. Tell us about the occasion, the person, or the
+        feeling you'd like to capture — and we'll create something truly unforgettable.</p>
 
-    <div class="info-items">
-      <div class="info-item">
-        <div class="info-item-icon">
-          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <div class="info-items">
+        <div class="info-item">
+          <div class="info-item-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+          </div>
+          <div class="info-item-text">
+            <strong>Flagship Boutique</strong>
+            <span>42, MG Road, Marine Drive<br>Kochi, Kerala 682031</span>
+          </div>
         </div>
-        <div class="info-item-text">
-          <strong>Flagship Boutique</strong>
-          <span>42, MG Road, Marine Drive<br>Kochi, Kerala 682031</span>
+        <div class="info-item">
+          <div class="info-item-icon">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l4 2" />
+            </svg>
+          </div>
+          <div class="info-item-text">
+            <strong>Business Hours</strong>
+            <span>Mon – Sat: 10:00 AM – 7:30 PM<br>Sunday: 11:00 AM – 5:00 PM</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" />
+            </svg>
+          </div>
+          <div class="info-item-text">
+            <strong>Customer Care</strong>
+            <span>+91 800 123 4567<br>Response within 2 hours</span>
+          </div>
         </div>
       </div>
-      <div class="info-item">
-        <div class="info-item-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg>
-        </div>
-        <div class="info-item-text">
-          <strong>Business Hours</strong>
-          <span>Mon – Sat: 10:00 AM – 7:30 PM<br>Sunday: 11:00 AM – 5:00 PM</span>
-        </div>
-      </div>
-      <div class="info-item">
-        <div class="info-item-icon">
-          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/></svg>
-        </div>
-        <div class="info-item-text">
-          <strong>Customer Care</strong>
-          <span>+91 800 123 4567<br>Response within 2 hours</span>
-        </div>
+
+      <p
+        style="font-size:12px;color:var(--muted);margin-bottom:14px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;">
+        Follow Our Journey</p>
+      <div class="social-links">
+        <a href="#" class="social-btn" aria-label="Facebook">
+          <svg viewBox="0 0 24 24">
+            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+          </svg>
+        </a>
+        <a href="#" class="social-btn" aria-label="Instagram">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+          </svg>
+        </a>
+        <a href="#" class="social-btn" aria-label="Pinterest">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.18-.76 1.23-5.22 1.23-5.22s-.31-.63-.31-1.57c0-1.47.85-2.57 1.91-2.57.9 0 1.34.68 1.34 1.49 0 .91-.58 2.27-.88 3.53-.25 1.05.52 1.91 1.55 1.91 1.86 0 3.29-1.96 3.29-4.8 0-2.51-1.8-4.26-4.37-4.26-2.97 0-4.72 2.23-4.72 4.53 0 .9.34 1.85.78 2.38.08.1.09.19.07.29-.08.33-.26 1.05-.29 1.2-.04.19-.14.23-.32.14-1.25-.58-2.03-2.42-2.03-3.89 0-3.15 2.29-6.05 6.61-6.05 3.47 0 6.16 2.47 6.16 5.77 0 3.45-2.17 6.22-5.19 6.22-1.01 0-1.97-.53-2.3-1.15l-.62 2.33c-.23.87-.84 1.96-1.25 2.62.94.29 1.94.45 2.97.45 5.52 0 10-4.48 10-10S17.52 2 12 2z" />
+          </svg>
+        </a>
+        <a href="#" class="social-btn" aria-label="YouTube">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z" />
+            <polygon points="9.75,15.02 15.5,12 9.75,8.98 9.75,15.02" />
+          </svg>
+        </a>
       </div>
     </div>
 
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;">Follow Our Journey</p>
-    <div class="social-links">
-      <a href="#" class="social-btn" aria-label="Facebook">
-        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-      </a>
-      <a href="#" class="social-btn" aria-label="Instagram">
-        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-      </a>
-      <a href="#" class="social-btn" aria-label="Pinterest">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.18-.76 1.23-5.22 1.23-5.22s-.31-.63-.31-1.57c0-1.47.85-2.57 1.91-2.57.9 0 1.34.68 1.34 1.49 0 .91-.58 2.27-.88 3.53-.25 1.05.52 1.91 1.55 1.91 1.86 0 3.29-1.96 3.29-4.8 0-2.51-1.8-4.26-4.37-4.26-2.97 0-4.72 2.23-4.72 4.53 0 .9.34 1.85.78 2.38.08.1.09.19.07.29-.08.33-.26 1.05-.29 1.2-.04.19-.14.23-.32.14-1.25-.58-2.03-2.42-2.03-3.89 0-3.15 2.29-6.05 6.61-6.05 3.47 0 6.16 2.47 6.16 5.77 0 3.45-2.17 6.22-5.19 6.22-1.01 0-1.97-.53-2.3-1.15l-.62 2.33c-.23.87-.84 1.96-1.25 2.62.94.29 1.94.45 2.97.45 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
-      </a>
-      <a href="#" class="social-btn" aria-label="YouTube">
-        <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98 9.75,15.02"/></svg>
-      </a>
-    </div>
-  </div>
+    <!-- FORM -->
+    <div class="contact-form-wrap">
+      <h3>Send Us a Message</h3>
+      <p>Fill in the form below and a member of our team will get back to you shortly.</p>
 
-  <!-- FORM -->
-  <div class="contact-form-wrap">
-    <h3>Send Us a Message</h3>
-    <p>Fill in the form below and a member of our team will get back to you shortly.</p>
-
-    <div id="contactForm">
-      <div class="form-row">
+      <div id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input type="text" id="firstName" placeholder="Elanora" required />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input type="text" id="lastName" placeholder="Grace" required />
+          </div>
+        </div>
         <div class="form-group">
-          <label for="firstName">First Name *</label>
-          <input type="text" id="firstName" placeholder="Elanora" required />
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" placeholder="elanora@example.com" required />
         </div>
         <div class="form-group">
-          <label for="lastName">Last Name *</label>
-          <input type="text" id="lastName" placeholder="Grace" required />
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="+91 98765 43210" />
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject *</label>
+          <select id="subject" required>
+            <option value="" disabled selected>Select a topic…</option>
+            <option>Product Enquiry</option>
+            <option>Order Tracking</option>
+            <option>Bespoke / Custom Jewellery</option>
+            <option>Returns & Exchanges</option>
+            <option>Wholesale / Partnership</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Your Message *</label>
+          <textarea id="message" placeholder="Tell us how we can help you…" required></textarea>
+        </div>
+        <div class="form-consent">
+          <input type="checkbox" id="consent" required />
+          <label for="consent">I agree to the <a href="/privacy">Privacy Policy</a> and consent to Elanora contacting me
+            regarding my enquiry.</label>
+        </div>
+        <button type="button" class="btn-submit" onclick="submitForm()">
+          Send Message
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="form-success" id="formSuccess">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <h4>Message Sent Successfully!</h4>
+        <p>Thank you for reaching out. One of our team members will get back to you within 24 hours.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="faq-header">
+      <span class="section-label">Common Questions</span>
+      <h2>Frequently Asked Questions</h2>
+      <p>Quick answers to the questions we hear most often. Can't find what you're looking for? Just reach out.</p>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          How do I know if my jewellery is authentic?
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </div>
+        <div class="faq-answer">Every Elanora piece comes with a BIS hallmark certificate and a unique product ID that
+          you can verify on our website. Our gemstones are certified by independent GIA-accredited labs.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          Do you offer custom or bespoke jewellery?
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </div>
+        <div class="faq-answer">Absolutely. We love creating one-of-a-kind pieces. Share your vision with us via the
+          contact form or visit our boutique, and our designers will work with you from concept to creation.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          What is your return and exchange policy?
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </div>
+        <div class="faq-answer">We offer a 15-day hassle-free return policy for unworn items in original condition and
+          packaging. Exchanges can be processed within 30 days. Custom orders are non-returnable.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          How long does shipping take?
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </div>
+        <div class="faq-answer">Standard shipping takes 3–5 business days across India. Express delivery (1–2 business
+          days) is available at checkout. All orders are insured and come in our signature gift packaging.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          How do I care for my Elanora jewellery?
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </div>
+        <div class="faq-answer">Store jewellery in our provided pouch or box when not in use, away from moisture,
+          perfumes, and chemicals. Wipe gently with a soft cloth after wearing. We offer complimentary cleaning at our
+          boutique.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          Do you ship internationally?
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </div>
+        <div class="faq-answer">Yes! We ship to 18 countries. International orders are fully insured and typically take
+          7–14 business days. Customs duties, if applicable, are the buyer's responsibility. Contact us for specific
+          country availability.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORE VISIT -->
+  <div class="store-visit" id="store">
+    <div class="store-image">
+      <img src="images/home/Submain pic 3.jpeg" alt="Elanora boutique"
+        onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:380px><span>Store Image</span></div>'" />
+    </div>
+    <div class="store-content">
+      <span class="section-label" style="background:rgba(200,151,42,0.15);color:var(--gold-light);">Visit Us In
+        Person</span>
+      <h2 style="margin-top:14px;">Experience <span>Elanora</span><br>In Our Boutique</h2>
+      <p>Step into our world. Browse our full collection, meet our artisans, and receive personalised styling advice in
+        a relaxed, beautiful setting.</p>
+      <div class="store-hours">
+        <div class="store-hour-row">
+          <span>Monday – Friday</span>
+          <span>10:00 AM – 7:30 PM</span>
+        </div>
+        <div class="store-hour-row">
+          <span>Saturday</span>
+          <span>10:00 AM – 8:00 PM</span>
+        </div>
+        <div class="store-hour-row">
+          <span>Sunday</span>
+          <span>11:00 AM – 5:00 PM</span>
         </div>
       </div>
-      <div class="form-group">
-        <label for="email">Email Address *</label>
-        <input type="email" id="email" placeholder="elanora@example.com" required />
-      </div>
-      <div class="form-group">
-        <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" placeholder="+91 98765 43210" />
-      </div>
-      <div class="form-group">
-        <label for="subject">Subject *</label>
-        <select id="subject" required>
-          <option value="" disabled selected>Select a topic…</option>
-          <option>Product Enquiry</option>
-          <option>Order Tracking</option>
-          <option>Bespoke / Custom Jewellery</option>
-          <option>Returns & Exchanges</option>
-          <option>Wholesale / Partnership</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="message">Your Message *</label>
-        <textarea id="message" placeholder="Tell us how we can help you…" required></textarea>
-      </div>
-      <div class="form-consent">
-        <input type="checkbox" id="consent" required />
-        <label for="consent">I agree to the <a href="/privacy">Privacy Policy</a> and consent to Elanora contacting me regarding my enquiry.</label>
-      </div>
-      <button type="button" class="btn-submit" onclick="submitForm()">
-        Send Message
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-      </button>
-    </div>
-
-    <div class="form-success" id="formSuccess">
-      <div class="success-icon">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <h4>Message Sent Successfully!</h4>
-      <p>Thank you for reaching out. One of our team members will get back to you within 24 hours.</p>
+      <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn-gold">
+        Get Directions
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </a>
     </div>
   </div>
 
-</div>
+  <%- include('partials/user/footer') %>
 
-<!-- FAQ -->
-<section class="faq">
-  <div class="faq-header">
-    <span class="section-label">Common Questions</span>
-    <h2>Frequently Asked Questions</h2>
-    <p>Quick answers to the questions we hear most often. Can't find what you're looking for? Just reach out.</p>
-  </div>
-  <div class="faq-grid">
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        How do I know if my jewellery is authentic?
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </div>
-      <div class="faq-answer">Every Elanora piece comes with a BIS hallmark certificate and a unique product ID that you can verify on our website. Our gemstones are certified by independent GIA-accredited labs.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        Do you offer custom or bespoke jewellery?
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </div>
-      <div class="faq-answer">Absolutely. We love creating one-of-a-kind pieces. Share your vision with us via the contact form or visit our boutique, and our designers will work with you from concept to creation.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        What is your return and exchange policy?
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </div>
-      <div class="faq-answer">We offer a 15-day hassle-free return policy for unworn items in original condition and packaging. Exchanges can be processed within 30 days. Custom orders are non-returnable.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        How long does shipping take?
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </div>
-      <div class="faq-answer">Standard shipping takes 3–5 business days across India. Express delivery (1–2 business days) is available at checkout. All orders are insured and come in our signature gift packaging.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        How do I care for my Elanora jewellery?
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </div>
-      <div class="faq-answer">Store jewellery in our provided pouch or box when not in use, away from moisture, perfumes, and chemicals. Wipe gently with a soft cloth after wearing. We offer complimentary cleaning at our boutique.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        Do you ship internationally?
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </div>
-      <div class="faq-answer">Yes! We ship to 18 countries. International orders are fully insured and typically take 7–14 business days. Customs duties, if applicable, are the buyer's responsibility. Contact us for specific country availability.</div>
-    </div>
-  </div>
-</section>
+    <script>
+      // FAQ Toggle
+      function toggleFaq(el) {
+        const item = el.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      }
 
-<!-- STORE VISIT -->
-<div class="store-visit" id="store">
-  <div class="store-image">
-    <img src="images/home/Submain pic 3.jpeg" alt="Elanora boutique" onerror="this.parentElement.innerHTML='<div class=img-placeholder style=height:380px><span>Store Image</span></div>'"/>
-  </div>
-  <div class="store-content">
-    <span class="section-label" style="background:rgba(200,151,42,0.15);color:var(--gold-light);">Visit Us In Person</span>
-    <h2 style="margin-top:14px;">Experience <span>Elanora</span><br>In Our Boutique</h2>
-    <p>Step into our world. Browse our full collection, meet our artisans, and receive personalised styling advice in a relaxed, beautiful setting.</p>
-    <div class="store-hours">
-      <div class="store-hour-row">
-        <span>Monday – Friday</span>
-        <span>10:00 AM – 7:30 PM</span>
-      </div>
-      <div class="store-hour-row">
-        <span>Saturday</span>
-        <span>10:00 AM – 8:00 PM</span>
-      </div>
-      <div class="store-hour-row">
-        <span>Sunday</span>
-        <span>11:00 AM – 5:00 PM</span>
-      </div>
-    </div>
-    <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn-gold">
-      Get Directions
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-  </div>
-</div>
-
-<%- include('partials/user/footer') %>
-
-<script>
-  // FAQ Toggle
-  function toggleFaq(el) {
-    const item = el.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
-  }
-
-  // Form Submit (front-end Demo; Wire To Your Backend As Needed)
-  function submitForm() {
-    const fields = ['firstName', 'email', 'subject', 'message', 'consent'];
-    const allValid = fields.every(id => {
-      const el = document.getElementById(id);
-      return el && (el.type === 'checkbox' ? el.checked : el.value.trim() !== '');
-    });
-    if (!allValid) {
-      alert('Please fill in all required fields.');
-      return;
-    }
-    document.getElementById('contactForm').style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
-  }
-</script>
+      // Form Submit (front-end Demo; Wire To Your Backend As Needed)
+      function submitForm() {
+        const fields = ['firstName', 'email', 'subject', 'message', 'consent'];
+        const allValid = fields.every(id => {
+          const el = document.getElementById(id);
+          return el && (el.type === 'checkbox' ? el.checked : el.value.trim() !== '');
+        });
+        if (!allValid) {
+          alert('Please fill in all required fields.');
+          return;
+        }
+        document.getElementById('contactForm').style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+      }
+    </script>
 </body>
+
 </html>

@@ -145,7 +145,7 @@ export const addProduct = async (req, res) => {
             const variantImages = files
                 .filter(f => f.fieldname === `images-${v.tempId}`)
                 .map(f => ({ url: f.secure_url || f.url || f.path }));
-            
+
             if (variantImages.length !== 4) {
                 return res.status(400).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_EXACTLY_4_IMAGES_ARE_REQUIRED_CURRENTLY_DYNAMIC_1(idx, variantImages) });
             }
@@ -190,10 +190,10 @@ export const addProduct = async (req, res) => {
 export const loadEditProduct = async (req, res) => {
     try {
         if (!req.session.admin) return res.redirect('/admin');
-        
+
         const product = await Products.findById(req.params.id).populate('category').lean();
         if (!product) return res.status(404).send(MESSAGES.PRODUCT_NOT_FOUND_1);
-        
+
         const categories = await Category.find({});
         res.render("admin/editProduct", { title: "Edit Product", product, categories });
     } catch (error) {
@@ -256,7 +256,7 @@ export const editProduct = async (req, res) => {
         } catch (e) {
             return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_INVALID_VARIANTS_FORMAT });
         }
-        
+
         if (!Array.isArray(variants) || variants.length === 0) {
             return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_AT_LEAST_ONE_VARIANT });
         }
@@ -283,7 +283,7 @@ export const editProduct = async (req, res) => {
             }
 
             let images = [];
-            
+
             if (v.existingImages) {
                 const kept = Array.isArray(v.existingImages) ? v.existingImages : [v.existingImages];
                 images = kept.filter(url => typeof url === 'string' && url.length > 0).map(url => ({ url }));
@@ -292,7 +292,7 @@ export const editProduct = async (req, res) => {
             const newImages = files
                 .filter(f => f.fieldname === `images-${v.tempId}`)
                 .map(f => ({ url: f.secure_url || f.url || f.path }));
-            
+
             images = [...images, ...newImages];
 
             if (images.length !== 4) {
@@ -350,7 +350,7 @@ export const toggleProductStatus = async (req, res) => {
     try {
         const product = await Products.findById(req.params.id);
         if (!product) return res.status(404).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
-        
+
         product.isListed = !product.isListed;
         await product.save();
         res.json({ success: true, message: MESSAGES.PRODUCT_DYNAMIC_SUCCESSFULLY(product) });
@@ -463,11 +463,11 @@ export const deleteProductOffer = async (req, res) => {
         }
 
         product.offer = undefined;
-        
+
         const categoryDoc = await Category.findById(product.category);
         const pricing = getEffectivePrice(product, categoryDoc);
         product.discountPrice = pricing.price;
-        
+
         await product.save();
 
         res.json({ success: true, message: "Offer removed successfully and product price reverted" });

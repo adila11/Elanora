@@ -122,22 +122,22 @@ export const loadCheckoutPayment = async (req, res) => {
         let appliedDiscountAmount = 0;
         let appliedDiscountType = "";
         let appliedDiscountValue = 0;
-        
+
         if (req.session.appliedCoupon) {
             const code = req.session.appliedCoupon;
             const coupon = await Coupon.findOne({ couponCode: code });
-            
+
             if (coupon && coupon.isActive) {
                 const withinDates = now >= new Date(coupon.startDate) && now <= new Date(coupon.expiryDate);
                 const withinLimit = !coupon.usageLimit || (coupon.usageCount || 0) < coupon.usageLimit;
                 const meetsMinimum = subtotal >= (coupon.minimumPurchase || 0);
                 const notUsedBefore = !coupon.usedBy || !coupon.usedBy.some(id => id.toString() === user._id.toString());
-                
+
                 if (withinDates && withinLimit && meetsMinimum && notUsedBefore) {
                     appliedCouponCode = code;
                     appliedDiscountType = coupon.discountType;
                     appliedDiscountValue = coupon.discountValue;
-                    
+
                     if (coupon.discountType === "percentage") {
                         appliedDiscountAmount = Math.round(subtotal * coupon.discountValue / 100);
                         if (coupon.maximumDiscount && coupon.maximumDiscount > 0) {
@@ -155,12 +155,12 @@ export const loadCheckoutPayment = async (req, res) => {
             }
         }
 
-        res.render("user/checkout/checkoutPayment", { 
-            cart, 
-            user, 
-            addressId, 
-            availableCoupons, 
-            walletBalance, 
+        res.render("user/checkout/checkoutPayment", {
+            cart,
+            user,
+            addressId,
+            availableCoupons,
+            walletBalance,
             subtotal,
             couponCode: appliedCouponCode,
             discountAmount: appliedDiscountAmount,
@@ -222,14 +222,14 @@ export const loadCheckoutReview = async (req, res) => {
         if (req.session.appliedCoupon) {
             const code = req.session.appliedCoupon;
             const coupon = await Coupon.findOne({ couponCode: code });
-            
+
             if (coupon && coupon.isActive) {
                 const now = new Date();
                 const withinDates = now >= new Date(coupon.startDate) && now <= new Date(coupon.expiryDate);
                 const withinLimit = !coupon.usageLimit || (coupon.usageCount || 0) < coupon.usageLimit;
                 const meetsMinimum = subtotal >= (coupon.minimumPurchase || 0);
                 const notUsedBefore = !coupon.usedBy || !coupon.usedBy.some(id => id.toString() === user._id.toString());
-                
+
                 if (withinDates && withinLimit && meetsMinimum && notUsedBefore) {
                     finalCouponCode = code;
                     if (coupon.discountType === "percentage") {
@@ -395,14 +395,12 @@ export const createRazorpayOrder = async (req, res) => {
         const finalAmount = subtotal + deliveryCharge - discount;
         const amount = finalAmount * 100;
 
-        // Create Razorpay order
         const razorpayOrder = await razorpay.orders.create({
             amount,
             currency: "INR",
             receipt: `receipt_${Date.now()}`
         });
 
-        // Save DB order with paymentStatus 'pending' BEFORE payment
         const order = new Order({
             orderId: generateOrderId(),
             userId,
@@ -432,7 +430,6 @@ export const createRazorpayOrder = async (req, res) => {
 
         await order.save();
 
-        // Deduct stock
         for (let item of cart.items) {
             await Product.findOneAndUpdate(
                 { "_id": item.productId, "variants._id": item.variantId },
@@ -440,7 +437,6 @@ export const createRazorpayOrder = async (req, res) => {
             );
         }
 
-        // Apply coupon usage
         if (appliedCoupon) {
             await Coupon.findByIdAndUpdate(appliedCoupon._id, {
                 $inc: { usageCount: 1 },
@@ -448,7 +444,6 @@ export const createRazorpayOrder = async (req, res) => {
             });
         }
 
-        // Clear cart and session
         await Cart.findOneAndDelete({ userId });
         req.session.appliedCoupon = null;
         req.session.checkoutData = null;
@@ -734,13 +729,11 @@ export const verifyPayment = async (req, res) => {
             });
         }
 
-        // Find existing order by razorpayOrderId (created in createRazorpayOrder)
         const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
         if (!order) {
             return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
         }
 
-        // Update payment status to paid
         order.paymentStatus = "paid";
         order.orderStatus = "pending";
         order.razorpayPaymentId = razorpay_payment_id;
@@ -778,12 +771,10 @@ export const handlePaymentFailure = async (req, res) => {
             return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
         }
 
-        // Only mark as failed if still pending
         if (order.paymentStatus === "pending") {
             order.paymentStatus = "failed";
             order.orderStatus = "payment_failed";
             order.paymentFailedAt = new Date();
-            // Allow retry for 24 hours
             const expiresAt = new Date();
             expiresAt.setHours(expiresAt.getHours() + 24);
             order.orderExpiresAt = expiresAt;

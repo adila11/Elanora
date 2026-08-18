@@ -21,8 +21,8 @@ const validateCouponInput = (payload = {}) => {
     const errors = {};
     const data = {};
 
-    
-    const rawCode =typeof couponCode === "string"? couponCode.trim(): "";
+
+    const rawCode = typeof couponCode === "string" ? couponCode.trim() : "";
 
     if (!rawCode) {
         errors.couponCode = "Coupon code is required.";
@@ -31,40 +31,40 @@ const validateCouponInput = (payload = {}) => {
         const upperCode = rawCode.toUpperCase();
 
         if (!/^[A-Z0-9]+$/.test(upperCode)) {
-            errors.couponCode ="Coupon code can only contain letters and numbers.";
+            errors.couponCode = "Coupon code can only contain letters and numbers.";
         } else if (
             upperCode.length < 4 ||
             upperCode.length > 20
         ) {
-            errors.couponCode ="Coupon code must be between 4 and 20 characters.";
+            errors.couponCode = "Coupon code must be between 4 and 20 characters.";
         } else {
             data.couponCode = upperCode;
         }
     }
 
-    
-    const rawName = typeof couponName === "string"? couponName.trim(): "";
+
+    const rawName = typeof couponName === "string" ? couponName.trim() : "";
 
     if (!rawName) {
 
         errors.couponName = "Coupon name is required.";
     } else if (rawName.length < 3) {
 
-        errors.couponName ="Coupon name must contain at least 3 characters.";
+        errors.couponName = "Coupon name must contain at least 3 characters.";
     } else if (rawName.length > 50) {
 
-        errors.couponName ="Coupon name cannot exceed 50 characters.";
-    } else { 
+        errors.couponName = "Coupon name cannot exceed 50 characters.";
+    } else {
         data.couponName = rawName;
     }
 
-    
 
-    const rawDescription =typeof description === "string"? description.trim(): "";
+
+    const rawDescription = typeof description === "string" ? description.trim() : "";
 
     if (rawDescription.length > 200) {
 
-        errors.description ="Description cannot exceed 200 characters.";
+        errors.description = "Description cannot exceed 200 characters.";
 
     } else {
 
@@ -72,18 +72,18 @@ const validateCouponInput = (payload = {}) => {
 
     }
 
-   
-    const rawType =typeof discountType === "string"? discountType.trim().toLowerCase(): "";
+
+    const rawType = typeof discountType === "string" ? discountType.trim().toLowerCase() : "";
 
     if (!rawType) {
 
-        errors.discountType ="Discount type is required.";
+        errors.discountType = "Discount type is required.";
 
     } else if (
         !ALLOWED_DISCOUNT_TYPES.includes(rawType)
     ) {
 
-        errors.discountType ="Discount type must be percentage or fixed.";
+        errors.discountType = "Discount type must be percentage or fixed.";
 
     } else {
 
@@ -91,8 +91,8 @@ const validateCouponInput = (payload = {}) => {
 
     }
 
-    
-    if (discountValue === undefined ||discountValue === null || discountValue === "") {
+
+    if (discountValue === undefined || discountValue === null || discountValue === "") {
 
         errors.discountValue = "Discount value is required.";
 
@@ -102,18 +102,18 @@ const validateCouponInput = (payload = {}) => {
 
         if (Number.isNaN(value)) {
 
-            errors.discountValue ="Discount value must be a valid number.";
+            errors.discountValue = "Discount value must be a valid number.";
 
         } else if (value <= 0) {
 
-            errors.discountValue ="Discount value must be greater than zero.";
+            errors.discountValue = "Discount value must be greater than zero.";
 
         } else if (
             data.discountType === "percentage" &&
             value > 100
         ) {
 
-            errors.discountValue ="Percentage discount cannot exceed 100%.";
+            errors.discountValue = "Percentage discount cannot exceed 100%.";
 
         } else {
 
@@ -123,11 +123,11 @@ const validateCouponInput = (payload = {}) => {
 
     }
 
-    
 
-    if (minimumPurchase === undefined ||minimumPurchase === null || minimumPurchase === "" ) {
 
-        errors.minimumPurchase ="Minimum purchase is required.";
+    if (minimumPurchase === undefined || minimumPurchase === null || minimumPurchase === "") {
+
+        errors.minimumPurchase = "Minimum purchase is required.";
 
     } else {
 
@@ -135,11 +135,11 @@ const validateCouponInput = (payload = {}) => {
 
         if (Number.isNaN(value)) {
 
-            errors.minimumPurchase ="Minimum purchase must be a valid number.";
+            errors.minimumPurchase = "Minimum purchase must be a valid number.";
 
         } else if (value < 0) {
 
-            errors.minimumPurchase ="Minimum purchase cannot be negative.";
+            errors.minimumPurchase = "Minimum purchase cannot be negative.";
 
         } else {
 
@@ -149,12 +149,12 @@ const validateCouponInput = (payload = {}) => {
 
     }
 
-   
+
     if (data.discountType === "percentage") {
 
-        if (maximumDiscount === undefined ||maximumDiscount === null ||maximumDiscount === "") {
+        if (maximumDiscount === undefined || maximumDiscount === null || maximumDiscount === "") {
 
-            errors.maximumDiscount ="Maximum discount is required.";
+            errors.maximumDiscount = "Maximum discount is required.";
 
         } else {
 
@@ -162,11 +162,11 @@ const validateCouponInput = (payload = {}) => {
 
             if (Number.isNaN(value)) {
 
-                errors.maximumDiscount ="Maximum discount must be a valid number.";
+                errors.maximumDiscount = "Maximum discount must be a valid number.";
 
             } else if (value <= 0) {
 
-                errors.maximumDiscount ="Maximum discount must be greater than zero.";
+                errors.maximumDiscount = "Maximum discount must be greater than zero.";
 
             } else {
 
@@ -182,21 +182,21 @@ const validateCouponInput = (payload = {}) => {
 
     }
 
-   
+
     const parsedStart = new Date(startDate);
     const parsedExpiry = new Date(expiryDate);
 
-    const isStartValid =Boolean(startDate) &&!Number.isNaN(parsedStart.getTime());
+    const isStartValid = Boolean(startDate) && !Number.isNaN(parsedStart.getTime());
 
-    const isExpiryValid =Boolean(expiryDate) &&!Number.isNaN(parsedExpiry.getTime());
+    const isExpiryValid = Boolean(expiryDate) && !Number.isNaN(parsedExpiry.getTime());
 
     if (!startDate) {
 
-        errors.startDate ="Start date is required.";
+        errors.startDate = "Start date is required.";
 
     } else if (!isStartValid) {
 
-        errors.startDate ="Start date is invalid.";
+        errors.startDate = "Start date is invalid.";
 
     } else {
 
@@ -206,11 +206,11 @@ const validateCouponInput = (payload = {}) => {
 
     if (!expiryDate) {
 
-        errors.expiryDate ="Expiry date is required.";
+        errors.expiryDate = "Expiry date is required.";
 
     } else if (!isExpiryValid) {
 
-        errors.expiryDate ="Expiry date is invalid.";
+        errors.expiryDate = "Expiry date is invalid.";
 
     } else {
 
@@ -218,15 +218,15 @@ const validateCouponInput = (payload = {}) => {
 
     }
 
-    if (isStartValid &&isExpiryValid && parsedExpiry <= parsedStart) {
+    if (isStartValid && isExpiryValid && parsedExpiry <= parsedStart) {
 
-        errors.expiryDate ="Expiry date must be after the start date.";
+        errors.expiryDate = "Expiry date must be after the start date.";
 
     }
 
-    
 
-    if (usageLimit === undefined ||usageLimit === null ||usageLimit === "" ) {
+
+    if (usageLimit === undefined || usageLimit === null || usageLimit === "") {
 
         data.usageLimit = null;
 
@@ -236,11 +236,11 @@ const validateCouponInput = (payload = {}) => {
 
         if (!Number.isInteger(value)) {
 
-            errors.usageLimit ="Usage limit must be a whole number.";
+            errors.usageLimit = "Usage limit must be a whole number.";
 
         } else if (value < 1) {
 
-            errors.usageLimit ="Usage limit must be at least 1.";
+            errors.usageLimit = "Usage limit must be at least 1.";
 
         } else {
 
@@ -251,7 +251,7 @@ const validateCouponInput = (payload = {}) => {
     }
 
     return {
-        isValid:Object.keys(errors).length === 0,
+        isValid: Object.keys(errors).length === 0,
         errors,
         data
 
@@ -260,7 +260,7 @@ const validateCouponInput = (payload = {}) => {
 };
 
 
-const isCouponCodeTaken = async (couponCode,excludeId = null) => {
+const isCouponCodeTaken = async (couponCode, excludeId = null) => {
 
     const query = { couponCode };
 
@@ -354,24 +354,24 @@ export const loadCoupons = async (req, res) => {
 export const createCoupon = async (req, res) => {
 
     try {
-        const { isValid, errors,data} = validateCouponInput(req.body);
+        const { isValid, errors, data } = validateCouponInput(req.body);
 
         if (!isValid) {
 
             return res.status(400).json({
                 success: false,
-                message:MESSAGES.OTHER_PLEASE_CORRECT_VALIDATION_ERRORS,
+                message: MESSAGES.OTHER_PLEASE_CORRECT_VALIDATION_ERRORS,
                 errors
             });
         }
 
 
-        const alreadyExists =await isCouponCodeTaken(data.couponCode);
+        const alreadyExists = await isCouponCodeTaken(data.couponCode);
 
         if (alreadyExists) {
             return res.status(409).json({
                 success: false,
-                message:MESSAGES.COUPON_CODE_ALREADY_EXISTS,
+                message: MESSAGES.COUPON_CODE_ALREADY_EXISTS,
                 errors: {
                     couponCode: "This coupon code is already in use."
                 }
@@ -404,7 +404,7 @@ export const createCoupon = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message:"Something went wrong while creating the coupon."
+            message: "Something went wrong while creating the coupon."
         });
 
     }
@@ -425,44 +425,44 @@ export const updateCoupon = async (req, res) => {
 
         if (!isValid) {
             return res.status(400).json({
-                  success: false,
-                   message:MESSAGES.OTHER_PLEASE_CORRECT_VALIDATION_ERRORS,
-                   errors
+                success: false,
+                message: MESSAGES.OTHER_PLEASE_CORRECT_VALIDATION_ERRORS,
+                errors
             });
         }
 
 
 
-        const alreadyExists = await isCouponCodeTaken(data.couponCode,id);
+        const alreadyExists = await isCouponCodeTaken(data.couponCode, id);
 
         if (alreadyExists) {
             return res.status(409).json({
                 success: false,
-                message:MESSAGES.COUPON_CODE_ALREADY_EXISTS,
+                message: MESSAGES.COUPON_CODE_ALREADY_EXISTS,
                 errors: {
-                    couponCode:"This coupon code is already in use."
+                    couponCode: "This coupon code is already in use."
                 }
             });
         }
 
 
-        const updatedCoupon =await Coupon.findByIdAndUpdate(id, {
-                    couponCode: data.couponCode,
-                    couponName: data.couponName,
-                    description: data.description,
-                    discountType: data.discountType,
-                    discountValue: data.discountValue,
-                    minimumPurchase: data.minimumPurchase,
-                    maximumDiscount: data.maximumDiscount,
-                    startDate: data.startDate,
-                    expiryDate: data.expiryDate,
-                    usageLimit: data.usageLimit,
-                    isActive: Boolean(req.body.isActive)
-                },
+        const updatedCoupon = await Coupon.findByIdAndUpdate(id, {
+            couponCode: data.couponCode,
+            couponName: data.couponName,
+            description: data.description,
+            discountType: data.discountType,
+            discountValue: data.discountValue,
+            minimumPurchase: data.minimumPurchase,
+            maximumDiscount: data.maximumDiscount,
+            startDate: data.startDate,
+            expiryDate: data.expiryDate,
+            usageLimit: data.usageLimit,
+            isActive: Boolean(req.body.isActive)
+        },
 
-                { new: true,runValidators: true}
+            { new: true, runValidators: true }
 
-            );
+        );
 
         if (!updatedCoupon) {
             return res.status(404).json({
@@ -480,7 +480,7 @@ export const updateCoupon = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message:"Something went wrong while updating the coupon."
+            message: "Something went wrong while updating the coupon."
         });
     }
 };
