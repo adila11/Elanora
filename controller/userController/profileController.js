@@ -1,5 +1,6 @@
 import { User, UserOtp } from "../../model/userSchema.js"
 import sentOtp from "../../utils/sendOtp.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const loadProfile = async (req, res) => {
     try {
@@ -8,7 +9,7 @@ export const loadProfile = async (req, res) => {
         const user = await User.findOne({ email: email });
         return res.render("user/profile/profile", { user })
     } catch (error) {
-        res.status(500).send("Server error")
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -33,21 +34,21 @@ export const editProfile = async (req, res) => {
         if (fullName.trim().length > 40) {
             return res.status(400).json({
                 success: false,
-                message: "Full name cannot exceed 40 characters"
+                message: MESSAGES.VALIDATION_FULL_NAME_CANNOT_EXCEED
             });
         }
 
         if (!/^[A-Za-z\s]+$/.test(fullName.trim())) {
             return res.status(400).json({
                 success: false,
-                message: "Full name must contain only alphabets"
+                message: MESSAGES.OTHER_FULL_NAME_MUST_CONTAIN
             });
         }
 
         if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             return res.status(400).json({
                 success: false,
-                message: "Please enter a valid email address"
+                message: MESSAGES.AUTH_PLEASE_ENTER_VALID_EMAIL
             });
         }
 
@@ -60,7 +61,7 @@ export const editProfile = async (req, res) => {
 
         const user = await User.findOne({ email: userEmail });   
         if (!user) {
-            return res.status(404).json({ success: false, message: "User not found" });
+            return res.status(404).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
         }
 
         let updated = false;
@@ -124,7 +125,7 @@ export const sendCurrentEmailOtp = async (req, res) => {
         if (!currentEmail) {
             return res.status(401).json({
                 success: false,
-                message: "Please login to continue"
+                message: MESSAGES.AUTH_PLEASE_LOGIN_CONTINUE
             });
         }
 
@@ -132,7 +133,7 @@ export const sendCurrentEmailOtp = async (req, res) => {
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: "User not found"
+                message: MESSAGES.USER_NOT_FOUND
             });
         }
 
@@ -157,7 +158,7 @@ export const verifyCurrentEmailOtp = async (req, res) => {
         if (!currentEmail) {
             return res.status(401).json({
                 success: false,
-                message: "Please login to continue"
+                message: MESSAGES.AUTH_PLEASE_LOGIN_CONTINUE
             });
         }
 
@@ -165,7 +166,7 @@ export const verifyCurrentEmailOtp = async (req, res) => {
         if (!otp || otp.length !== 6 || isNaN(otp)) {
             return res.status(400).json({
                 success: false,
-                message: "Valid 6-digit OTP is required"
+                message: MESSAGES.AUTH_VALID_6DIGIT_OTP_REQUIRED
             });
         }
 
@@ -188,7 +189,7 @@ export const verifyCurrentEmailOtp = async (req, res) => {
             await UserOtp.deleteOne({ email: currentEmail });
             return res.status(400).json({
                 success: false,
-                message: "Verification code has expired"
+                message: MESSAGES.AUTH_VERIFICATION_CODE_EXPIRED
             });
         }
 
@@ -213,7 +214,7 @@ export const sendNewEmailOtp = async (req, res) => {
         if (!currentEmail) {
             return res.status(401).json({
                 success: false,
-                message: "Please login to continue"
+                message: MESSAGES.AUTH_PLEASE_LOGIN_CONTINUE
             });
         }
 
@@ -228,7 +229,7 @@ export const sendNewEmailOtp = async (req, res) => {
         if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
             return res.status(400).json({
                 success: false,
-                message: "Please enter a valid email address"
+                message: MESSAGES.AUTH_PLEASE_ENTER_VALID_EMAIL
             });
         }
 
@@ -270,7 +271,7 @@ export const verifyNewEmailOtp = async (req, res) => {
         if (!currentEmail) {
             return res.status(401).json({
                 success: false,
-                message: "Please login to continue"
+                message: MESSAGES.AUTH_PLEASE_LOGIN_CONTINUE
             });
         }
 
@@ -294,7 +295,7 @@ export const verifyNewEmailOtp = async (req, res) => {
         if (!otp || otp.length !== 6 || isNaN(otp)) {
             return res.status(400).json({
                 success: false,
-                message: "Valid 6-digit OTP is required"
+                message: MESSAGES.AUTH_VALID_6DIGIT_OTP_REQUIRED
             });
         }
 
@@ -317,7 +318,7 @@ export const verifyNewEmailOtp = async (req, res) => {
             await UserOtp.deleteOne({ email: sanitizedNewEmail });
             return res.status(400).json({
                 success: false,
-                message: "Verification code has expired"
+                message: MESSAGES.AUTH_VERIFICATION_CODE_EXPIRED
             });
         }
 
@@ -325,7 +326,7 @@ export const verifyNewEmailOtp = async (req, res) => {
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: "User not found"
+                message: MESSAGES.USER_NOT_FOUND
             });
         }
 
@@ -359,7 +360,7 @@ export const loadPagenotFound = async (req, res) => {
     try {
         return res.status(404).render("user/profile/pageNotFound")
     } catch (error) {
-        res.status(500).send("Server error")
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
     }
 }
 

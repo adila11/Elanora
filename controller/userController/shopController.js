@@ -3,6 +3,7 @@ import Category from "../../model/categoriesSchema.js";
 import Wishlist from "../../model/wishlistSchema.js";
 import { User } from "../../model/userSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const loadShop = async (req, res) => {
     try {
@@ -117,7 +118,7 @@ export const loadShop = async (req, res) => {
             buildQuery
         });
     } catch (error) {
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -178,6 +179,6 @@ export const loadProductDetail = async (req, res) => {
         if (error.name === 'CastError') {
             return res.status(404).render("user/profile/pageNotFound");
         }
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };

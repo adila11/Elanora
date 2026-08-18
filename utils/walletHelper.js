@@ -1,5 +1,6 @@
 import Wallet from "../model/walletSchema.js";
 import WalletTransaction from "../model/walletTransactionSchema.js";
+import { MESSAGES } from '../constants/messages.js';
 
 
 const generateTransactionId = () => {
@@ -66,7 +67,7 @@ export const debitWallet = async ({
     const wallet = await getOrCreateWallet(userId);
 
     if (wallet.balance < amount) {
-        throw new Error("Insufficient wallet balance");
+        throw new Error(MESSAGES.USER_INSUFFICIENT_WALLET_BALANCE);
     }
 
     wallet.balance -= amount;

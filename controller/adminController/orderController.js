@@ -1,6 +1,7 @@
 import Order from "../../model/orderSchema.js";
 import { User } from "../../model/userSchema.js";
 import Product from "../../model/productSchema.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const getOrdersPage = async (req, res) => {
     try {
@@ -154,7 +155,7 @@ export const updateOrderStatus = async (req, res) => {
 
         const existingOrder = await Order.findOne({ orderId });
         if (!existingOrder) {
-            return res.status(404).json({ success: false, message: "Order not found." });
+            return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
         }
 
         if (['delivered','cancelled','returned'].includes(existingOrder.orderStatus)) {
@@ -166,7 +167,7 @@ export const updateOrderStatus = async (req, res) => {
 
         const dbStatus = STATUS_MAP[status];
         if (!dbStatus) {
-            return res.status(400).json({ success: false, message: "Invalid status value." });
+            return res.status(400).json({ success: false, message: MESSAGES.ORDER_INVALID_STATUS_VALUE });
         }
 
         const currentStatus = existingOrder.orderStatus;
@@ -240,7 +241,7 @@ export const updateItemStatus = async (req, res) => {
 
         const existingOrder = await Order.findOne({ orderId });
         if (!existingOrder) {
-            return res.status(404).json({ success: false, message: "Order not found." });
+            return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
         }
 
         const item = existingOrder.items.find(
@@ -264,7 +265,7 @@ export const updateItemStatus = async (req, res) => {
 
         const dbStatus = STATUS_MAP[status];
         if (!dbStatus) {
-            return res.status(400).json({ success: false, message: "Invalid status value." });
+            return res.status(400).json({ success: false, message: MESSAGES.ORDER_INVALID_STATUS_VALUE });
         }
 
         if (currentItemStatus !== dbStatus && !ALLOWED_TRANSITIONS[currentItemStatus]?.includes(dbStatus)) {
@@ -323,7 +324,7 @@ export const getOrderDetail = async (req, res) => {
             .lean();
 
         if (!order) {
-            return res.status(404).render('admin/404', { message: 'Order not found' });
+            return res.status(404).render('admin/404', { message: MESSAGES.ORDER_NOT_FOUND });
         }
 
         order.user = order.userId;

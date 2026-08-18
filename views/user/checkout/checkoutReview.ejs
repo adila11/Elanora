@@ -824,8 +824,20 @@
     btn.innerHTML = 'Place Order <svg viewBox="0 0 24 24" width="18" height="18" stroke="white" fill="none" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>';
   }
 
-  function goToFailurePage(reason) {
+  async function goToFailurePage(reason, internalOrderId) {
+    // Mark the order as failed in the DB before redirecting
+    if (internalOrderId) {
+      try {
+        await fetch('/payment-failed', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ internalOrderId })
+        });
+      } catch (e) { /* ignore */ }
+    }
     const params = new URLSearchParams({ reason: reason || 'Payment failed' });
+    if (internalOrderId) params.set('orderId', internalOrderId);
     window.location.href = `/order-failed?${params.toString()}`;
   }
 
@@ -855,6 +867,9 @@
           throw new Error(data.message || 'Failed to initiate payment.');
         }
 
+        // Store the internal order ID for failure handling
+        const internalOrderId = data.internalOrderId;
+
         const options = {
           key: data.key,
           amount: data.amount,
@@ -876,27 +891,26 @@
                   razorpay_order_id: rpResponse.razorpay_order_id,
                   razorpay_payment_id: rpResponse.razorpay_payment_id,
                   razorpay_signature: rpResponse.razorpay_signature,
-                  addressId: "<%= address._id %>",
-                  paymentMethod: "razorpay",
-                  couponCode: "<%= couponCode %>"
+                  internalOrderId: internalOrderId
                 })
               });
 
               const verifyData = await verifyRes.json().catch(() => ({}));
 
               if (!verifyRes.ok || !verifyData.success) {
-                goToFailurePage(verifyData.message || 'Payment verification failed');
+                goToFailurePage(verifyData.message || 'Payment verification failed', internalOrderId);
                 return;
               }
 
               window.location.href = verifyData.redirectUrl || '/order-success/';
             } catch (verifyErr) {
-              goToFailurePage(verifyErr.message);
+              goToFailurePage(verifyErr.message, internalOrderId);
             }
           },
           modal: {
             ondismiss: function () {
-              resetPlaceOrderBtn(btn);
+              // User closed the payment modal — mark order as failed
+              goToFailurePage('Payment cancelled by user', internalOrderId);
             }
           }
         };
@@ -904,7 +918,7 @@
         const rzp = new Razorpay(options);
 
         rzp.on('payment.failed', function (resp) {
-          goToFailurePage(resp.error && resp.error.description);
+          goToFailurePage(resp.error && resp.error.description, internalOrderId);
         });
 
         rzp.open();

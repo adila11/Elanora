@@ -172,6 +172,41 @@
       border: 1px solid #E8B4B0;
     }
 
+    .status-badge.payment_failed {
+      background: #FDF0EE;
+      color: #C0392B;
+      border: 1px solid #E8B4B0;
+    }
+
+    /* RETRY PAYMENT BTN */
+    .retry-btn-detail {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      background: #c49a2a;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: 12px;
+    }
+
+    .retry-btn-detail:hover {
+      background: #a87820;
+      transform: scale(1.02);
+    }
+
+    .retry-btn-detail:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     /* TRACKER */
     .tracker-wrap {
       position: relative;
@@ -1022,7 +1057,7 @@
                 ═══════════════════════════════════════════════════ */ const orderStatusLabel={ pending: 'Pending' ,
                 processing: 'Processing' , shipped: 'Shipped' , out_for_delivery: 'Out for Delivery' ,
                 delivered: 'Delivered' , cancelled: 'Cancelled' , partially_cancelled: 'Partially Cancelled' ,
-                returned: 'Returned' , partially_returned: 'Partially Returned' , }; const itemStatusLabel={
+                returned: 'Returned' , partially_returned: 'Partially Returned' , payment_failed: 'Payment Failed' , }; const itemStatusLabel={
                 active: 'Active' , cancelled: 'Cancelled' , returned: 'Returned' , }; const returnStatusLabel={
                 pending: 'Return Requested' , approved: 'Returned' , rejected: 'Return Rejected' , }; /*
                 ═══════════════════════════════════════════════════ DERIVE EFFECTIVE ORDER STATUS FROM ITEMS
@@ -1076,6 +1111,7 @@
                 partially_cancelled: 'partially_cancelled',
                 returned: 'returned',
                 partially_returned: 'partially_returned',
+                payment_failed: 'payment_failed',
                 };
                 const orderBadgeClass = badgeCssMap[displayStatus] || displayStatus;
 
@@ -1165,9 +1201,20 @@
                                   Phone: <%= order.shippingAddress.phone %>
                       </span>
                     </div>
-                    <span class="status-badge <%= orderBadgeClass %>">
-                      <%= orderStatusLabel[displayStatus] || displayStatus %>
-                    </span>
+                    <% if (order.paymentStatus === 'failed') { %>
+                      <span class="status-badge payment_failed">Payment Failed</span>
+                      <button class="retry-btn-detail" id="retryBtnDetail" onclick='initiateRetryPaymentDetail("<%= order._id %>")'>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="23 4 23 10 17 10" />
+                          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                        </svg>
+                        Retry Payment
+                      </button>
+                    <% } else { %>
+                      <span class="status-badge <%= orderBadgeClass %>">
+                        <%= orderStatusLabel[displayStatus] || displayStatus %>
+                      </span>
+                    <% } %>
                   </div>
 
                   <!-- ORDER TRACKER -->
@@ -1924,6 +1971,129 @@
         }
       </script>
 
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      <script>
+        // Retry Payment Flow (Order Detail Page)
+        async function initiateRetryPaymentDetail(orderId) {
+          const btn = document.getElementById('retryBtnDetail');
+          if (!btn || btn.disabled) return;
+
+          btn.disabled = true;
+          const originalHtml = btn.innerHTML;
+          btn.innerHTML = 'Validating…';
+
+          try {
+            // Step 1: Validate
+            const validateRes = await fetch(`/orders/${orderId}/retry-validate`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include'
+            });
+            const validateData = await validateRes.json();
+
+            if (!validateRes.ok || !validateData.success) {
+              const msg = validateData.errors
+                ? validateData.errors.map(e => e.error).join('\n')
+                : (validateData.message || 'Validation failed');
+              if (typeof window.showToast === 'function') window.showToast(msg, 'error');
+              else alert(msg);
+              if (validateData.expired) setTimeout(() => window.location.reload(), 1500);
+              btn.disabled = false;
+              btn.innerHTML = originalHtml;
+              return;
+            }
+
+            // Step 2: Create Razorpay order
+            btn.innerHTML = 'Processing…';
+
+            const retryRes = await fetch(`/orders/${orderId}/retry-payment`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include'
+            });
+            const retryData = await retryRes.json();
+
+            if (!retryRes.ok || !retryData.success) {
+              if (typeof window.showToast === 'function') window.showToast(retryData.message || 'Failed to initiate payment', 'error');
+              btn.disabled = false;
+              btn.innerHTML = originalHtml;
+              return;
+            }
+
+            // Step 3: Open Razorpay checkout
+            const options = {
+              key: retryData.key,
+              amount: retryData.amount,
+              currency: retryData.currency,
+              name: "Elanora",
+              description: "Retry Payment",
+              order_id: retryData.orderId,
+              theme: { color: "#c49a2a" },
+              handler: async function(rpResponse) {
+                try {
+                  const verifyRes = await fetch(`/orders/${orderId}/verify-retry`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                      razorpay_order_id: rpResponse.razorpay_order_id,
+                      razorpay_payment_id: rpResponse.razorpay_payment_id,
+                      razorpay_signature: rpResponse.razorpay_signature
+                    })
+                  });
+                  const verifyData = await verifyRes.json();
+
+                  if (verifyRes.ok && verifyData.success) {
+                    if (typeof window.showToast === 'function') window.showToast('Payment successful!', 'success');
+                    setTimeout(() => window.location.reload(), 1000);
+                  } else {
+                    if (typeof window.showToast === 'function') window.showToast(verifyData.message || 'Payment verification failed', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                  }
+                } catch (verifyErr) {
+                  if (typeof window.showToast === 'function') window.showToast('Payment verification error', 'error');
+                  btn.disabled = false;
+                  btn.innerHTML = originalHtml;
+                }
+              },
+              modal: {
+                ondismiss: function() {
+                  fetch('/payment-failed', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ internalOrderId: orderId })
+                  }).catch(() => {});
+                  btn.disabled = false;
+                  btn.innerHTML = originalHtml;
+                }
+              }
+            };
+
+            const rzp = new Razorpay(options);
+
+            rzp.on('payment.failed', function(resp) {
+              fetch('/payment-failed', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ internalOrderId: orderId })
+              }).catch(() => {});
+              if (typeof window.showToast === 'function') window.showToast(resp.error?.description || 'Payment failed. You can try again.', 'error');
+              btn.disabled = false;
+              btn.innerHTML = originalHtml;
+            });
+
+            rzp.open();
+
+          } catch (err) {
+            if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+          }
+        }
+      </script>
       <!-- PREMIUM INVOICE TEMPLATE (OFFSCREEN) -->
       <div class="invoice-container-wrap">
         <div class="invoice-card" id="printableInvoice">

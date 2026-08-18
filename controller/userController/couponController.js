@@ -2,17 +2,18 @@ import Coupon from "../../model/couponSchema.js";
 import Cart from "../../model/cartSchema.js";
 import { User } from "../../model/userSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const applyCoupon = async (req, res) => {
     try {
         const userEmail = req.session.user;
         if (!userEmail) {
-            return res.status(401).json({ success: false, message: "Please login first" });
+            return res.status(401).json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
-            return res.status(401).json({ success: false, message: "User not found" });
+            return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
         }
 
         const { couponCode } = req.body;
@@ -99,15 +100,15 @@ export const applyCoupon = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error. Please try again." });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
     }
 };
 
 export const removeCoupon = async (req, res) => {
     try {
         req.session.appliedCoupon = null;
-        return res.json({ success: true, message: "Coupon removed" });
+        return res.json({ success: true, message: "Coupon removed successfully" });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error. Please try again." });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
     }
 };

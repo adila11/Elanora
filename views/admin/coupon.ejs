@@ -834,19 +834,41 @@
 
 <script>
   let deleteCouponId = null;
+  let hasManuallyEditedMinCart = false;
+
+  // --- Min Cart Value Auto-Validation Utilities ---
+  function getRequiredMinCartValue(couponValue) {
+    if (!couponValue || isNaN(couponValue) || couponValue <= 0) return 0;
+    return Math.ceil(couponValue / 0.70);
+  }
+
+  function validateMinCartValue(couponValue, minCartValue) {
+    const requiredMin = getRequiredMinCartValue(couponValue);
+    if (requiredMin > 0 && minCartValue < requiredMin) {
+      return {
+        isValid: false,
+        requiredMin,
+        message: `Minimum cart value cannot be less than ₹${requiredMin}. For a coupon value of ₹${couponValue}, the minimum cart value must be at least ₹${requiredMin} (70% rule).`
+      };
+    }
+    return { isValid: true };
+  }
 
   function openCreateModal() {
+    hasManuallyEditedMinCart = false;
     document.getElementById('couponForm').reset();
     document.getElementById('couponId').value = '';
     document.getElementById('discountType').value = 'percentage';
     document.getElementById('isActive').checked = true;
     document.getElementById('couponModalTitle').textContent = 'Create New Coupon';
     document.getElementById('couponSubmitBtn').textContent = 'Save Coupon';
+    document.getElementById('couponSubmitBtn').disabled = false;
     clearFieldErrors();
     document.getElementById('couponModal').style.display = 'flex';
   }
 
   function openEditModal(coupon) {
+    hasManuallyEditedMinCart = true;
     document.getElementById('couponForm').reset();
     document.getElementById('couponId').value = coupon._id;
     document.getElementById('couponCode').value = coupon.couponCode;
@@ -863,8 +885,10 @@
 
     document.getElementById('couponModalTitle').textContent = 'Edit Coupon';
     document.getElementById('couponSubmitBtn').textContent = 'Save Coupon';
+    document.getElementById('couponSubmitBtn').disabled = false;
     clearFieldErrors();
     document.getElementById('couponModal').style.display = 'flex';
+    checkMinCartValidation();
   }
 
   function closeCouponModal() {
@@ -890,6 +914,68 @@
     document.querySelectorAll('#couponForm .form-input, #couponForm .form-select, #couponForm .form-textarea')
       .forEach(el => el.classList.remove('invalid'));
   }
+
+  // Live Auto-Validation Logic
+  function checkMinCartValidation() {
+    const discountTypeEl = document.getElementById('discountType');
+    const discountValueEl = document.getElementById('discountValue');
+    const minimumPurchaseEl = document.getElementById('minimumPurchase');
+    const submitBtn = document.getElementById('couponSubmitBtn');
+    
+    // Clear only this specific error to re-evaluate it
+    const errEl = document.getElementById('err-minimumPurchase');
+    minimumPurchaseEl.classList.remove('invalid');
+    if (errEl) {
+      errEl.textContent = '';
+      errEl.style.display = 'none';
+    }
+    submitBtn.disabled = false;
+
+    if (discountTypeEl.value === 'fixed') {
+      const couponValue = Number(discountValueEl.value);
+      const minCartValue = Number(minimumPurchaseEl.value);
+
+      if (couponValue > 0 && minimumPurchaseEl.value !== '') {
+        const validation = validateMinCartValue(couponValue, minCartValue);
+        if (!validation.isValid) {
+          showFieldError('minimumPurchase', validation.message);
+          submitBtn.disabled = true;
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  document.getElementById('discountValue').addEventListener('input', function() {
+    const discountTypeEl = document.getElementById('discountType');
+    const minimumPurchaseEl = document.getElementById('minimumPurchase');
+    
+    if (discountTypeEl.value === 'fixed') {
+      const couponValue = Number(this.value);
+      if (couponValue > 0) {
+        const requiredMin = getRequiredMinCartValue(couponValue);
+        if (!hasManuallyEditedMinCart || minimumPurchaseEl.value === '') {
+          minimumPurchaseEl.value = requiredMin;
+        }
+      }
+    }
+    checkMinCartValidation();
+  });
+
+  document.getElementById('minimumPurchase').addEventListener('input', function() {
+    hasManuallyEditedMinCart = true;
+    checkMinCartValidation();
+  });
+
+  document.getElementById('minimumPurchase').addEventListener('blur', function() {
+    checkMinCartValidation();
+  });
+
+  document.getElementById('discountType').addEventListener('change', function() {
+    checkMinCartValidation();
+  });
+
 
   function validateCouponForm() {
     clearFieldErrors();
@@ -959,7 +1045,7 @@
       }
     }
 
-    // 6. Minimum Purchase — Required, Number, Not Negative
+    // 6. Minimum Purchase — Required, Number, Not Negative, plus 70% auto-validation
     const rawMinPurchase = document.getElementById('minimumPurchase').value.trim();
     if (rawMinPurchase === '') {
       errors.minimumPurchase = 'Minimum purchase amount is required.';
@@ -970,7 +1056,16 @@
       } else if (numMinPurchase < 0) {
         errors.minimumPurchase = 'Minimum purchase cannot be negative.';
       } else {
-        data.minimumPurchase = numMinPurchase;
+        if (data.discountType === 'fixed' && data.discountValue > 0) {
+          const validation = validateMinCartValue(data.discountValue, numMinPurchase);
+          if (!validation.isValid) {
+            errors.minimumPurchase = validation.message;
+          } else {
+            data.minimumPurchase = numMinPurchase;
+          }
+        } else {
+          data.minimumPurchase = numMinPurchase;
+        }
       }
     }
 

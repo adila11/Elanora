@@ -167,6 +167,7 @@ const orderSchema = new mongoose.Schema({
             'out_for_delivery',
             'delivered',
             'cancelled',
+            'payment_failed',
 
             'return_requested',
             'returned',
@@ -198,6 +199,15 @@ const orderSchema = new mongoose.Schema({
     cancelledAt: Date,
     deliveredAt: Date,
     returnedAt: Date,
+
+    retryCount: {
+        type: Number,
+        default: 0
+    },
+
+    paymentFailedAt: Date,
+
+    orderExpiresAt: Date,
 
 }, {
     timestamps: true

@@ -1,4 +1,5 @@
 import Coupon from "../../model/couponSchema.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 const ALLOWED_DISCOUNT_TYPES = ["percentage", "fixed"];
 
@@ -359,7 +360,7 @@ export const createCoupon = async (req, res) => {
 
             return res.status(400).json({
                 success: false,
-                message:"Please correct the validation errors.",
+                message:MESSAGES.OTHER_PLEASE_CORRECT_VALIDATION_ERRORS,
                 errors
             });
         }
@@ -370,7 +371,7 @@ export const createCoupon = async (req, res) => {
         if (alreadyExists) {
             return res.status(409).json({
                 success: false,
-                message:"Coupon code already exists.",
+                message:MESSAGES.COUPON_CODE_ALREADY_EXISTS,
                 errors: {
                     couponCode: "This coupon code is already in use."
                 }
@@ -425,7 +426,7 @@ export const updateCoupon = async (req, res) => {
         if (!isValid) {
             return res.status(400).json({
                   success: false,
-                   message:"Please correct the validation errors.",
+                   message:MESSAGES.OTHER_PLEASE_CORRECT_VALIDATION_ERRORS,
                    errors
             });
         }
@@ -437,7 +438,7 @@ export const updateCoupon = async (req, res) => {
         if (alreadyExists) {
             return res.status(409).json({
                 success: false,
-                message:"Coupon code already exists.",
+                message:MESSAGES.COUPON_CODE_ALREADY_EXISTS,
                 errors: {
                     couponCode:"This coupon code is already in use."
                 }
@@ -466,7 +467,7 @@ export const updateCoupon = async (req, res) => {
         if (!updatedCoupon) {
             return res.status(404).json({
                 success: false,
-                message: "Coupon not found."
+                message: MESSAGES.COUPON_NOT_FOUND
             });
 
         }
@@ -498,7 +499,7 @@ export const deleteCoupon = async (req, res) => {
         if (!deletedCoupon) {
             return res.status(404).json({
                 success: false,
-                message: "Coupon not found."
+                message: MESSAGES.COUPON_NOT_FOUND
             });
         }
         return res.status(200).json({

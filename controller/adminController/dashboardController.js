@@ -1,6 +1,7 @@
 import Order from "../../model/orderSchema.js";
 import Product from "../../model/productSchema.js";
 import { User } from "../../model/userSchema.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
@@ -115,7 +116,7 @@ export const loadDashboard = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).send("Dashboard temporarily unavailable. Please try again.");
+    res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
   }
 };
 

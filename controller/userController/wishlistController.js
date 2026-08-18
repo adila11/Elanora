@@ -3,6 +3,7 @@ import Products from "../../model/productSchema.js";
 import { User } from "../../model/userSchema.js";
 import Cart from "../../model/cartSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const loadWishlist = async (req, res) => {
     try {
@@ -38,7 +39,7 @@ export const loadWishlist = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -47,19 +48,19 @@ export const addToWishlist = async (req, res) => {
         const userEmail = req.session.user;
 
         if (!userEmail) {
-            return res.json({ success: false, message: "Please login first" });
+            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
-            return res.json({ success: false, message: "Please login first" });
+            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const { productId } = req.body;
 
         const product = await Products.findById(productId);
         if (!product) {
-            return res.json({ success: false, message: "Product not found" });
+            return res.json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
         }
 
         const cart = await Cart.findOne({ userId: user._id });
@@ -93,7 +94,7 @@ export const addToWishlist = async (req, res) => {
         res.json({ success: true, message: "Added to wishlist" });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error" });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -102,12 +103,12 @@ export const removeFromWishlist = async (req, res) => {
         const userEmail = req.session.user;
 
         if (!userEmail) {
-            return res.json({ success: false, message: "Please login first" });
+            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
-            return res.json({ success: false, message: "Please login first" });
+            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const { productId } = req.body;
@@ -126,7 +127,7 @@ export const removeFromWishlist = async (req, res) => {
         res.json({ success: true, message: "Removed from wishlist" });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error" });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 

@@ -1,6 +1,7 @@
 import Category from "../../model/categoriesSchema.js";
 import Products from "../../model/productSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const loadCategories = async (req, res) => {
     try {
@@ -65,21 +66,21 @@ export const loadCategories = async (req, res) => {
             sort
         });
     } catch (error) {
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
 export const addCategory = async (req, res) => {
     try {
-        if (!req.session.admin) return res.status(401).json({ message: 'Unauthorized' });
+        if (!req.session.admin) return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
 
         let { name, description } = req.body;
 
         if (!name || name.trim().length < 3) {
-            return res.status(400).json({ message: 'Category name must be at least 3 characters.' });
+            return res.status(400).json({ message: MESSAGES.PRODUCT_NAME_MUST_AT });
         }
         if (!/^[a-zA-Z0-9\s]+$/.test(name.trim())) {
-            return res.status(400).json({ message: 'Only letters, numbers and spaces are allowed.' });
+            return res.status(400).json({ message: MESSAGES.VALIDATION_ONLY_LETTERS_NUMBERS_SPACES });
         }
 
         const formattedName = name.trim().charAt(0).toUpperCase() + name.trim().slice(1);
@@ -88,14 +89,14 @@ export const addCategory = async (req, res) => {
             name: { $regex: `^${formattedName}$`, $options: 'i' }
         });
         if (existing) {
-            return res.status(409).json({ message: 'A category with this name already exists.' });
+            return res.status(409).json({ message: "A category with this name already exists." });
         }
 
         const newCategory = new Category({ name: formattedName, description: description?.trim() });
         await newCategory.save();
 
         return res.status(201).json({
-            message: 'Category added successfully!',
+            message: "Category added successfully!",
             category: {
                 _id: newCategory._id,
                 name: newCategory.name,
@@ -106,22 +107,22 @@ export const addCategory = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: 'Server error. Please try again.' });
+        res.status(500).json({ message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
     }
 };
 
 export const editCategory = async (req, res) => {
     try {
-        if (!req.session.admin) return res.status(401).json({ message: 'Unauthorized' });
+        if (!req.session.admin) return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
 
         const { id } = req.params;
         let { name, description } = req.body;
 
         if (!name || name.trim().length < 3) {
-            return res.status(400).json({ message: 'Category name must be at least 3 characters.' });
+            return res.status(400).json({ message: MESSAGES.PRODUCT_NAME_MUST_AT });
         }
         if (!/^[a-zA-Z0-9\s]+$/.test(name.trim())) {
-            return res.status(400).json({ message: 'Only letters, numbers and spaces are allowed.' });
+            return res.status(400).json({ message: MESSAGES.VALIDATION_ONLY_LETTERS_NUMBERS_SPACES });
         }
 
         const formattedName = name.trim().charAt(0).toUpperCase() + name.trim().slice(1);
@@ -131,7 +132,7 @@ export const editCategory = async (req, res) => {
             _id: { $ne: id }
         });
         if (duplicate) {
-            return res.status(409).json({ message: 'Another category with this name already exists.' });
+            return res.status(409).json({ message: "Another category with this name already exists." });
         }
 
         const updated = await Category.findByIdAndUpdate(
@@ -145,10 +146,10 @@ export const editCategory = async (req, res) => {
             }
         );
 
-        if (!updated) return res.status(404).json({ message: 'Category not found.' });
+        if (!updated) return res.status(404).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
 
         return res.json({
-            message: 'Category updated successfully!',
+            message: MESSAGES.PRODUCT_UPDATED_SUCCESSFULLY_1,
             category: {
                 _id: updated._id,
                 name: updated.name,
@@ -159,20 +160,20 @@ export const editCategory = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: 'Server error. Please try again.' });
+        res.status(500).json({ message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
     }
 };
 
 export const toggleCategory = async (req, res) => {
     try {
         if (!req.session.admin) {
-            return res.status(401).json({ message: 'Unauthorized' });
+            return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
         }
 
         const cat = await Category.findById(req.params.id);
 
         if (!cat) {
-            return res.status(404).json({ message: 'Category not found.' });
+            return res.status(404).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
         }
         cat.isActive = !cat.isActive;
 
@@ -197,57 +198,57 @@ export const toggleCategory = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({
-            message: "Server error."
+            message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR
         });
     }
 };
 
 export const deleteCategory = async (req, res) => {
     try {
-        if (!req.session.admin) return res.status(401).json({ message: 'Unauthorized' });
+        if (!req.session.admin) return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
 
         const deleted = await Category.findByIdAndDelete(req.params.id);
         
-        if (!deleted) return res.status(404).json({ message: 'Category not found.' });
+        if (!deleted) return res.status(404).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
 
-        return res.json({ message: 'Category deleted successfully.' });
+        return res.json({ message: MESSAGES.PRODUCT_DELETED_SUCCESSFULLY_1 });
     } catch (error) {
-        res.status(500).json({ message: 'Server error.' });
+        res.status(500).json({ message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
 export const saveCategoryOffer = async (req, res) => {
     try {
         if (!req.session.admin) {
-            return res.status(401).json({ success: false, message: "Unauthorized" });
+            return res.status(401).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
         }
 
         const { id } = req.params;
         const { name, discountType, discountValue, startDate, endDate } = req.body;
 
         if (!name || !name.trim()) {
-            return res.status(400).json({ success: false, message: "Offer name is required" });
+            return res.status(400).json({ success: false, message: MESSAGES.COUPON_OFFER_NAME_REQUIRED });
         }
         if (name.trim().length < 3 || name.trim().length > 50) {
-            return res.status(400).json({ success: false, message: "Offer name must be between 3 and 50 characters" });
+            return res.status(400).json({ success: false, message: MESSAGES.COUPON_OFFER_NAME_MUST_BETWEEN });
         }
 
         if (!discountType || !["percentage", "flat"].includes(discountType)) {
-            return res.status(400).json({ success: false, message: "Invalid discount type" });
+            return res.status(400).json({ success: false, message: MESSAGES.COUPON_INVALID_DISCOUNT_TYPE });
         }
 
         const discVal = parseFloat(discountValue);
         if (isNaN(discVal) || discVal <= 0) {
-            return res.status(400).json({ success: false, message: "Discount value must be a valid number greater than 0" });
+            return res.status(400).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_VALUE_MUST_VALID });
         }
 
         const category = await Category.findById(id);
         if (!category) {
-            return res.status(404).json({ success: false, message: "Category not found" });
+            return res.status(404).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
         }
 
         if (discountType === "percentage" && (discVal < 1 || discVal > 99)) {
-            return res.status(400).json({ success: false, message: "Percentage discount must be between 1 and 99" });
+            return res.status(400).json({ success: false, message: MESSAGES.COUPON_PERCENTAGE_DISCOUNT_MUST_BETWEEN });
         }
 
         let start = null;
@@ -255,16 +256,16 @@ export const saveCategoryOffer = async (req, res) => {
         if (startDate) {
             start = new Date(startDate);
             if (isNaN(start.getTime())) {
-                return res.status(400).json({ success: false, message: "Invalid start date" });
+                return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_INVALID_START_DATE });
             }
         }
         if (endDate) {
             end = new Date(endDate);
             if (isNaN(end.getTime())) {
-                return res.status(400).json({ success: false, message: "Invalid end date" });
+                return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_INVALID_END_DATE });
             }
             if (start && end < start) {
-                return res.status(400).json({ success: false, message: "End date must be after or equal to start date" });
+                return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_END_DATE_MUST_AFTER });
             }
         }
 
@@ -297,13 +298,13 @@ export const saveCategoryOffer = async (req, res) => {
 export const deleteCategoryOffer = async (req, res) => {
     try {
         if (!req.session.admin) {
-            return res.status(401).json({ success: false, message: "Unauthorized" });
+            return res.status(401).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
         }
 
         const { id } = req.params;
         const category = await Category.findById(id);
         if (!category) {
-            return res.status(404).json({ success: false, message: "Category not found" });
+            return res.status(404).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
         }
 
         category.offer = undefined;

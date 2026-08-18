@@ -454,16 +454,24 @@
           </div>
 
           <div class="btn-row">
-            <form id="retryForm" method="POST" action="/checkout/review" style="flex:1; display:flex;">
-              <input type="hidden" name="addressId" value="<%= addressId %>">
-              <input type="hidden" name="paymentMethod" value="<%= paymentMethod %>">
-              <input type="hidden" name="couponCode" value="<%= couponCode %>">
-              <input type="hidden" name="discountAmount" value="<%= discountAmount %>">
-              <button type="submit" class="btn-solid" style="width:100%;">
-                Try Again
-              </button>
-            </form>
-            <a href="/checkout/payment" class="btn-outline">Change Payment Method</a>
+            <% if (orderId) { %>
+            <button id="retryBtn-<%= orderId %>" onclick='initiateRetryPayment("<%= orderId %>")' class="btn-solid" style="width:100%; border:none;">
+              <svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2.5">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+              Retry Payment
+            </button>
+            <% } else { %>
+            <a href="/orders" class="btn-solid" style="width:100%;">
+              <svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2.5">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+              View My Orders & Retry
+            </a>
+            <% } %>
+            <a href="/" class="btn-outline">Continue Shopping</a>
           </div>
         </div>
 
@@ -472,6 +480,133 @@
 
     <%- include('../../partials/user/footer') %>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+      // Retry Payment Flow
+      async function initiateRetryPayment(orderId) {
+        const btn = document.getElementById(`retryBtn-${orderId}`);
+        if (!btn || btn.disabled) return;
+
+        btn.disabled = true;
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg> Validating…';
+
+        try {
+          // Step 1: Validate
+          const validateRes = await fetch(`/orders/${orderId}/retry-validate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+          });
+          const validateData = await validateRes.json();
+
+          if (!validateRes.ok || !validateData.success) {
+            const msg = validateData.errors
+              ? validateData.errors.map(e => e.error).join('\n')
+              : (validateData.message || 'Validation failed');
+            if (typeof window.showToast === 'function') window.showToast(msg, 'error');
+            else alert(msg);
+            if (validateData.expired) setTimeout(() => window.location.href = '/orders', 1500);
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+            return;
+          }
+
+          // Step 2: Create Razorpay order
+          btn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" stroke="white" fill="none" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg> Processing…';
+
+          const retryRes = await fetch(`/orders/${orderId}/retry-payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+          });
+          const retryData = await retryRes.json();
+
+          if (!retryRes.ok || !retryData.success) {
+            if (typeof window.showToast === 'function') window.showToast(retryData.message || 'Failed to initiate payment', 'error');
+            else alert(retryData.message || 'Failed to initiate payment');
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+            return;
+          }
+
+          // Step 3: Open Razorpay checkout
+          const options = {
+            key: retryData.key,
+            amount: retryData.amount,
+            currency: retryData.currency,
+            name: "Elanora",
+            description: "Retry Payment",
+            order_id: retryData.orderId,
+            theme: { color: "#c49a2a" },
+            handler: async function(rpResponse) {
+              try {
+                const verifyRes = await fetch(`/orders/${orderId}/verify-retry`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({
+                    razorpay_order_id: rpResponse.razorpay_order_id,
+                    razorpay_payment_id: rpResponse.razorpay_payment_id,
+                    razorpay_signature: rpResponse.razorpay_signature
+                  })
+                });
+                const verifyData = await verifyRes.json();
+
+                if (verifyRes.ok && verifyData.success) {
+                  window.location.href = verifyData.redirectUrl || `/order-success/${orderId}`;
+                } else {
+                  if (typeof window.showToast === 'function') window.showToast(verifyData.message || 'Payment verification failed', 'error');
+                  else alert(verifyData.message || 'Payment verification failed');
+                  btn.disabled = false;
+                  btn.innerHTML = originalHtml;
+                }
+              } catch (verifyErr) {
+                if (typeof window.showToast === 'function') window.showToast('Payment verification error', 'error');
+                else alert('Payment verification error');
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+              }
+            },
+            modal: {
+              ondismiss: function() {
+                fetch('/payment-failed', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({ internalOrderId: orderId })
+                }).catch(() => {});
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+              }
+            }
+          };
+
+          const rzp = new Razorpay(options);
+
+          rzp.on('payment.failed', function(resp) {
+            fetch('/payment-failed', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ internalOrderId: orderId })
+            }).catch(() => {});
+            if (typeof window.showToast === 'function') window.showToast(resp.error?.description || 'Payment failed. You can try again.', 'error');
+            else alert(resp.error?.description || 'Payment failed. You can try again.');
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+          });
+
+          rzp.open();
+
+        } catch (err) {
+          if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+          else alert('Network error. Please try again.');
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+        }
+      }
+    </script>
 </body>
 
 </html>

@@ -10,14 +10,15 @@ import passport from 'passport'
 import { loadShop, loadProductDetail } from '../controller/userController/shopController.js'
 import { addToCart, loadCart, updateCartItem, removeCartItem } from '../controller/userController/cartController.js'
 import { loadWishlist, addToWishlist, removeFromWishlist } from '../controller/userController/wishlistController.js'
-import { loadCheckoutAddress, loadCheckoutPayment, loadCheckoutReview, placeOrder, loadOrderSuccess, createRazorpayOrder, verifyPayment, loadOrderFailed } from "../controller/userController/checkoutController.js";
-import { cancelFullOrder, cancelSingleItem, getOrderDetail, getOrders, returnItem } from '../controller/userController/orderController.js'
+import { loadCheckoutAddress, loadCheckoutPayment, loadCheckoutReview, placeOrder, loadOrderSuccess, createRazorpayOrder, verifyPayment, loadOrderFailed, handlePaymentFailure } from "../controller/userController/checkoutController.js";
+import { cancelFullOrder, cancelSingleItem, getOrderDetail, getOrders, returnItem, validateRetryPayment, retryPayment, verifyRetryPayment } from '../controller/userController/orderController.js'
 import { checkPincode } from "../utils/pincodeValidator.js";
 import { loadAbout } from '../controller/userController/aboutController.js'
 import { loadContact } from '../controller/userController/contactController.js'
 import { createWalletTopupOrder, loadWallet, loadWalletTransactions, verifyWalletPayment } from '../controller/userController/walletController.js'
 import { loadReferralPage } from '../controller/userController/referralController.js'
 import { applyCoupon, removeCoupon } from '../controller/userController/couponController.js'
+import { MESSAGES } from '../constants/messages.js';
 const router = express.Router()
 
 
@@ -44,7 +45,7 @@ router.get(
     (req, res) => {
         if (req.user && req.user.isBlocked) {
             req.logout((err) => {
-                req.flash('error', "Your account has been blocked by the admin");
+                req.flash('error', MESSAGES.AUTH_ACCOUNT_BLOCKED_BY_ADMIN);
                 res.redirect("/login");
             });
             return;
@@ -134,6 +135,10 @@ router.get("/orders/:id", isLoggedIn, isBlocked, getOrderDetail);
 router.post('/orders/:id/cancel', cancelFullOrder);
 router.post('/cancel-item', cancelSingleItem);
 router.post('/return-item', returnItem);
+router.post('/payment-failed', isLoggedIn, isBlocked, handlePaymentFailure);
+router.post('/orders/:id/retry-validate', isLoggedIn, isBlocked, validateRetryPayment);
+router.post('/orders/:id/retry-payment', isLoggedIn, isBlocked, retryPayment);
+router.post('/orders/:id/verify-retry', isLoggedIn, isBlocked, verifyRetryPayment);
 
 router.post("/resend-otp", resendOtp)
 

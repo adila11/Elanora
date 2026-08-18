@@ -6,6 +6,9 @@ import Return from "../../model/returnSchema.js";
 import { User } from "../../model/userSchema.js";
 import { creditWallet } from "../../utils/walletHelper.js";
 import { revalidateCouponAgainstCart, cancelOrderDueToCouponBreach } from "../../utils/couponValidator.js";
+import razorpay from "../../config/razorpay.js";
+import crypto from "crypto";
+import { MESSAGES } from '../../constants/messages.js';
 
 
 export const getOrders = async (req, res) => {
@@ -47,7 +50,7 @@ export const getOrders = async (req, res) => {
             },
         });
     } catch (err) {
-        res.status(500).send('Server Error');
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -94,7 +97,7 @@ export const getOrderDetail = async (req, res) => {
         if (error.name === 'CastError') {
             return res.status(404).render("user/profile/pageNotFound");
         }
-        res.status(500).send("Server Error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -105,10 +108,10 @@ export const cancelFullOrder = async (req, res) => {
         const { reason } = req.body;
 
         const user = await User.findOne({ email: req.session.user });
-        if (!user) return res.status(401).json({ success: false, message: "User not found" });
+        if (!user) return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
 
         const order = await Order.findOne({ _id: orderId, userId: user._id });
-        if (!order) return res.status(404).json({ success: false, message: "Order not found" });
+        if (!order) return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
 
         const blockedStatuses = ["shipped", "out_for_delivery", "delivered"];
         if (blockedStatuses.includes(order.orderStatus)) {
@@ -175,7 +178,7 @@ export const cancelFullOrder = async (req, res) => {
         return res.status(200).json({ success: true, message: "Order cancelled successfully" });
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Server Error" });
+        return res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -195,7 +198,7 @@ export const cancelSingleItem = async (req, res) => {
         if (!item) {
             return res.status(404).json({
                 success: false,
-                message: "Item not found"
+                message: MESSAGES.OTHER_ITEM_NOT_FOUND
             });
         }
 
@@ -212,6 +215,8 @@ export const cancelSingleItem = async (req, res) => {
                 message: "Cannot cancel this item after shipping"
             });
         }
+
+        
 
         if (order.isCouponApplied && order.couponCode && item.itemStatus !== "cancelled" && item.itemStatus !== "returned") {
             const couponCheck = await revalidateCouponAgainstCart(order, [item._id]);
@@ -237,7 +242,7 @@ export const cancelSingleItem = async (req, res) => {
                 );
                 return res.json({
                     success: true,
-                    message: `Full order cancelled and refunded to your wallet due to coupon minimum purchase requirement breach.`,
+                    message: "Full order cancelled and refunded to your wallet due to coupon minimum purchase requirement breach.",
                     autoCancelledOrder: true,
                 });
             }
@@ -317,7 +322,7 @@ export const returnItem = async (req, res) => {
         if (!user) {
             return res.status(401).json({
                 success: false,
-                message: "User not found"
+                message: MESSAGES.USER_NOT_FOUND
             });
         }
 
@@ -329,7 +334,7 @@ export const returnItem = async (req, res) => {
         if (!order) {
             return res.status(404).json({
                 success: false,
-                message: "Order not found"
+                message: MESSAGES.ORDER_NOT_FOUND
             });
         }
 
@@ -345,7 +350,7 @@ export const returnItem = async (req, res) => {
         if (!item) {
             return res.status(404).json({
                 success: false,
-                message: "Item not found"
+                message: MESSAGES.OTHER_ITEM_NOT_FOUND
             });
         }
 
@@ -395,10 +400,211 @@ export const returnItem = async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: "Server Error"
+            message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR
         });
 
     }
 };
 
 
+
+export const validateRetryPayment = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.session.user });
+        if (!user) return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+
+        const order = await Order.findOne({ _id: req.params.id, userId: user._id });
+        if (!order) return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
+
+        // Must be a failed payment order
+        if (order.paymentStatus !== 'failed') {
+            return res.status(400).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_DOES_NOT });
+        }
+
+        // Check if cancelled
+        if (order.orderStatus === 'cancelled') {
+            return res.status(400).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_CANCELLED });
+        }
+
+        // Check if expired
+        if (order.orderExpiresAt && new Date() > new Date(order.orderExpiresAt)) {
+            // Auto-cancel expired order and restore stock
+            order.orderStatus = 'cancelled';
+            order.cancelReason = 'Payment retry window expired';
+            order.cancelledAt = new Date();
+
+            for (let item of order.items) {
+                if (item.itemStatus !== 'cancelled') {
+                    item.itemStatus = 'cancelled';
+                    item.cancelReason = 'Payment retry window expired';
+                    item.cancelledAt = new Date();
+
+                    await Product.findOneAndUpdate(
+                        { "_id": item.productId, "variants._id": item.variantId },
+                        { $inc: { "variants.$.stock": item.qty } }
+                    );
+                }
+            }
+            await order.save();
+
+            return res.status(400).json({
+                success: false,
+                message: "Payment retry window has expired. The order has been cancelled.",
+                expired: true
+            });
+        }
+
+        // Validate each item's product/variant still exists and is active
+        const validationErrors = [];
+
+        for (const item of order.items) {
+            const product = await Product.findById(item.productId);
+
+            if (!product) {
+                validationErrors.push({ productName: item.productName, error: `${item.productName} is no longer available` });
+                continue;
+            }
+
+            if (!product.isListed) {
+                validationErrors.push({ productName: item.productName, error: `${item.productName} has been delisted` });
+                continue;
+            }
+
+            if (item.variantId) {
+                const variant = product.variants.id(item.variantId);
+                if (!variant) {
+                    validationErrors.push({ productName: item.productName, error: `${item.productName} (${item.variantName}) variant is no longer available` });
+                    continue;
+                }
+                if (!variant.isActive) {
+                    validationErrors.push({ productName: item.productName, error: `${item.productName} (${item.variantName}) variant is inactive` });
+                    continue;
+                }
+                // Stock was already deducted at order creation, so variant.stock reflects reserved state.
+                // Only flag if stock has gone negative (shouldn't normally happen).
+                if (variant.stock < 0) {
+                    validationErrors.push({ productName: item.productName, error: `${item.productName} (${item.variantName}) is out of stock` });
+                }
+            }
+        }
+
+        if (validationErrors.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Some items have validation issues",
+                errors: validationErrors
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: "Order is eligible for retry payment",
+            order: {
+                _id: order._id,
+                orderId: order.orderId,
+                finalAmount: order.finalAmount,
+                items: order.items.map(i => ({
+                    productName: i.productName,
+                    variantName: i.variantName,
+                    qty: i.qty,
+                    price: i.price,
+                    total: i.total
+                }))
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+    }
+};
+
+
+export const retryPayment = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.session.user });
+        if (!user) return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+
+        const order = await Order.findOne({ _id: req.params.id, userId: user._id });
+        if (!order) return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
+
+        if (order.paymentStatus !== 'failed') {
+            return res.status(400).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_DOES_NOT });
+        }
+
+        if (order.orderStatus === 'cancelled') {
+            return res.status(400).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_CANCELLED });
+        }
+
+        if (order.orderExpiresAt && new Date() > new Date(order.orderExpiresAt)) {
+            return res.status(400).json({ success: false, message: "Payment retry window has expired" });
+        }
+
+        // Create new Razorpay order for the same amount
+        const amount = order.finalAmount * 100;
+        const razorpayOrder = await razorpay.orders.create({
+            amount,
+            currency: "INR",
+            receipt: `retry_${order._id}_${Date.now()}`
+        });
+
+        // Update order with new Razorpay order ID and increment retry count
+        order.razorpayOrderId = razorpayOrder.id;
+        order.retryCount = (order.retryCount || 0) + 1;
+        await order.save();
+
+        return res.json({
+            success: true,
+            orderId: razorpayOrder.id,
+            internalOrderId: order._id,
+            amount: razorpayOrder.amount,
+            currency: razorpayOrder.currency,
+            key: process.env.RAZORPAY_KEY_ID
+        });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Failed to create retry payment" });
+    }
+};
+
+
+export const verifyRetryPayment = async (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+        const user = await User.findOne({ email: req.session.user });
+        if (!user) return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+
+        const generatedSignature = crypto
+            .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+            .update(razorpay_order_id + "|" + razorpay_payment_id)
+            .digest("hex");
+
+        if (generatedSignature !== razorpay_signature) {
+            return res.status(400).json({ success: false, message: MESSAGES.ORDER_INVALID_PAYMENT_SIGNATURE });
+        }
+
+        const order = await Order.findOne({ razorpayOrderId: razorpay_order_id, userId: user._id });
+        if (!order) {
+            return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
+        }
+
+        // Payment succeeded — update status
+        order.paymentStatus = "paid";
+        order.orderStatus = "pending";
+        order.razorpayPaymentId = razorpay_payment_id;
+        order.razorpaySignature = razorpay_signature;
+        order.paymentFailedAt = undefined;
+        order.orderExpiresAt = undefined;
+        await order.save();
+
+        return res.json({
+            success: true,
+            message: "Payment successful",
+            orderId: order._id,
+            redirectUrl: `/order-success/${order._id}`
+        });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: MESSAGES.ORDER_PAYMENT_VERIFICATION_FAILED });
+    }
+};

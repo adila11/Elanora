@@ -1,5 +1,6 @@
 import { User } from "../../model/userSchema.js"
 import Address from "../../model/addressSchema.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const loadAddress = async (req, res) => {
     try {
@@ -19,7 +20,7 @@ export const loadAddress = async (req, res) => {
             addresses
         });
     } catch (error) {
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -34,19 +35,19 @@ export const loadAddAddress = async (req, res) => {
         if (!user) return res.redirect("/login");
         res.render("user/address/add-address", { user });
     } catch (error) {
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 }
 export const addAddress = async (req, res) => {
     try {
         const email = req.session.user;
         if (!email) {
-            return res.status(401).json({ message: "Unauthorized. Please login." });
+            return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED_PLEASE_LOGIN });
         }
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: "User not found" });
+            return res.status(401).json({ message: MESSAGES.USER_NOT_FOUND });
         }
 
         const { 
@@ -64,50 +65,50 @@ export const addAddress = async (req, res) => {
         const errors = [];
 
         if (!type || type.trim() === "") {
-            errors.push("Address type is required");
+            errors.push(MESSAGES.VALIDATION_ADDRESS_TYPE_REQUIRED);
         }
 
         if (!fullName || fullName.trim().length < 3) {
-            errors.push("Full name must be at least 3 characters");
+            errors.push(MESSAGES.VALIDATION_FULL_NAME_MUST_AT);
         } else if (fullName.trim().length > 40) {
-            errors.push("Full name cannot exceed 40 characters");
+            errors.push(MESSAGES.VALIDATION_FULL_NAME_CANNOT_EXCEED);
         } else if (!/^[A-Za-z\s]+$/.test(fullName.trim())) {
-            errors.push("Full name must contain only alphabets");
+            errors.push(MESSAGES.OTHER_FULL_NAME_MUST_CONTAIN);
         }
 
         if (!phone || !/^[6-9]\d{9}$/.test(phone.trim())) {
-            errors.push("Valid 10-digit Indian phone number is required");
+            errors.push(MESSAGES.VALIDATION_VALID_10DIGIT_INDIAN_PHONE);
         }
 
         if (!addressLine || addressLine.trim().length < 10) {
-            errors.push("Address line must be at least 10 characters");
+            errors.push(MESSAGES.VALIDATION_ADDRESS_LINE_MUST_AT);
         } else if (addressLine.trim().length > 100) {
-            errors.push("Address line cannot exceed 100 characters");
+            errors.push(MESSAGES.VALIDATION_ADDRESS_LINE_CANNOT_EXCEED);
         }
 
         if (!city || city.trim().length < 2) {
-            errors.push("City is required");
+            errors.push(MESSAGES.VALIDATION_CITY_REQUIRED);
         } else if (city.trim().length > 20) {
-            errors.push("City cannot exceed 20 characters");
+            errors.push(MESSAGES.VALIDATION_CITY_CANNOT_EXCEED_20);
         } else if (!/^[A-Za-z\s]+$/.test(city.trim())) {
-            errors.push("City must contain only alphabets");
+            errors.push(MESSAGES.VALIDATION_CITY_MUST_CONTAIN_ONLY);
         }
 
         if (!district || district.trim().length < 2) {
-            errors.push("District is required");
+            errors.push(MESSAGES.VALIDATION_DISTRICT_REQUIRED);
         }
 
         if (!state || state.trim().length < 2) {
-            errors.push("State is required");
+            errors.push(MESSAGES.VALIDATION_STATE_REQUIRED);
         }
 
         if (!pincode || !/^\d{6}$/.test(pincode.trim())) {
-            errors.push("Valid 6-digit pincode is required");
+            errors.push(MESSAGES.VALIDATION_VALID_6DIGIT_PINCODE_REQUIRED);
         }
 
         if (errors.length > 0) {
             return res.status(400).json({ 
-                message: "Validation failed", 
+                message: MESSAGES.OTHER_VALIDATION_FAILED, 
                 errors 
             });
         }
@@ -155,7 +156,7 @@ export const addAddress = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ 
-            message: "Something went wrong. Please try again later." 
+            message: MESSAGES.SERVER_SOMETHING_WENT_WRONG_PLEASE 
         });
     }
 };
@@ -181,7 +182,7 @@ export const loadEditAddress = async (req, res) => {
         if (error.name === 'CastError') {
             return res.status(404).render("user/profile/pageNotFound");
         }
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 }
 
@@ -190,12 +191,12 @@ export const editAddress = async (req, res) => {
     try {
         const email = req.session.user;
         if (!email) {
-            return res.status(401).json({ message: "Unauthorized. Please login." });
+            return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED_PLEASE_LOGIN });
         }
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: "User not found" });
+            return res.status(401).json({ message: MESSAGES.USER_NOT_FOUND });
         }
 
         const { id } = req.params;
@@ -218,56 +219,56 @@ export const editAddress = async (req, res) => {
         });
 
         if (!address) {
-            return res.status(404).json({ message: "Address not found" });
+            return res.status(404).json({ message: MESSAGES.USER_ADDRESS_NOT_FOUND });
         }
 
         const errors = [];
 
         if (!type || type.trim() === "") {
-            errors.push("Address type is required");
+            errors.push(MESSAGES.VALIDATION_ADDRESS_TYPE_REQUIRED);
         }
 
         if (!fullName || fullName.trim().length < 3) {
-            errors.push("Full name must be at least 3 characters");
+            errors.push(MESSAGES.VALIDATION_FULL_NAME_MUST_AT);
         } else if (fullName.trim().length > 40) {
-            errors.push("Full name cannot exceed 40 characters");
+            errors.push(MESSAGES.VALIDATION_FULL_NAME_CANNOT_EXCEED);
         } else if (!/^[A-Za-z\s]+$/.test(fullName.trim())) {
-            errors.push("Full name must contain only alphabets");
+            errors.push(MESSAGES.OTHER_FULL_NAME_MUST_CONTAIN);
         }
 
         if (!phone || !/^[6-9]\d{9}$/.test(phone.trim())) {
-            errors.push("Valid 10-digit Indian phone number is required");
+            errors.push(MESSAGES.VALIDATION_VALID_10DIGIT_INDIAN_PHONE);
         }
 
         if (!addressLine || addressLine.trim().length < 10) {
-            errors.push("Address line must be at least 10 characters");
+            errors.push(MESSAGES.VALIDATION_ADDRESS_LINE_MUST_AT);
         } else if (addressLine.trim().length > 100) {
-            errors.push("Address line cannot exceed 100 characters");
+            errors.push(MESSAGES.VALIDATION_ADDRESS_LINE_CANNOT_EXCEED);
         }
 
         if (!city || city.trim().length < 2) {
-            errors.push("City is required");
+            errors.push(MESSAGES.VALIDATION_CITY_REQUIRED);
         } else if (city.trim().length > 20) {
-            errors.push("City cannot exceed 20 characters");
+            errors.push(MESSAGES.VALIDATION_CITY_CANNOT_EXCEED_20);
         } else if (!/^[A-Za-z\s]+$/.test(city.trim())) {
-            errors.push("City must contain only alphabets");
+            errors.push(MESSAGES.VALIDATION_CITY_MUST_CONTAIN_ONLY);
         }
 
         if (!district || district.trim().length < 2) {
-            errors.push("District is required");
+            errors.push(MESSAGES.VALIDATION_DISTRICT_REQUIRED);
         }
 
         if (!state || state.trim().length < 2) {
-            errors.push("State is required");
+            errors.push(MESSAGES.VALIDATION_STATE_REQUIRED);
         }
 
         if (!pincode || !/^\d{6}$/.test(pincode.trim())) {
-            errors.push("Valid 6-digit pincode is required");
+            errors.push(MESSAGES.VALIDATION_VALID_6DIGIT_PINCODE_REQUIRED);
         }
 
         if (errors.length > 0) {
             return res.status(400).json({ 
-                message: "Validation failed", 
+                message: MESSAGES.OTHER_VALIDATION_FAILED, 
                 errors 
             });
         }
@@ -298,7 +299,7 @@ export const editAddress = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ 
-            message: "Something went wrong. Please try again later." 
+            message: MESSAGES.SERVER_SOMETHING_WENT_WRONG_PLEASE 
         });
     }
 };
@@ -327,7 +328,7 @@ export const setDefault = async (req, res) => {
 
         res.status(201).json({ message: "Default Address Has Been. Updated  " }); req.flash('Success', "Default address updated")
     } catch (error) {
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 }
 
@@ -335,10 +336,10 @@ export const setDefault = async (req, res) => {
 export const deleteAddress = async (req, res) => {
     try {
         const email = req.session.user;
-        if (!email) return res.status(401).json({ message: "Please login" });
+        if (!email) return res.status(401).json({ message: MESSAGES.AUTH_PLEASE_LOGIN });
 
         const user = await User.findOne({ email });
-        if (!user) return res.status(401).json({ message: "User not found" });
+        if (!user) return res.status(401).json({ message: MESSAGES.USER_NOT_FOUND });
 
         const { id } = req.params;
         if (!id) {
@@ -351,7 +352,7 @@ export const deleteAddress = async (req, res) => {
         });
 
         if (!address) {
-            return res.status(404).json({ message: "Address not found" });
+            return res.status(404).json({ message: MESSAGES.USER_ADDRESS_NOT_FOUND });
         }
 
         address.isDelete = true;
@@ -363,6 +364,6 @@ export const deleteAddress = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };

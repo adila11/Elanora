@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { User } from "../../model/userSchema.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 
 export const loadresetpassword = async (req, res) => {
@@ -9,7 +10,7 @@ export const loadresetpassword = async (req, res) => {
         const user = await User.findOne({ email: email });
         return res.render("user/profile/resetPassword", { user })
     } catch (error) {
-        res.status(500).send("Server error")
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
     }
 }
 export const resetpassword = async (req, res) => {
@@ -30,7 +31,7 @@ export const resetpassword = async (req, res) => {
         if (!oldPassword || !newPassword || !confirmPassword) {
             return res.status(400).json({
                 success: false,
-                message: "All fields are required"
+                message: MESSAGES.VALIDATION_ALL_FIELDS_REQUIRED
             });
         }
 
@@ -47,7 +48,7 @@ export const resetpassword = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 field: "confirm",
-                message: "Passwords do not match"
+                message: MESSAGES.AUTH_PASSWORDS_DO_NOT_MATCH
             });
         }
 
@@ -76,6 +77,6 @@ export const resetpassword = async (req, res) => {
         return res.json({ success: true });   
 
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error" });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };

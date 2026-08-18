@@ -4,6 +4,7 @@ import WalletTransaction from "../../model/walletTransactionSchema.js";
 import { creditWallet } from "../../utils/walletHelper.js";
 import razorpay from "../../config/razorpay.js";
 import crypto from "crypto";
+import { MESSAGES } from '../../constants/messages.js';
 
 
 export const loadWallet = async (req, res) => {
@@ -41,7 +42,7 @@ export const loadWallet = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).send("Server Error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -103,7 +104,7 @@ export const loadWalletTransactions = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).send("Server Error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -115,14 +116,14 @@ export const createWalletTopupOrder = async (req, res) => {
         if (!numAmount || numAmount < 100) {
             return res.status(400).json({
                 success: false,
-                message: "Minimum wallet top-up amount is ₹100"
+                message: MESSAGES.USER_MINIMUM_WALLET_TOPUP_AMOUNT
             });
         }
 
         if (numAmount > 50000) {
             return res.status(400).json({
                 success: false,
-                message: "Maximum wallet top-up amount per transaction is ₹50,000"
+                message: MESSAGES.USER_MAXIMUM_WALLET_TOPUP_AMOUNT
             });
         }
 
@@ -170,14 +171,14 @@ export const verifyWalletPayment = async (req, res) => {
         if (isNaN(numAmount) || numAmount < 100) {
             return res.status(400).json({
                 success: false,
-                message: "Minimum wallet top-up amount is ₹100"
+                message: MESSAGES.USER_MINIMUM_WALLET_TOPUP_AMOUNT
             });
         }
 
         if (numAmount > 50000) {
             return res.status(400).json({
                 success: false,
-                message: "Maximum wallet top-up amount per transaction is ₹50,000"
+                message: MESSAGES.USER_MAXIMUM_WALLET_TOPUP_AMOUNT
             });
         }
 
@@ -192,7 +193,7 @@ export const verifyWalletPayment = async (req, res) => {
         if (expectedSignature !== razorpay_signature) {
             return res.status(400).json({
                 success: false,
-                message: "Payment verification failed"
+                message: MESSAGES.ORDER_PAYMENT_VERIFICATION_FAILED
             });
         }
 
@@ -214,7 +215,7 @@ export const verifyWalletPayment = async (req, res) => {
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: "User not found"
+                message: MESSAGES.USER_NOT_FOUND
             });
         }
 

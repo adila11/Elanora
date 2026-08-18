@@ -1,4 +1,5 @@
 import { User } from "../../model/userSchema.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const loadUserManagement = async (req, res) => {
     try {
@@ -60,14 +61,14 @@ export const loadUserManagement = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
 export const blockUser = async (req, res) => {
     try {
         if (!req.session.admin) {
-            return res.status(401).json({ success: false, message: 'Unauthorized' });
+            return res.status(401).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
         }
 
         const { id } = req.params;
@@ -76,7 +77,7 @@ export const blockUser = async (req, res) => {
         if (!id || typeof isBlocked !== 'boolean') {
             return res.status(400).json({ 
                 success: false, 
-                message: 'Missing id or isBlocked (must be boolean)' 
+                message: "Missing id or isBlocked (must be boolean)" 
             });
         }
 
@@ -87,7 +88,7 @@ export const blockUser = async (req, res) => {
         );
 
         if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+            return res.status(404).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
         }
 
         res.json({
@@ -97,7 +98,7 @@ export const blockUser = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 }
 

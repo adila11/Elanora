@@ -516,6 +516,84 @@
     border:1px solid #E8B4B0;
 }
 
+.status-badge.payment_failed{
+    background:#FDF0EE;
+    color:#C0392B;
+    border:1px solid #E8B4B0;
+}
+
+/* RETRY PAYMENT BTN */
+.retry-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    background: #c49a2a;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.retry-btn:hover {
+    background: #a87820;
+    transform: scale(1.02);
+}
+
+.retry-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.retry-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* VALIDATION ERROR MODAL */
+.validation-modal {
+    background: #fff;
+    border-radius: 18px;
+    padding: 36px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(44, 31, 14, 0.15);
+    animation: modalIn 0.22s ease both;
+    position: relative;
+}
+
+.validation-error-list {
+    border: 1px solid #E8B4B0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 16px 0;
+}
+
+.validation-error-item {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: #C0392B;
+    border-bottom: 1px solid #E8B4B0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.validation-error-item:last-child {
+    border-bottom: none;
+}
+
+.validation-error-item svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
   </style>
 </head>
 
@@ -576,16 +654,27 @@
                         </div>
 
                         <div class="order-actions">
-                          <span class="status-badge <%= order.orderStatus || 'pending' %>">
-                            <%= String(order.orderStatus || 'pending' ).replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %>
-                  </span>
+                          <% if (order.paymentStatus === 'failed') { %>
+                            <span class="status-badge payment_failed">Payment Failed</span>
+                            <button class="retry-btn" id="retryBtn-<%= order._id %>" onclick='initiateRetryPayment("<%= order._id %>")' data-order-id="<%= order._id %>">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="23 4 23 10 17 10" />
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                              </svg>
+                              Retry Payment
+                            </button>
+                          <% } else { %>
+                            <span class="status-badge <%= order.orderStatus || 'pending' %>">
+                              <%= String(order.orderStatus || 'pending' ).replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %>
+                            </span>
 
-                  <% if (order.orderStatus === ' pending' || order.orderStatus==='processing' ) { %>
+                            <% if (order.orderStatus === 'pending' || order.orderStatus==='processing' ) { %>
                               <button class="cancel-order-btn"
                                 onclick='openCancelModal("<%= order._id %>", <%- JSON.stringify(order.items) %>)'>
                                 Cancel
                               </button>
-                              <% } %>
+                            <% } %>
+                          <% } %>
                         </div>
                       </div>
 
@@ -752,7 +841,35 @@
       </div>
     </div>
 
+    <!-- Validation Error Modal -->
+    <div id="validationModal" class="modal-overlay" onclick="if(event.target===this)closeValidationModal()">
+      <div class="validation-modal">
+        <button class="modal-close" onclick="closeValidationModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <div
+          style="width:48px;height:48px;border-radius:12px;background:#FDF0EE;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        </div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:#2c2c2c;margin-bottom:6px;">Cannot Retry Payment</h3>
+        <p class="modal-sub" style="font-size:0.82rem;color:#aaa;margin-bottom:16px;line-height:1.5;">The following items have issues that prevent payment retry:</p>
+        <div class="validation-error-list" id="validationErrorList"></div>
+        <div style="margin-top:20px;">
+          <button class="btn-keep" onclick="closeValidationModal()" style="width:100%;padding:11px;background:#f7f3ec;border:1px solid #e8e0d0;border-radius:30px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;color:#888;cursor:pointer;">Close</button>
+        </div>
+      </div>
+    </div>
+
     <%- include('partials/user/footer') %>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
       <script>
         // Search
@@ -835,6 +952,150 @@
           } finally {
             btn.disabled = false;
             btn.textContent = 'Yes, Cancel';
+          }
+        }
+
+        // Validation Error Modal
+        function openValidationModal(errors) {
+          const list = document.getElementById('validationErrorList');
+          list.innerHTML = errors.map(err => `
+            <div class="validation-error-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+              </svg>
+              <span>${err.error || err.message || err}</span>
+            </div>
+          `).join('');
+          document.getElementById('validationModal').classList.add('open');
+        }
+
+        function closeValidationModal() {
+          document.getElementById('validationModal').classList.remove('open');
+        }
+
+        // Retry Payment Flow
+        async function initiateRetryPayment(orderId) {
+          const btn = document.getElementById(`retryBtn-${orderId}`);
+          if (!btn || btn.disabled) return;
+
+          btn.disabled = true;
+          const originalHtml = btn.innerHTML;
+          btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" stroke="white" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> Validating…';
+
+          try {
+            // Step 1: Validate
+            const validateRes = await fetch(`/orders/${orderId}/retry-validate`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include'
+            });
+            const validateData = await validateRes.json();
+
+            if (!validateRes.ok || !validateData.success) {
+              if (validateData.errors && validateData.errors.length > 0) {
+                openValidationModal(validateData.errors);
+              } else if (validateData.expired) {
+                if (typeof window.showToast === 'function') window.showToast(validateData.message, 'error');
+                setTimeout(() => window.location.reload(), 1500);
+              } else {
+                if (typeof window.showToast === 'function') window.showToast(validateData.message || 'Validation failed', 'error');
+              }
+              btn.disabled = false;
+              btn.innerHTML = originalHtml;
+              return;
+            }
+
+            // Step 2: Create Razorpay order
+            btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" stroke="white" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> Processing…';
+
+            const retryRes = await fetch(`/orders/${orderId}/retry-payment`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include'
+            });
+            const retryData = await retryRes.json();
+
+            if (!retryRes.ok || !retryData.success) {
+              if (typeof window.showToast === 'function') window.showToast(retryData.message || 'Failed to initiate payment', 'error');
+              btn.disabled = false;
+              btn.innerHTML = originalHtml;
+              return;
+            }
+
+            // Step 3: Open Razorpay checkout
+            const options = {
+              key: retryData.key,
+              amount: retryData.amount,
+              currency: retryData.currency,
+              name: "Elanora",
+              description: "Retry Payment",
+              order_id: retryData.orderId,
+              theme: { color: "#c49a2a" },
+              handler: async function(rpResponse) {
+                try {
+                  const verifyRes = await fetch(`/orders/${orderId}/verify-retry`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                      razorpay_order_id: rpResponse.razorpay_order_id,
+                      razorpay_payment_id: rpResponse.razorpay_payment_id,
+                      razorpay_signature: rpResponse.razorpay_signature
+                    })
+                  });
+                  const verifyData = await verifyRes.json();
+
+                  if (verifyRes.ok && verifyData.success) {
+                    if (typeof window.showToast === 'function') window.showToast('Payment successful!', 'success');
+                    setTimeout(() => window.location.reload(), 1000);
+                  } else {
+                    if (typeof window.showToast === 'function') window.showToast(verifyData.message || 'Payment verification failed', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                  }
+                } catch (verifyErr) {
+                  if (typeof window.showToast === 'function') window.showToast('Payment verification error', 'error');
+                  btn.disabled = false;
+                  btn.innerHTML = originalHtml;
+                }
+              },
+              modal: {
+                ondismiss: function() {
+                  // Payment modal closed without completing — mark as failed again
+                  fetch('/payment-failed', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ internalOrderId: orderId })
+                  }).catch(() => {});
+                  btn.disabled = false;
+                  btn.innerHTML = originalHtml;
+                }
+              }
+            };
+
+            const rzp = new Razorpay(options);
+
+            rzp.on('payment.failed', function(resp) {
+              fetch('/payment-failed', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ internalOrderId: orderId })
+              }).catch(() => {});
+              if (typeof window.showToast === 'function') window.showToast(resp.error?.description || 'Payment failed. You can try again.', 'error');
+              btn.disabled = false;
+              btn.innerHTML = originalHtml;
+            });
+
+            rzp.open();
+
+          } catch (err) {
+            if (typeof window.showToast === 'function') window.showToast('Network error. Please try again.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
           }
         }
       </script>

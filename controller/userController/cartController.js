@@ -3,18 +3,19 @@ import Products from "../../model/productSchema.js";
 import { User } from "../../model/userSchema.js";
 import Wishlist from "../../model/wishlistSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const addToCart = async (req, res) => {
     try {
         const userEmail = req.session.user;
 
         if (!userEmail) {
-            return res.json({ success: false, message: "Please login first" });
+            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
-            return res.json({ success: false, message: "Please login first" });
+            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const userId = user._id;
@@ -27,12 +28,12 @@ export const addToCart = async (req, res) => {
 
         const product = await Products.findById(productId).populate('category');
         if (!product || !product.isListed) {
-            return res.json({ success: false, message: "Product is not available" });
+            return res.json({ success: false, message: MESSAGES.PRODUCT_NOT_AVAILABLE });
         }
 
         const variant = product.variants ? product.variants.id(variantId) : null;
         if (!variant || !variant.isActive) {
-            return res.json({ success: false, message: "Variant is not available" });
+            return res.json({ success: false, message: MESSAGES.PRODUCT_VARIANT_NOT_AVAILABLE });
         }
 
         let cart = await Cart.findOne({ userId });
@@ -58,21 +59,21 @@ export const addToCart = async (req, res) => {
         if (newTotalCartQty > 10) {
             const remaining = Math.max(0, 10 - currentTotalQty);
             if (remaining === 0) {
-                return res.json({ success: false, message: "Maximum cart quantity is 10." });
+                return res.json({ success: false, message: MESSAGES.CART_MAXIMUM_CART_QUANTITY_10 });
             }
-            return res.json({ success: false, message: `You can only add ${remaining} more items to the cart.` });
+            return res.json({ success: false, message: MESSAGES.YOU_CAN_ONLY_ADD_DYNAMIC_MORE_ITEMS_TO_THE_CART_1(remaining) });
         }
 
         if (newTotalProductQty > 10) {
-            return res.json({ success: false, message: "Maximum quantity per product is 10." });
+            return res.json({ success: false, message: MESSAGES.CART_MAXIMUM_QUANTITY_PER_PRODUCT });
         }
 
         if (newTotalProductQty > variant.stock) {
             const remainingStockCanAdd = variant.stock - existingItemQty;
             if (remainingStockCanAdd <= 0) {
-                return res.json({ success: false, message: `Maximum available stock (${variant.stock}) is already in your cart.` });
+                return res.json({ success: false, message: MESSAGES.MAXIMUM_AVAILABLE_STOCK_DYNAMIC_IS_ALREADY_IN_YOUR_CART(variant) });
             }
-            return res.json({ success: false, message: `Only ${remainingStockCanAdd} more units available in stock.` });
+            return res.json({ success: false, message: MESSAGES.ONLY_DYNAMIC_MORE_UNITS_AVAILABLE_IN_STOCK(remainingStockCanAdd) });
         }
 
         const pricing = getEffectivePrice(product);
@@ -130,7 +131,7 @@ export const addToCart = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error" });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -139,12 +140,12 @@ export const updateCartItem = async (req, res) => {
         const userEmail = req.session.user;
 
         if (!userEmail) {
-            return res.json({ success: false, message: "Please login first" });
+            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
-            return res.json({ success: false, message: "Please login first" });
+            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const userId = user._id;
@@ -157,7 +158,7 @@ export const updateCartItem = async (req, res) => {
 
         const cart = await Cart.findOne({ userId });
         if (!cart) {
-            return res.json({ success: false, message: "Cart not found" });
+            return res.json({ success: false, message: MESSAGES.CART_NOT_FOUND });
         }
 
         const itemIndex = cart.items.findIndex(item =>
@@ -176,23 +177,23 @@ export const updateCartItem = async (req, res) => {
         if (otherItemsQty + quantity > 10) {
             const allowedQty = Math.max(0, 10 - otherItemsQty);
             if (allowedQty === 0) {
-                return res.json({ success: false, message: "Maximum cart quantity is 10." });
+                return res.json({ success: false, message: MESSAGES.CART_MAXIMUM_CART_QUANTITY_10 });
             }
-            return res.json({ success: false, message: `You can only add ${allowedQty} more items to the cart.` });
+            return res.json({ success: false, message: MESSAGES.YOU_CAN_ONLY_ADD_DYNAMIC_MORE_ITEMS_TO_THE_CART(allowedQty) });
         }
 
         if (quantity > 10) {
-            return res.json({ success: false, message: "Maximum quantity per product is 10." });
+            return res.json({ success: false, message: MESSAGES.CART_MAXIMUM_QUANTITY_PER_PRODUCT });
         }
 
         const product = await Products.findById(productId).populate('category');
         if (!product || !product.isListed) {
-            return res.json({ success: false, message: "Product is not available" });
+            return res.json({ success: false, message: MESSAGES.PRODUCT_NOT_AVAILABLE });
         }
 
         const variant = product.variants ? product.variants.id(variantId) : null;
         if (!variant || !variant.isActive) {
-            return res.json({ success: false, message: "Variant is not available" });
+            return res.json({ success: false, message: MESSAGES.PRODUCT_VARIANT_NOT_AVAILABLE });
         }
 
         let finalQty = quantity;
@@ -229,7 +230,7 @@ export const updateCartItem = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error" });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -238,12 +239,12 @@ export const removeCartItem = async (req, res) => {
         const userEmail = req.session.user;
 
         if (!userEmail) {
-            return res.json({ success: false, message: "Please login first" });
+            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
-            return res.json({ success: false, message: "Please login first" });
+            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const userId = user._id;
@@ -254,7 +255,7 @@ export const removeCartItem = async (req, res) => {
             populate: { path: "category" }
         });
         if (!cart) {
-            return res.json({ success: false, message: "Cart not found" });
+            return res.json({ success: false, message: MESSAGES.CART_NOT_FOUND });
         }
 
         cart.items = cart.items.filter(item => {
@@ -288,7 +289,7 @@ export const removeCartItem = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error" });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -345,6 +346,6 @@ export const loadCart = async (req, res) => {
         res.render("user/cart", { cart, subtotal, title: "Shopping Cart" });
 
     } catch (error) {
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };

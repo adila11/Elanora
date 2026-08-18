@@ -1,4 +1,6 @@
 import Admin from "../../model/adminSchema.js";
+import bcrypt from "bcrypt";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const loadLogin = async (req, res) => {
     try {
@@ -9,7 +11,7 @@ export const loadLogin = async (req, res) => {
         return res.render("admin/login", { error: null });
 
     } catch (error) {
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -23,7 +25,7 @@ export const login = async (req, res) => {
 
         if (!email || !password) {
             return res.render("admin/login", { 
-                error: "All fields are required" 
+                error: MESSAGES.VALIDATION_ALL_FIELDS_REQUIRED 
             });
         }
         
@@ -34,7 +36,9 @@ export const login = async (req, res) => {
                 error: "Admin not found" 
             });
         }
-        if(admin.password!=password){
+        
+        const isMatch = await bcrypt.compare(password, admin.password);
+        if(!isMatch){
             return res.render("admin/login", { 
                 error: "Admin password incorrect" 
             });
@@ -45,7 +49,7 @@ export const login = async (req, res) => {
         res.redirect("/admin/dashboard")
 
     } catch (error) {
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -58,7 +62,7 @@ export const logout =async(req,res)=>{
         delete req.session.admin
         return res.redirect("/admin")
     } catch (error) {
-        return res.status(500).send("Server Error");
+        return res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 
 }

@@ -3,6 +3,7 @@ import Category from "../../model/categoriesSchema.js";
 import Cart from '../../model/cartSchema.js';
 import { User } from '../../model/userSchema.js';
 import { getEffectivePrice } from "../../utils/offerHelper.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 const loadHome = async (req, res) => {
     try {
@@ -60,7 +61,7 @@ const loadHome = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).send("Server error");
+        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 

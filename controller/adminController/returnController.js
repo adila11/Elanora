@@ -2,6 +2,7 @@ import Return from "../../model/returnSchema.js";
 import Order from "../../model/orderSchema.js";
 import Product from "../../model/productSchema.js";
 import { creditWallet } from "../../utils/walletHelper.js";
+import { MESSAGES } from '../../constants/messages.js';
 
 export const getReturnsPage = async (req, res) => {
     try {
@@ -72,10 +73,10 @@ export const approveReturn = async (req, res) => {
 
         const returnRequest = await Return.findById(id);
         if (!returnRequest) {
-            return res.status(404).json({ success: false, message: "Return request not found" });
+            return res.status(404).json({ success: false, message: MESSAGES.ORDER_RETURN_REQUEST_NOT_FOUND });
         }
         if (returnRequest.status !== "pending") {
-            return res.status(400).json({ success: false, message: "Return already processed" });
+            return res.status(400).json({ success: false, message: MESSAGES.ORDER_RETURN_ALREADY_PROCESSED });
         }
 
         returnRequest.status = "approved";
@@ -138,7 +139,7 @@ export const approveReturn = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: "Something went wrong" });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -150,10 +151,10 @@ export const rejectReturn = async (req, res) => {
 
         const returnRequest = await Return.findById(id);
         if (!returnRequest) {
-            return res.status(404).json({ success: false, message: "Return request not found" });
+            return res.status(404).json({ success: false, message: MESSAGES.ORDER_RETURN_REQUEST_NOT_FOUND });
         }
         if (returnRequest.status !== "pending") {
-            return res.status(400).json({ success: false, message: "Return already processed" });
+            return res.status(400).json({ success: false, message: MESSAGES.ORDER_RETURN_ALREADY_PROCESSED });
         }
 
         returnRequest.status = "rejected";
@@ -175,6 +176,6 @@ export const rejectReturn = async (req, res) => {
         res.json({ success: true, message: "Return rejected" });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: "Something went wrong" });
+        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
