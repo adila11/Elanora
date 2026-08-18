@@ -62,4 +62,4 @@ app.set("view engine", "ejs");
 app.set("views", [path.join(process.cwd(), "views")]);
 
 app.listen(process.env.PORT, () => {
-});
+}) ;
