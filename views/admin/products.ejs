@@ -626,10 +626,12 @@
                           </span>
                         </td>
                         <td>
-                          <% const now=new Date(); // Product Offer Active Check const hasProdOffer=p.offer &&
-                            p.offer.discountValue; const prodStartOk=hasProdOffer && (!p.offer.startDate || new
-                            Date(p.offer.startDate) <=now); const prodEndOk=hasProdOffer && (!p.offer.endDate || new
-                            Date(p.offer.endDate)>= now);
+                          <% 
+                            const now = new Date(); 
+                            // Product Offer Active Check 
+                            const hasProdOffer = p.offer && p.offer.discountValue; 
+                            const prodStartOk = hasProdOffer && (!p.offer.startDate || new Date(p.offer.startDate) <= now); 
+                            const prodEndOk = hasProdOffer && (!p.offer.endDate || new Date(p.offer.endDate) >= now);
                             const isProdOfferActive = hasProdOffer && prodStartOk && prodEndOk;
 
                             // Category Offer Active Check
