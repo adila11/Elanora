@@ -1,15 +1,14 @@
-<% const displayName=(user.firstName && user.lastName) ? user.firstName + ' ' + user.lastName : (user.fullName ?
-  user.fullName.toUpperCase() : 'User' ); const memberYear=user.createdAt ? new Date(user.createdAt).getFullYear() : new
-  Date().getFullYear(); // Consistent profile icon path (same logic as your main profile page) const
-  profileIconPath=user.profileIcon ? (user.profileIcon.startsWith('http') ? user.profileIcon :
-  (user.profileIcon.startsWith('/') ? user.profileIcon : '/' + user.profileIcon.replace('public/', '' ))) : '' ; //
-  Generate initials for SVG fallback const bannerInitials=(user.fullName || 'U' ).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-  const svgFallback = `data:image/svg+xml,${encodeURIComponent(' <svg xmlns="http://www.w3.org/2000/svg" width="88"
-  height="88">
-  <rect width="88" height="88" rx="44" fill="%23c49a2a" /><text x="50%" y="54%" dominant-baseline="middle"
-    text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="32" font-weight="600">' +
-    bannerInitials + '</text></svg>')}`;
-  %>
+<% 
+  const displayName = (user.firstName && user.lastName) ? user.firstName + ' ' + user.lastName : (user.fullName ? user.fullName.toUpperCase() : 'User'); 
+  const memberYear = user.createdAt ? new Date(user.createdAt).getFullYear() : new Date().getFullYear(); 
+  
+  // Consistent profile icon path (same logic as your main profile page) 
+  const profileIconPath = user.profileIcon ? (user.profileIcon.startsWith('http') ? user.profileIcon : (user.profileIcon.startsWith('/') ? user.profileIcon : '/' + user.profileIcon.replace('public/', ''))) : ''; 
+  
+  // Generate initials for SVG fallback 
+  const bannerInitials = (user.fullName || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  const svgFallback = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="88" height="88"><rect width="88" height="88" rx="44" fill="%23c49a2a" /><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="32" font-weight="600">' + bannerInitials + '</text></svg>')}`;
+%>
 
   <div
     style="background:#fff; border-radius:18px; padding:24px 32px; display:flex; align-items:center; gap:24px; margin-bottom:28px; border:1px solid #e8e0d0; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
