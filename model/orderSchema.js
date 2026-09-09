@@ -80,7 +80,18 @@ const orderItemSchema = new mongoose.Schema({
 
     cancelledAt: Date,
 
-    returnedAt: Date
+    returnedAt: Date,
+
+    rating: {
+        type: Number,
+        min: 1,
+        max: 5
+    },
+
+    reviewComment: {
+        type: String,
+        maxLength: 1000
+    }
 
 });
 

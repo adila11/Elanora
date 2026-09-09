@@ -597,3 +597,40 @@ export const verifyRetryPayment = async (req, res) => {
         return res.status(500).json({ success: false, message: MESSAGES.ORDER_PAYMENT_VERIFICATION_FAILED });
     }
 };
+
+export const submitOrderItemReview = async (req, res) => {
+    try {
+        const { orderId, itemId } = req.params;
+        const { rating, comment } = req.body;
+
+        if (!rating || rating < 1 || rating > 5) {
+            return res.status(400).json({ success: false, message: 'Invalid rating. Must be between 1 and 5.' });
+        }
+
+        const user = await User.findOne({ email: req.session.user });
+        if (!user) return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+
+        const order = await Order.findOne({ _id: orderId, userId: user._id });
+        if (!order) return res.status(404).json({ success: false, message: 'Order not found.' });
+
+        const item = order.items.id(itemId);
+        if (!item) return res.status(404).json({ success: false, message: 'Item not found in order.' });
+
+        if (item.itemStatus !== 'delivered' && order.orderStatus !== 'delivered') {
+            return res.status(403).json({ success: false, message: 'You can only review a product after it has been delivered.' });
+        }
+
+        if (item.rating) {
+            return res.status(400).json({ success: false, message: 'You have already reviewed this item.' });
+        }
+
+        item.rating = rating;
+        item.reviewComment = comment;
+
+        await order.save();
+
+        res.status(200).json({ success: true, message: 'Review submitted successfully.' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error while submitting review.' });
+    }
+};

@@ -11,7 +11,7 @@ import { loadShop, loadProductDetail } from '../controller/userController/shopCo
 import { addToCart, loadCart, updateCartItem, removeCartItem } from '../controller/userController/cartController.js'
 import { loadWishlist, addToWishlist, removeFromWishlist } from '../controller/userController/wishlistController.js'
 import { loadCheckoutAddress, loadCheckoutPayment, loadCheckoutReview, placeOrder, loadOrderSuccess, createRazorpayOrder, verifyPayment, loadOrderFailed, handlePaymentFailure } from "../controller/userController/checkoutController.js";
-import { cancelFullOrder, cancelSingleItem, getOrderDetail, getOrders, returnItem, validateRetryPayment, retryPayment, verifyRetryPayment } from '../controller/userController/orderController.js'
+import { cancelFullOrder, cancelSingleItem, getOrderDetail, getOrders, returnItem, validateRetryPayment, retryPayment, verifyRetryPayment, submitOrderItemReview } from '../controller/userController/orderController.js'
 import { checkPincode } from "../utils/pincodeValidator.js";
 import { loadAbout } from '../controller/userController/aboutController.js'
 import { loadContact } from '../controller/userController/contactController.js'
@@ -139,6 +139,7 @@ router.post('/payment-failed', isLoggedIn, isBlocked, handlePaymentFailure);
 router.post('/orders/:id/retry-validate', isLoggedIn, isBlocked, validateRetryPayment);
 router.post('/orders/:id/retry-payment', isLoggedIn, isBlocked, retryPayment);
 router.post('/orders/:id/verify-retry', isLoggedIn, isBlocked, verifyRetryPayment);
+router.post('/orders/:orderId/items/:itemId/review', isLoggedIn, isBlocked, submitOrderItemReview);
 
 router.post("/resend-otp", resendOtp)
 

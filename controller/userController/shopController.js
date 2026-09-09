@@ -4,6 +4,7 @@ import Wishlist from "../../model/wishlistSchema.js";
 import { User } from "../../model/userSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
 import { MESSAGES } from '../../constants/messages.js';
+import Order from "../../model/orderSchema.js";
 
 export const loadShop = async (req, res) => {
     try {
@@ -65,6 +66,8 @@ export const loadShop = async (req, res) => {
             .sort(sortOption)
             .skip(skip)
             .limit(ITEMS_PER_PAGE);
+
+
 
 
         const activeProducts = products.filter(
@@ -164,6 +167,35 @@ export const loadProductDetail = async (req, res) => {
             }
         }
 
+        const ordersWithReviews = await Order.find({ 
+            "items.productId": product._id, 
+            "items.rating": { $exists: true } 
+        }).populate('userId', 'fullName');
+        
+        let reviews = [];
+        let totalRating = 0;
+        
+        ordersWithReviews.forEach(order => {
+            order.items.forEach(item => {
+                if (item.productId.toString() === product._id.toString() && item.rating) {
+                    reviews.push({
+                        userId: order.userId,
+                        rating: item.rating,
+                        comment: item.reviewComment,
+                        createdAt: order.updatedAt
+                    });
+                    totalRating += item.rating;
+                }
+            });
+        });
+        
+        reviews.sort((a, b) => b.createdAt - a.createdAt);
+
+        let averageRating = 0;
+        if (reviews.length > 0) {
+            averageRating = (totalRating / reviews.length).toFixed(1);
+        }
+
         res.render("user/productDetail", {
             product,
             relatedProducts,
@@ -172,7 +204,9 @@ export const loadProductDetail = async (req, res) => {
             offerActive: pricing.offerActive,
             offerName: pricing.offerName,
             offerDiscountValue: pricing.offerDiscountValue,
-            offerDiscountType: pricing.offerDiscountType
+            offerDiscountType: pricing.offerDiscountType,
+            reviews,
+            averageRating
         });
     } catch (error) {
         if (error.name === 'CastError') {

@@ -4,6 +4,8 @@ import { User } from "../../model/userSchema.js";
 import Cart from "../../model/cartSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
 import { MESSAGES } from '../../constants/messages.js';
+import Category from "../../model/categoriesSchema.js";
+import { sendCurrentEmailOtp } from "./profileController.js";
 
 export const loadWishlist = async (req, res) => {
     try {
@@ -70,6 +72,10 @@ export const addToWishlist = async (req, res) => {
                 return res.json({ success: false, message: "This product already exists in your cart." });
             }
         }
+
+        
+
+
 
         let wishlist = await Wishlist.findOne({ userId: user._id });
 

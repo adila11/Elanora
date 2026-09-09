@@ -1161,15 +1161,17 @@
                     </h3>
 
                     <div class="flex items-center gap-3 ml-auto">
-                      <button class="btn-gold" id="downloadInvoiceBtn" onclick="downloadInvoice()">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                          stroke-width="2.5" class="inline mr-1">
-                          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                          <polyline points="7 10 12 15 17 10" />
-                          <line x1="12" y1="15" x2="12" y2="3" />
-                        </svg>
-                        Download Invoice
-                      </button>
+                      <% if (order.paymentStatus === 'paid' || order.paymentStatus === 'refunded' || (order.paymentMethod === 'cod' && order.paymentStatus !== 'failed')) { %>
+                        <button class="btn-gold" id="downloadInvoiceBtn" onclick="downloadInvoice()">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" class="inline mr-1">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                          </svg>
+                          Download Invoice
+                        </button>
+                      <% } %>
 
                       <% if (['pending', 'processing' ].includes(os) && !allCancelled) { %>
                         <button class="btn-outline-red" onclick="openFullCancelModal()">
@@ -1581,6 +1583,27 @@
                                     Cancel Item
                                   </button>
                                   <% } %>
+
+                                  <% if (os === 'delivered' && !['returned', 'return_requested', 'return_rejected'].includes(item.itemStatus)) { %>
+                                    <% if (item.rating) { %>
+                                      <div style="margin-left: 10px; color: var(--text-main); font-size: 0.85rem; display: inline-flex; align-items: center; gap: 4px;">
+                                        Your Rating: 
+                                        <div class="stars">
+                                          <% for(let i = 1; i <= 5; i++) { %>
+                                            <span style="<%= item.rating >= i ? '' : 'color:var(--border)' %>">★</span>
+                                          <% } %>
+                                        </div>
+                                      </div>
+                                    <% } else { %>
+                                      <button class="btn-outline-gold" data-id="<%= safeId %>" data-name="<%= safeName %>"
+                                        data-sub="<%= safeSub %>" data-img="<%= safeImg %>" onclick="openReviewModal(this, '<%= order._id %>')">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                        </svg>
+                                        Rate Item
+                                      </button>
+                                    <% } %>
+                                  <% } %>
                           </div>
                         </div>
                         <% }) %>
@@ -1739,6 +1762,41 @@
           <div class="modal-actions">
             <button class="modal-btn-cancel" onclick="closePartialCancelModal()">Keep Item</button>
             <button class="modal-btn-danger" onclick="submitPartialCancel()">Cancel Item</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM REVIEW MODAL -->
+      <div class="modal-overlay" id="reviewModal" onclick="if(event.target===this) closeReviewModal()">
+        <div class="modal">
+          <div class="modal-header">
+            <div class="modal-title">Rate Item</div>
+            <button class="modal-close" onclick="closeReviewModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <div class="modal-item-card">
+            <div class="modal-item-img"><img id="reviewItemImg" src="" alt=""></div>
+            <div class="modal-item-info">
+              <h4 id="reviewItemName"></h4>
+              <p id="reviewItemSub"></p>
+            </div>
+          </div>
+          <div style="margin-bottom: 15px; text-align: center;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 500;">Rating</label>
+            <div class="star-rating" id="reviewStars" style="cursor: pointer; font-size: 2rem; color: var(--border);">
+                <span data-val="1">★</span><span data-val="2">★</span><span data-val="3">★</span><span data-val="4">★</span><span data-val="5">★</span>
+            </div>
+            <input type="hidden" id="reviewRatingInput" value="0">
+          </div>
+          <label class="modal-label">Comment <span>(optional)</span></label>
+          <textarea class="modal-textarea" id="reviewCommentInput" placeholder="Tell us what you think…"></textarea>
+          <div class="modal-actions">
+            <button class="modal-btn-cancel" onclick="closeReviewModal()">Cancel</button>
+            <button class="modal-btn-submit" onclick="submitReview()">Submit Review</button>
           </div>
         </div>
       </div>
@@ -2112,6 +2170,79 @@
             btn.disabled = false;
             btn.innerHTML = originalHtml;
           }
+        }
+        let reviewItemId = null;
+        let reviewOrderId = null;
+
+        function openReviewModal(btn, orderId) {
+          reviewItemId = btn.dataset.id;
+          reviewOrderId = orderId;
+          document.getElementById('reviewItemName').textContent = btn.dataset.name;
+          document.getElementById('reviewItemSub').textContent = btn.dataset.sub;
+          document.getElementById('reviewItemImg').src = btn.dataset.img || '';
+          document.getElementById('reviewRatingInput').value = '0';
+          document.getElementById('reviewCommentInput').value = '';
+          
+          const stars = document.querySelectorAll('#reviewStars span');
+          stars.forEach(s => s.style.color = 'var(--border)');
+
+          document.getElementById('reviewModal').classList.add('active');
+        }
+
+        function closeReviewModal() {
+          document.getElementById('reviewModal').classList.remove('active');
+          reviewItemId = null;
+          reviewOrderId = null;
+        }
+
+        const reviewStars = document.querySelectorAll('#reviewStars span');
+        if (reviewStars) {
+            reviewStars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const val = parseInt(this.getAttribute('data-val'));
+                    document.getElementById('reviewRatingInput').value = val;
+                    reviewStars.forEach((s, index) => {
+                        if (index < val) {
+                            s.style.color = '#c49a2a';
+                        } else {
+                            s.style.color = 'var(--border)';
+                        }
+                    });
+                });
+            });
+        }
+
+        async function submitReview() {
+            const rating = document.getElementById('reviewRatingInput').value;
+            const comment = document.getElementById('reviewCommentInput').value;
+            
+            if (rating === '0') {
+                if (typeof window.showToast === 'function') window.showToast('Please select a star rating.', 'error');
+                else alert('Please select a star rating.');
+                return;
+            }
+            
+            try {
+                const res = await fetch(`/orders/${reviewOrderId}/items/${reviewItemId}/review`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rating: parseInt(rating), comment })
+                });
+                
+                const data = await res.json();
+                if (data.success) {
+                    closeReviewModal();
+                    if (typeof window.showToast === 'function') window.showToast('Thank you for your feedback!', 'success');
+                    else alert('Thank you for your feedback!');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    if (typeof window.showToast === 'function') window.showToast(data.message || 'Could not submit review.', 'error');
+                    else alert(data.message || 'Could not submit review.');
+                }
+            } catch (err) {
+                if (typeof window.showToast === 'function') window.showToast('Something went wrong. Please try again.', 'error');
+                else alert('Something went wrong. Please try again.');
+            }
         }
       </script>
       <!-- PREMIUM INVOICE TEMPLATE (OFFSCREEN) -->

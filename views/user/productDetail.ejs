@@ -821,11 +821,21 @@
                     <!-- RIGHT: Info -->
                     <div class="info-col">
                         <div class="rating-row">
-                            <div class="stars">
-                                <span class="star">★</span><span class="star">★</span><span class="star">★</span>
-                                <span class="star">★</span><span class="star empty">★</span>
-                            </div>
-                            <span class="rating-text">New Arrival</span>
+                            <% if (reviews && reviews.length > 0) { %>
+                                <div class="stars">
+                                    <% for(let i = 1; i <= 5; i++) { %>
+                                        <span class="star <%= Math.round(averageRating) >= i ? '' : 'empty' %>">★</span>
+                                    <% } %>
+                                </div>
+                                <span class="rating-text"><%= averageRating %> (<%= reviews.length %> Reviews)</span>
+                            <% } else { %>
+                                <div class="stars">
+                                    <% for(let i = 1; i <= 5; i++) { %>
+                                        <span class="star empty">★</span>
+                                    <% } %>
+                                </div>
+                                <span class="rating-text">No reviews yet</span>
+                            <% } %>
                         </div>
 
                         <div class="info-top">
@@ -951,7 +961,7 @@
         <section class="tabs-section">
             <div class="tab-nav">
                 <button class="tab-btn active" onclick="switchTab(this,'desc')">Description</button>
-                <button class="tab-btn" onclick="switchTab(this,'reviews')">Reviews (24)</button>
+                <button class="tab-btn" onclick="switchTab(this,'reviews')">Reviews (<%= reviews ? reviews.length : 0 %>)</button>
             </div>
 
             <div id="desc" class="tab-panel active">
@@ -990,45 +1000,29 @@
 
             <div id="reviews" class="tab-panel">
                 <div class="reviews-grid">
-                    <div class="review-card">
-                        <div class="reviewer">
-                            <div class="avatar">P</div>
-                            <div>
-                                <div class="reviewer-name">Priya S.</div>
-                                <div class="reviewer-date">March 2026</div>
+                    <% if (reviews && reviews.length > 0) { %>
+                        <% reviews.forEach(review => { %>
+                            <div class="review-card">
+                                <div class="reviewer">
+                                    <div class="avatar"><%= review.userId.fullName ? review.userId.fullName.charAt(0).toUpperCase() : 'U' %></div>
+                                    <div>
+                                        <div class="reviewer-name"><%= review.userId.fullName || 'User' %></div>
+                                        <div class="reviewer-date"><%= new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></div>
+                                    </div>
+                                    <div class="stars" style="margin-left:auto">
+                                        <% for(let i = 1; i <= 5; i++) { %>
+                                            <span class="star" style="font-size:0.8rem; <%= review.rating >= i ? '' : 'color:var(--border)' %>">★</span>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <% if (review.comment) { %>
+                                    <p class="review-text"><%= review.comment %></p>
+                                <% } %>
                             </div>
-                            <div class="stars" style="margin-left:auto"><span class="star"
-                                    style="font-size:0.8rem">★★★★★</span></div>
-                        </div>
-                        <p class="review-text">Absolutely stunning ring! The geometric design is so unique and the gold
-                            finish looks exactly like the photos. Gets so many compliments.</p>
-                    </div>
-                    <div class="review-card">
-                        <div class="reviewer">
-                            <div class="avatar">A</div>
-                            <div>
-                                <div class="reviewer-name">Ananya R.</div>
-                                <div class="reviewer-date">February 2026</div>
-                            </div>
-                            <div class="stars" style="margin-left:auto"><span class="star"
-                                    style="font-size:0.8rem">★★★★★</span></div>
-                        </div>
-                        <p class="review-text">Beautifully crafted and arrived in lovely packaging. Perfect for both
-                            casual and formal wear. Very happy with this purchase!</p>
-                    </div>
-                    <div class="review-card">
-                        <div class="reviewer">
-                            <div class="avatar">M</div>
-                            <div>
-                                <div class="reviewer-name">Meera K.</div>
-                                <div class="reviewer-date">January 2026</div>
-                            </div>
-                            <div class="stars" style="margin-left:auto"><span class="star"
-                                    style="font-size:0.8rem">★★★★<span style="color:var(--border)">★</span></span></div>
-                        </div>
-                        <p class="review-text">Great quality ring, slightly larger than expected but fits well. The
-                            design is elegant and modern. Would recommend!</p>
-                    </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p class="review-text">No reviews yet.</p>
+                    <% } %>
                 </div>
             </div>
         </section>
