@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Order from "../../model/orderSchema.js";
 import Product from "../../model/productSchema.js";
 import { User } from "../../model/userSchema.js";
@@ -116,7 +117,7 @@ export const loadDashboard = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -178,8 +179,8 @@ export const getDashboardChartData = async (req, res) => {
       data = yearlySales.map(y => y.total);
     }
 
-    res.json({ success: true, labels, data });
+    res.status(STATUS_CODES.OK).json({ success: true, labels, data });
   } catch (err) {
-    res.status(500).json({ success: false, message: "Failed to fetch chart data" });
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Failed to fetch chart data" });
   }
 };

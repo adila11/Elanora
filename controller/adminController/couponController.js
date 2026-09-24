@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Coupon from "../../model/couponSchema.js";
 import { MESSAGES } from '../../constants/messages.js';
 
@@ -339,7 +340,7 @@ export const loadCoupons = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(500).render("admin/coupon", {
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render("admin/coupon", {
             title: "Coupon",
             coupons: [],
             search: "",
@@ -358,7 +359,7 @@ export const createCoupon = async (req, res) => {
 
         if (!isValid) {
 
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.OTHER_PLEASE_CORRECT_VALIDATION_ERRORS,
                 errors
@@ -369,7 +370,7 @@ export const createCoupon = async (req, res) => {
         const alreadyExists = await isCouponCodeTaken(data.couponCode);
 
         if (alreadyExists) {
-            return res.status(409).json({
+            return res.status(STATUS_CODES.CONFLICT).json({
                 success: false,
                 message: MESSAGES.COUPON_CODE_ALREADY_EXISTS,
                 errors: {
@@ -396,13 +397,13 @@ export const createCoupon = async (req, res) => {
 
         });
 
-        return res.status(201).json({
+        return res.status(STATUS_CODES.CREATED).json({
             success: true,
             message: "Coupon created successfully."
         });
 
     } catch (error) {
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: "Something went wrong while creating the coupon."
         });
@@ -424,7 +425,7 @@ export const updateCoupon = async (req, res) => {
         } = validateCouponInput(req.body);
 
         if (!isValid) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.OTHER_PLEASE_CORRECT_VALIDATION_ERRORS,
                 errors
@@ -436,7 +437,7 @@ export const updateCoupon = async (req, res) => {
         const alreadyExists = await isCouponCodeTaken(data.couponCode, id);
 
         if (alreadyExists) {
-            return res.status(409).json({
+            return res.status(STATUS_CODES.CONFLICT).json({
                 success: false,
                 message: MESSAGES.COUPON_CODE_ALREADY_EXISTS,
                 errors: {
@@ -465,20 +466,20 @@ export const updateCoupon = async (req, res) => {
         );
 
         if (!updatedCoupon) {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 success: false,
                 message: MESSAGES.COUPON_NOT_FOUND
             });
 
         }
 
-        return res.status(200).json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             message: "Coupon updated successfully."
         });
 
     } catch (error) {
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: "Something went wrong while updating the coupon."
         });
@@ -497,18 +498,18 @@ export const deleteCoupon = async (req, res) => {
             );
 
         if (!deletedCoupon) {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 success: false,
                 message: MESSAGES.COUPON_NOT_FOUND
             });
         }
-        return res.status(200).json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             message: "Coupon deleted successfully."
         });
 
     } catch (error) {
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: "Something went wrong while deleting the coupon."
         });

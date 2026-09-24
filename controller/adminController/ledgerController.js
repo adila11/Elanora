@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Order from "../../model/orderSchema.js";
 import PDFDocument from "pdfkit";
 
@@ -82,6 +83,6 @@ export const exportLedger = async (req, res) => {
 
     doc.end();
   } catch (err) {
-    res.status(500).json({ success: false, message: "Failed to generate ledger" });
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Failed to generate ledger" });
   }
 };

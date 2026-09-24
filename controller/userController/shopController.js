@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Products from "../../model/productSchema.js";
 import Category from "../../model/categoriesSchema.js";
 import Wishlist from "../../model/wishlistSchema.js";
@@ -121,7 +122,7 @@ export const loadShop = async (req, res) => {
             buildQuery
         });
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -136,7 +137,7 @@ export const loadProductDetail = async (req, res) => {
             });
 
         if (!product || !product.isListed || !product.category) {
-            return res.status(404).render("user/profile/pageNotFound");
+            return res.status(STATUS_CODES.NOT_FOUND).render("user/profile/pageNotFound");
         }
 
         const pricing = getEffectivePrice(product);
@@ -210,8 +211,8 @@ export const loadProductDetail = async (req, res) => {
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).render("user/profile/pageNotFound");
+            return res.status(STATUS_CODES.NOT_FOUND).render("user/profile/pageNotFound");
         }
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };

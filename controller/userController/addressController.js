@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import { User } from "../../model/userSchema.js"
 import Address from "../../model/addressSchema.js";
 import { MESSAGES } from '../../constants/messages.js';
@@ -20,7 +21,7 @@ export const loadAddress = async (req, res) => {
             addresses
         });
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -35,19 +36,19 @@ export const loadAddAddress = async (req, res) => {
         if (!user) return res.redirect("/login");
         res.render("user/address/add-address", { user });
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 }
 export const addAddress = async (req, res) => {
     try {
         const email = req.session.user;
         if (!email) {
-            return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED_PLEASE_LOGIN });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.AUTH_UNAUTHORIZED_PLEASE_LOGIN });
         }
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: MESSAGES.USER_NOT_FOUND });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.USER_NOT_FOUND });
         }
 
         const {
@@ -107,7 +108,7 @@ export const addAddress = async (req, res) => {
         }
 
         if (errors.length > 0) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 message: MESSAGES.OTHER_VALIDATION_FAILED,
                 errors
             });
@@ -119,7 +120,7 @@ export const addAddress = async (req, res) => {
         });
 
         if (addressCount >= 5) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 message: "You can save a maximum of 5 addresses only."
             });
         }
@@ -149,13 +150,13 @@ export const addAddress = async (req, res) => {
 
         await newAddress.save();
 
-        res.status(201).json({
+        res.status(STATUS_CODES.CREATED).json({
             message: "Address added successfully!",
             address: newAddress
         });
 
     } catch (error) {
-        res.status(500).json({
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             message: MESSAGES.SERVER_SOMETHING_WENT_WRONG_PLEASE
         });
     }
@@ -172,17 +173,17 @@ export const loadEditAddress = async (req, res) => {
         if (!user) return res.redirect("/login");
 
         const { id } = req.params;
-        if (!id) return res.status(404).render("user/profile/pageNotFound");
+        if (!id) return res.status(STATUS_CODES.NOT_FOUND).render("user/profile/pageNotFound");
 
         const address = await Address.findById(id);
-        if (!address) return res.status(404).render("user/profile/pageNotFound");
+        if (!address) return res.status(STATUS_CODES.NOT_FOUND).render("user/profile/pageNotFound");
 
         res.render("user/address/edit-address", { user, address });
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).render("user/profile/pageNotFound");
+            return res.status(STATUS_CODES.NOT_FOUND).render("user/profile/pageNotFound");
         }
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 }
 
@@ -191,12 +192,12 @@ export const editAddress = async (req, res) => {
     try {
         const email = req.session.user;
         if (!email) {
-            return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED_PLEASE_LOGIN });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.AUTH_UNAUTHORIZED_PLEASE_LOGIN });
         }
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: MESSAGES.USER_NOT_FOUND });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.USER_NOT_FOUND });
         }
 
         const { id } = req.params;
@@ -219,7 +220,7 @@ export const editAddress = async (req, res) => {
         });
 
         if (!address) {
-            return res.status(404).json({ message: MESSAGES.USER_ADDRESS_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: MESSAGES.USER_ADDRESS_NOT_FOUND });
         }
 
         const errors = [];
@@ -267,7 +268,7 @@ export const editAddress = async (req, res) => {
         }
 
         if (errors.length > 0) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 message: MESSAGES.OTHER_VALIDATION_FAILED,
                 errors
             });
@@ -292,13 +293,13 @@ export const editAddress = async (req, res) => {
 
         await address.save();
 
-        res.json({
+        res.status(STATUS_CODES.OK).json({
             message: "Address updated successfully",
             address
         });
 
     } catch (error) {
-        res.status(500).json({
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             message: MESSAGES.SERVER_SOMETHING_WENT_WRONG_PLEASE
         });
     }
@@ -326,9 +327,9 @@ export const setDefault = async (req, res) => {
 
         await Address.findByIdAndUpdate(id, { isDefault: true });
 
-        res.status(201).json({ message: "Default Address Has Been. Updated  " }); req.flash('Success', "Default address updated")
+        res.status(STATUS_CODES.CREATED).json({ message: "Default Address Has Been. Updated  " }); req.flash('Success', "Default address updated")
     } catch (error) {
-        res.status(500).json({ message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 }
 
@@ -336,14 +337,14 @@ export const setDefault = async (req, res) => {
 export const deleteAddress = async (req, res) => {
     try {
         const email = req.session.user;
-        if (!email) return res.status(401).json({ message: MESSAGES.AUTH_PLEASE_LOGIN });
+        if (!email) return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.AUTH_PLEASE_LOGIN });
 
         const user = await User.findOne({ email });
-        if (!user) return res.status(401).json({ message: MESSAGES.USER_NOT_FOUND });
+        if (!user) return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.USER_NOT_FOUND });
 
         const { id } = req.params;
         if (!id) {
-            return res.status(400).json({ message: "Invalid address ID" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: "Invalid address ID" });
         }
 
         const address = await Address.findOne({
@@ -352,18 +353,18 @@ export const deleteAddress = async (req, res) => {
         });
 
         if (!address) {
-            return res.status(404).json({ message: MESSAGES.USER_ADDRESS_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: MESSAGES.USER_ADDRESS_NOT_FOUND });
         }
 
         address.isDelete = true;
         await address.save();
 
-        return res.json({
+        return res.status(STATUS_CODES.OK).json({
             message: "Address deleted successfully",
             success: true
         });
 
     } catch (error) {
-        res.status(500).json({ message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };

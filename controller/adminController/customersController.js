@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import { User } from "../../model/userSchema.js";
 import { MESSAGES } from '../../constants/messages.js';
 
@@ -61,21 +62,21 @@ export const loadUserManagement = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
 export const blockUser = async (req, res) => {
     try {
         if (!req.session.admin) {
-            return res.status(401).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
         }
 
         const { id } = req.params;
         const { isBlocked } = req.body;
 
         if (!id || typeof isBlocked !== 'boolean') {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "Missing id or isBlocked (must be boolean)"
             });
@@ -88,17 +89,17 @@ export const blockUser = async (req, res) => {
         );
 
         if (!user) {
-            return res.status(404).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
         }
 
-        res.json({
+        res.status(STATUS_CODES.OK).json({
             success: true,
             message: `User ${isBlocked ? 'blocked' : 'unblocked'} successfully`,
             isBlocked: user.isBlocked
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 }
 

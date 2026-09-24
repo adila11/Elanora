@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Order from "../../model/orderSchema.js";
 import Address from "../../model/addressSchema.js";
 import Cart from "../../model/cartSchema.js";
@@ -50,7 +51,7 @@ export const getOrders = async (req, res) => {
             },
         });
     } catch (err) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -65,7 +66,7 @@ export const getOrderDetail = async (req, res) => {
         if (!user) return res.redirect("/login");
 
         const order = await Order.findOne({ _id: req.params.id, userId: user._id });
-        if (!order) return res.status(404).render("user/profile/pageNotFound");
+        if (!order) return res.status(STATUS_CODES.NOT_FOUND).render("user/profile/pageNotFound");
 
         if (order.orderStatus === 'delivered') {
             let modified = false;
@@ -94,9 +95,9 @@ export const getOrderDetail = async (req, res) => {
 
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).render("user/profile/pageNotFound");
+            return res.status(STATUS_CODES.NOT_FOUND).render("user/profile/pageNotFound");
         }
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -107,18 +108,18 @@ export const cancelFullOrder = async (req, res) => {
         const { reason } = req.body;
 
         const user = await User.findOne({ email: req.session.user });
-        if (!user) return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+        if (!user) return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
 
         const order = await Order.findOne({ _id: orderId, userId: user._id });
-        if (!order) return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
+        if (!order) return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
 
         const blockedStatuses = ["shipped", "out_for_delivery", "delivered"];
         if (blockedStatuses.includes(order.orderStatus)) {
-            return res.status(400).json({ success: false, message: "Order cannot be cancelled after shipping" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Order cannot be cancelled after shipping" });
         }
 
         if (order.orderStatus === "cancelled") {
-            return res.status(400).json({ success: false, message: "Order already cancelled" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Order already cancelled" });
         }
 
         let sanitizedReason = (reason || "").trim();
@@ -174,10 +175,10 @@ export const cancelFullOrder = async (req, res) => {
             });
         }
 
-        return res.status(200).json({ success: true, message: "Order cancelled successfully" });
+        return res.status(STATUS_CODES.OK).json({ success: true, message: "Order cancelled successfully" });
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -187,15 +188,15 @@ export const cancelSingleItem = async (req, res) => {
         const { orderId, itemId, reason } = req.body;
 
         const user = await User.findOne({ email: req.session.user });
-        if (!user) return res.status(401).json({ success: false });
+        if (!user) return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false });
 
         const order = await Order.findOne({ _id: orderId, userId: user._id });
-        if (!order) return res.status(404).json({ success: false });
+        if (!order) return res.status(STATUS_CODES.NOT_FOUND).json({ success: false });
 
         const item = order.items.id(itemId);
 
         if (!item) {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 success: false,
                 message: MESSAGES.OTHER_ITEM_NOT_FOUND
             });
@@ -209,7 +210,7 @@ export const cancelSingleItem = async (req, res) => {
         ];
 
         if (blockedStatuses.includes(order.orderStatus) || blockedStatuses.includes(item.itemStatus)) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "Cannot cancel this item after shipping"
             });
@@ -222,7 +223,7 @@ export const cancelSingleItem = async (req, res) => {
             if (!couponCheck.isEligible) {
                 const { confirmFullCancel } = req.body;
                 if (!confirmFullCancel) {
-                    return res.json({
+                    return res.status(STATUS_CODES.BAD_REQUEST).json({
                         success: false,
                         requiresConfirmation: true,
                         isCouponBreach: true,
@@ -239,7 +240,7 @@ export const cancelSingleItem = async (req, res) => {
                     `Item cancellation caused coupon minimum purchase breach (${couponCheck.couponCode})`,
                     "user"
                 );
-                return res.json({
+                return res.status(STATUS_CODES.OK).json({
                     success: true,
                     message: "Full order cancelled and refunded to your wallet due to coupon minimum purchase requirement breach.",
                     autoCancelledOrder: true,
@@ -301,10 +302,10 @@ export const cancelSingleItem = async (req, res) => {
             }
         }
 
-        res.json({ success: true, message: "Item cancelled successfully" });
+        res.status(STATUS_CODES.OK).json({ success: true, message: "Item cancelled successfully" });
 
     } catch (error) {
-        res.status(500).json({ success: false });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false });
     }
 };
 
@@ -319,7 +320,7 @@ export const returnItem = async (req, res) => {
         });
 
         if (!user) {
-            return res.status(401).json({
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({
                 success: false,
                 message: MESSAGES.USER_NOT_FOUND
             });
@@ -331,14 +332,14 @@ export const returnItem = async (req, res) => {
         });
 
         if (!order) {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 success: false,
                 message: MESSAGES.ORDER_NOT_FOUND
             });
         }
 
         if (order.orderStatus !== "delivered") {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "Return is allowed only after delivery"
             });
@@ -347,7 +348,7 @@ export const returnItem = async (req, res) => {
         const item = order.items.id(itemId);
 
         if (!item) {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 success: false,
                 message: MESSAGES.OTHER_ITEM_NOT_FOUND
             });
@@ -355,7 +356,7 @@ export const returnItem = async (req, res) => {
 
         const ineligibleStatuses = ["cancelled", "returned", "return_requested", "return_rejected"];
         if (ineligibleStatuses.includes(item.itemStatus)) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "This item cannot be returned"
             });
@@ -367,7 +368,7 @@ export const returnItem = async (req, res) => {
         });
 
         if (existingReturn) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "Return request already submitted"
             });
@@ -389,7 +390,7 @@ export const returnItem = async (req, res) => {
 
         await order.save();
 
-        return res.json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             message: "Return request submitted successfully"
         });
@@ -397,7 +398,7 @@ export const returnItem = async (req, res) => {
     } catch (error) {
 
 
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR
         });
@@ -410,17 +411,17 @@ export const returnItem = async (req, res) => {
 export const validateRetryPayment = async (req, res) => {
     try {
         const user = await User.findOne({ email: req.session.user });
-        if (!user) return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+        if (!user) return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
 
         const order = await Order.findOne({ _id: req.params.id, userId: user._id });
-        if (!order) return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
+        if (!order) return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
 
         if (order.paymentStatus !== 'failed') {
-            return res.status(400).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_DOES_NOT });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_DOES_NOT });
         }
 
         if (order.orderStatus === 'cancelled') {
-            return res.status(400).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_CANCELLED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_CANCELLED });
         }
 
         if (order.orderExpiresAt && new Date() > new Date(order.orderExpiresAt)) {
@@ -442,7 +443,7 @@ export const validateRetryPayment = async (req, res) => {
             }
             await order.save();
 
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "Payment retry window has expired. The order has been cancelled.",
                 expired: true
@@ -481,14 +482,14 @@ export const validateRetryPayment = async (req, res) => {
         }
 
         if (validationErrors.length > 0) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "Some items have validation issues",
                 errors: validationErrors
             });
         }
 
-        return res.json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             message: "Order is eligible for retry payment",
             order: {
@@ -506,7 +507,7 @@ export const validateRetryPayment = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -514,21 +515,21 @@ export const validateRetryPayment = async (req, res) => {
 export const retryPayment = async (req, res) => {
     try {
         const user = await User.findOne({ email: req.session.user });
-        if (!user) return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+        if (!user) return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
 
         const order = await Order.findOne({ _id: req.params.id, userId: user._id });
-        if (!order) return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
+        if (!order) return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
 
         if (order.paymentStatus !== 'failed') {
-            return res.status(400).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_DOES_NOT });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_DOES_NOT });
         }
 
         if (order.orderStatus === 'cancelled') {
-            return res.status(400).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_CANCELLED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.ORDER_THIS_ORDER_CANCELLED });
         }
 
         if (order.orderExpiresAt && new Date() > new Date(order.orderExpiresAt)) {
-            return res.status(400).json({ success: false, message: "Payment retry window has expired" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Payment retry window has expired" });
         }
 
         const amount = order.finalAmount * 100;
@@ -542,7 +543,7 @@ export const retryPayment = async (req, res) => {
         order.retryCount = (order.retryCount || 0) + 1;
         await order.save();
 
-        return res.json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             orderId: razorpayOrder.id,
             internalOrderId: order._id,
@@ -552,7 +553,7 @@ export const retryPayment = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Failed to create retry payment" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Failed to create retry payment" });
     }
 };
 
@@ -562,7 +563,7 @@ export const verifyRetryPayment = async (req, res) => {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
         const user = await User.findOne({ email: req.session.user });
-        if (!user) return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+        if (!user) return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
 
         const generatedSignature = crypto
             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -570,12 +571,12 @@ export const verifyRetryPayment = async (req, res) => {
             .digest("hex");
 
         if (generatedSignature !== razorpay_signature) {
-            return res.status(400).json({ success: false, message: MESSAGES.ORDER_INVALID_PAYMENT_SIGNATURE });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.ORDER_INVALID_PAYMENT_SIGNATURE });
         }
 
         const order = await Order.findOne({ razorpayOrderId: razorpay_order_id, userId: user._id });
         if (!order) {
-            return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
         }
 
         order.paymentStatus = "paid";
@@ -586,7 +587,7 @@ export const verifyRetryPayment = async (req, res) => {
         order.orderExpiresAt = undefined;
         await order.save();
 
-        return res.json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             message: "Payment successful",
             orderId: order._id,
@@ -594,7 +595,7 @@ export const verifyRetryPayment = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: MESSAGES.ORDER_PAYMENT_VERIFICATION_FAILED });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.ORDER_PAYMENT_VERIFICATION_FAILED });
     }
 };
 
@@ -604,24 +605,24 @@ export const submitOrderItemReview = async (req, res) => {
         const { rating, comment } = req.body;
 
         if (!rating || rating < 1 || rating > 5) {
-            return res.status(400).json({ success: false, message: 'Invalid rating. Must be between 1 and 5.' });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: 'Invalid rating. Must be between 1 and 5.' });
         }
 
         const user = await User.findOne({ email: req.session.user });
-        if (!user) return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+        if (!user) return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
 
         const order = await Order.findOne({ _id: orderId, userId: user._id });
-        if (!order) return res.status(404).json({ success: false, message: 'Order not found.' });
+        if (!order) return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: 'Order not found.' });
 
         const item = order.items.id(itemId);
-        if (!item) return res.status(404).json({ success: false, message: 'Item not found in order.' });
+        if (!item) return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: 'Item not found in order.' });
 
         if (item.itemStatus !== 'delivered' && order.orderStatus !== 'delivered') {
-            return res.status(403).json({ success: false, message: 'You can only review a product after it has been delivered.' });
+            return res.status(STATUS_CODES.FORBIDDEN).json({ success: false, message: 'You can only review a product after it has been delivered.' });
         }
 
         if (item.rating) {
-            return res.status(400).json({ success: false, message: 'You have already reviewed this item.' });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: 'You have already reviewed this item.' });
         }
 
         item.rating = rating;
@@ -629,8 +630,8 @@ export const submitOrderItemReview = async (req, res) => {
 
         await order.save();
 
-        res.status(200).json({ success: true, message: 'Review submitted successfully.' });
+        res.status(STATUS_CODES.OK).json({ success: true, message: 'Review submitted successfully.' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Internal server error while submitting review.' });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: 'Internal server error while submitting review.' });
     }
 };

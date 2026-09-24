@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Cart from "../../model/cartSchema.js";
 import Products from "../../model/productSchema.js";
 import { User } from "../../model/userSchema.js";
@@ -10,12 +11,12 @@ export const addToCart = async (req, res) => {
         const userEmail = req.session.user;
 
         if (!userEmail) {
-            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
-            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const userId = user._id;
@@ -23,17 +24,17 @@ export const addToCart = async (req, res) => {
 
         const quantity = parseInt(qty, 10);
         if (isNaN(quantity) || quantity < 1) {
-            return res.json({ success: false, message: "Invalid quantity" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Invalid quantity" });
         }
 
         const product = await Products.findById(productId).populate('category');
         if (!product || !product.isListed) {
-            return res.json({ success: false, message: MESSAGES.PRODUCT_NOT_AVAILABLE });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_NOT_AVAILABLE });
         }
 
         const variant = product.variants ? product.variants.id(variantId) : null;
         if (!variant || !variant.isActive) {
-            return res.json({ success: false, message: MESSAGES.PRODUCT_VARIANT_NOT_AVAILABLE });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_VARIANT_NOT_AVAILABLE });
         }
 
         let cart = await Cart.findOne({ userId });
@@ -59,21 +60,21 @@ export const addToCart = async (req, res) => {
         if (newTotalCartQty > 10) {
             const remaining = Math.max(0, 10 - currentTotalQty);
             if (remaining === 0) {
-                return res.json({ success: false, message: MESSAGES.CART_MAXIMUM_CART_QUANTITY_10 });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.CART_MAXIMUM_CART_QUANTITY_10 });
             }
-            return res.json({ success: false, message: MESSAGES.YOU_CAN_ONLY_ADD_DYNAMIC_MORE_ITEMS_TO_THE_CART_1(remaining) });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.YOU_CAN_ONLY_ADD_DYNAMIC_MORE_ITEMS_TO_THE_CART_1(remaining) });
         }
 
         if (newTotalProductQty > 10) {
-            return res.json({ success: false, message: MESSAGES.CART_MAXIMUM_QUANTITY_PER_PRODUCT });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.CART_MAXIMUM_QUANTITY_PER_PRODUCT });
         }
 
         if (newTotalProductQty > variant.stock) {
             const remainingStockCanAdd = variant.stock - existingItemQty;
             if (remainingStockCanAdd <= 0) {
-                return res.json({ success: false, message: MESSAGES.MAXIMUM_AVAILABLE_STOCK_DYNAMIC_IS_ALREADY_IN_YOUR_CART(variant) });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.MAXIMUM_AVAILABLE_STOCK_DYNAMIC_IS_ALREADY_IN_YOUR_CART(variant) });
             }
-            return res.json({ success: false, message: MESSAGES.ONLY_DYNAMIC_MORE_UNITS_AVAILABLE_IN_STOCK(remainingStockCanAdd) });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.ONLY_DYNAMIC_MORE_UNITS_AVAILABLE_IN_STOCK(remainingStockCanAdd) });
         }
 
         const pricing = getEffectivePrice(product);
@@ -124,14 +125,14 @@ export const addToCart = async (req, res) => {
             }
         }
 
-        res.json({
+        res.status(STATUS_CODES.OK).json({
             success: true,
             message: "Added to cart",
             cartCount
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -140,12 +141,12 @@ export const updateCartItem = async (req, res) => {
         const userEmail = req.session.user;
 
         if (!userEmail) {
-            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
-            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const userId = user._id;
@@ -153,12 +154,12 @@ export const updateCartItem = async (req, res) => {
 
         const quantity = parseInt(qty, 10);
         if (isNaN(quantity) || quantity < 1) {
-            return res.json({ success: false, message: "Quantity must be at least 1" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Quantity must be at least 1" });
         }
 
         const cart = await Cart.findOne({ userId });
         if (!cart) {
-            return res.json({ success: false, message: MESSAGES.CART_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.CART_NOT_FOUND });
         }
 
         const itemIndex = cart.items.findIndex(item =>
@@ -167,7 +168,7 @@ export const updateCartItem = async (req, res) => {
         );
 
         if (itemIndex === -1) {
-            return res.json({ success: false, message: "Item not found in cart" });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: "Item not found in cart" });
         }
 
         const otherItemsQty = cart.items.reduce((sum, item, idx) => {
@@ -177,23 +178,23 @@ export const updateCartItem = async (req, res) => {
         if (otherItemsQty + quantity > 10) {
             const allowedQty = Math.max(0, 10 - otherItemsQty);
             if (allowedQty === 0) {
-                return res.json({ success: false, message: MESSAGES.CART_MAXIMUM_CART_QUANTITY_10 });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.CART_MAXIMUM_CART_QUANTITY_10 });
             }
-            return res.json({ success: false, message: MESSAGES.YOU_CAN_ONLY_ADD_DYNAMIC_MORE_ITEMS_TO_THE_CART(allowedQty) });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.YOU_CAN_ONLY_ADD_DYNAMIC_MORE_ITEMS_TO_THE_CART(allowedQty) });
         }
 
         if (quantity > 10) {
-            return res.json({ success: false, message: MESSAGES.CART_MAXIMUM_QUANTITY_PER_PRODUCT });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.CART_MAXIMUM_QUANTITY_PER_PRODUCT });
         }
 
         const product = await Products.findById(productId).populate('category');
         if (!product || !product.isListed) {
-            return res.json({ success: false, message: MESSAGES.PRODUCT_NOT_AVAILABLE });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_NOT_AVAILABLE });
         }
 
         const variant = product.variants ? product.variants.id(variantId) : null;
         if (!variant || !variant.isActive) {
-            return res.json({ success: false, message: MESSAGES.PRODUCT_VARIANT_NOT_AVAILABLE });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_VARIANT_NOT_AVAILABLE });
         }
 
         let finalQty = quantity;
@@ -220,7 +221,7 @@ export const updateCartItem = async (req, res) => {
 
         const cartCount = cart.items.reduce((total, item) => total + Number(item.qty), 0);
 
-        res.json({
+        res.status(STATUS_CODES.OK).json({
             success: true,
             itemTotal: cart.items[itemIndex].total,
             subtotal,
@@ -230,7 +231,7 @@ export const updateCartItem = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -239,12 +240,12 @@ export const removeCartItem = async (req, res) => {
         const userEmail = req.session.user;
 
         if (!userEmail) {
-            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
-            return res.json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const userId = user._id;
@@ -255,7 +256,7 @@ export const removeCartItem = async (req, res) => {
             populate: { path: "category" }
         });
         if (!cart) {
-            return res.json({ success: false, message: MESSAGES.CART_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.CART_NOT_FOUND });
         }
 
         cart.items = cart.items.filter(item => {
@@ -281,7 +282,7 @@ export const removeCartItem = async (req, res) => {
             0
         );
 
-        res.json({
+        res.status(STATUS_CODES.OK).json({
             success: true,
             subtotal,
             cartCount,
@@ -289,7 +290,7 @@ export const removeCartItem = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -346,6 +347,6 @@ export const loadCart = async (req, res) => {
         res.render("user/cart", { cart, subtotal, title: "Shopping Cart" });
 
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };

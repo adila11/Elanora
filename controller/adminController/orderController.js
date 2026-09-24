@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Order from "../../model/orderSchema.js";
 import { User } from "../../model/userSchema.js";
 import Product from "../../model/productSchema.js";
@@ -155,11 +156,11 @@ export const updateOrderStatus = async (req, res) => {
 
         const existingOrder = await Order.findOne({ orderId });
         if (!existingOrder) {
-            return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
         }
 
         if (['delivered', 'cancelled', 'returned'].includes(existingOrder.orderStatus)) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "Status cannot be changed after the order has been delivered, cancelled, or returned."
             });
@@ -167,12 +168,12 @@ export const updateOrderStatus = async (req, res) => {
 
         const dbStatus = STATUS_MAP[status];
         if (!dbStatus) {
-            return res.status(400).json({ success: false, message: MESSAGES.ORDER_INVALID_STATUS_VALUE });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.ORDER_INVALID_STATUS_VALUE });
         }
 
         const currentStatus = existingOrder.orderStatus;
         if (currentStatus !== dbStatus && !ALLOWED_TRANSITIONS[currentStatus]?.includes(dbStatus)) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: `Invalid status transition from ${currentStatus} to ${dbStatus}.`
             });
@@ -226,10 +227,10 @@ export const updateOrderStatus = async (req, res) => {
         }
 
         await existingOrder.save();
-        return res.json({ success: true });
+        return res.status(STATUS_CODES.OK).json({ success: true });
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: "An error occurred while updating the status." });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "An error occurred while updating the status." });
     }
 };
 
@@ -241,7 +242,7 @@ export const updateItemStatus = async (req, res) => {
 
         const existingOrder = await Order.findOne({ orderId });
         if (!existingOrder) {
-            return res.status(404).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.ORDER_NOT_FOUND });
         }
 
         const item = existingOrder.items.find(
@@ -249,7 +250,7 @@ export const updateItemStatus = async (req, res) => {
         );
 
         if (!item) {
-            return res.status(404).json({ success: false, message: "Item not found in this order." });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: "Item not found in this order." });
         }
 
         const currentItemStatus = (item.itemStatus && item.itemStatus !== 'active')
@@ -257,7 +258,7 @@ export const updateItemStatus = async (req, res) => {
             : (existingOrder.orderStatus || 'pending');
 
         if (['delivered', 'cancelled', 'returned'].includes(currentItemStatus)) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "Item status is final and cannot be changed."
             });
@@ -265,11 +266,11 @@ export const updateItemStatus = async (req, res) => {
 
         const dbStatus = STATUS_MAP[status];
         if (!dbStatus) {
-            return res.status(400).json({ success: false, message: MESSAGES.ORDER_INVALID_STATUS_VALUE });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.ORDER_INVALID_STATUS_VALUE });
         }
 
         if (currentItemStatus !== dbStatus && !ALLOWED_TRANSITIONS[currentItemStatus]?.includes(dbStatus)) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: `Invalid item status transition from ${currentItemStatus} to ${dbStatus}.`
             });
@@ -307,10 +308,10 @@ export const updateItemStatus = async (req, res) => {
 
         await existingOrder.save();
 
-        return res.json({ success: true });
+        return res.status(STATUS_CODES.OK).json({ success: true });
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: "An error occurred while updating the item status." });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "An error occurred while updating the item status." });
     }
 };
 
@@ -324,13 +325,13 @@ export const getOrderDetail = async (req, res) => {
             .lean();
 
         if (!order) {
-            return res.status(404).render('admin/404', { message: MESSAGES.ORDER_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).render('admin/404', { message: MESSAGES.ORDER_NOT_FOUND });
         }
 
         order.user = order.userId;
 
         res.render('admin/orderDetail', { order, title: "Order Details" });
     } catch (err) {
-        res.status(500).render('admin/error', { message: 'Server error' });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render('admin/error', { message: 'Server error' });
     }
 };

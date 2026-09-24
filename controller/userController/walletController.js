@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import { User } from "../../model/userSchema.js";
 import Wallet from "../../model/walletSchema.js";
 import WalletTransaction from "../../model/walletTransactionSchema.js";
@@ -42,7 +43,7 @@ export const loadWallet = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -104,7 +105,7 @@ export const loadWalletTransactions = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -114,14 +115,14 @@ export const createWalletTopupOrder = async (req, res) => {
         const numAmount = Number(amount);
 
         if (!numAmount || numAmount < 100) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.USER_MINIMUM_WALLET_TOPUP_AMOUNT
             });
         }
 
         if (numAmount > 50000) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.USER_MAXIMUM_WALLET_TOPUP_AMOUNT
             });
@@ -135,14 +136,14 @@ export const createWalletTopupOrder = async (req, res) => {
 
         const razorpayOrder = await razorpay.orders.create(options);
 
-        res.json({
+        res.status(STATUS_CODES.OK).json({
             success: true,
             order: razorpayOrder,
             key: process.env.RAZORPAY_KEY_ID
         });
 
     } catch (error) {
-        res.status(500).json({
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: "Unable to create payment"
         });
@@ -160,7 +161,7 @@ export const verifyWalletPayment = async (req, res) => {
         } = req.body;
 
         if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !amount) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "Missing payment details"
             });
@@ -169,14 +170,14 @@ export const verifyWalletPayment = async (req, res) => {
         const numAmount = Number(amount);
 
         if (isNaN(numAmount) || numAmount < 100) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.USER_MINIMUM_WALLET_TOPUP_AMOUNT
             });
         }
 
         if (numAmount > 50000) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.USER_MAXIMUM_WALLET_TOPUP_AMOUNT
             });
@@ -191,7 +192,7 @@ export const verifyWalletPayment = async (req, res) => {
             .digest("hex");
 
         if (expectedSignature !== razorpay_signature) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.ORDER_PAYMENT_VERIFICATION_FAILED
             });
@@ -203,7 +204,7 @@ export const verifyWalletPayment = async (req, res) => {
         });
 
         if (existingTransaction) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "Payment already processed"
             });
@@ -213,7 +214,7 @@ export const verifyWalletPayment = async (req, res) => {
         const user = await User.findOne({ email: req.session.user });
 
         if (!user) {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 success: false,
                 message: MESSAGES.USER_NOT_FOUND
             });
@@ -228,7 +229,7 @@ export const verifyWalletPayment = async (req, res) => {
             description: "Wallet Top-up"
         });
 
-        return res.json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             message: "Wallet credited successfully"
         });
@@ -236,7 +237,7 @@ export const verifyWalletPayment = async (req, res) => {
     } catch (error) {
 
 
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: "Something went wrong"
         });

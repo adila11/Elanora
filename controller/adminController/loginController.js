@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Admin from "../../model/adminSchema.js";
 import bcrypt from "bcrypt";
 import { MESSAGES } from '../../constants/messages.js';
@@ -11,7 +12,7 @@ export const loadLogin = async (req, res) => {
         return res.render("admin/login", { error: null });
 
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -49,7 +50,7 @@ export const login = async (req, res) => {
         res.redirect("/admin/dashboard")
 
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -62,7 +63,7 @@ export const logout = async (req, res) => {
         delete req.session.admin
         return res.redirect("/admin")
     } catch (error) {
-        return res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 
 }

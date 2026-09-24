@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import bcrypt from 'bcrypt';
 import { User } from "../../model/userSchema.js";
 import { MESSAGES } from '../../constants/messages.js';
@@ -10,7 +11,7 @@ export const loadresetpassword = async (req, res) => {
         const user = await User.findOne({ email: email });
         return res.render("user/profile/resetPassword", { user })
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
     }
 }
 export const resetpassword = async (req, res) => {
@@ -29,7 +30,7 @@ export const resetpassword = async (req, res) => {
 
 
         if (!oldPassword || !newPassword || !confirmPassword) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.VALIDATION_ALL_FIELDS_REQUIRED
             });
@@ -37,7 +38,7 @@ export const resetpassword = async (req, res) => {
 
         const isMatch = await bcrypt.compare(oldPassword, user.password);
         if (!isMatch) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 field: "old",
                 message: "Old password is incorrect"
@@ -45,7 +46,7 @@ export const resetpassword = async (req, res) => {
         }
 
         if (newPassword !== confirmPassword) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 field: "confirm",
                 message: MESSAGES.AUTH_PASSWORDS_DO_NOT_MATCH
@@ -53,7 +54,7 @@ export const resetpassword = async (req, res) => {
         }
 
         if (oldPassword === newPassword) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 field: "new",
                 message: "New password must be different from old password"
@@ -62,7 +63,7 @@ export const resetpassword = async (req, res) => {
 
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
         if (!passwordRegex.test(newPassword)) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 field: "new",
                 message: "Password must be 8+ chars with uppercase, lowercase & number"
@@ -74,9 +75,9 @@ export const resetpassword = async (req, res) => {
         await user.save();
 
         req.flash("success", "Password updated successfully");
-        return res.json({ success: true });
+        return res.status(STATUS_CODES.OK).json({ success: true });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };

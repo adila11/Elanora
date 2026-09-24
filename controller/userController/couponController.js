@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Coupon from "../../model/couponSchema.js";
 import Cart from "../../model/cartSchema.js";
 import { User } from "../../model/userSchema.js";
@@ -8,46 +9,46 @@ export const applyCoupon = async (req, res) => {
     try {
         const userEmail = req.session.user;
         if (!userEmail) {
-            return res.status(401).json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_PLEASE_LOGIN_FIRST });
         }
 
         const user = await User.findOne({ email: userEmail });
         if (!user) {
-            return res.status(401).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
         }
 
         const { couponCode } = req.body;
         if (!couponCode || !couponCode.trim()) {
-            return res.json({ success: false, message: "Please enter a coupon code." });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Please enter a coupon code." });
         }
 
         const code = couponCode.trim().toUpperCase();
 
         const coupon = await Coupon.findOne({ couponCode: code });
         if (!coupon) {
-            return res.json({ success: false, message: "Invalid coupon code." });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Invalid coupon code." });
         }
 
         if (!coupon.isActive) {
-            return res.json({ success: false, message: "This coupon is inactive." });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "This coupon is inactive." });
         }
 
         const now = new Date();
         if (now < new Date(coupon.startDate)) {
-            return res.json({ success: false, message: "This coupon is not valid yet." });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "This coupon is not valid yet." });
         }
         if (now > new Date(coupon.expiryDate)) {
-            return res.json({ success: false, message: "This coupon has expired." });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "This coupon has expired." });
         }
 
         if (coupon.usageLimit !== null && coupon.usageLimit !== undefined) {
             if ((coupon.usageCount || 0) >= coupon.usageLimit) {
-                return res.json({ success: false, message: "This coupon has reached its usage limit." });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "This coupon has reached its usage limit." });
             }
         }
 
         if (coupon.usedBy && coupon.usedBy.some(id => id.toString() === user._id.toString())) {
-            return res.json({ success: false, message: "You have already used this coupon." });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "You have already used this coupon." });
         }
 
         const cart = await Cart.findOne({ userId: user._id }).populate({
@@ -55,7 +56,7 @@ export const applyCoupon = async (req, res) => {
             populate: { path: "category" }
         });
         if (!cart || cart.items.length === 0) {
-            return res.json({ success: false, message: "Your cart is empty." });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Your cart is empty." });
         }
 
         let subtotal = 0;
@@ -69,7 +70,7 @@ export const applyCoupon = async (req, res) => {
 
         const minPurchase = coupon.minimumPurchase || 0;
         if (subtotal < minPurchase) {
-            return res.json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: `Minimum purchase of ₹${minPurchase.toLocaleString('en-IN')} required.`
             });
@@ -88,7 +89,7 @@ export const applyCoupon = async (req, res) => {
         discount = Math.min(discount, subtotal);
         req.session.appliedCoupon = code;
 
-        return res.json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             couponCode: code,
             discount,
@@ -100,15 +101,15 @@ export const applyCoupon = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
     }
 };
 
 export const removeCoupon = async (req, res) => {
     try {
         req.session.appliedCoupon = null;
-        return res.json({ success: true, message: "Coupon removed successfully" });
+        return res.status(STATUS_CODES.OK).json({ success: true, message: "Coupon removed successfully" });
     } catch (error) {
-        res.status(500).json({ success: false, message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
     }
 };

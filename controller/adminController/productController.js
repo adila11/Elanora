@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Products from "../../model/productSchema.js";
 import Category from "../../model/categoriesSchema.js";
 import mongoose from "mongoose";
@@ -58,7 +59,7 @@ export const loadProduct = async (req, res) => {
             sort
         });
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -72,7 +73,7 @@ export const loadAddProduct = async (req, res) => {
         const categories = await Category.find({ isActive: true });
         return res.render("admin/addProduct", { title: "Add Product", categories })
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -82,31 +83,31 @@ export const addProduct = async (req, res) => {
         const files = req.files || [];
 
         if (!name || !name.trim()) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_NAME_REQUIRED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_NAME_REQUIRED });
         }
         if (!description || !description.trim()) {
-            return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_DESCRIPTION_REQUIRED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VALIDATION_DESCRIPTION_REQUIRED });
         }
         if (!category) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_REQUIRED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_REQUIRED });
         }
         if (!mongoose.Types.ObjectId.isValid(category)) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_INVALID_CATEGORY_ID });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_INVALID_CATEGORY_ID });
         }
 
         const bPrice = parseFloat(basePrice);
         if (isNaN(bPrice) || bPrice <= 0) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_BASE_PRICE_MUST_VALID });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_BASE_PRICE_MUST_VALID });
         }
 
         let dPrice = bPrice;
         if (discountPrice !== undefined && discountPrice !== '') {
             dPrice = parseFloat(discountPrice);
             if (isNaN(dPrice) || dPrice <= 0) {
-                return res.status(400).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_PRICE_MUST_VALID });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_PRICE_MUST_VALID });
             }
             if (dPrice > bPrice) {
-                return res.status(400).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_PRICE_CANNOT_GREATER });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_PRICE_CANNOT_GREATER });
             }
         }
 
@@ -114,32 +115,32 @@ export const addProduct = async (req, res) => {
         try {
             variants = typeof rawVariants === 'string' ? JSON.parse(rawVariants) : rawVariants;
         } catch (e) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_INVALID_VARIANTS_FORMAT });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_INVALID_VARIANTS_FORMAT });
         }
 
         if (!Array.isArray(variants) || variants.length === 0) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_AT_LEAST_ONE_VARIANT });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_AT_LEAST_ONE_VARIANT });
         }
 
         const skus = variants.map(v => v.sku ? v.sku.trim() : '');
         if (skus.some(s => !s)) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_SKU_REQUIRED_ALL_VARIANTS });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_SKU_REQUIRED_ALL_VARIANTS });
         }
         if (new Set(skus).size !== skus.length) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_DUPLICATE_SKUS_NOT_ALLOWED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_DUPLICATE_SKUS_NOT_ALLOWED });
         }
 
         const processedVariants = [];
         for (const [idx, v] of variants.entries()) {
             if (!v.color || !v.color.trim()) {
-                return res.status(400).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_COLOR_IS_REQUIRED(idx) });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_COLOR_IS_REQUIRED(idx) });
             }
             if (v.stock === undefined || v.stock === '') {
-                return res.status(400).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_STOCK_IS_REQUIRED(idx) });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_STOCK_IS_REQUIRED(idx) });
             }
             const stockNum = parseInt(v.stock);
             if (isNaN(stockNum) || stockNum < 0) {
-                return res.status(400).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_STOCK_MUST_BE_A_NONNEGATIVE_INTEGER(idx) });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_STOCK_MUST_BE_A_NONNEGATIVE_INTEGER(idx) });
             }
 
             const variantImages = files
@@ -147,7 +148,7 @@ export const addProduct = async (req, res) => {
                 .map(f => ({ url: f.secure_url || f.url || f.path }));
 
             if (variantImages.length !== 4) {
-                return res.status(400).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_EXACTLY_4_IMAGES_ARE_REQUIRED_CURRENTLY_DYNAMIC_1(idx, variantImages) });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_EXACTLY_4_IMAGES_ARE_REQUIRED_CURRENTLY_DYNAMIC_1(idx, variantImages) });
             }
 
             processedVariants.push({
@@ -174,7 +175,7 @@ export const addProduct = async (req, res) => {
             variants: processedVariants
         });
 
-        res.status(201).json({
+        res.status(STATUS_CODES.CREATED).json({
             success: true,
             message: "Product created successfully",
             productId: product._id
@@ -183,7 +184,7 @@ export const addProduct = async (req, res) => {
     } catch (error) {
         let message = error.message || "Something went wrong";
         if (error.code === 11000) message = "A product with this SKU already exists";
-        res.status(500).json({ success: false, message });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message });
     }
 };
 
@@ -192,12 +193,12 @@ export const loadEditProduct = async (req, res) => {
         if (!req.session.admin) return res.redirect('/admin');
 
         const product = await Products.findById(req.params.id).populate('category').lean();
-        if (!product) return res.status(404).send(MESSAGES.PRODUCT_NOT_FOUND_1);
+        if (!product) return res.status(STATUS_CODES.NOT_FOUND).send(MESSAGES.PRODUCT_NOT_FOUND_1);
 
         const categories = await Category.find({});
         res.render("admin/editProduct", { title: "Edit Product", product, categories });
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -208,36 +209,36 @@ export const editProduct = async (req, res) => {
         const files = req.files || [];
 
         if (!name || !name.trim()) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_NAME_REQUIRED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_NAME_REQUIRED });
         }
         if (!description || !description.trim()) {
-            return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_DESCRIPTION_REQUIRED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VALIDATION_DESCRIPTION_REQUIRED });
         }
         if (!category) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_REQUIRED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_REQUIRED });
         }
         if (!mongoose.Types.ObjectId.isValid(category)) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_INVALID_CATEGORY_ID });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_INVALID_CATEGORY_ID });
         }
 
         const product = await Products.findById(id);
         if (!product) {
-            return res.status(404).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
         }
 
         const bPrice = parseFloat(basePrice);
         if (isNaN(bPrice) || bPrice <= 0) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_BASE_PRICE_MUST_VALID });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_BASE_PRICE_MUST_VALID });
         }
 
         let merchantDPrice = bPrice;
         if (discountPrice !== undefined && discountPrice !== '') {
             merchantDPrice = parseFloat(discountPrice);
             if (isNaN(merchantDPrice) || merchantDPrice <= 0) {
-                return res.status(400).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_PRICE_MUST_VALID });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_PRICE_MUST_VALID });
             }
             if (merchantDPrice > bPrice) {
-                return res.status(400).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_PRICE_CANNOT_GREATER });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_PRICE_CANNOT_GREATER });
             }
         }
         merchantDPrice = Math.round(merchantDPrice * 100) / 100;
@@ -254,32 +255,32 @@ export const editProduct = async (req, res) => {
         try {
             variants = typeof rawVariants === 'string' ? JSON.parse(rawVariants) : rawVariants;
         } catch (e) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_INVALID_VARIANTS_FORMAT });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_INVALID_VARIANTS_FORMAT });
         }
 
         if (!Array.isArray(variants) || variants.length === 0) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_AT_LEAST_ONE_VARIANT });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_AT_LEAST_ONE_VARIANT });
         }
 
         const skus = variants.map(v => v.sku ? v.sku.trim() : '');
         if (skus.some(s => !s)) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_SKU_REQUIRED_ALL_VARIANTS });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_SKU_REQUIRED_ALL_VARIANTS });
         }
         if (new Set(skus).size !== skus.length) {
-            return res.status(400).json({ success: false, message: MESSAGES.PRODUCT_DUPLICATE_SKUS_NOT_ALLOWED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.PRODUCT_DUPLICATE_SKUS_NOT_ALLOWED });
         }
 
         const processedVariants = [];
         for (const [idx, v] of variants.entries()) {
             if (!v.color || !v.color.trim()) {
-                return res.status(400).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_COLOR_IS_REQUIRED(idx) });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_COLOR_IS_REQUIRED(idx) });
             }
             if (v.stock === undefined || v.stock === '') {
-                return res.status(400).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_STOCK_IS_REQUIRED(idx) });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_STOCK_IS_REQUIRED(idx) });
             }
             const stockNum = parseInt(v.stock);
             if (isNaN(stockNum) || stockNum < 0) {
-                return res.status(400).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_STOCK_MUST_BE_A_NONNEGATIVE_INTEGER(idx) });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_STOCK_MUST_BE_A_NONNEGATIVE_INTEGER(idx) });
             }
 
             let images = [];
@@ -296,7 +297,7 @@ export const editProduct = async (req, res) => {
             images = [...images, ...newImages];
 
             if (images.length !== 4) {
-                return res.status(400).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_EXACTLY_4_IMAGES_ARE_REQUIRED_CURRENTLY_DYNAMIC(idx, images) });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VARIANT_DYNAMIC_EXACTLY_4_IMAGES_ARE_REQUIRED_CURRENTLY_DYNAMIC(idx, images) });
             }
 
             const variantObj = {
@@ -331,10 +332,10 @@ export const editProduct = async (req, res) => {
         );
 
         if (!updated) {
-            return res.status(404).json({ success: false, message: "Failed to update product" });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: "Failed to update product" });
         }
 
-        res.json({ success: true, message: MESSAGES.PRODUCT_UPDATED_SUCCESSFULLY_1 });
+        res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.PRODUCT_UPDATED_SUCCESSFULLY_1 });
 
     } catch (error) {
         let message = error.message || "Update failed";
@@ -342,60 +343,60 @@ export const editProduct = async (req, res) => {
         if (error.name === 'ValidationError') {
             message = "Validation Error: " + Object.values(error.errors).map(e => e.message).join(', ');
         }
-        res.status(500).json({ success: false, message });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message });
     }
 };
 
 export const toggleProductStatus = async (req, res) => {
     try {
         const product = await Products.findById(req.params.id);
-        if (!product) return res.status(404).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
+        if (!product) return res.status(STATUS_CODES.NOT_FOUND).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
 
         product.isListed = !product.isListed;
         await product.save();
-        res.json({ success: true, message: MESSAGES.PRODUCT_DYNAMIC_SUCCESSFULLY(product) });
+        res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.PRODUCT_DYNAMIC_SUCCESSFULLY(product) });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Toggle failed" });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Toggle failed" });
     }
 };
 
 export const deleteProduct = async (req, res) => {
     try {
         await Products.findByIdAndDelete(req.params.id);
-        res.json({ success: true, message: MESSAGES.PRODUCT_DELETED_SUCCESSFULLY_1 });
+        res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.PRODUCT_DELETED_SUCCESSFULLY_1 });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Delete failed" });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Delete failed" });
     }
 };
 
 export const saveProductOffer = async (req, res) => {
     try {
         if (!req.session.admin) {
-            return res.status(401).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
         }
 
         const { id } = req.params;
         const { name, discountType, discountValue, startDate, endDate } = req.body;
 
         if (!name || !name.trim()) {
-            return res.status(400).json({ success: false, message: MESSAGES.COUPON_OFFER_NAME_REQUIRED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_OFFER_NAME_REQUIRED });
         }
         if (name.trim().length < 3 || name.trim().length > 50) {
-            return res.status(400).json({ success: false, message: MESSAGES.COUPON_OFFER_NAME_MUST_BETWEEN });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_OFFER_NAME_MUST_BETWEEN });
         }
 
         if (!discountType || !["percentage", "flat"].includes(discountType)) {
-            return res.status(400).json({ success: false, message: MESSAGES.COUPON_INVALID_DISCOUNT_TYPE });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_INVALID_DISCOUNT_TYPE });
         }
 
         const discVal = parseFloat(discountValue);
         if (isNaN(discVal) || discVal <= 0) {
-            return res.status(400).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_VALUE_MUST_VALID });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_VALUE_MUST_VALID });
         }
 
         const product = await Products.findById(id);
         if (!product) {
-            return res.status(404).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
         }
 
         const basePriceToUse = product.merchantDiscountPrice || product.discountPrice || product.basePrice;
@@ -404,11 +405,11 @@ export const saveProductOffer = async (req, res) => {
         }
 
         if (discountType === "percentage" && (discVal < 1 || discVal > 99)) {
-            return res.status(400).json({ success: false, message: MESSAGES.COUPON_PERCENTAGE_DISCOUNT_MUST_BETWEEN });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_PERCENTAGE_DISCOUNT_MUST_BETWEEN });
         }
 
         if (discountType === "flat" && discVal >= basePriceToUse) {
-            return res.status(400).json({ success: false, message: "Flat discount must be less than the product's price" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Flat discount must be less than the product's price" });
         }
 
         let start = null;
@@ -416,16 +417,16 @@ export const saveProductOffer = async (req, res) => {
         if (startDate) {
             start = new Date(startDate);
             if (isNaN(start.getTime())) {
-                return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_INVALID_START_DATE });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VALIDATION_INVALID_START_DATE });
             }
         }
         if (endDate) {
             end = new Date(endDate);
             if (isNaN(end.getTime())) {
-                return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_INVALID_END_DATE });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VALIDATION_INVALID_END_DATE });
             }
             if (start && end < start) {
-                return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_END_DATE_MUST_AFTER });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VALIDATION_END_DATE_MUST_AFTER });
             }
         }
 
@@ -444,22 +445,22 @@ export const saveProductOffer = async (req, res) => {
 
         await product.save();
 
-        res.json({ success: true, message: "Offer saved successfully and product price updated" });
+        res.status(STATUS_CODES.OK).json({ success: true, message: "Offer saved successfully and product price updated" });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error saving offer" });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Server error saving offer" });
     }
 };
 
 export const deleteProductOffer = async (req, res) => {
     try {
         if (!req.session.admin) {
-            return res.status(401).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
         }
 
         const { id } = req.params;
         const product = await Products.findById(id);
         if (!product) {
-            return res.status(404).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
         }
 
         product.offer = undefined;
@@ -470,8 +471,8 @@ export const deleteProductOffer = async (req, res) => {
 
         await product.save();
 
-        res.json({ success: true, message: "Offer removed successfully and product price reverted" });
+        res.status(STATUS_CODES.OK).json({ success: true, message: "Offer removed successfully and product price reverted" });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error removing offer" });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Server error removing offer" });
     }
 };

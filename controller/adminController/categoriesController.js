@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Category from "../../model/categoriesSchema.js";
 import Products from "../../model/productSchema.js";
 import { getEffectivePrice } from "../../utils/offerHelper.js";
@@ -66,21 +67,21 @@ export const loadCategories = async (req, res) => {
             sort
         });
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
 export const addCategory = async (req, res) => {
     try {
-        if (!req.session.admin) return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
+        if (!req.session.admin) return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
 
         let { name, description } = req.body;
 
         if (!name || name.trim().length < 3) {
-            return res.status(400).json({ message: MESSAGES.PRODUCT_NAME_MUST_AT });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: MESSAGES.PRODUCT_NAME_MUST_AT });
         }
         if (!/^[a-zA-Z0-9\s]+$/.test(name.trim())) {
-            return res.status(400).json({ message: MESSAGES.VALIDATION_ONLY_LETTERS_NUMBERS_SPACES });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: MESSAGES.VALIDATION_ONLY_LETTERS_NUMBERS_SPACES });
         }
 
         const formattedName = name.trim().charAt(0).toUpperCase() + name.trim().slice(1);
@@ -89,13 +90,13 @@ export const addCategory = async (req, res) => {
             name: { $regex: `^${formattedName}$`, $options: 'i' }
         });
         if (existing) {
-            return res.status(409).json({ message: "A category with this name already exists." });
+            return res.status(STATUS_CODES.CONFLICT).json({ message: "A category with this name already exists." });
         }
 
         const newCategory = new Category({ name: formattedName, description: description?.trim() });
         await newCategory.save();
 
-        return res.status(201).json({
+        return res.status(STATUS_CODES.CREATED).json({
             message: "Category added successfully!",
             category: {
                 _id: newCategory._id,
@@ -107,22 +108,22 @@ export const addCategory = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
     }
 };
 
 export const editCategory = async (req, res) => {
     try {
-        if (!req.session.admin) return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
+        if (!req.session.admin) return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
 
         const { id } = req.params;
         let { name, description } = req.body;
 
         if (!name || name.trim().length < 3) {
-            return res.status(400).json({ message: MESSAGES.PRODUCT_NAME_MUST_AT });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: MESSAGES.PRODUCT_NAME_MUST_AT });
         }
         if (!/^[a-zA-Z0-9\s]+$/.test(name.trim())) {
-            return res.status(400).json({ message: MESSAGES.VALIDATION_ONLY_LETTERS_NUMBERS_SPACES });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: MESSAGES.VALIDATION_ONLY_LETTERS_NUMBERS_SPACES });
         }
 
         const formattedName = name.trim().charAt(0).toUpperCase() + name.trim().slice(1);
@@ -132,7 +133,7 @@ export const editCategory = async (req, res) => {
             _id: { $ne: id }
         });
         if (duplicate) {
-            return res.status(409).json({ message: "Another category with this name already exists." });
+            return res.status(STATUS_CODES.CONFLICT).json({ message: "Another category with this name already exists." });
         }
 
         const updated = await Category.findByIdAndUpdate(
@@ -146,9 +147,9 @@ export const editCategory = async (req, res) => {
             }
         );
 
-        if (!updated) return res.status(404).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
+        if (!updated) return res.status(STATUS_CODES.NOT_FOUND).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
 
-        return res.json({
+        return res.status(STATUS_CODES.OK).json({
             message: MESSAGES.PRODUCT_UPDATED_SUCCESSFULLY_1,
             category: {
                 _id: updated._id,
@@ -160,20 +161,20 @@ export const editCategory = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.SERVER_ERROR_PLEASE_TRY_1 });
     }
 };
 
 export const toggleCategory = async (req, res) => {
     try {
         if (!req.session.admin) {
-            return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
         }
 
         const cat = await Category.findById(req.params.id);
 
         if (!cat) {
-            return res.status(404).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
         }
         cat.isActive = !cat.isActive;
 
@@ -190,14 +191,14 @@ export const toggleCategory = async (req, res) => {
             }
         );
 
-        return res.json({
+        return res.status(STATUS_CODES.OK).json({
             message: `Category ${cat.isActive ? 'listed' : 'unlisted'} successfully.`,
             isActive: cat.isActive
         });
 
 
     } catch (error) {
-        res.status(500).json({
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR
         });
     }
@@ -205,50 +206,50 @@ export const toggleCategory = async (req, res) => {
 
 export const deleteCategory = async (req, res) => {
     try {
-        if (!req.session.admin) return res.status(401).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
+        if (!req.session.admin) return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.AUTH_UNAUTHORIZED });
 
         const deleted = await Category.findByIdAndDelete(req.params.id);
 
-        if (!deleted) return res.status(404).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
+        if (!deleted) return res.status(STATUS_CODES.NOT_FOUND).json({ message: MESSAGES.PRODUCT_NOT_FOUND_1 });
 
-        return res.json({ message: MESSAGES.PRODUCT_DELETED_SUCCESSFULLY_1 });
+        return res.status(STATUS_CODES.OK).json({ message: MESSAGES.PRODUCT_DELETED_SUCCESSFULLY_1 });
     } catch (error) {
-        res.status(500).json({ message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
 export const saveCategoryOffer = async (req, res) => {
     try {
         if (!req.session.admin) {
-            return res.status(401).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
         }
 
         const { id } = req.params;
         const { name, discountType, discountValue, startDate, endDate } = req.body;
 
         if (!name || !name.trim()) {
-            return res.status(400).json({ success: false, message: MESSAGES.COUPON_OFFER_NAME_REQUIRED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_OFFER_NAME_REQUIRED });
         }
         if (name.trim().length < 3 || name.trim().length > 50) {
-            return res.status(400).json({ success: false, message: MESSAGES.COUPON_OFFER_NAME_MUST_BETWEEN });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_OFFER_NAME_MUST_BETWEEN });
         }
 
         if (!discountType || !["percentage", "flat"].includes(discountType)) {
-            return res.status(400).json({ success: false, message: MESSAGES.COUPON_INVALID_DISCOUNT_TYPE });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_INVALID_DISCOUNT_TYPE });
         }
 
         const discVal = parseFloat(discountValue);
         if (isNaN(discVal) || discVal <= 0) {
-            return res.status(400).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_VALUE_MUST_VALID });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_DISCOUNT_VALUE_MUST_VALID });
         }
 
         const category = await Category.findById(id);
         if (!category) {
-            return res.status(404).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
         }
 
         if (discountType === "percentage" && (discVal < 1 || discVal > 99)) {
-            return res.status(400).json({ success: false, message: MESSAGES.COUPON_PERCENTAGE_DISCOUNT_MUST_BETWEEN });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.COUPON_PERCENTAGE_DISCOUNT_MUST_BETWEEN });
         }
 
         let start = null;
@@ -256,16 +257,16 @@ export const saveCategoryOffer = async (req, res) => {
         if (startDate) {
             start = new Date(startDate);
             if (isNaN(start.getTime())) {
-                return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_INVALID_START_DATE });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VALIDATION_INVALID_START_DATE });
             }
         }
         if (endDate) {
             end = new Date(endDate);
             if (isNaN(end.getTime())) {
-                return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_INVALID_END_DATE });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VALIDATION_INVALID_END_DATE });
             }
             if (start && end < start) {
-                return res.status(400).json({ success: false, message: MESSAGES.VALIDATION_END_DATE_MUST_AFTER });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.VALIDATION_END_DATE_MUST_AFTER });
             }
         }
 
@@ -289,22 +290,22 @@ export const saveCategoryOffer = async (req, res) => {
             await product.save();
         }
 
-        res.json({ success: true, message: "Category offer saved successfully and product prices updated" });
+        res.status(STATUS_CODES.OK).json({ success: true, message: "Category offer saved successfully and product prices updated" });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error saving category offer" });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Server error saving category offer" });
     }
 };
 
 export const deleteCategoryOffer = async (req, res) => {
     try {
         if (!req.session.admin) {
-            return res.status(401).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
+            return res.status(STATUS_CODES.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTH_UNAUTHORIZED });
         }
 
         const { id } = req.params;
         const category = await Category.findById(id);
         if (!category) {
-            return res.status(404).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND_1 });
         }
 
         category.offer = undefined;
@@ -320,8 +321,8 @@ export const deleteCategoryOffer = async (req, res) => {
             await product.save();
         }
 
-        res.json({ success: true, message: "Category offer removed successfully and product prices reverted" });
+        res.status(STATUS_CODES.OK).json({ success: true, message: "Category offer removed successfully and product prices reverted" });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error removing category offer" });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Server error removing category offer" });
     }
 };

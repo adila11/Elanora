@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Products from "../../model/productSchema.js";
 import Category from "../../model/categoriesSchema.js";
 import Cart from '../../model/cartSchema.js';
@@ -61,7 +62,7 @@ const loadHome = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 

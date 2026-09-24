@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import Return from "../../model/returnSchema.js";
 import Order from "../../model/orderSchema.js";
 import Product from "../../model/productSchema.js";
@@ -73,10 +74,10 @@ export const approveReturn = async (req, res) => {
 
         const returnRequest = await Return.findById(id);
         if (!returnRequest) {
-            return res.status(404).json({ success: false, message: MESSAGES.ORDER_RETURN_REQUEST_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.ORDER_RETURN_REQUEST_NOT_FOUND });
         }
         if (returnRequest.status !== "pending") {
-            return res.status(400).json({ success: false, message: MESSAGES.ORDER_RETURN_ALREADY_PROCESSED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.ORDER_RETURN_ALREADY_PROCESSED });
         }
 
         returnRequest.status = "approved";
@@ -133,13 +134,13 @@ export const approveReturn = async (req, res) => {
             await order.save();
         }
 
-        res.json({
+        res.status(STATUS_CODES.OK).json({
             success: true,
             message: `Return approved. ₹${returnRequest.refundAmount} refunded to user's wallet.`
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -151,10 +152,10 @@ export const rejectReturn = async (req, res) => {
 
         const returnRequest = await Return.findById(id);
         if (!returnRequest) {
-            return res.status(404).json({ success: false, message: MESSAGES.ORDER_RETURN_REQUEST_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.ORDER_RETURN_REQUEST_NOT_FOUND });
         }
         if (returnRequest.status !== "pending") {
-            return res.status(400).json({ success: false, message: MESSAGES.ORDER_RETURN_ALREADY_PROCESSED });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: MESSAGES.ORDER_RETURN_ALREADY_PROCESSED });
         }
 
         returnRequest.status = "rejected";
@@ -173,9 +174,9 @@ export const rejectReturn = async (req, res) => {
             await order.save();
         }
 
-        res.json({ success: true, message: "Return rejected" });
+        res.status(STATUS_CODES.OK).json({ success: true, message: "Return rejected" });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_INTERNAL_SERVER_ERROR });
     }
 };

@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "../../constants/statusCodes.js";
 import sentOtp from "../../utils/sendOtp.js";
 import { UserOtp, User } from "../../model/userSchema.js";
 import { creditWallet } from "../../utils/walletHelper.js";
@@ -15,7 +16,7 @@ export const loadLogin = async (req, res) => {
         return res.render("user/auth/login/login", { error: null });
 
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -56,7 +57,7 @@ export const login = async (req, res) => {
         return res.redirect('/');
 
     } catch (error) {
-        return res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -67,7 +68,7 @@ export const loadforgotpassword = async (req, res) => {
         }
         return res.render("user/auth/forgotpassword/forgotpassword")
     } catch (error) {
-        return res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 }
 
@@ -112,7 +113,7 @@ export const loadforgotpassOTPVerification = async (req, res) => {
         if (!req.session.tempUser) return res.redirect("/forgotpassword")
         return res.render("user/auth/forgotpassword/forgotpass-otp")
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -139,7 +140,7 @@ export const forgotpassOTPVerification = async (req, res) => {
         return res.redirect('/newpassword')
 
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -155,7 +156,7 @@ export const loadnewpassword = async (req, res) => {
 
         return res.render("user/auth/forgotpassword/newpassword")
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -199,7 +200,7 @@ export const newpassword = async (req, res) => {
         return res.redirect("/login")
 
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -211,7 +212,7 @@ export const loadSignup = async (req, res) => {
         }
         return res.render("user/auth/signup/signup")
     } catch (error) {
-        res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -221,7 +222,7 @@ export const signup = async (req, res) => {
 
 
         if (!fullName || !email || !password || !confirmPassword) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.VALIDATION_ALL_FIELDS_REQUIRED,
                 field: "fullName"
@@ -229,7 +230,7 @@ export const signup = async (req, res) => {
         }
 
         if (!/^[A-Za-z\s]+$/.test(fullName.trim())) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.OTHER_FULL_NAME_MUST_CONTAIN,
                 field: "fullName"
@@ -237,7 +238,7 @@ export const signup = async (req, res) => {
         }
 
         if (fullName.trim().length > 40) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.VALIDATION_FULL_NAME_CANNOT_EXCEED,
                 field: "fullName"
@@ -246,7 +247,7 @@ export const signup = async (req, res) => {
 
         const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
-            return res.status(409).json({
+            return res.status(STATUS_CODES.CONFLICT).json({
                 success: false,
                 message: "Email already exists",
                 field: "email"
@@ -255,7 +256,7 @@ export const signup = async (req, res) => {
 
 
         if (password !== confirmPassword) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.AUTH_PASSWORDS_DO_NOT_MATCH,
                 field: "confirmPassword"
@@ -265,7 +266,7 @@ export const signup = async (req, res) => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
         if (!passwordRegex.test(password)) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: MESSAGES.AUTH_PASSWORD_MUST_AT_LEAST,
                 field: "confirmPassword"
@@ -274,7 +275,7 @@ export const signup = async (req, res) => {
 
 
         if (!agreeTerms) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: "You must accept the Terms of Service and Privacy Policy",
                 field: "terms"
@@ -283,7 +284,7 @@ export const signup = async (req, res) => {
         if (referralCode && referralCode.trim()) {
             const referrer = await User.findOne({ referralCode: referralCode.trim() });
             if (!referrer) {
-                return res.status(400).json({
+                return res.status(STATUS_CODES.BAD_REQUEST).json({
                     success: false,
                     message: "Invalid referral code",
                     field: "referralCode"
@@ -302,14 +303,14 @@ export const signup = async (req, res) => {
         await sentOtp(email, "signup");
 
 
-        return res.status(200).json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             message: "OTP sent successfully",
             redirect: "/signup-verification"
         });
 
     } catch (error) {
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: "Server error. Please try again later."
         });
@@ -322,7 +323,7 @@ export const loadSignupOTPVerification = async (req, res) => {
         if (!req.session.tempUser) return res.redirect("/signup");
         return res.render("user/auth/signup/signup-otp")
     } catch (error) {
-        return res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 
 }
@@ -405,7 +406,7 @@ export const SignupOTPVerification = async (req, res) => {
         return res.redirect('/');
 
     } catch (error) {
-        return res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 }
 
@@ -416,7 +417,7 @@ export const logout = async (req, res) => {
         delete req.session.user;
         return res.redirect("/");
     } catch (error) {
-        return res.status(500).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -424,7 +425,7 @@ export const resendOtp = async (req, res) => {
     try {
         const tempUser = req.session.tempUser;
         if (!tempUser) {
-            return res.status(400).json({ success: false, message: "Session expired. Please start over." });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Session expired. Please start over." });
         }
 
         const email = typeof tempUser === 'string' ? tempUser : tempUser.email;
@@ -432,13 +433,13 @@ export const resendOtp = async (req, res) => {
 
         await sentOtp(email, purpose);
 
-        return res.status(200).json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             message: "New OTP sent successfully"
         });
 
     } catch (error) {
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: "Failed to resend OTP. Please try again."
         });
